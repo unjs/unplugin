@@ -1,8 +1,10 @@
 import { Plugin as RollupPlugin } from 'rollup'
 
+export type Thenable<T> = T | Promise<T>
+
 export interface UnpluginHooks {
   transformInclude?: (id: string) => boolean;
-  transform?: (code: string, id: string) => string | { code: string; map: any; };
+  transform?: (code: string, id: string) => Thenable<string | { code: string; map: any; } | null | undefined>;
 }
 
 export interface UnpluginOptions<UserOptions> {
