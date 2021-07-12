@@ -5,10 +5,9 @@ import { getLoaderPath } from './utils'
 export function getWebpackPlugin<UserOptions = {}> (
   options: UnpluginOptions<UserOptions>
 ): UnpluginInstance<UserOptions>['webpack'] {
-  return class WebpackPlugin {
+  class UnpluginWebpackPlugin {
     // eslint-disable-next-line no-useless-constructor
     constructor (public userOptions?: UserOptions) {}
-
     apply (compiler: any) {
       const hooks = options.setup(this.userOptions)
 
@@ -21,20 +20,23 @@ export function getWebpackPlugin<UserOptions = {}> (
         const loaderPath = getLoaderPath(options.name)
 
         fs.writeFileSync(loaderPath, `
-module.exports = async function(source) {
-  if (!this._compiler || !this._compiler.$unplugin) return source
+module.exports = async function(source, map) {
+  const callback = this.async()
+  if (!this._compiler || !this._compiler.$unplugin)
+    return callback(null, source, map)
   
   const plugin = this._compiler.$unplugin['${options.name}']
 
-  if (!plugin) return source
+  if (!plugin)
+    return callback(null, source, map)
 
   const res = await plugin.transform(source, this.resource)
 
   if (typeof res !== 'string') {
-    this.callback(null, res.code, res.map)
+    callback(null, res.code, res.map)
   }
   else {
-    this.callback(null, res)
+    callback(null, res, map)
   }
 }
         `, 'utf-8')
@@ -52,4 +54,6 @@ module.exports = async function(source) {
       }
     }
   }
+
+  return UserOptions => new UnpluginWebpackPlugin(UserOptions)
 }

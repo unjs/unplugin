@@ -12,5 +12,5 @@ export function getLoaderPath (name: string) {
     mkdirSync(tempDir)
   }
 
-  return join(tempDir, 'loader-' + name + '.js')
+  return join(tempDir, 'webpack-loader-' + name + '.js')
 }

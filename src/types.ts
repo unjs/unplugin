@@ -13,5 +13,5 @@ export interface UnpluginOptions<UserOptions> {
 
 export interface UnpluginInstance<UserOptions> {
   rollup: (options?: UserOptions) => RollupPlugin;
-  webpack: { new(): any; };
+  webpack: (options?: UserOptions) => any;
 }
