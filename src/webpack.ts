@@ -22,17 +22,14 @@ export function getWebpackPlugin<UserOptions = {}> (
         fs.writeFileSync(loaderPath, `
 module.exports = async function(source, map) {
   const callback = this.async()
-  if (!this._compiler || !this._compiler.$unplugin)
-    return callback(null, source, map)
-  
   const plugin = this._compiler.$unplugin['${options.name}']
-
-  if (!plugin)
-    return callback(null, source, map)
 
   const res = await plugin.transform(source, this.resource)
 
-  if (typeof res !== 'string') {
+  if (res == null) {
+    callback(null, source, map)
+  }
+  else if (typeof res !== 'string') {
     callback(null, res.code, res.map)
   }
   else {
@@ -43,7 +40,11 @@ module.exports = async function(source, map) {
 
         compiler.options.module.rules.push({
           include (id: string) {
-            return hooks.transformInclude?.(id)
+            if (hooks.transformInclude) {
+              return hooks.transformInclude(id)
+            } else {
+              return true
+            }
           },
           enforce: options.enforce,
           use: [{

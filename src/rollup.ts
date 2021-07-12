@@ -10,7 +10,7 @@ export function getRollupPlugin <UserOptions = {}> (
       name: options.name,
       enforce: options.enforce,
       transform (code, id) {
-        if (!hooks.transformInclude?.(id)) {
+        if (hooks.transformInclude && !hooks.transformInclude(id)) {
           return null
         }
         return hooks.transform?.(code, id) || null
