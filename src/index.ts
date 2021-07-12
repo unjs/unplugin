@@ -1,31 +1,16 @@
-import { Plugin as RollupPlugin } from 'rollup'
-import { WebpackPluginInstance } from 'webpack'
+import { getRollupPlugin } from './rollup'
+import { UnpluginOptions, UnpluginInstance } from './types'
+import { getWebpackPlugin } from './webpack'
 
-export interface UnpluginOptions<UserOptions> {
-  setup(options: UserOptions): UserOptions
-  hooks(options: UserOptions): RollupPlugin
-}
-
-export interface UnpluginInstance<UserOptions> {
-  rollup: (options?: UserOptions) => RollupPlugin
-  webpack: (options?: UserOptions) => WebpackPluginInstance
-}
-
-export function defineUnplugin<UserOptions = {}> (options: UnpluginOptions<UserOptions>): UnpluginInstance<UserOptions> {
-  function getRollupPlugin (): UnpluginInstance<UserOptions>['rollup'] {
-    throw new Error('Not implemented')
-  }
-
-  function getWebpackPlugin (): UnpluginInstance<UserOptions>['webpack'] {
-    throw new Error('Not implemented')
-  }
-
+export function defineUnplugin<UserOptions = {}, ResolvedContext = UserOptions> (
+  options: UnpluginOptions<UserOptions, ResolvedContext>
+): UnpluginInstance<UserOptions> {
   return {
     get rollup () {
-      return getRollupPlugin()
+      return getRollupPlugin(options)
     },
     get webpack () {
-      return getWebpackPlugin()
+      return getWebpackPlugin(options)
     }
   }
 }
