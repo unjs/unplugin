@@ -11,9 +11,9 @@
 ## Usage
 
 ```ts
-import { defineUnplugin } from 'unplugin'
+import { createUnplugin } from 'unplugin'
 
-const plugin = defineUnplugin((options: UserOptions) => {
+const plugin = createUnplugin((options: UserOptions) => {
   return {
     name: 'my-first-unplugin',
     // webpack's id filter is outside of loader logic,

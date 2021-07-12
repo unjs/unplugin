@@ -2,7 +2,7 @@ import { getRollupPlugin } from './rollup'
 import { UnpluginInstance, UnpluginFactory } from './types'
 import { getWebpackPlugin } from './webpack'
 
-export function defineUnplugin<UserOptions = {}> (
+export function createUnplugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
 ): UnpluginInstance<UserOptions> {
   return {
