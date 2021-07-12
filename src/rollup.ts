@@ -1,20 +1,25 @@
-import { UnpluginInstance, UnpluginOptions } from './types'
+import { Plugin as RollupPlugin } from 'rollup'
+import { UnpluginInstance, UnpluginFactory } from './types'
 
 export function getRollupPlugin <UserOptions = {}> (
-  options: UnpluginOptions<UserOptions>
+  factory: UnpluginFactory<UserOptions>
 ): UnpluginInstance<UserOptions>['rollup'] {
   return (userOptions?: UserOptions) => {
-    const hooks = options.setup(userOptions)
+    const rawPlugin = factory(userOptions)
 
-    return {
-      name: options.name,
-      enforce: options.enforce,
-      transform (code, id) {
-        if (hooks.transformInclude && !hooks.transformInclude(id)) {
+    const plugin: RollupPlugin = {
+      ...rawPlugin
+    }
+
+    if (rawPlugin.transform && rawPlugin.transformInclude) {
+      plugin.transform = (code, id) => {
+        if (rawPlugin.transformInclude && !rawPlugin.transformInclude(id)) {
           return null
         }
-        return hooks.transform?.(code, id) || null
+        return rawPlugin.transform!(code, id)
       }
     }
+
+    return plugin
   }
 }

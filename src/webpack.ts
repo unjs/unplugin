@@ -1,28 +1,52 @@
 import fs from 'fs'
-import { UnpluginInstance, UnpluginOptions } from './types'
+import { UnpluginInstance, UnpluginFactory } from './types'
 import { getLoaderPath } from './utils'
 
 export function getWebpackPlugin<UserOptions = {}> (
-  options: UnpluginOptions<UserOptions>
+  factory: UnpluginFactory<UserOptions>
 ): UnpluginInstance<UserOptions>['webpack'] {
   class UnpluginWebpackPlugin {
     // eslint-disable-next-line no-useless-constructor
     constructor (public userOptions?: UserOptions) {}
     apply (compiler: any) {
-      const hooks = options.setup(this.userOptions)
+      const rawPlugin = factory(this.userOptions)
 
       if (!compiler.$unplugin) {
         compiler.$unplugin = {}
       }
-      compiler.$unplugin[options.name] = hooks
+      compiler.$unplugin[rawPlugin.name] = rawPlugin
 
-      if (hooks.transform) {
-        const loaderPath = getLoaderPath(options.name)
+      if (rawPlugin.transform) {
+        const loaderPath = getLoaderPath(rawPlugin.name)
 
-        fs.writeFileSync(loaderPath, `
+        generateLoader(loaderPath, rawPlugin.name)
+
+        compiler.options.module.rules.push({
+          include (id: string) {
+            if (rawPlugin.transformInclude) {
+              return rawPlugin.transformInclude(id)
+            } else {
+              return true
+            }
+          },
+          enforce: rawPlugin.enforce,
+          use: [{
+            ident: rawPlugin.name,
+            loader: loaderPath
+          }]
+        })
+      }
+    }
+  }
+
+  return UserOptions => new UnpluginWebpackPlugin(UserOptions)
+}
+
+function generateLoader (loaderPath: string, name: string) {
+  fs.writeFileSync(loaderPath, `
 module.exports = async function(source, map) {
   const callback = this.async()
-  const plugin = this._compiler.$unplugin['${options.name}']
+  const plugin = this._compiler.$unplugin['${name}']
 
   const res = await plugin.transform(source, this.resource)
 
@@ -35,26 +59,5 @@ module.exports = async function(source, map) {
   else {
     callback(null, res, map)
   }
-}
-        `, 'utf-8')
-
-        compiler.options.module.rules.push({
-          include (id: string) {
-            if (hooks.transformInclude) {
-              return hooks.transformInclude(id)
-            } else {
-              return true
-            }
-          },
-          enforce: options.enforce,
-          use: [{
-            ident: options.name,
-            loader: loaderPath
-          }]
-        })
-      }
-    }
-  }
-
-  return UserOptions => new UnpluginWebpackPlugin(UserOptions)
+}`, 'utf-8')
 }
