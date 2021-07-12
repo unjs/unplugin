@@ -1,0 +1,54 @@
+{
+  "name": "unplugin",
+  "version": "0.0.1",
+  "description": "Unified plugin system for Rollup and Webpack",
+  "repository": "unjs/unplugin",
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "siroc build",
+    "lint": "eslint --ext ts .",
+    "release": "yarn test && yarn build && standard-version && npm publish && git push --follow-tags",
+    "profile": "0x -o -D .profile -P 'autocannon -c 100 -p 10 -d 40 http://localhost:$PORT' ./hello.js",
+    "test": "yarn lint && jest"
+  },
+  "devDependencies": {
+    "0x": "latest",
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "@types/cookie": "latest",
+    "@types/express": "latest",
+    "@types/jest": "latest",
+    "@types/node": "latest",
+    "@types/supertest": "latest",
+    "autocannon": "latest",
+    "connect": "latest",
+    "cookie": "latest",
+    "destr": "latest",
+    "eslint": "latest",
+    "express": "latest",
+    "get-port": "latest",
+    "jest": "latest",
+    "jiti": "latest",
+    "listhen": "latest",
+    "rollup": "^2.53.1",
+    "siroc": "latest",
+    "standard-version": "latest",
+    "supertest": "latest",
+    "ts-jest": "latest",
+    "typescript": "latest",
+    "ufo": "latest",
+    "webpack": "^5.44.0"
+  }
+}
