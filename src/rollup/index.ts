@@ -1,5 +1,5 @@
 import { Plugin as RollupPlugin } from 'rollup'
-import { UnpluginInstance, UnpluginFactory } from './types'
+import { UnpluginInstance, UnpluginFactory } from '../types'
 
 export function getRollupPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>

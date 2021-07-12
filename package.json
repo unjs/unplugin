@@ -9,6 +9,9 @@
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./dist/webpack/loader": {
+      "require": "./dist/webpack/loader.cjs"
     }
   },
   "main": "dist/index.cjs",
