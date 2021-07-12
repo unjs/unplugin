@@ -2,44 +2,41 @@ import fs from 'fs'
 import { UnpluginInstance, UnpluginOptions } from './types'
 import { getLoaderPath } from './utils'
 
-export function getWebpackPlugin<UserOptions = {}, ResolvedContext = UserOptions> (
-  options: UnpluginOptions<UserOptions, ResolvedContext>
+export function getWebpackPlugin<UserOptions = {}> (
+  options: UnpluginOptions<UserOptions>
 ): UnpluginInstance<UserOptions>['webpack'] {
   return class WebpackPlugin {
     // eslint-disable-next-line no-useless-constructor
     constructor (public userOptions?: UserOptions) {}
 
     apply (compiler: any) {
-      const context = options.setup(this.userOptions)
-      const hooks = options.hooks(context)
+      const hooks = options.setup(this.userOptions)
 
       if (!compiler.$unplugin) {
         compiler.$unplugin = {}
       }
-      compiler.$unplugin[options.name] = {
-        context,
-        hooks
-      }
+      compiler.$unplugin[options.name] = hooks
 
       if (hooks.transform) {
         const loaderPath = getLoaderPath(options.name)
 
-        fs.writeFileSync(loaderPath, `module.exports = async function(source) {
-          if (!this._compiler || !this._compiler.$unplugin) return source
-          
-          const plugin = this._compiler.$unplugin['${options.name}']
+        fs.writeFileSync(loaderPath, `
+module.exports = async function(source) {
+  if (!this._compiler || !this._compiler.$unplugin) return source
+  
+  const plugin = this._compiler.$unplugin['${options.name}']
 
-          if (!plugin) return source
+  if (!plugin) return source
 
-          const res = await plugin.hooks.transform(source, this.resource)
+  const res = await plugin.transform(source, this.resource)
 
-          if (typeof res !== 'string') {
-            this.callback(null, res.code, res.map)
-          }
-          else {
-            this.callback(null, res)
-          }
-        }
+  if (typeof res !== 'string') {
+    this.callback(null, res.code, res.map)
+  }
+  else {
+    this.callback(null, res)
+  }
+}
         `, 'utf-8')
 
         compiler.options.module.rules.push({

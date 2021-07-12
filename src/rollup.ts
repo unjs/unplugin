@@ -1,14 +1,14 @@
 import { UnpluginInstance, UnpluginOptions } from './types'
 
-export function getRollupPlugin <UserOptions = {}, ResolvedContext = UserOptions> (
-  options: UnpluginOptions<UserOptions, ResolvedContext>
+export function getRollupPlugin <UserOptions = {}> (
+  options: UnpluginOptions<UserOptions>
 ): UnpluginInstance<UserOptions>['rollup'] {
   return (userOptions?: UserOptions) => {
-    const context = options.setup(userOptions)
-    const hooks = options.hooks(context)
+    const hooks = options.setup(userOptions)
 
     return {
       name: options.name,
+      enforce: options.enforce,
       transform (code, id) {
         if (!hooks.transformInclude?.(id)) {
           return null

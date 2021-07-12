@@ -1,9 +1,8 @@
 import { existsSync, mkdirSync } from 'fs'
-import { dirname } from 'path'
-import { join } from 'path/posix'
+import { dirname, join, resolve } from 'path'
 
 export function getPackageRoot () {
-  return dirname(require.resolve('unplugin/package.json'))
+  return resolve(dirname(__dirname))
 }
 
 export function getLoaderPath (name: string) {

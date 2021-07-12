@@ -5,12 +5,10 @@ export interface UnpluginHooks {
   transform?: (code: string, id: string) => string | { code: string; map: any; };
 }
 
-export interface UnpluginOptions<UserOptions, ResolvedContext = UserOptions> {
+export interface UnpluginOptions<UserOptions> {
   name: string;
   enforce?: 'post' | 'pre' | undefined;
-  setup(options?: UserOptions): ResolvedContext;
-  hooks(options: ResolvedContext): UnpluginHooks;
-  rollup?: Partial<RollupPlugin>;
+  setup(options?: UserOptions): UnpluginHooks;
 }
 
 export interface UnpluginInstance<UserOptions> {

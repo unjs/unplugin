@@ -2,8 +2,8 @@ import { getRollupPlugin } from './rollup'
 import { UnpluginOptions, UnpluginInstance } from './types'
 import { getWebpackPlugin } from './webpack'
 
-export function defineUnplugin<UserOptions = {}, ResolvedContext = UserOptions> (
-  options: UnpluginOptions<UserOptions, ResolvedContext>
+export function defineUnplugin<UserOptions = {}> (
+  options: UnpluginOptions<UserOptions>
 ): UnpluginInstance<UserOptions> {
   return {
     get rollup () {
