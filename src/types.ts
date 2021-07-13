@@ -2,7 +2,7 @@ import { Plugin as RollupPlugin } from 'rollup'
 
 export type Thenable<T> = T | Promise<T>
 
-export interface UnpluginHooks {
+export interface UnpluginOptions {
   name: string;
   enforce?: 'post' | 'pre' | undefined;
   transformInclude?: (id: string) => boolean;
@@ -11,9 +11,15 @@ export interface UnpluginHooks {
   resolveId?: (id?:string) => Thenable<string | null | undefined>
 }
 
-export type UnpluginFactory<UserOptions> = (options?: UserOptions) => UnpluginHooks
+export type UnpluginFactory<UserOptions> = (options?: UserOptions) => UnpluginOptions
 
 export interface UnpluginInstance<UserOptions> {
   rollup: (options?: UserOptions) => RollupPlugin;
   webpack: (options?: UserOptions) => any;
+}
+
+declare module 'webpack' {
+  interface Compiler {
+    $unpluginContext: Record<string, UnpluginOptions>
+  }
 }

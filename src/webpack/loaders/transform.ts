@@ -1,10 +1,14 @@
 import type { LoaderContext } from 'webpack'
+import '../../types'
 
-export default async function (this: LoaderContext<any>, source: string, map: any) {
+export default async function transform (this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
   const { unpluginName } = this.query
-  // @ts-expect-error
-  const plugin = this._compiler.$unpluginContext[unpluginName]
+  const plugin = this._compiler?.$unpluginContext[unpluginName]
+
+  if (!plugin?.transform) {
+    return callback(null, source, map)
+  }
 
   const res = await plugin.transform(source, this.resource)
 

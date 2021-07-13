@@ -11,12 +11,9 @@ export function getWebpackPlugin<UserOptions = {}> (
     apply (compiler: Compiler) {
       const rawPlugin = factory(this.userOptions)
 
-      // @ts-expect-error
       if (!compiler.$unpluginContext) {
-      // @ts-expect-error
         compiler.$unpluginContext = {}
       }
-      // @ts-expect-error
       compiler.$unpluginContext[rawPlugin.name] = rawPlugin
 
       if (rawPlugin.transform) {
@@ -30,7 +27,23 @@ export function getWebpackPlugin<UserOptions = {}> (
           },
           enforce: rawPlugin.enforce,
           use: [{
-            loader: resolve(__dirname, '..', 'dist/webpack/loader.cjs'),
+            loader: resolve(__dirname, '..', 'dist/webpack/loaders/transform.cjs'),
+            options: {
+              unpluginName: rawPlugin.name
+            }
+          }]
+        })
+      }
+
+      // TODO: not working for virtual module
+      if (rawPlugin.load) {
+        compiler.options.module.rules.push({
+          include () {
+            return true
+          },
+          enforce: rawPlugin.enforce,
+          use: [{
+            loader: resolve(__dirname, '..', 'dist/webpack/loaders/load.cjs'),
             options: {
               unpluginName: rawPlugin.name
             }

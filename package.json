@@ -10,9 +10,8 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
-    "./dist/webpack/loader": {
-      "require": "./dist/webpack/loader.cjs"
-    }
+    "./dist/webpack/loaders/transform": "./dist/webpack/loaders/transform.cjs",
+    "./dist/webpack/loaders/load": "./dist/webpack/loaders/load.cjs"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
