@@ -1,6 +1,5 @@
 import { resolve } from 'path'
-import { Compiler } from 'webpack'
-import { UnpluginInstance, UnpluginFactory } from '../types'
+import { UnpluginInstance, UnpluginFactory, WebpackCompiler } from '../types'
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -8,7 +7,8 @@ export function getWebpackPlugin<UserOptions = {}> (
   class UnpluginWebpackPlugin {
     // eslint-disable-next-line no-useless-constructor
     constructor (public userOptions?: UserOptions) {}
-    apply (compiler: Compiler) {
+
+    apply (compiler: WebpackCompiler) {
       const rawPlugin = factory(this.userOptions)
 
       if (!compiler.$unpluginContext) {
@@ -49,6 +49,10 @@ export function getWebpackPlugin<UserOptions = {}> (
             }
           }]
         })
+      }
+
+      if (rawPlugin.webpack) {
+        rawPlugin.webpack(compiler)
       }
     }
   }

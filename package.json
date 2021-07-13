@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "version": "0.0.1",
-  "description": "Unified plugin system for Rollup and Webpack",
+  "description": "Unified plugin system for Webpack, Rollup and Vite",
   "repository": "unjs/unplugin",
   "license": "MIT",
   "sideEffects": false,
@@ -44,13 +44,14 @@
     "jest": "latest",
     "jiti": "latest",
     "listhen": "latest",
-    "rollup": "^2.53.1",
+    "rollup": "latest",
     "siroc": "latest",
     "standard-version": "latest",
     "supertest": "latest",
     "ts-jest": "latest",
     "typescript": "latest",
     "ufo": "latest",
-    "webpack": "^5.44.0"
+    "vite": "latest",
+    "webpack": "latest"
   }
 }
