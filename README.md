@@ -4,9 +4,11 @@
 
 ## Support
 
-- [x] Module transform
-- [ ] Virtual Module
-- [ ] Id Resolve
+| Rollup | Webpack |
+| ------ | ------- |
+| `transform` | ✅ |
+| `resolveId` | ✅ |
+| `load` | 🚧 |
 
 ## Usage
 
