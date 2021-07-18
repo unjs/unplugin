@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/unjs/unplugin/compare/v0.0.2...v0.0.3) (2021-07-18)
+
+
+### Features
+
+* resolveId ([236738d](https://github.com/unjs/unplugin/commit/236738dee54e84651470abe2b11062917e462c40))
+
+
+### Bug Fixes
+
+* hook id ([42090cb](https://github.com/unjs/unplugin/commit/42090cbdfce89f616a6d5bfb1e84fc9edd8fe013))
+
 ### 0.0.2 (2021-07-13)
 
 
