@@ -1,5 +1,6 @@
-import { resolve } from 'path'
-import { UnpluginInstance, UnpluginFactory, WebpackCompiler } from '../types'
+import { join, resolve } from 'path'
+import type { Resolver } from 'enhanced-resolve'
+import type { UnpluginInstance, UnpluginFactory, WebpackCompiler } from '../types'
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -10,6 +11,7 @@ export function getWebpackPlugin<UserOptions = {}> (
 
     apply (compiler: WebpackCompiler) {
       const rawPlugin = factory(this.userOptions)
+      const loaderPath = resolve(__dirname, 'webpack/loaders')
 
       if (!compiler.$unpluginContext) {
         compiler.$unpluginContext = {}
@@ -27,12 +29,37 @@ export function getWebpackPlugin<UserOptions = {}> (
           },
           enforce: rawPlugin.enforce,
           use: [{
-            loader: resolve(__dirname, '..', 'dist/webpack/loaders/transform.cjs'),
+            loader: join(loaderPath, 'transform.cjs'),
             options: {
               unpluginName: rawPlugin.name
             }
           }]
         })
+      }
+
+      if (rawPlugin.resolveId) {
+        const resolver = {
+          apply (resolver: Resolver) {
+            const target = resolver.ensureHook('resolve')
+            resolver
+              .getHook('resolve')
+              .tapAsync('unplugin', async (request: any, resolveContext: any, callback: any) => {
+                const resolved = await rawPlugin.resolveId!(request.request)
+                if (resolved != null) {
+                  const newRequest = {
+                    ...request,
+                    request: resolved
+                  }
+                  resolver.doResolve(target, newRequest, null, resolveContext, callback)
+                } else {
+                  callback()
+                }
+              })
+          }
+        }
+
+        compiler.options.resolve.plugins = compiler.options.resolve.plugins || []
+        compiler.options.resolve.plugins.push(resolver)
       }
 
       // TODO: not working for virtual module
@@ -43,7 +70,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           },
           enforce: rawPlugin.enforce,
           use: [{
-            loader: resolve(__dirname, '..', 'dist/webpack/loaders/load.cjs'),
+            loader: join(loaderPath, 'load.cjs'),
             options: {
               unpluginName: rawPlugin.name
             }

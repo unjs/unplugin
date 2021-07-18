@@ -38,6 +38,7 @@
     "connect": "latest",
     "cookie": "latest",
     "destr": "latest",
+    "enhanced-resolve": "^5.8.2",
     "eslint": "latest",
     "express": "latest",
     "get-port": "latest",
