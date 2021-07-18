@@ -42,7 +42,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           apply (resolver: Resolver) {
             const target = resolver.ensureHook('resolve')
             resolver
-              .getHook('resolve')
+              .getHook('described-resolve')
               .tapAsync('unplugin', async (request: any, resolveContext: any, callback: any) => {
                 const resolved = await rawPlugin.resolveId!(request.request)
                 if (resolved != null) {
