@@ -26,6 +26,9 @@
     "profile": "0x -o -D .profile -P 'autocannon -c 100 -p 10 -d 40 http://localhost:$PORT' ./hello.js",
     "test": "yarn lint && jest"
   },
+  "dependencies": {
+    "webpack-virtual-modules": "^0.4.3"
+  },
   "devDependencies": {
     "0x": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
@@ -38,21 +41,37 @@
     "connect": "latest",
     "cookie": "latest",
     "destr": "latest",
-    "enhanced-resolve": "^5.8.2",
+    "enhanced-resolve": "latest",
     "eslint": "latest",
     "express": "latest",
     "get-port": "latest",
     "jest": "latest",
     "jiti": "latest",
     "listhen": "latest",
-    "rollup": "latest",
+    "rollup": "^2.53.3",
     "siroc": "latest",
     "standard-version": "latest",
     "supertest": "latest",
     "ts-jest": "latest",
     "typescript": "latest",
     "ufo": "latest",
-    "vite": "latest",
-    "webpack": "latest"
+    "vite": "^2.4.3",
+    "webpack": "^5.46.0"
+  },
+  "peerDependencies": {
+    "rollup": "^2.50.0",
+    "vite": "^2.3.0",
+    "webpack": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "rollup": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
   }
 }

@@ -1,6 +1,7 @@
 import type { Plugin as RollupPlugin } from 'rollup'
 import type { Compiler as WebpackCompiler } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
+import VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export {
   RollupPlugin,
@@ -22,6 +23,9 @@ export interface UnpluginOptions {
   rollup?: Partial<RollupPlugin>
   webpack?: (compiler: WebpackCompiler) => void
   vite?: Partial<VitePlugin>
+
+  // injected internal objects
+  __vfs?: VirtualModulesPlugin
 }
 
 export type UnpluginFactory<UserOptions> = (options?: UserOptions) => UnpluginOptions
