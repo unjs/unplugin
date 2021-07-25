@@ -44,29 +44,36 @@ export function getWebpackPlugin<UserOptions = {}> (
 
           const resolver = {
             apply (resolver: Resolver) {
-              const target = resolver.ensureHook('resolve')
+              const tap = (target: any) => async (request: any, resolveContext: any, callback: any) => {
+                const resolved = await rawPlugin.resolveId!(request.request)
+                if (resolved != null) {
+                  const newRequest = {
+                    ...request,
+                    request: resolved
+                  }
+                  if (!fs.existsSync(resolved)) {
+                    virtualModule.writeModule(resolved, '')
+                  }
+                  resolver.doResolve(target, newRequest, null, resolveContext, callback)
+                } else {
+                  callback()
+                }
+              }
+
               resolver
                 .getHook('described-resolve')
-                .tapAsync('unplugin', async (request: any, resolveContext: any, callback: any) => {
-                  const resolved = await rawPlugin.resolveId!(request.request)
-                  if (resolved != null) {
-                    const newRequest = {
-                      ...request,
-                      request: resolved
-                    }
-                    if (!fs.existsSync(resolved)) {
-                      virtualModule.writeModule(resolved, '')
-                    }
-                    resolver.doResolve(target, newRequest, null, resolveContext, callback)
-                  } else {
-                    callback()
-                  }
-                })
+                .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
+              resolver
+                .getHook('resolve')
+                .tapAsync('unplugin', tap(resolver.ensureHook('resolve')))
+              resolver
+                .getHook('file')
+                .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
             }
           }
 
           compiler.options.resolve.plugins = compiler.options.resolve.plugins || []
-          compiler.options.resolve.plugins.push(resolver)
+          compiler.options.resolve.plugins.unshift(resolver)
         }
 
         // TODO: not working for virtual module
