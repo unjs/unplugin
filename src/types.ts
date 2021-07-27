@@ -34,6 +34,7 @@ export interface UnpluginInstance<UserOptions> {
   rollup: (options?: UserOptions) => RollupPlugin;
   webpack: (options?: UserOptions) => any;
   vite: (options?: UserOptions) => VitePlugin;
+  raw: UnpluginFactory<UserOptions>
 }
 
 declare module 'webpack' {

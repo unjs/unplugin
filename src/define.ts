@@ -15,6 +15,9 @@ export function createUnplugin<UserOptions = {}> (
     },
     get webpack () {
       return getWebpackPlugin(factory)
+    },
+    get raw () {
+      return factory
     }
   }
 }
