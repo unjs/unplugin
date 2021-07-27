@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/unjs/unplugin/compare/v0.0.4...v0.0.5) (2021-07-27)
+
+
+### Features
+
+* expose raw object ([19a3768](https://github.com/unjs/unplugin/commit/19a37687b82994c1c2454ec118d30960a2659b85))
+
 ### [0.0.4](https://github.com/unjs/unplugin/compare/v0.0.3...v0.0.4) (2021-07-25)
 
 
