@@ -13,10 +13,15 @@ export function getWebpackPlugin<UserOptions = {}> (
         const rawPlugin = factory(userOptions)
         const loaderPath = resolve(__dirname, 'webpack/loaders')
 
-        if (!compiler.$unpluginContext) {
-          compiler.$unpluginContext = {}
-        }
-        compiler.$unpluginContext[rawPlugin.name] = rawPlugin
+        const context = compiler.$unpluginContext || {}
+        compiler.$unpluginContext = context
+        context[rawPlugin.name] = rawPlugin
+
+        compiler.hooks.thisCompilation.tap(rawPlugin.name, (compilation) => {
+          compilation.hooks.childCompiler.tap(rawPlugin.name, (childCompiler) => {
+            childCompiler.$unpluginContext = context
+          })
+        })
 
         if (rawPlugin.transform) {
           compiler.options.module.rules.push({
