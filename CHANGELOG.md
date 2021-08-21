@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/unjs/unplugin/compare/v0.0.5...v0.0.6) (2021-08-21)
+
+
+### Bug Fixes
+
+* apply context for child compilers ([123838e](https://github.com/unjs/unplugin/commit/123838e9722792a7fc43d2476c49d6c83c3658d7))
+
 ### [0.0.5](https://github.com/unjs/unplugin/compare/v0.0.4...v0.0.5) (2021-07-27)
 
 
