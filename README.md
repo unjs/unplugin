@@ -2,13 +2,15 @@
 
 > Experimental
 
+Unified plugin system for Vite, Rollup, and Webpack
+
 ## Support
 
 | Rollup | Webpack |
 | ------ | ------- |
 | `transform` | ✅ |
-| `resolveId` | ✅ |
-| `load` | 🚧 |
+| `resolveId` | 🚧 |
+| `load` | ✅ |
 
 ## Usage
 
@@ -35,5 +37,4 @@ const rollupPlugin = plugin.rollup({ /* ...user options */ })
 const webpackPlugin = plugin.webpack()
 ```
 
-
-
+See [vue2-script-setup-transform](https://github.com/antfu/vue2-script-setup-transform) as an example.
