@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/unjs/unplugin/compare/v0.0.6...v0.0.7) (2021-08-23)
+
+
+### Features
+
+* expose context for transform hook ([aa92da9](https://github.com/unjs/unplugin/commit/aa92da9743fb926ad19a1b631e0b6c79292e1349))
+
 ### [0.0.6](https://github.com/unjs/unplugin/compare/v0.0.5...v0.0.6) (2021-08-21)
 
 
