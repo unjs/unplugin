@@ -1,31 +1,31 @@
-import { Plugin as RollupPlugin } from 'rollup'
-import { UnpluginInstance, UnpluginFactory, UnpluginOptions } from '../types'
+import { UnpluginInstance, UnpluginFactory, UnpluginOptions, RollupPlugin } from '../types'
+import { UnpluginContextMeta } from '../context'
 
 export function getRollupPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
 ): UnpluginInstance<UserOptions>['rollup'] {
   return (userOptions?: UserOptions) => {
-    const rawPlugin = factory(userOptions)
+    const meta: UnpluginContextMeta = {
+      framework: 'rollup'
+    }
+    const rawPlugin = factory(userOptions, meta)
     return toRollupPlugin(rawPlugin)
   }
 }
 
-export function toRollupPlugin (rawPlugin: UnpluginOptions) {
-  const plugin: RollupPlugin = {
-    ...rawPlugin
-  }
-
-  if (rawPlugin.transform && rawPlugin.transformInclude) {
-    plugin.transform = (code, id) => {
-      if (rawPlugin.transformInclude && !rawPlugin.transformInclude(id)) {
+export function toRollupPlugin (plugin: UnpluginOptions): RollupPlugin {
+  if (plugin.transform && plugin.transformInclude) {
+    const _transform = plugin.transform
+    plugin.transform = function (code, id) {
+      if (plugin.transformInclude && !plugin.transformInclude(id)) {
         return null
       }
-      return rawPlugin.transform!(code, id)
+      return _transform.call(this, code, id)
     }
   }
 
-  if (rawPlugin.rollup) {
-    Object.assign(plugin, rawPlugin.rollup)
+  if (plugin.rollup) {
+    Object.assign(plugin, plugin.rollup)
   }
 
   return plugin

@@ -2,7 +2,8 @@ import fs from 'fs'
 import { join, resolve } from 'path'
 import type { Resolver } from 'enhanced-resolve'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { UnpluginInstance, UnpluginFactory, WebpackCompiler } from '../types'
+import { UnpluginContextMeta } from '../context'
+import type { UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -10,47 +11,55 @@ export function getWebpackPlugin<UserOptions = {}> (
   return (userOptions?: UserOptions) => {
     return {
       apply (compiler: WebpackCompiler) {
-        const rawPlugin = factory(userOptions)
+        const meta: UnpluginContextMeta = {
+          framework: 'webpack',
+          webpack: {
+            compiler
+          }
+        }
+
+        const rawPlugin = factory(userOptions, meta)
+        const plugin = Object.assign(rawPlugin, { __unpluginMeta: meta }) as ResolvedUnpluginOptions
         const loaderPath = resolve(__dirname, 'webpack/loaders')
 
-        const context = compiler.$unpluginContext || {}
-        compiler.$unpluginContext = context
-        context[rawPlugin.name] = rawPlugin
+        const injected = compiler.$unpluginContext || {}
+        compiler.$unpluginContext = injected
+        injected[plugin.name] = plugin
 
-        compiler.hooks.thisCompilation.tap(rawPlugin.name, (compilation) => {
-          compilation.hooks.childCompiler.tap(rawPlugin.name, (childCompiler) => {
-            childCompiler.$unpluginContext = context
+        compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
+          compilation.hooks.childCompiler.tap(plugin.name, (childCompiler) => {
+            childCompiler.$unpluginContext = injected
           })
         })
 
-        if (rawPlugin.transform) {
+        if (plugin.transform) {
           compiler.options.module.rules.push({
             include (id: string) {
-              if (rawPlugin.transformInclude) {
-                return rawPlugin.transformInclude(id)
+              if (plugin.transformInclude) {
+                return plugin.transformInclude(id)
               } else {
                 return true
               }
             },
-            enforce: rawPlugin.enforce,
+            enforce: plugin.enforce,
             use: [{
               loader: join(loaderPath, 'transform.cjs'),
               options: {
-                unpluginName: rawPlugin.name
+                unpluginName: plugin.name
               }
             }]
           })
         }
 
-        if (rawPlugin.resolveId) {
+        if (plugin.resolveId) {
           const virtualModule = new VirtualModulesPlugin()
-          rawPlugin.__vfs = virtualModule
+          plugin.__vfs = virtualModule
           compiler.options.plugins.push(virtualModule)
 
           const resolver = {
             apply (resolver: Resolver) {
               const tap = (target: any) => async (request: any, resolveContext: any, callback: any) => {
-                const resolved = await rawPlugin.resolveId!(request.request)
+                const resolved = await plugin.resolveId!(request.request)
                 if (resolved != null) {
                   const newRequest = {
                     ...request,
@@ -82,23 +91,23 @@ export function getWebpackPlugin<UserOptions = {}> (
         }
 
         // TODO: not working for virtual module
-        if (rawPlugin.load) {
+        if (plugin.load) {
           compiler.options.module.rules.push({
             include () {
               return true
             },
-            enforce: rawPlugin.enforce,
+            enforce: plugin.enforce,
             use: [{
               loader: join(loaderPath, 'load.cjs'),
               options: {
-                unpluginName: rawPlugin.name
+                unpluginName: plugin.name
               }
             }]
           })
         }
 
-        if (rawPlugin.webpack) {
-          rawPlugin.webpack(compiler)
+        if (plugin.webpack) {
+          plugin.webpack(compiler)
         }
       }
     }

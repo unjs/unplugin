@@ -1,4 +1,5 @@
 import type { LoaderContext } from 'webpack'
+import { UnpluginContext } from '../../context'
 import '../../types'
 
 export default async function transform (this: LoaderContext<any>, source: string, map: any) {
@@ -10,7 +11,11 @@ export default async function transform (this: LoaderContext<any>, source: strin
     return callback(null, source, map)
   }
 
-  const res = await plugin.transform(source, this.resource)
+  const context: UnpluginContext = {
+    error: error => this.emitError(typeof error === 'string' ? new Error(error) : error),
+    warn: error => this.emitWarning(typeof error === 'string' ? new Error(error) : error)
+  }
+  const res = await plugin.transform.call(context, source, this.resource)
 
   if (res == null) {
     callback(null, source, map)
