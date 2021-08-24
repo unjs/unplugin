@@ -1,6 +1,7 @@
 import type { Plugin as RollupPlugin } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
+import type { Module as NuxtModule } from '@nuxt/types'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { UnpluginContext, UnpluginContextMeta } from './context'
 
@@ -37,6 +38,7 @@ export interface UnpluginInstance<UserOptions> {
   rollup: (options?: UserOptions) => RollupPlugin;
   webpack: (options?: UserOptions) => WebpackPluginInstance;
   vite: (options?: UserOptions) => VitePlugin;
+  nuxt: NuxtModule<UserOptions>;
   raw: UnpluginFactory<UserOptions>
 }
 

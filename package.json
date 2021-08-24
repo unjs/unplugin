@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "0x": "latest",
+    "@nuxt/types": "^2.15.8",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/cookie": "latest",
     "@types/express": "latest",

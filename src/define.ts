@@ -1,3 +1,4 @@
+import { getNuxtModule } from './nuxt'
 import { getRollupPlugin } from './rollup'
 import { UnpluginInstance, UnpluginFactory } from './types'
 import { getVitePlugin } from './vite'
@@ -15,6 +16,9 @@ export function createUnplugin<UserOptions = {}> (
     },
     get webpack () {
       return getWebpackPlugin(factory)
+    },
+    get nuxt () {
+      return getNuxtModule(factory)
     },
     get raw () {
       return factory

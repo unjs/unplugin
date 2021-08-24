@@ -56,6 +56,7 @@ export const unplugin = createUnplugin((options: UserOptions) => {
 export const vitePlugin = plugin.vite
 export const rollupPlugin = plugin.rollup
 export const webpackPlugin = plugin.webpack
+export const nuxtModule = plugin.nuxt
 ```
 
 ###### Vite
@@ -91,6 +92,26 @@ export default {
 module.exports = {
   plugins: [
     require('./my-unplugin').webpack({ /* options */ })
+  ]
+}
+```
+
+###### Nuxt
+
+Expose the Nuxt module in a submodule
+
+```ts
+// ./nuxt.js
+import MyUnplugin from './my-unplugin'
+
+export default MyUnplugin.nuxt
+```
+
+```ts
+// nuxt.config.js
+export default {
+  buildModules: [
+    ['my-unplugin/nuxt', { /* options */ }]
   ]
 }
 ```
