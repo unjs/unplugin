@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "version": "0.0.8",
-  "description": "Unified plugin system for Webpack, Rollup and Vite",
+  "description": "Unified plugin system for build tools",
   "repository": "unjs/unplugin",
   "license": "MIT",
   "sideEffects": false,

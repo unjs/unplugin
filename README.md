@@ -1,23 +1,43 @@
 # unplugin
 
+[![NPM version](https://img.shields.io/npm/v/unplugin?color=a1b858&label=)](https://www.npmjs.com/package/unplugin)
+
 > Experimental
 
-Unified plugin system for Vite, Rollup, and Webpack
+Unified plugin system for build tools.
 
-## Support
+Current supports:
 
-| Rollup | Webpack |
-| ------ | ------- |
-| `transform` | ✅ |
-| `resolveId` | 🚧 |
-| `load` | ✅ |
+- [Vite](https://vitejs.dev/)
+- [Rollup](https://rollupjs.org/)
+- [Webpack](https://webpack.js.org/)
+
+## Hooks
+
+`unplugin` extends the excellent [Rollup plugin API](https://rollupjs.org/guide/en/#plugins-overview) as the unified plugin interface and provides a compatible layer base on the build tools using.
+
+###### Support State
+
+| Hook | Rollup | Vite | Webpack |
+| ---- | ------ | ---- | ------- |
+| `transformInclude` | ✅ | ✅ | ✅ |
+| [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ |
+| [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌* | ✅ | ✅ |
+| [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | 🚧 Expiremental |
+| [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | 🚧 Expiremental |
+
+- *: Rollup does not support `enforce` to control the order of plugins. Users will need to maintain the order manually.
+
+## Starter Template
+
+- [unplugin-starter](https://github.com/antfu/unplugin-starter)
 
 ## Usage
 
 ```ts
 import { createUnplugin } from 'unplugin'
 
-const plugin = createUnplugin((options: UserOptions) => {
+export const unplugin = createUnplugin((options: UserOptions) => {
   return {
     name: 'my-first-unplugin',
     // webpack's id filter is outside of loader logic,
@@ -33,8 +53,53 @@ const plugin = createUnplugin((options: UserOptions) => {
   }
 })
 
-const rollupPlugin = plugin.rollup({ /* ...user options */ })
-const webpackPlugin = plugin.webpack()
+export const vitePlugin = plugin.vite
+export const rollupPlugin = plugin.rollup
+export const webpackPlugin = plugin.webpack
 ```
 
-See [vue2-script-setup-transform](https://github.com/antfu/vue2-script-setup-transform) as an example.
+###### Vite
+
+```ts
+// vite.config.ts
+import MyUnplugin from './my-unplugin'
+
+export default {
+  plugins: [
+    MyUnplugin.vite({ /* options */ })
+  ]
+}
+```
+
+###### Rollup
+
+```ts
+// rollup.config.js
+import MyUnplugin from './my-unplugin'
+
+export default {
+  plugins: [
+    MyUnplugin.rollup({ /* options */ })
+  ]
+}
+```
+
+###### Webpack
+
+```ts
+// webpack.config.js
+module.exports = {
+  plugins: [
+    require('./my-unplugin').webpack({ /* options */ })
+  ]
+}
+```
+
+## Examples
+
+- [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)
+- [unplugin-vue2-script-setup](https://github.com/antfu/unplugin-vue2-script-setup)
+
+## License
+
+[MIT](./LICENSE) License © 2021 Nuxt Contrib
