@@ -54,6 +54,39 @@ export const rollupPlugin = plugin.rollup
 export const webpackPlugin = plugin.webpack
 ```
 
+### Framework-specific Logic
+
+While `unplugin` provides compatible layers for some hooks, the functionality of it is limited to the common subset of the build's plugins capability. For more advanced framework-specific usages, `unplugin` provides an escape hatch for that.
+
+```ts
+export const unplugin = createUnplugin((options: UserOptions, meta) => {
+
+  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack'
+
+  return {
+    // common unplugin hooks
+    name: 'my-first-unplugin',
+    transformInclude (id) { /* ... */ },
+    transform (code) { /* ... */  },
+    
+    // framework specific hooks
+    vite: {
+      configureServer(server) {
+        // configure Vite server
+      }
+    },
+    rollup: {
+      // configure Rollup
+    },
+    webpack(compiler) {
+      // configure Webpack compiler
+    }
+  }
+})
+```
+
+### Plugin Installation
+
 ###### Vite
 
 ```ts
