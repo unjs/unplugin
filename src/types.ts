@@ -1,8 +1,7 @@
-import type { Plugin as RollupPlugin } from 'rollup'
+import type { Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
-import VirtualModulesPlugin from 'webpack-virtual-modules'
-import { UnpluginContext, UnpluginContextMeta } from './context'
+import type VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export {
   RollupPlugin,
@@ -29,6 +28,7 @@ export interface UnpluginOptions {
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
   // injected internal objects
   __vfs?: VirtualModulesPlugin
+  __virtualModulePrefix: string
 }
 
 export type UnpluginFactory<UserOptions> = (options: UserOptions | undefined, meta: UnpluginContextMeta) => UnpluginOptions
@@ -38,6 +38,18 @@ export interface UnpluginInstance<UserOptions> {
   webpack: (options?: UserOptions) => WebpackPluginInstance;
   vite: (options?: UserOptions) => VitePlugin;
   raw: UnpluginFactory<UserOptions>
+}
+
+export interface UnpluginContextMeta extends Partial<RollupContextMeta> {
+  framework: 'rollup' | 'vite' | 'webpack'
+  webpack?: {
+    compiler: WebpackCompiler
+  }
+}
+
+export interface UnpluginContext {
+  error(message: string | Error): void
+  warn(message: string | Error): void
 }
 
 declare module 'webpack' {

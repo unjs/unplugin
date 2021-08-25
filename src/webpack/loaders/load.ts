@@ -1,7 +1,5 @@
 import type { LoaderContext } from 'webpack'
-import { UnpluginContext } from '../../context'
-import { UNPLUGIN_VMOD_PREFIX } from '../meta'
-import '../../types'
+import { UnpluginContext } from '../../types'
 
 export default async function load (this: LoaderContext<any>, source: string) {
   const callback = this.async()
@@ -18,8 +16,8 @@ export default async function load (this: LoaderContext<any>, source: string) {
   }
 
   let id = this.resource
-  if (id.startsWith(UNPLUGIN_VMOD_PREFIX)) {
-    id = id.slice(UNPLUGIN_VMOD_PREFIX.length)
+  if (id.startsWith(plugin.__virtualModulePrefix)) {
+    id = id.slice(plugin.__virtualModulePrefix.length)
   }
 
   const res = await plugin.load.call(context, id)

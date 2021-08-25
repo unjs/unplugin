@@ -1,6 +1,5 @@
 import type { LoaderContext } from 'webpack'
-import { UnpluginContext } from '../../context'
-import '../../types'
+import { UnpluginContext } from '../../types'
 
 export default async function transform (this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()

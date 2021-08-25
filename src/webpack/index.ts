@@ -1,10 +1,11 @@
 import fs from 'fs'
-import { join, resolve } from 'path'
+import { join, resolve } from 'upath'
 import type { Resolver } from 'enhanced-resolve'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import { UnpluginContextMeta } from '../context'
-import type { UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
-import { UNPLUGIN_VMOD_PREFIX } from './meta'
+import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
+
+const TRANSFORM_LOADER = resolve(__dirname, 'webpack/loaders/transform.cjs')
+const LOAD_LOADER = resolve(__dirname, 'webpack/loaders/load.cjs')
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -20,9 +21,15 @@ export function getWebpackPlugin<UserOptions = {}> (
         }
 
         const rawPlugin = factory(userOptions, meta)
-        const plugin = Object.assign(rawPlugin, { __unpluginMeta: meta }) as ResolvedUnpluginOptions
-        const loaderPath = resolve(__dirname, 'webpack/loaders')
+        const plugin = Object.assign(
+          rawPlugin,
+          {
+            __unpluginMeta: meta,
+            __virtualModulePrefix: join(process.cwd(), 'virtual:')
+          }
+        ) as ResolvedUnpluginOptions
 
+        // inject context object to share with loaders
         const injected = compiler.$unpluginContext || {}
         compiler.$unpluginContext = injected
         injected[plugin.name] = plugin
@@ -33,6 +40,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           })
         })
 
+        // transform hook
         if (plugin.transform) {
           compiler.options.module.rules.push({
             include (id: string) {
@@ -44,7 +52,7 @@ export function getWebpackPlugin<UserOptions = {}> (
             },
             enforce: plugin.enforce,
             use: [{
-              loader: join(loaderPath, 'transform.cjs'),
+              loader: TRANSFORM_LOADER,
               options: {
                 unpluginName: plugin.name
               }
@@ -52,6 +60,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           })
         }
 
+        // resolveId hook
         if (plugin.resolveId) {
           const virtualModule = new VirtualModulesPlugin()
           plugin.__vfs = virtualModule
@@ -59,37 +68,39 @@ export function getWebpackPlugin<UserOptions = {}> (
 
           const resolver = {
             apply (resolver: Resolver) {
-              const tap = (target: any) => async (request: any, resolveContext: any, callback: any) => {
-                if (!request.request || request.request.startsWith(UNPLUGIN_VMOD_PREFIX)) {
+              const target = resolver.ensureHook('resolve')
+              const tap = () => async (request: any, resolveContext: any, callback: any) => {
+                // filter out invalid requests
+                if (!request.request || request.request.startsWith(plugin.__virtualModulePrefix)) {
                   return callback()
                 }
+
+                // call hook
                 let resolved = await plugin.resolveId!(request.request)
-                if (resolved != null) {
-                  if (resolved === request.request) {
-                    resolved = UNPLUGIN_VMOD_PREFIX + request.request
-                  }
-                  const newRequest = {
-                    ...request,
-                    request: resolved
-                  }
-                  if (!fs.existsSync(resolved)) {
-                    virtualModule.writeModule(resolved, '')
-                  }
-                  resolver.doResolve(target, newRequest, null, resolveContext, callback)
-                } else {
-                  callback()
+                if (resolved == null) {
+                  return callback()
                 }
+
+                // if the resolved module is not exists,
+                // we treat it as a virtual module
+                if (!fs.existsSync(resolved)) {
+                  resolved = plugin.__virtualModulePrefix + request.request
+                  virtualModule.writeModule(resolved, '')
+                }
+
+                // construt the new request
+                const newRequest = {
+                  ...request,
+                  request: resolved
+                }
+
+                // redirect the resolver
+                resolver.doResolve(target, newRequest, null, resolveContext, callback)
               }
 
-              // resolver
-              //   .getHook('described-resolve')
-              //   .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
               resolver
                 .getHook('resolve')
-                .tapAsync('unplugin', tap(resolver.ensureHook('resolve')))
-              // resolver
-              //   .getHook('file')
-              //   .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
+                .tapAsync('unplugin', tap())
             }
           }
 
@@ -97,7 +108,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           compiler.options.resolve.plugins.push(resolver)
         }
 
-        // TODO: not working for virtual module
+        // load hook
         if (plugin.load) {
           compiler.options.module.rules.push({
             include () {
@@ -105,7 +116,7 @@ export function getWebpackPlugin<UserOptions = {}> (
             },
             enforce: plugin.enforce,
             use: [{
-              loader: join(loaderPath, 'load.cjs'),
+              loader: LOAD_LOADER,
               options: {
                 unpluginName: plugin.name
               }
