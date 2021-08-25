@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/unjs/unplugin/compare/v0.1.0...v0.2.0) (2021-08-25)
+
+
+### Features
+
+* virtual module support for webpack ([333717b](https://github.com/unjs/unplugin/commit/333717b29757ddbf39677430929b8c73625e0711))
+
 ### [0.0.9](https://github.com/unjs/unplugin/compare/v0.0.8...v0.0.9) (2021-08-25)
 
 ### [0.0.7](https://github.com/unjs/unplugin/compare/v0.0.6...v0.0.7) (2021-08-23)
