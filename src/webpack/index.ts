@@ -4,6 +4,7 @@ import type { Resolver } from 'enhanced-resolve'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { UnpluginContextMeta } from '../context'
 import type { UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
+import { UNPLUGIN_VMOD_PREFIX } from './meta'
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -59,8 +60,14 @@ export function getWebpackPlugin<UserOptions = {}> (
           const resolver = {
             apply (resolver: Resolver) {
               const tap = (target: any) => async (request: any, resolveContext: any, callback: any) => {
-                const resolved = await plugin.resolveId!(request.request)
+                if (!request.request || request.request.startsWith(UNPLUGIN_VMOD_PREFIX)) {
+                  return callback()
+                }
+                let resolved = await plugin.resolveId!(request.request)
                 if (resolved != null) {
+                  if (resolved === request.request) {
+                    resolved = UNPLUGIN_VMOD_PREFIX + request.request
+                  }
                   const newRequest = {
                     ...request,
                     request: resolved
@@ -74,20 +81,20 @@ export function getWebpackPlugin<UserOptions = {}> (
                 }
               }
 
-              resolver
-                .getHook('described-resolve')
-                .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
+              // resolver
+              //   .getHook('described-resolve')
+              //   .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
               resolver
                 .getHook('resolve')
                 .tapAsync('unplugin', tap(resolver.ensureHook('resolve')))
-              resolver
-                .getHook('file')
-                .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
+              // resolver
+              //   .getHook('file')
+              //   .tapAsync('unplugin', tap(resolver.ensureHook('internal-resolve')))
             }
           }
 
           compiler.options.resolve.plugins = compiler.options.resolve.plugins || []
-          compiler.options.resolve.plugins.unshift(resolver)
+          compiler.options.resolve.plugins.push(resolver)
         }
 
         // TODO: not working for virtual module

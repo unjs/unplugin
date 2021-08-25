@@ -1,8 +1,8 @@
-.vscode
-node_modules
-*.log*
-dist
-coverage
+.DS_STORE
 .profile
+.vscode
+*.log*
+coverage
+dist
+node_modules
 temp
-dist-*

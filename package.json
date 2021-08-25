@@ -21,10 +21,11 @@
   ],
   "scripts": {
     "build": "siroc build",
+    "dev": "siroc dev",
     "lint": "eslint --ext ts .",
     "release": "yarn test && yarn build && standard-version && yarn publish && git push --follow-tags",
-    "test:build:fixtures": "jiti scripts/buildFixtures.ts",
-    "test": "yarn lint && yarn test:build:fixtures && jest"
+    "test:build": "jiti scripts/buildFixtures.ts",
+    "test": "yarn lint && yarn test:build && jest"
   },
   "dependencies": {
     "webpack-virtual-modules": "^0.4.3"
@@ -38,6 +39,7 @@
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.1",
     "babel-loader": "^8.2.2",
+    "chalk": "^4.1.2",
     "enhanced-resolve": "^5.8.2",
     "eslint": "^7.32.0",
     "fast-glob": "^3.2.7",
