@@ -22,8 +22,8 @@ Currently supports:
 | `transformInclude` | ✅ | ✅ | ✅ |
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ |
 | [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌* | ✅ | ✅ |
-| [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | 🚧 Expiremental |
-| [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | 🚧 Expiremental |
+| [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | 🚧 Experimental |
+| [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | 🚧 Experimental |
 
 - *: Rollup does not support using `enforce` to control the order of plugins. Users will need to maintain the order manually.
 
