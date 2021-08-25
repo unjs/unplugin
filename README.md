@@ -28,10 +28,6 @@ Current supports:
 
 - *: Rollup does not support `enforce` to control the order of plugins. Users will need to maintain the order manually.
 
-## Starter Template
-
-- [unplugin-starter](https://github.com/antfu/unplugin-starter)
-
 ## Usage
 
 ```ts
@@ -94,6 +90,10 @@ module.exports = {
   ]
 }
 ```
+
+## Starter Templates
+
+- [unplugin-starter](https://github.com/antfu/unplugin-starter)
 
 ## Examples
 
