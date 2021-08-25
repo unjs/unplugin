@@ -49,9 +49,9 @@ export const unplugin = createUnplugin((options: UserOptions) => {
   }
 })
 
-export const vitePlugin = plugin.vite
-export const rollupPlugin = plugin.rollup
-export const webpackPlugin = plugin.webpack
+export const vitePlugin = unplugin.vite
+export const rollupPlugin = unplugin.rollup
+export const webpackPlugin = unplugin.webpack
 ```
 
 ### Framework-specific Logic
