@@ -23,7 +23,7 @@
     "build": "siroc build",
     "dev": "siroc dev",
     "lint": "eslint --ext ts .",
-    "release": "yarn build && standard-version && yarn publish && git push --follow-tags",
+    "release": "yarn build && standard-version && yarn publish --non-interactive && git push --follow-tags",
     "test:build": "yarn build && jiti scripts/buildFixtures.ts",
     "test": "yarn lint && yarn test:build && jest"
   },
