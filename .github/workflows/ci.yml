@@ -35,14 +35,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn
 
-      - name: Lint
-        run: yarn lint
-
       - name: Build
         run: yarn build
 
       - name: Test
-        run: yarn jest
+        run: yarn test
 
       - name: Coverage
         uses: codecov/codecov-action@v1
