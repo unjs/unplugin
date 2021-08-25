@@ -6,15 +6,14 @@
 
 Unified plugin system for build tools.
 
-Current supports:
-
+Currently supports:
 - [Vite](https://vitejs.dev/)
 - [Rollup](https://rollupjs.org/)
 - [Webpack](https://webpack.js.org/)
 
 ## Hooks
 
-`unplugin` extends the excellent [Rollup plugin API](https://rollupjs.org/guide/en/#plugins-overview) as the unified plugin interface and provides a compatible layer base on the build tools using.
+`unplugin` extends the excellent [Rollup plugin API](https://rollupjs.org/guide/en/#plugins-overview) as the unified plugin interface and provides a compatible layer base on the build tools used with.
 
 ###### Support State
 
@@ -26,7 +25,7 @@ Current supports:
 | [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | 🚧 Expiremental |
 | [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | 🚧 Expiremental |
 
-- *: Rollup does not support `enforce` to control the order of plugins. Users will need to maintain the order manually.
+- *: Rollup does not support using `enforce` to control the order of plugins. Users will need to maintain the order manually.
 
 ## Usage
 
@@ -45,44 +44,13 @@ export const unplugin = createUnplugin((options: UserOptions) => {
     transform (code) {
       return code.replace(/<template>/, `<template><div>Injected</div>`)
     },
-    // more hooks incoming
+    // more hooks coming
   }
 })
 
 export const vitePlugin = unplugin.vite
 export const rollupPlugin = unplugin.rollup
 export const webpackPlugin = unplugin.webpack
-```
-
-### Framework-specific Logic
-
-While `unplugin` provides compatible layers for some hooks, the functionality of it is limited to the common subset of the build's plugins capability. For more advanced framework-specific usages, `unplugin` provides an escape hatch for that.
-
-```ts
-export const unplugin = createUnplugin((options: UserOptions, meta) => {
-
-  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack'
-
-  return {
-    // common unplugin hooks
-    name: 'my-first-unplugin',
-    transformInclude (id) { /* ... */ },
-    transform (code) { /* ... */  },
-    
-    // framework specific hooks
-    vite: {
-      configureServer(server) {
-        // configure Vite server
-      }
-    },
-    rollup: {
-      // configure Rollup
-    },
-    webpack(compiler) {
-      // configure Webpack compiler
-    }
-  }
-})
 ```
 
 ### Plugin Installation
@@ -122,6 +90,38 @@ module.exports = {
     require('./my-unplugin').webpack({ /* options */ })
   ]
 }
+```
+
+### Framework-specific Logic
+
+While `unplugin` provides compatible layers for some hooks, the functionality of it is limited to the common subset of the build's plugins capability. For more advanced framework-specific usages, `unplugin` provides an escape hatch for that.
+
+```ts
+export const unplugin = createUnplugin((options: UserOptions, meta) => {
+
+  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack'
+
+  return {
+    // common unplugin hooks
+    name: 'my-first-unplugin',
+    transformInclude (id) { /* ... */ },
+    transform (code) { /* ... */  },
+    
+    // framework specific hooks
+    vite: {
+      // Vite config
+      configureServer(server) {
+        // configure Vite server
+      }
+    },
+    rollup: {
+      // Rollup config
+    },
+    webpack(compiler) {
+      // configure Webpack compiler
+    }
+  }
+})
 ```
 
 ## Starter Templates
