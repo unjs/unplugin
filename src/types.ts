@@ -16,7 +16,7 @@ export interface UnpluginOptions {
   enforce?: 'post' | 'pre' | undefined;
   transformInclude?: (id: string) => boolean;
   transform?: (this: UnpluginContext, code: string, id: string) => Thenable<string | { code: string; map: any; } | null | undefined>;
-  load?: (this: UnpluginContext, id?:string) => Thenable<string | null | undefined>
+  load?: (this: UnpluginContext, id: string) => Thenable<string | null | undefined>
   resolveId?: (id: string, importer?: string) => Thenable<string | null | undefined>
 
   // framework specify extends
