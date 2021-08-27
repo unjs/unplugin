@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/unjs/unplugin/compare/v0.2.0...v0.2.1) (2021-08-27)
+
+
+### Bug Fixes
+
+* better source map handling for webpack ([992f322](https://github.com/unjs/unplugin/commit/992f322b8bf0812263141013e9533f42eb2fbb1e))
+* types for load hook ([01a9364](https://github.com/unjs/unplugin/commit/01a9364a7a7cd1a5716b20c0448aef8ea0ab8018))
+
 ## [0.2.0](https://github.com/unjs/unplugin/compare/v0.1.0...v0.2.0) (2021-08-25)
 
 
