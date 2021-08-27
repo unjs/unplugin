@@ -50,8 +50,8 @@ export interface UnpluginContextMeta extends Partial<RollupContextMeta> {
 }
 
 export interface UnpluginContext {
-  error(message: string | Error): void
-  warn(message: string | Error): void
+  error(message: any): void
+  warn(message: any): void
 }
 
 declare module 'webpack' {
