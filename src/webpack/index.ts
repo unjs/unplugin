@@ -62,8 +62,12 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         // resolveId hook
         if (plugin.resolveId) {
-          const virtualModule = new VirtualModulesPlugin()
-          plugin.__vfs = virtualModule
+          let vfs = compiler.options.plugins.find(i => i instanceof VirtualModulesPlugin) as VirtualModulesPlugin
+          if (!vfs) {
+            vfs = new VirtualModulesPlugin()
+            compiler.options.plugins.push(vfs)
+          }
+          plugin.__vfs = vfs
 
           const resolver = {
             apply (resolver: Resolver) {
@@ -84,7 +88,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
                   resolved = plugin.__virtualModulePrefix + request.request
-                  virtualModule.writeModule(resolved, '')
+                  vfs.writeModule(resolved, '')
                 }
 
                 // construt the new request
@@ -109,10 +113,6 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         // load hook
         if (plugin.load) {
-          if (plugin.__vfs) {
-            compiler.options.plugins.push(plugin.__vfs)
-          }
-
           compiler.options.module.rules.push({
             include () {
               return true
