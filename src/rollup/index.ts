@@ -1,5 +1,4 @@
-import { UnpluginInstance, UnpluginFactory, UnpluginOptions, RollupPlugin } from '../types'
-import { UnpluginContextMeta } from '../context'
+import { UnpluginInstance, UnpluginFactory, UnpluginOptions, RollupPlugin, UnpluginContextMeta } from '../types'
 
 export function getRollupPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
