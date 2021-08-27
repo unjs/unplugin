@@ -67,6 +67,7 @@ export function getWebpackPlugin<UserOptions = {}> (
             vfs = new VirtualModulesPlugin()
             compiler.options.plugins.push(vfs)
           }
+          plugin.__vfsModules = new Set()
           plugin.__vfs = vfs
 
           const resolver = {
@@ -88,7 +89,8 @@ export function getWebpackPlugin<UserOptions = {}> (
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
                   resolved = plugin.__virtualModulePrefix + request.request
-                  vfs.writeModule(resolved, '')
+                  plugin.__vfs!.writeModule(resolved, '')
+                  plugin.__vfsModules!.add(resolved)
                 }
 
                 // construt the new request
@@ -112,10 +114,10 @@ export function getWebpackPlugin<UserOptions = {}> (
         }
 
         // load hook
-        if (plugin.load) {
+        if (plugin.load && plugin.__vfsModules) {
           compiler.options.module.rules.push({
-            include () {
-              return true
+            include (id) {
+              return plugin.__vfsModules!.has(id)
             },
             enforce: plugin.enforce,
             use: [{
