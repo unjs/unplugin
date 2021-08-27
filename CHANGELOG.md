@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/unjs/unplugin/compare/v0.2.2...v0.2.3) (2021-08-27)
+
+
+### Bug Fixes
+
+* **webpack:** loader for `load` hook only enabled for resolveId result ([4ff7681](https://github.com/unjs/unplugin/commit/4ff76818aafd718acbbeed2dcc4f262f6df6ee37))
+* install vfs plugin when `load` is provided ([a33bbe3](https://github.com/unjs/unplugin/commit/a33bbe30b8e20483cf26fc68bd8a80fd1658b1ff))
+
 ### [0.2.2](https://github.com/unjs/unplugin/compare/v0.2.1...v0.2.2) (2021-08-27)
 
 
