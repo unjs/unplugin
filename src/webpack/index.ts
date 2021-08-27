@@ -64,7 +64,6 @@ export function getWebpackPlugin<UserOptions = {}> (
         if (plugin.resolveId) {
           const virtualModule = new VirtualModulesPlugin()
           plugin.__vfs = virtualModule
-          compiler.options.plugins.push(virtualModule)
 
           const resolver = {
             apply (resolver: Resolver) {
@@ -110,6 +109,10 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         // load hook
         if (plugin.load) {
+          if (plugin.__vfs) {
+            compiler.options.plugins.push(plugin.__vfs)
+          }
+
           compiler.options.module.rules.push({
             include () {
               return true
