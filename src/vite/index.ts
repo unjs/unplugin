@@ -1,6 +1,5 @@
-import { UnpluginContextMeta } from '../context'
 import { toRollupPlugin } from '../rollup'
-import { UnpluginInstance, UnpluginFactory, VitePlugin } from '../types'
+import { UnpluginInstance, UnpluginFactory, VitePlugin, UnpluginContextMeta } from '../types'
 
 export function getVitePlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
