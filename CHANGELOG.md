@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/unjs/unplugin/compare/v0.2.1...v0.2.2) (2021-08-27)
+
+
+### Bug Fixes
+
+* widen context error types ([00ea6d9](https://github.com/unjs/unplugin/commit/00ea6d9a4abf7c26a1190d8ef91aa12f2b413d8b))
+
 ### [0.2.1](https://github.com/unjs/unplugin/compare/v0.2.0...v0.2.1) (2021-08-27)
 
 
