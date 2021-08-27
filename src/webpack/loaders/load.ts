@@ -1,13 +1,13 @@
 import type { LoaderContext } from 'webpack'
 import { UnpluginContext } from '../../types'
 
-export default async function load (this: LoaderContext<any>, source: string) {
+export default async function load (this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
   const { unpluginName } = this.query
   const plugin = this._compiler?.$unpluginContext[unpluginName]
 
   if (!plugin?.load) {
-    return callback(null, source)
+    return callback(null, source, map)
   }
 
   const context: UnpluginContext = {
@@ -23,8 +23,10 @@ export default async function load (this: LoaderContext<any>, source: string) {
   const res = await plugin.load.call(context, id)
 
   if (res == null) {
-    callback(null, source)
+    callback(null, source, map)
+  } else if (typeof res !== 'string') {
+    callback(null, res.code, res.map ?? map)
   } else {
-    callback(null, res)
+    callback(null, res, map)
   }
 }

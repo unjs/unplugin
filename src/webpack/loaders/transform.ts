@@ -19,7 +19,7 @@ export default async function transform (this: LoaderContext<any>, source: strin
   if (res == null) {
     callback(null, source, map)
   } else if (typeof res !== 'string') {
-    callback(null, res.code, res.map)
+    callback(null, res.code, res.map ?? map)
   } else {
     callback(null, res, map)
   }

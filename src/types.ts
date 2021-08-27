@@ -1,4 +1,4 @@
-import type { Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta } from 'rollup'
+import type { Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMap } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
@@ -11,12 +11,14 @@ export {
 
 export type Thenable<T> = T | Promise<T>
 
+export type TransformResult = string | { code: string; map?: SourceMap | null; } | null | undefined
+
 export interface UnpluginOptions {
   name: string;
   enforce?: 'post' | 'pre' | undefined;
   transformInclude?: (id: string) => boolean;
-  transform?: (this: UnpluginContext, code: string, id: string) => Thenable<string | { code: string; map: any; } | null | undefined>;
-  load?: (this: UnpluginContext, id: string) => Thenable<string | null | undefined>
+  transform?: (this: UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
+  load?: (this: UnpluginContext, id: string) => Thenable<TransformResult>
   resolveId?: (id: string, importer?: string) => Thenable<string | null | undefined>
 
   // framework specify extends
