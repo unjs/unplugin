@@ -44,6 +44,9 @@ export function getWebpackPlugin<UserOptions = {}> (
         if (plugin.transform) {
           compiler.options.module.rules.push({
             include (id: string) {
+              if (id == null) {
+                return false
+              }
               if (plugin.transformInclude) {
                 return plugin.transformInclude(id)
               } else {
@@ -117,7 +120,7 @@ export function getWebpackPlugin<UserOptions = {}> (
         if (plugin.load && plugin.__vfsModules) {
           compiler.options.module.rules.push({
             include (id) {
-              return plugin.__vfsModules!.has(id)
+              return id != null && plugin.__vfsModules!.has(id)
             },
             enforce: plugin.enforce,
             use: [{
