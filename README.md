@@ -15,15 +15,15 @@ Currently supports:
 
 `unplugin` extends the excellent [Rollup plugin API](https://rollupjs.org/guide/en/#plugins-overview) as the unified plugin interface and provides a compatible layer base on the build tools used with.
 
-###### Support State
+###### Supported
 
 | Hook | Rollup | Vite | Webpack |
 | ---- | ------ | ---- | ------- |
 | `transformInclude` | ✅ | ✅ | ✅ |
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ |
 | [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌* | ✅ | ✅ |
-| [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | 🚧 Experimental |
-| [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | 🚧 Experimental |
+| [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | ✅ |
+| [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | ✅ |
 
 - *: Rollup does not support using `enforce` to control the order of plugins. Users will need to maintain the order manually.
 
@@ -132,6 +132,8 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 
 - [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)
 - [unplugin-vue2-script-setup](https://github.com/antfu/unplugin-vue2-script-setup)
+- [unplugin-icons](https://github.com/antfu/unplugin-icons)
+- [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
 
 ## License
 
