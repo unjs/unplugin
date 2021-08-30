@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/unjs/unplugin/compare/v0.2.3...v0.2.4) (2021-08-30)
+
+
+### Bug Fixes
+
+* **webpack:** don't load null id ([b5f68c7](https://github.com/unjs/unplugin/commit/b5f68c7afe2ebd97db0e8c09891635c174d0321f))
+* **webpack:** source map handling ([76fda42](https://github.com/unjs/unplugin/commit/76fda42c53b35a95eef21e063a7174a3fe292fc5))
+
 ### [0.2.3](https://github.com/unjs/unplugin/compare/v0.2.2...v0.2.3) (2021-08-27)
 
 
