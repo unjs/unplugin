@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/unjs/unplugin/compare/v0.2.4...v0.2.5) (2021-08-31)
+
+
+### Bug Fixes
+
+* __dirname mjs support, close [#10](https://github.com/unjs/unplugin/issues/10) ([2a5da06](https://github.com/unjs/unplugin/commit/2a5da067c671eb95bb1ccc8e33e94a821616dd89))
+
 ### [0.2.4](https://github.com/unjs/unplugin/compare/v0.2.3...v0.2.4) (2021-08-30)
 
 
