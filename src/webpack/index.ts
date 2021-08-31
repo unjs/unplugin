@@ -1,11 +1,13 @@
 import fs from 'fs'
-import { join, resolve } from 'upath'
+import { fileURLToPath } from 'url'
+import { dirname, join, resolve } from 'upath'
 import type { Resolver } from 'enhanced-resolve'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 
-const TRANSFORM_LOADER = resolve(__dirname, 'webpack/loaders/transform.cjs')
-const LOAD_LOADER = resolve(__dirname, 'webpack/loaders/load.cjs')
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
+const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.cjs')
+const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.cjs')
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
