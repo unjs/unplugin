@@ -6,8 +6,8 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
-const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.cjs')
-const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.cjs')
+const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.js')
+const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.js')
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>

@@ -8,26 +8,27 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.js"
     },
-    "./dist/webpack/loaders/transform": "./dist/webpack/loaders/transform.cjs",
-    "./dist/webpack/loaders/load": "./dist/webpack/loaders/load.cjs"
+    "./dist/webpack/loaders/load": "./dist/webpack/loaders/load.js",
+    "./dist/webpack/loaders/transform": "./dist/webpack/loaders/transform.js"
   },
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "siroc build",
-    "dev": "siroc dev",
+    "build": "tsup",
+    "dev": "tsup --watch src",
     "lint": "eslint --ext ts .",
     "release": "yarn build && standard-version && yarn publish --non-interactive && git push --follow-tags",
-    "test:build": "yarn build && jiti scripts/buildFixtures.ts",
-    "test": "yarn lint && yarn test:build && jest"
+    "test": "yarn lint && yarn test:build && jest",
+    "test:build": "yarn build && jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
+    "upath": "^2.0.1",
     "webpack-virtual-modules": "^0.4.3"
   },
   "devDependencies": {
@@ -44,11 +45,10 @@
     "jest": "^27.0.6",
     "jiti": "^1.11.0",
     "rollup": "^2.56.3",
-    "siroc": "^0.16.0",
     "standard-version": "^9.3.1",
     "ts-jest": "^27.0.5",
+    "tsup": "^4.14.0",
     "typescript": "^4.3.5",
-    "ufo": "^0.7.9",
     "vite": "^2.5.1",
     "webpack": "^5.51.1",
     "webpack-cli": "^4.8.0"
