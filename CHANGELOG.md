@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/unjs/unplugin/compare/v0.2.5...v0.2.6) (2021-08-31)
+
+
+### Bug Fixes
+
+* swtich to tsup, fix [#10](https://github.com/unjs/unplugin/issues/10) ([4450e1e](https://github.com/unjs/unplugin/commit/4450e1e18e5686f9e5a11b060ed6e36c92d4440d))
+
 ### [0.2.5](https://github.com/unjs/unplugin/compare/v0.2.4...v0.2.5) (2021-08-31)
 
 
