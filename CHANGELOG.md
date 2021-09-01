@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/unjs/unplugin/compare/v0.2.6...v0.2.7) (2021-09-01)
+
+
+### Bug Fixes
+
+* use default export for `unpath`, close [#10](https://github.com/unjs/unplugin/issues/10) ([5a3645a](https://github.com/unjs/unplugin/commit/5a3645ac25ebf0cb26ac75adbd567e53c57e9fe5))
+
 ### [0.2.6](https://github.com/unjs/unplugin/compare/v0.2.5...v0.2.6) (2021-08-31)
 
 
