@@ -23,6 +23,7 @@
     "build": "tsup",
     "dev": "tsup --watch src",
     "lint": "eslint --ext ts .",
+    "lint:fix": "pnpm lint -- --fix",
     "release": "pnpm build && standard-version && pnpm publish --non-interactive && git push --follow-tags",
     "test": "pnpm lint && pnpm test:build && jest",
     "test:build": "pnpm build && jiti scripts/buildFixtures.ts"
