@@ -19,7 +19,7 @@ export interface UnpluginOptions {
   transformInclude?: (id: string) => boolean;
   transform?: (this: UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
   load?: (this: UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (id: string, importer?: string) => Thenable<string | null | undefined>
+  resolveId?: (id: string, importer?: string) => Thenable<string | null | undefined | object>
 
   // framework specify extends
   rollup?: Partial<RollupPlugin>
