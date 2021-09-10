@@ -23,9 +23,9 @@
     "build": "tsup",
     "dev": "tsup --watch src",
     "lint": "eslint --ext ts .",
-    "release": "yarn build && standard-version && yarn publish --non-interactive && git push --follow-tags",
-    "test": "yarn lint && yarn test:build && jest",
-    "test:build": "yarn build && jiti scripts/buildFixtures.ts"
+    "release": "pnpm build && standard-version && pnpm publish --non-interactive && git push --follow-tags",
+    "test": "pnpm lint && pnpm test:build && jest",
+    "test:build": "pnpm build && jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
     "upath": "^2.0.1",
