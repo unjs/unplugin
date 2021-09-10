@@ -137,6 +137,8 @@ export function getWebpackPlugin<UserOptions = {}> (
         if (plugin.webpack) {
           plugin.webpack(compiler)
         }
+
+        plugin.buildStart?.()
       }
     }
   }
