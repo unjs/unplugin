@@ -2,7 +2,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url'
 import path from 'upath'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { Resolver } from 'enhanced-resolve'
+import type { Resolver, ResolveRequest } from 'enhanced-resolve'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url))
@@ -78,17 +78,21 @@ export function getWebpackPlugin<UserOptions = {}> (
           const resolver = {
             apply (resolver: Resolver) {
               const target = resolver.ensureHook('resolve')
-              const tap = () => async (request: any, resolveContext: any, callback: any) => {
+              const tap = () => async (request: ResolveRequest, resolveContext: any, callback: any) => {
                 // filter out invalid requests
                 if (!request.request || request.request.startsWith(plugin.__virtualModulePrefix)) {
                   return callback()
                 }
 
                 // call hook
-                let resolved = await plugin.resolveId!(request.request)
-                if (resolved == null) {
+                const result = await plugin.resolveId!(request.request)
+                if (result == null) {
                   return callback()
                 }
+                let resolved = typeof result === 'string' ? result : result.id
+
+                // TODO: support external
+                // const isExternal = typeof result === 'string' ? false : result.external === true
 
                 // if the resolved module is not exists,
                 // we treat it as a virtual module

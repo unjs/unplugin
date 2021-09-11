@@ -13,7 +13,7 @@ export type Thenable<T> = T | Promise<T>
 
 export type TransformResult = string | { code: string; map?: SourceMap | null; } | null | undefined
 
-export type RollupExternalId = { id: string, external: boolean }
+export type ExternalIdResult = { id: string, external?: boolean }
 
 export interface UnpluginOptions {
   name: string;
@@ -22,7 +22,7 @@ export interface UnpluginOptions {
   transformInclude?: (id: string) => boolean;
   transform?: (this: UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
   load?: (this: UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (id: string, importer?: string) => Thenable<string | null | undefined | RollupExternalId>
+  resolveId?: (id: string, importer?: string) => Thenable<string | ExternalIdResult | null | undefined>
 
   // framework specify extends
   rollup?: Partial<RollupPlugin>
