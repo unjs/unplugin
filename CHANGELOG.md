@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/unjs/unplugin/compare/v0.2.7...v0.2.8) (2021-09-11)
+
+
+### Features
+
+* `resolveId` supports Rollup externals ([#18](https://github.com/unjs/unplugin/issues/18)) ([3c756dd](https://github.com/unjs/unplugin/commit/3c756ddd629501cafa13468bf0c653a32fd989b8))
+* support `buildStart` hook, close [#14](https://github.com/unjs/unplugin/issues/14) ([73f550a](https://github.com/unjs/unplugin/commit/73f550ad2598313813731fcc2f135b5c29e3a86e))
+
 ### [0.2.7](https://github.com/unjs/unplugin/compare/v0.2.6...v0.2.7) (2021-09-01)
 
 
