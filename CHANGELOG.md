@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/unjs/unplugin/compare/v0.2.8...v0.2.9) (2021-09-13)
+
+
+### Bug Fixes
+
+* webpack peer dependency warnings ([#21](https://github.com/unjs/unplugin/issues/21)) ([706fc99](https://github.com/unjs/unplugin/commit/706fc9965e261e710c3b194ec6f91f112db93037))
+
 ### [0.2.8](https://github.com/unjs/unplugin/compare/v0.2.7...v0.2.8) (2021-09-11)
 
 
