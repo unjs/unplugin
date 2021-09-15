@@ -22,7 +22,7 @@ Currently supports:
 | [`buildStart`](https://rollupjs.org/guide/en/#buildstart) | ✅ | ✅ | ✅ | ✅ |
 | `transformInclude`* | ✅ | ✅ | ✅ | ✅ |
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ | ✅ |
-| [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌* | ✅ | ✅ | ✅ |
+| [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌\*\* | ✅ | ✅ | ✅ |
 | [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | ✅ | ✅ |
 | [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | ✅ | ✅ |
 
