@@ -12,6 +12,7 @@ module.exports = {
       name: 'main',
       fileName: 'main.js'
     },
-    outDir: 'dist/vite'
+    outDir: 'dist/vite',
+    sourcemap: true
   }
 }

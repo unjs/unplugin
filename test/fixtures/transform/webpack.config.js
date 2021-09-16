@@ -10,5 +10,6 @@ module.exports = {
   },
   plugins: [
     webpack({ msg: 'Webpack' })
-  ]
+  ],
+  devtool: 'source-map'
 }

@@ -1,4 +1,5 @@
 const { createUnplugin } = require('unplugin')
+const MagicString = require('magic-string')
 
 module.exports = createUnplugin((options) => {
   return {
@@ -6,8 +7,21 @@ module.exports = createUnplugin((options) => {
     transformInclude (id) {
       return id.match(/[/\\]target\.js$/)
     },
-    transform (code) {
-      return code.replace('__UNPLUGIN__', `[Injected ${options.msg}]`)
+    transform (code, id) {
+      const s = new MagicString(code)
+      const index = code.indexOf('__UNPLUGIN__')
+      if (index === -1) {
+        return null
+      }
+
+      s.overwrite(index, index + '__UNPLUGIN__'.length, `[Injected ${options.msg}]`)
+      return {
+        code: s.toString(),
+        map: s.generateMap({
+          source: id,
+          includeContent: true
+        })
+      }
     }
   }
 })

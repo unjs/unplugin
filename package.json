@@ -44,6 +44,7 @@
     "fs-extra": "^10.0.0",
     "jest": "^27.2.0",
     "jiti": "^1.12.0",
+    "magic-string": "^0.25.7",
     "rollup": "^2.56.3",
     "standard-version": "^9.3.1",
     "ts-jest": "^27.0.5",
