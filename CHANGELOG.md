@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/unjs/unplugin/compare/v0.2.9...v0.2.10) (2021-09-16)
+
+
+### Bug Fixes
+
+* cleanup sources in transform map ([17dd24a](https://github.com/unjs/unplugin/commit/17dd24a7088679f8f2cb96dd41d12b377693a008))
+
 ### [0.2.9](https://github.com/unjs/unplugin/compare/v0.2.8...v0.2.9) (2021-09-13)
 
 
