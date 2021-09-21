@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.12](https://github.com/unjs/unplugin/compare/v0.2.11...v0.2.12) (2021-09-21)
+
+
+### Bug Fixes
+
+* use `optionalDependencies` instead of `peerDependencies` ([4cc6686](https://github.com/unjs/unplugin/commit/4cc668609e2c3ba724e2fe135fb7077524dccc73))
+
 ### [0.2.11](https://github.com/unjs/unplugin/compare/v0.2.10...v0.2.11) (2021-09-16)
 
 
