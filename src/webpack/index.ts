@@ -1,13 +1,13 @@
 import fs from 'fs'
 import { fileURLToPath } from 'url'
-import path from 'upath'
+import { join, resolve, dirname } from 'pathe'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { Resolver, ResolveRequest } from 'enhanced-resolve'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 
-const _dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url))
-const TRANSFORM_LOADER = path.resolve(_dirname, 'webpack/loaders/transform.js')
-const LOAD_LOADER = path.resolve(_dirname, 'webpack/loaders/load.js')
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
+const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.js')
+const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.js')
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -27,7 +27,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           rawPlugin,
           {
             __unpluginMeta: meta,
-            __virtualModulePrefix: path.join(process.cwd(), 'virtual:')
+            __virtualModulePrefix: join(process.cwd(), 'virtual:')
           }
         ) as ResolvedUnpluginOptions
 
