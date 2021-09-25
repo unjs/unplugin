@@ -27,7 +27,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           rawPlugin,
           {
             __unpluginMeta: meta,
-            __virtualModulePrefix: path.join(process.cwd(), 'virtual:')
+            __virtualModulePrefix: path.join(process.cwd(), '_virtual_')
           }
         ) as ResolvedUnpluginOptions
 
