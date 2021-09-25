@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.15](https://github.com/unjs/unplugin/compare/v0.2.14...v0.2.15) (2021-09-25)
+
+
+### Bug Fixes
+
+* revert "chore: switch from `upath` to `pathe`" ([bc4e50b](https://github.com/unjs/unplugin/commit/bc4e50b5bebb8364de931c6eb8c9e585147d5747))
+* virtualModulePrefix compactible for windows ([9104fa2](https://github.com/unjs/unplugin/commit/9104fa2cf74b09aa91f72b4e0c41dc1e1f1043c8))
+
 ### [0.2.14](https://github.com/unjs/unplugin/compare/v0.2.13...v0.2.14) (2021-09-24)
 
 ### [0.2.13](https://github.com/unjs/unplugin/compare/v0.2.12...v0.2.13) (2021-09-21)
