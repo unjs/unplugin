@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.16](https://github.com/unjs/unplugin/compare/v0.2.15...v0.2.16) (2021-09-25)
+
+
+### Bug Fixes
+
+* windows path resolving ([c9055aa](https://github.com/unjs/unplugin/commit/c9055aaf1fdc97139beb6b293282bdee61eba050))
+
 ### [0.2.15](https://github.com/unjs/unplugin/compare/v0.2.14...v0.2.15) (2021-09-25)
 
 
