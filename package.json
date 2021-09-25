@@ -28,7 +28,6 @@
     "test:build": "yarn build && jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
-    "upath": "^2.0.1",
     "webpack-virtual-modules": "^0.4.3"
   },
   "devDependencies": {
