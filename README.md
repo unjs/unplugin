@@ -20,6 +20,7 @@ Currently supports:
 | Hook | Rollup | Vite | Webpack 4 | Webpack 5 |
 | ---- | :----: | :--: | :-------: | :-------: |
 | [`buildStart`](https://rollupjs.org/guide/en/#buildstart) | ✅ | ✅ | ✅ | ✅ |
+| [`buildEnd`](https://rollupjs.org/guide/en/#buildend) | ✅ | ✅ | ✅ | ✅ |
 | `transformInclude`* | ✅ | ✅ | ✅ | ✅ |
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ | ✅ |
 | [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌\*\* | ✅ | ✅ | ✅ |

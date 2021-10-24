@@ -143,6 +143,8 @@ export function getWebpackPlugin<UserOptions = {}> (
         }
 
         plugin.buildStart?.()
+
+        plugin.buildEnd?.()
       }
     }
   }

@@ -19,6 +19,7 @@ export interface UnpluginOptions {
   name: string;
   enforce?: 'post' | 'pre' | undefined;
   buildStart?: () => Promise<void> | void;
+  buildEnd?: () => Promise<void> | void;
   transformInclude?: (id: string) => boolean;
   transform?: (this: UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
   load?: (this: UnpluginContext, id: string) => Thenable<TransformResult>
