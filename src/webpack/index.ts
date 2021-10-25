@@ -144,7 +144,11 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         plugin.buildStart?.()
 
-        plugin.buildEnd?.()
+        if (plugin.buildEnd) {
+          compiler.hooks.done.tapAsync(plugin.name, () => {
+            plugin.buildEnd!()
+          })
+        }
       }
     }
   }
