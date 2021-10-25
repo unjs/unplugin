@@ -158,6 +158,12 @@ export function getWebpackPlugin<UserOptions = {}> (
         }
 
         plugin.buildStart?.()
+
+        if (plugin.buildEnd) {
+          compiler.hooks.done.tapAsync(plugin.name, () => {
+            plugin.buildEnd!()
+          })
+        }
       }
     }
   }
