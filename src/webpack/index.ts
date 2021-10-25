@@ -83,12 +83,16 @@ export function getWebpackPlugin<UserOptions = {}> (
             apply (resolver: Resolver) {
               const target = resolver.ensureHook('resolve')
               const tap = () => async (request: ResolveRequest, resolveContext: any, callback: any) => {
-                // filter out invalid requests
-                if (!request.request || request.request.startsWith(plugin.__virtualModulePrefix)) {
+                if (!request.request) {
                   return callback()
                 }
 
                 const id = slash(request.request)
+
+                // filter out invalid requests
+                if (id.startsWith(plugin.__virtualModulePrefix)) {
+                  return callback()
+                }
 
                 // call hook
                 const result = await plugin.resolveId!(id)
