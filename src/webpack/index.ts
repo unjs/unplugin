@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { fileURLToPath } from 'url'
-import { resolve, dirname, join } from 'path'
+import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { Resolver, ResolveRequest } from 'enhanced-resolve'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
@@ -26,12 +26,17 @@ export function getWebpackPlugin<UserOptions = {}> (
           }
         }
 
+        let virtualModulePrefix = slash(resolve(process.cwd(), '_virtual_'))
+        if (!virtualModulePrefix.startsWith('/')) {
+          virtualModulePrefix = '/' + virtualModulePrefix
+        }
+
         const rawPlugin = factory(userOptions, meta)
         const plugin = Object.assign(
           rawPlugin,
           {
             __unpluginMeta: meta,
-            __virtualModulePrefix: slash(join(process.cwd(), '_virtual_'))
+            __virtualModulePrefix: virtualModulePrefix
           }
         ) as ResolvedUnpluginOptions
 
