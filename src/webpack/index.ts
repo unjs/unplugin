@@ -4,14 +4,11 @@ import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { Resolver, ResolveRequest } from 'enhanced-resolve'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
+import { slash, backSlash } from './utils'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
 const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.js')
 const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.js')
-
-function slash (path: string) {
-  return path.replace(/\\/g, '/')
-}
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -26,10 +23,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           }
         }
 
-        let virtualModulePrefix = slash(resolve(process.cwd(), '_virtual_'))
-        if (!virtualModulePrefix.startsWith('/')) {
-          virtualModulePrefix = '/' + virtualModulePrefix
-        }
+        const virtualModulePrefix = resolve(process.cwd(), '_virtual_')
 
         const rawPlugin = factory(userOptions, meta)
         const plugin = Object.assign(
@@ -59,7 +53,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                 return false
               }
               if (plugin.transformInclude) {
-                return plugin.transformInclude(slash(id))
+                return plugin.transformInclude(id)
               } else {
                 return true
               }
@@ -92,7 +86,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                   return callback()
                 }
 
-                const id = slash(request.request)
+                const id = backSlash(request.request)
 
                 // filter out invalid requests
                 if (id.startsWith(plugin.__virtualModulePrefix)) {
@@ -100,7 +94,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                 }
 
                 // call hook
-                const result = await plugin.resolveId!(id)
+                const result = await plugin.resolveId!(slash(id))
                 if (result == null) {
                   return callback()
                 }
@@ -113,6 +107,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
                   resolved = plugin.__virtualModulePrefix + id
+                  // webapck virtual module should pass in the correct path
                   plugin.__vfs!.writeModule(resolved, '')
                   plugin.__vfsModules!.add(resolved)
                 }
@@ -141,7 +136,7 @@ export function getWebpackPlugin<UserOptions = {}> (
         if (plugin.load && plugin.__vfsModules) {
           compiler.options.module.rules.push({
             include (id) {
-              return id != null && plugin.__vfsModules!.has(slash(id))
+              return id != null && plugin.__vfsModules!.has(id)
             },
             enforce: plugin.enforce,
             use: [{
