@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.20](https://github.com/unjs/unplugin/compare/v0.2.19...v0.2.20) (2021-11-05)
+
+
+### Bug Fixes
+
+* `buildEnd` hook ([#39](https://github.com/unjs/unplugin/issues/39)) ([5dfb89a](https://github.com/unjs/unplugin/commit/5dfb89aa318b75e629aea039bf890f1ce3eb7b1f))
+
 ### [0.2.19](https://github.com/unjs/unplugin/compare/v0.2.18...v0.2.19) (2021-10-28)
 
 
