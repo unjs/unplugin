@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.21](https://github.com/unjs/unplugin/compare/v0.2.20...v0.2.21) (2021-11-14)
+
+
+### Bug Fixes
+
+* webpack hook tapPromise must return Promise object ([#42](https://github.com/unjs/unplugin/issues/42)) ([f7c3fd4](https://github.com/unjs/unplugin/commit/f7c3fd476aac5022b6cc59dad5b444ed51022e91))
+
 ### [0.2.20](https://github.com/unjs/unplugin/compare/v0.2.19...v0.2.20) (2021-11-05)
 
 
