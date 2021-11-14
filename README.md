@@ -2,8 +2,6 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin?color=a1b858&label=)](https://www.npmjs.com/package/unplugin)
 
-> Experimental
-
 Unified plugin system for build tools.
 
 Currently supports:
