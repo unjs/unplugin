@@ -107,12 +107,12 @@ export function getWebpackPlugin<UserOptions = {}> (
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
                   resolved = plugin.__virtualModulePrefix + id
-                  // webapck virtual module should pass in the correct path
+                  // webpack virtual module should pass in the correct path
                   plugin.__vfs!.writeModule(resolved, '')
                   plugin.__vfsModules!.add(resolved)
                 }
 
-                // construt the new request
+                // construct the new request
                 const newRequest = {
                   ...request,
                   request: resolved
