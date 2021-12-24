@@ -40,7 +40,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
           }
 
           if (plugin.load || plugin.transform) {
-            onLoad({ filter: onLoadFilter, namespace: plugin.name }, async (args) => {
+            onLoad({ filter: onLoadFilter }, async (args) => {
               const errors: PartialMessage[] = []
               const warnings: PartialMessage[] = []
               const pluginContext: UnpluginContext = {

@@ -24,4 +24,11 @@ describe('transform build', () => {
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Webpack]')
   })
+
+  it('esbuild', async () => {
+    const content = await fs.readFile(r('esbuild/main.js'), 'utf-8')
+
+    expect(content).toContain('NON-TARGET: __UNPLUGIN__')
+    expect(content).toContain('TARGET: [Injected Esbuild]')
+  })
 })
