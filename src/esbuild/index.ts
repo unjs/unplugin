@@ -1,7 +1,9 @@
 import fs from 'fs'
 import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
+import type { RawSourceMap } from '@ampproject/remapping/dist/types/types'
 import type { UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
+import { combineSourcemaps } from './utils'
 
 export function getEsbuildPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -62,15 +64,18 @@ export function getEsbuildPlugin <UserOptions = {}> (
 
               if (!plugin.transform) {
                 if (map) {
+                  // fix missing sourcesContent, esbuild depends on it
+                  if (code && (!map.sourcesContent || map.sourcesContent.length === 0)) {
+                    map.sourcesContent = [code]
+                  }
                   code += `\n//# sourceMappingURL=${map.toUrl()}`
                 }
-                // The default loader is 'js', should we change it to 'default'?
+                // The default loader is 'js'.
                 return { contents: code, errors, warnings }
               }
 
               if (!plugin.transformInclude || plugin.transformInclude(args.path)) {
                 if (!code) {
-                  // What about binary files? (like images)
                   code = await fs.promises.readFile(args.path, 'utf8')
                 }
 
@@ -79,13 +84,22 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   code = result
                 } else if (typeof result === 'object' && result !== null) {
                   code = result.code
-                  map = result.map
+                  if (map && result.map) {
+                    map = combineSourcemaps(args.path, [
+                      result.map as RawSourceMap,
+                      map as RawSourceMap
+                    ]) as SourceMap
+                  } else {
+                    map = result.map
+                  }
                 }
-                // Merge source maps?
               }
 
               if (code) {
                 if (map) {
+                  if (!map.sourcesContent || map.sourcesContent.length === 0) {
+                    map.sourcesContent = [code]
+                  }
                   code += `\n//# sourceMappingURL=${map.toUrl()}`
                 }
                 return { contents: code, errors, warnings }
