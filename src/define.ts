@@ -1,3 +1,4 @@
+import { getEsbuildPlugin } from './esbuild'
 import { getRollupPlugin } from './rollup'
 import { UnpluginInstance, UnpluginFactory } from './types'
 import { getVitePlugin } from './vite'
@@ -7,6 +8,9 @@ export function createUnplugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
 ): UnpluginInstance<UserOptions> {
   return {
+    get esbuild () {
+      return getEsbuildPlugin(factory)
+    },
     get rollup () {
       return getRollupPlugin(factory)
     },
