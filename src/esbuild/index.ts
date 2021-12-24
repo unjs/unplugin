@@ -63,9 +63,12 @@ export function getEsbuildPlugin <UserOptions = {}> (
               }
 
               if (!plugin.transform) {
+                if (code === undefined) {
+                  return null
+                }
                 if (map) {
                   // fix missing sourcesContent, esbuild depends on it
-                  if (code && (!map.sourcesContent || map.sourcesContent.length === 0)) {
+                  if (!map.sourcesContent || map.sourcesContent.length === 0) {
                     map.sourcesContent = [code]
                   }
                   code += `\n//# sourceMappingURL=${map.toUrl()}`
