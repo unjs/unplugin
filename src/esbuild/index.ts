@@ -92,6 +92,13 @@ export function getEsbuildPlugin <UserOptions = {}> (
                       result.map as RawSourceMap,
                       map as RawSourceMap
                     ]) as SourceMap
+                    // add missing toUrl() to the merged map
+                    Object.defineProperty(map, 'toUrl', {
+                      enumerable: false,
+                      value: function toUrl () {
+                        return 'data:application/json;charset=utf-8;base64,' + Buffer.from(this.toString()).toString('base64')
+                      }
+                    })
                   } else {
                     map = result.map
                   }
