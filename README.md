@@ -8,6 +8,7 @@ Currently supports:
 - [Vite](https://vitejs.dev/)
 - [Rollup](https://rollupjs.org/)
 - [Webpack](https://webpack.js.org/)
+- [esbuild](https://esbuild.github.io/)
 
 ## Hooks
 
@@ -53,6 +54,7 @@ export const unplugin = createUnplugin((options: UserOptions) => {
 export const vitePlugin = unplugin.vite
 export const rollupPlugin = unplugin.rollup
 export const webpackPlugin = unplugin.webpack
+export const esbuildPlugin = unplugin.esbuild
 ```
 
 ### Plugin Installation
@@ -94,6 +96,19 @@ module.exports = {
 }
 ```
 
+###### esbuild
+
+```ts
+// esbuild.config.js
+import { build } from 'esbuild'
+
+build({
+  plugins: [
+    require('./my-unplugin').esbuild({ /* options */ })
+  ]
+})
+```
+
 ### Framework-specific Logic
 
 While `unplugin` provides compatible layers for some hooks, the functionality of it is limited to the common subset of the build's plugins capability. For more advanced framework-specific usages, `unplugin` provides an escape hatch for that.
@@ -101,7 +116,7 @@ While `unplugin` provides compatible layers for some hooks, the functionality of
 ```ts
 export const unplugin = createUnplugin((options: UserOptions, meta) => {
 
-  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack'
+  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack' | 'esbuild'
 
   return {
     // common unplugin hooks
@@ -121,6 +136,13 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
     },
     webpack(compiler) {
       // configure Webpack compiler
+    },
+    esbuild: {
+      // change the filter of onResolve and onLoad
+      onResolveFilter?: RegExp
+      onLoadFilter?: RegExp
+      // or you can completely replace the setup logic
+      setup?: EsbuildPlugin['setup']
     }
   }
 })
