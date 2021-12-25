@@ -99,10 +99,10 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   // if we already got sourcemap from `load()`,
                   // combine the two sourcemaps
                   if (map && result.map) {
-                    map = fixSourceMap(combineSourcemaps(args.path, [
+                    map = combineSourcemaps(args.path, [
                       result.map as RawSourceMap,
                       map as RawSourceMap
-                    ]))
+                    ]) as SourceMap
                   } else {
                     // otherwise, we always keep the last one, even if it's empty
                     map = result.map
