@@ -15,7 +15,7 @@ Currently supports:
 
 ###### Supported
 
-| Hook | Rollup | Vite | Webpack 4 | Webpack 5 | Esbuild |
+| Hook | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
 | ---- | :----: | :--: | :-------: | :-------: | :-----: |
 | [`buildStart`](https://rollupjs.org/guide/en/#buildstart) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`buildEnd`](https://rollupjs.org/guide/en/#buildend) | ✅ | ✅ | ✅ | ✅ | ✅ |
