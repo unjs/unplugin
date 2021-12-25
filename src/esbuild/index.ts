@@ -1,9 +1,10 @@
 import fs from 'fs'
+import path from 'path'
 import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type { RawSourceMap } from '@ampproject/remapping/dist/types/types'
 import type { UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
-import { combineSourcemaps } from './utils'
+import { combineSourcemaps, fixSourceMap } from './utils'
 
 export function getEsbuildPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -49,6 +50,9 @@ export function getEsbuildPlugin <UserOptions = {}> (
                 error (message) { errors.push({ text: String(message) }) },
                 warn (message) { warnings.push({ text: String(message) }) }
               }
+              // because we use `namespace` to simulate virtual modules，
+              // it is required to forward `resolveDir` for esbuild to find dependencies.
+              const resolveDir = path.dirname(args.path)
 
               let code: string | undefined, map: SourceMap | null | undefined
 
@@ -71,14 +75,19 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   if (!map.sourcesContent || map.sourcesContent.length === 0) {
                     map.sourcesContent = [code]
                   }
+                  map = fixSourceMap(map as RawSourceMap)
                   code += `\n//# sourceMappingURL=${map.toUrl()}`
                 }
-                // The default loader is 'js'.
-                return { contents: code, errors, warnings }
+                // loader: 'default' makes esbuild use the corresponding loader
+                // to the id's extname. this is required for jsx plugins
+                return { contents: code, errors, warnings, loader: 'default', resolveDir }
               }
 
               if (!plugin.transformInclude || plugin.transformInclude(args.path)) {
                 if (!code) {
+                  // caution: 'utf8' assumes the input file is not in binary.
+                  // if you want your plugin handle binary files, make sure to
+                  // `plugin.load()` them first.
                   code = await fs.promises.readFile(args.path, 'utf8')
                 }
 
@@ -87,19 +96,15 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   code = result
                 } else if (typeof result === 'object' && result !== null) {
                   code = result.code
+                  // if we already got sourcemap from `load()`,
+                  // combine the two sourcemaps
                   if (map && result.map) {
-                    map = combineSourcemaps(args.path, [
+                    map = fixSourceMap(combineSourcemaps(args.path, [
                       result.map as RawSourceMap,
                       map as RawSourceMap
-                    ]) as SourceMap
-                    // add missing toUrl() to the merged map
-                    Object.defineProperty(map, 'toUrl', {
-                      enumerable: false,
-                      value: function toUrl () {
-                        return 'data:application/json;charset=utf-8;base64,' + Buffer.from(this.toString()).toString('base64')
-                      }
-                    })
+                    ]))
                   } else {
+                    // otherwise, we always keep the last one, even if it's empty
                     map = result.map
                   }
                 }
@@ -110,9 +115,10 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   if (!map.sourcesContent || map.sourcesContent.length === 0) {
                     map.sourcesContent = [code]
                   }
+                  map = fixSourceMap(map as RawSourceMap)
                   code += `\n//# sourceMappingURL=${map.toUrl()}`
                 }
-                return { contents: code, errors, warnings }
+                return { contents: code, errors, warnings, loader: 'default', resolveDir }
               }
             })
           }

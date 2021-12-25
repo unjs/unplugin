@@ -3,6 +3,25 @@ import type {
   DecodedSourceMap,
   RawSourceMap
 } from '@ampproject/remapping/dist/types/types'
+import type { SourceMap } from 'rollup'
+
+// `load` and `transform` may return a sourcemap without toString and toUrl,
+// but esbuild needs them, we fix the two methods
+export function fixSourceMap (map: RawSourceMap): SourceMap {
+  Object.defineProperty(map, 'toString', {
+    enumerable: false,
+    value: function toString () {
+      return JSON.stringify(this)
+    }
+  })
+  Object.defineProperty(map, 'toUrl', {
+    enumerable: false,
+    value: function toString () {
+      return 'data:application/json;charset=utf-8;base64,' + Buffer.from(this.toString()).toString('base64')
+    }
+  })
+  return map as SourceMap
+}
 
 // taken from https://github.com/vitejs/vite/blob/71868579058512b51991718655e089a78b99d39c/packages/vite/src/node/utils.ts#L525
 const nullSourceMap: RawSourceMap = {
