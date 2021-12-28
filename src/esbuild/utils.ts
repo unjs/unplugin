@@ -36,7 +36,7 @@ export function fixSourceMap (map: RawSourceMap): SourceMap {
   })
   Object.defineProperty(map, 'toUrl', {
     enumerable: false,
-    value: function toString () {
+    value: function toUrl () {
       return 'data:application/json;charset=utf-8;base64,' + Buffer.from(this.toString()).toString('base64')
     }
   })
