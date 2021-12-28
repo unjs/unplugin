@@ -1,5 +1,6 @@
 import { resolve } from 'path'
 import fs from 'fs-extra'
+import { describe, it, expect } from 'vitest'
 
 const r = (...args: string[]) => resolve(__dirname, '../dist', ...args)
 
