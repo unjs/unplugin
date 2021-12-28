@@ -1,9 +1,29 @@
+import { extname } from 'path'
 import remapping from '@ampproject/remapping'
 import type {
   DecodedSourceMap,
   RawSourceMap
 } from '@ampproject/remapping/dist/types/types'
+import type { Loader } from 'esbuild'
 import type { SourceMap } from 'rollup'
+
+const ExtToLoader: Record<string, Loader> = {
+  '.js': 'js',
+  '.mjs': 'js',
+  '.cjs': 'js',
+  '.jsx': 'jsx',
+  '.ts': 'ts',
+  '.cts': 'ts',
+  '.mts': 'ts',
+  '.tsx': 'tsx',
+  '.css': 'css',
+  '.json': 'json',
+  '.txt': 'text'
+}
+
+export function guessLoader (id: string): Loader {
+  return ExtToLoader[extname(id).toLowerCase()] || 'js'
+}
 
 // `load` and `transform` may return a sourcemap without toString and toUrl,
 // but esbuild needs them, we fix the two methods

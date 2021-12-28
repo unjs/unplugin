@@ -4,7 +4,7 @@ import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type { RawSourceMap } from '@ampproject/remapping/dist/types/types'
 import type { UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
-import { combineSourcemaps, fixSourceMap } from './utils'
+import { combineSourcemaps, fixSourceMap, guessLoader } from './utils'
 
 export function getEsbuildPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -78,9 +78,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   map = fixSourceMap(map as RawSourceMap)
                   code += `\n//# sourceMappingURL=${map.toUrl()}`
                 }
-                // loader: 'default' makes esbuild use the corresponding loader
-                // to the id's extname. this is required for jsx plugins
-                return { contents: code, errors, warnings, loader: 'default', resolveDir }
+                return { contents: code, errors, warnings, loader: guessLoader(args.path), resolveDir }
               }
 
               if (!plugin.transformInclude || plugin.transformInclude(args.path)) {
@@ -118,7 +116,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   map = fixSourceMap(map as RawSourceMap)
                   code += `\n//# sourceMappingURL=${map.toUrl()}`
                 }
-                return { contents: code, errors, warnings, loader: 'default', resolveDir }
+                return { contents: code, errors, warnings, loader: guessLoader(args.path), resolveDir }
               }
             })
           }
