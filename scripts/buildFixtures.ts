@@ -23,6 +23,8 @@ async function run () {
     execSync('npx rollup -c', { cwd: path, stdio: 'inherit' })
     console.log(c.blue.inverse.bold`\n  Webpack  `, name, '\n')
     execSync('npx webpack', { cwd: path, stdio: 'inherit' })
+    console.log(c.yellow.inverse.bold`\n  Esbuild  `, name, '\n')
+    execSync('node esbuild.config.js', { cwd: path, stdio: 'inherit' })
   }
 }
 

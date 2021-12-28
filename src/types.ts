@@ -1,9 +1,11 @@
 import type { Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMap } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
+import type { Plugin as EsbuildPlugin } from 'esbuild'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export {
+  EsbuildPlugin,
   RollupPlugin,
   VitePlugin,
   WebpackCompiler
@@ -29,6 +31,12 @@ export interface UnpluginOptions {
   rollup?: Partial<RollupPlugin>
   webpack?: (compiler: WebpackCompiler) => void
   vite?: Partial<VitePlugin>
+  esbuild?: {
+    // using regexp in esbuild improves performance
+    onResolveFilter?: RegExp
+    onLoadFilter?: RegExp
+    setup?: EsbuildPlugin['setup']
+  }
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
@@ -44,11 +52,12 @@ export interface UnpluginInstance<UserOptions> {
   rollup: (options?: UserOptions) => RollupPlugin;
   webpack: (options?: UserOptions) => WebpackPluginInstance;
   vite: (options?: UserOptions) => VitePlugin;
+  esbuild: (options?: UserOptions) => EsbuildPlugin;
   raw: UnpluginFactory<UserOptions>
 }
 
 export interface UnpluginContextMeta extends Partial<RollupContextMeta> {
-  framework: 'rollup' | 'vite' | 'webpack'
+  framework: 'rollup' | 'vite' | 'webpack' | 'esbuild'
   webpack?: {
     compiler: WebpackCompiler
   }
