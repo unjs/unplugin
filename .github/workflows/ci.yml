@@ -18,28 +18,25 @@ jobs:
         node: [12, 14]
 
     steps:
-      - uses: actions/setup-node@v1
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.23.5
+
+      - name: Set node version to ${{ matrix.node }}
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: "pnpm"
 
-      - name: checkout
-        uses: actions/checkout@master
-
-      - name: cache node_modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn
+      - name: Install
+        run: pnpm i
 
       - name: Build
-        run: yarn build
+        run: pnpm run build
 
       - name: Test
-        run: yarn test
-
-      - name: Coverage
-        uses: codecov/codecov-action@v1
+        run: pnpm run test
