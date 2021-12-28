@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/unjs/unplugin/compare/v0.2.21...v0.3.0) (2021-12-28)
+
+
+### Features
+
+* support esbuild ([#46](https://github.com/unjs/unplugin/issues/46)) ([28557c8](https://github.com/unjs/unplugin/commit/28557c8e3cfc01983034ca214505489b1975c849))
+
+
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
