@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/unjs/unplugin/compare/v0.3.0...v0.3.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* avoid redefining property ([#48](https://github.com/unjs/unplugin/issues/48)) ([f6f6c09](https://github.com/unjs/unplugin/commit/f6f6c09e37dcd56a7eda21605c3c67c1beaebaf3))
+
+
+
 # [0.3.0](https://github.com/unjs/unplugin/compare/v0.2.21...v0.3.0) (2021-12-28)
 
 
