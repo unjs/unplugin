@@ -36,7 +36,7 @@ export function fixSourceMap (map: RawSourceMap): SourceMap {
       }
     })
   }
-  if (!(map as SourceMap).toUrl) {
+  if (!('toUrl' in map)) {
     Object.defineProperty(map, 'toUrl', {
       enumerable: false,
       value: function toUrl () {
