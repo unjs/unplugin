@@ -28,7 +28,7 @@ export function guessLoader (id: string): Loader {
 // `load` and `transform` may return a sourcemap without toString and toUrl,
 // but esbuild needs them, we fix the two methods
 export function fixSourceMap (map: RawSourceMap): SourceMap {
-  if (!map.toString) {
+  if (!('toString' in map)) {
     Object.defineProperty(map, 'toString', {
       enumerable: false,
       value: function toString () {
