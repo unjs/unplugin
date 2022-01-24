@@ -1,3 +1,12 @@
+## [0.3.2](https://github.com/unjs/unplugin/compare/v0.3.1...v0.3.2) (2022-01-24)
+
+
+### Features
+
+* **esbuild:** add css preprocessor support ([#50](https://github.com/unjs/unplugin/issues/50)) ([43cfaf5](https://github.com/unjs/unplugin/commit/43cfaf506fdf2cbff679ed1f6c85dc68e511840d))
+
+
+
 ## [0.3.1](https://github.com/unjs/unplugin/compare/v0.3.0...v0.3.1) (2022-01-21)
 
 
