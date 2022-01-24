@@ -17,6 +17,10 @@ const ExtToLoader: Record<string, Loader> = {
   '.mts': 'ts',
   '.tsx': 'tsx',
   '.css': 'css',
+  '.less': 'css',
+  '.stylus': 'css',
+  '.scss': 'css',
+  '.sass': 'css',
   '.json': 'json',
   '.txt': 'text'
 }
