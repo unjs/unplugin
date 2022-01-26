@@ -62,6 +62,8 @@ export function combineSourcemaps (
   filename: string,
   sourcemapList: Array<DecodedSourceMap | RawSourceMap>
 ): RawSourceMap {
+  sourcemapList = sourcemapList.filter(m => m.sources)
+
   if (
     sourcemapList.length === 0 ||
     sourcemapList.every(m => m.sources.length === 0)
