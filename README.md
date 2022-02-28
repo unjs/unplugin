@@ -158,6 +158,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-vue2-script-setup](https://github.com/antfu/unplugin-vue2-script-setup)
 - [unplugin-icons](https://github.com/antfu/unplugin-icons)
 - [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
+- [unplugin-upload-cdn](https://github.com/zenotsai/unplugin-upload-cdn)
 
 ## License
 
