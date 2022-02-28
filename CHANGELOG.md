@@ -1,3 +1,12 @@
+## [0.3.3](https://github.com/unjs/unplugin/compare/v0.3.2...v0.3.3) (2022-02-28)
+
+
+### Bug Fixes
+
+* filter out illegal sourcemap items ([#51](https://github.com/unjs/unplugin/issues/51)) ([6644466](https://github.com/unjs/unplugin/commit/6644466f2612295ec2b524edbeeeaffda16cea5b))
+
+
+
 ## [0.3.2](https://github.com/unjs/unplugin/compare/v0.3.1...v0.3.2) (2022-01-24)
 
 
