@@ -1,10 +1,14 @@
 import fs from 'fs'
 import path from 'path'
+import chokidar from 'chokidar'
 import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type { RawSourceMap } from '@ampproject/remapping/dist/types/types'
 import type { UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
 import { combineSourcemaps, fixSourceMap, guessLoader } from './utils'
+
+const watchListRecord: Record<string, chokidar.FSWatcher> = {}
+const watchList: Set<string> = new Set()
 
 export function getEsbuildPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -19,16 +23,57 @@ export function getEsbuildPlugin <UserOptions = {}> (
       name: plugin.name,
       setup:
         plugin.esbuild?.setup ??
-        function setup ({ onStart, onEnd, onResolve, onLoad }) {
+        function setup ({ onStart, onEnd, onResolve, onLoad, initialOptions, esbuild: { build } }) {
           const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/
           const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
 
           if (plugin.buildStart) {
-            onStart(plugin.buildStart)
+            onStart(() => plugin.buildStart!.call({
+              addWatchFile (id) {
+                watchList.add(path.resolve(id))
+              },
+              emitFile (emittedFile) {
+                const outFileName = emittedFile.fileName || emittedFile.name
+                if (initialOptions.outdir && emittedFile.source && outFileName) {
+                  fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
+                }
+              },
+              getWatchFiles () {
+                return Array.from(watchList)
+              }
+            }))
           }
 
-          if (plugin.buildEnd) {
-            onEnd(plugin.buildEnd)
+          if (plugin.buildEnd || initialOptions.watch) {
+            const rebuild = () => build({
+              ...initialOptions,
+              watch: false
+            })
+
+            onEnd(() => {
+              plugin.buildEnd?.()
+              if (initialOptions.watch) {
+                Object.keys(watchListRecord).forEach((id) => {
+                  if (!watchList.has(id)) {
+                    watchListRecord[id].close()
+                    delete watchListRecord[id]
+                  }
+                })
+                watchList.forEach((id) => {
+                  if (!Object.keys(watchListRecord).includes(id)) {
+                    watchListRecord[id] = chokidar.watch(id)
+                    watchListRecord[id].on('change', () => {
+                      plugin.watchChange?.(id, { event: 'update' })
+                      rebuild()
+                    })
+                    watchListRecord[id].on('unlink', () => {
+                      plugin.watchChange?.(id, { event: 'delete' })
+                      rebuild()
+                    })
+                  }
+                })
+              }
+            })
           }
 
           if (plugin.resolveId) {

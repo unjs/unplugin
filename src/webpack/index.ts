@@ -152,7 +152,54 @@ export function getWebpackPlugin<UserOptions = {}> (
           plugin.webpack(compiler)
         }
 
-        plugin.buildStart?.()
+        compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
+          plugin.buildStart?.call({
+            addWatchFile (id) {
+              (compilation.fileDependencies ?? compilation.compilationDependencies).add(
+                resolve(process.cwd(), id)
+              )
+            },
+            emitFile (emittedFile) {
+              const outFileName = emittedFile.fileName || emittedFile.name
+              if (emittedFile.source && outFileName) {
+                compilation.emitAsset(
+                  outFileName,
+                  // @ts-ignore
+                  compiler.webpack?.sources
+                    ? new compiler.webpack.sources.RawSource(
+                      typeof emittedFile.source === 'string'
+                        ? emittedFile.source
+                        : Buffer.from(emittedFile.source)
+                    )
+                    : {
+                        source: () => emittedFile.source,
+                        size: () => emittedFile.source!.length
+                      }
+                )
+              }
+            },
+            getWatchFiles () {
+              return Array.from(
+                compilation.fileDependencies ?? compilation.compilationDependencies
+              )
+            }
+          })
+        })
+
+        if (plugin.watchChange) {
+          compiler.hooks.watchRun.tap(plugin.name, (compilation) => {
+            if (compilation.modifiedFiles) {
+              compilation.modifiedFiles.forEach(file =>
+                plugin.watchChange!(file, { event: 'update' })
+              )
+            }
+            if (compilation.removedFiles) {
+              compilation.removedFiles.forEach(file =>
+                plugin.watchChange!(file, { event: 'delete' })
+              )
+            }
+          })
+        }
 
         if (plugin.buildEnd) {
           compiler.hooks.done.tapPromise(plugin.name, async () => {
