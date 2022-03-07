@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/unjs/unplugin/compare/v0.3.3...v0.4.0) (2022-03-07)
+
+
+### Features
+
+* add watch hook and context functions ([#55](https://github.com/unjs/unplugin/issues/55)) ([544e66c](https://github.com/unjs/unplugin/commit/544e66cd98dde8f8a5449a6143c115f198c5a595))
+
+
+
 ## [0.3.3](https://github.com/unjs/unplugin/compare/v0.3.2...v0.3.3) (2022-02-28)
 
 
