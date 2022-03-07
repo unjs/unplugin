@@ -25,10 +25,21 @@ Currently supports:
 | [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌ <sup>2</sup> | ✅ | ✅ | ✅ | ❌ <sup>2</sup> |
 | [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
+| [`watchChange`](https://rollupjs.org/guide/en/#watchchange) | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 1. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for following usage examples.
 2. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
+
+### [`buildStart`](https://rollupjs.org/guide/en/#buildstart) Context
+
+###### Supported
+
+| Hook | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
+| ---- | :----: | :--: | :-------: | :-------: | :-----: |
+| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## Usage
 

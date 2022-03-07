@@ -29,6 +29,7 @@
     "test:build": "nr build && jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
+    "chokidar": "^3.5.3",
     "webpack-virtual-modules": "^0.4.3"
   },
   "devDependencies": {
