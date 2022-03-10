@@ -1,5 +1,6 @@
 import type { LoaderContext } from 'webpack'
 import { UnpluginContext } from '../../types'
+import genContext from '../genContext'
 import { slash } from '../utils'
 
 export default async function load (this: LoaderContext<any>, source: string, map: any) {
@@ -21,7 +22,7 @@ export default async function load (this: LoaderContext<any>, source: string, ma
     id = id.slice(plugin.__virtualModulePrefix.length)
   }
 
-  const res = await plugin.load.call(context, slash(id))
+  const res = await plugin.load.call(Object.assign(this._compilation && genContext(this._compilation), context), slash(id))
 
   if (res == null) {
     callback(null, source, map)

@@ -5,7 +5,7 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { Resolver, ResolveRequest } from 'enhanced-resolve'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 import { slash, backSlash } from './utils'
-
+import genContext from './genContext'
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
 const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.js')
 const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.js')
@@ -152,58 +152,28 @@ export function getWebpackPlugin<UserOptions = {}> (
           plugin.webpack(compiler)
         }
 
-        compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
-          plugin.buildStart?.call({
-            addWatchFile (id) {
-              (compilation.fileDependencies ?? compilation.compilationDependencies).add(
-                resolve(process.cwd(), id)
-              )
-            },
-            emitFile (emittedFile) {
-              const outFileName = emittedFile.fileName || emittedFile.name
-              if (emittedFile.source && outFileName) {
-                compilation.emitAsset(
-                  outFileName,
-                  // @ts-ignore
-                  compiler.webpack?.sources
-                    ? new compiler.webpack.sources.RawSource(
-                      typeof emittedFile.source === 'string'
-                        ? emittedFile.source
-                        : Buffer.from(emittedFile.source)
-                    )
-                    : {
-                        source: () => emittedFile.source,
-                        size: () => emittedFile.source!.length
-                      }
-                )
-              }
-            },
-            getWatchFiles () {
-              return Array.from(
-                compilation.fileDependencies ?? compilation.compilationDependencies
+        compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
+          if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
+            const promises:Promise<void>[] = []
+            if (compiler.modifiedFiles) {
+              compiler.modifiedFiles.forEach(file =>
+                promises.push(Promise.resolve(plugin.watchChange!(file, { event: 'update' })))
               )
             }
-          })
+            if (compiler.removedFiles) {
+              compiler.removedFiles.forEach(file =>
+                promises.push(Promise.resolve(plugin.watchChange!(file, { event: 'delete' })))
+              )
+            }
+            await Promise.all(promises)
+          }
+
+          return await plugin.buildStart!.call(genContext(compilation))
         })
 
-        if (plugin.watchChange) {
-          compiler.hooks.watchRun.tap(plugin.name, (compilation) => {
-            if (compilation.modifiedFiles) {
-              compilation.modifiedFiles.forEach(file =>
-                plugin.watchChange!(file, { event: 'update' })
-              )
-            }
-            if (compilation.removedFiles) {
-              compilation.removedFiles.forEach(file =>
-                plugin.watchChange!(file, { event: 'delete' })
-              )
-            }
-          })
-        }
-
         if (plugin.buildEnd) {
-          compiler.hooks.done.tapPromise(plugin.name, async () => {
-            await plugin.buildEnd!()
+          compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
+            await plugin.buildEnd!.call(genContext(compilation))
           })
         }
       }

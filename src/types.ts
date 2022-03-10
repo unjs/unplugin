@@ -27,12 +27,12 @@ export interface UnpluginOptions {
   name: string;
   enforce?: 'post' | 'pre' | undefined;
   buildStart?: (this: UnpluginBuildContext) => Promise<void> | void;
-  buildEnd?: () => Promise<void> | void;
+  buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void;
   transformInclude?: (id: string) => boolean;
-  transform?: (this: UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
-  load?: (this: UnpluginContext, id: string) => Thenable<TransformResult>
+  transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
+  load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
   resolveId?: (id: string, importer?: string) => Thenable<string | ExternalIdResult | null | undefined>
-  watchChange?: (id: string, change: {event: 'create' | 'update' | 'delete'}) => void
+  watchChange?: (this: UnpluginBuildContext, id: string, change: {event: 'create' | 'update' | 'delete'}) => void
 
   // framework specify extends
   rollup?: Partial<RollupPlugin>
