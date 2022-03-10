@@ -152,24 +152,29 @@ export function getWebpackPlugin<UserOptions = {}> (
           plugin.webpack(compiler)
         }
 
-        compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
-          if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
-            const promises:Promise<void>[] = []
-            if (compiler.modifiedFiles) {
-              compiler.modifiedFiles.forEach(file =>
-                promises.push(Promise.resolve(plugin.watchChange!(file, { event: 'update' })))
-              )
+        if (plugin.watchChange || plugin.buildStart) {
+          compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
+            const context = genContext(compilation)
+            if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
+              const promises:Promise<void>[] = []
+              if (compiler.modifiedFiles) {
+                compiler.modifiedFiles.forEach(file =>
+                  promises.push(Promise.resolve(plugin.watchChange!.call(context, file, { event: 'update' })))
+                )
+              }
+              if (compiler.removedFiles) {
+                compiler.removedFiles.forEach(file =>
+                  promises.push(Promise.resolve(plugin.watchChange!.call(context, file, { event: 'delete' })))
+                )
+              }
+              await Promise.all(promises)
             }
-            if (compiler.removedFiles) {
-              compiler.removedFiles.forEach(file =>
-                promises.push(Promise.resolve(plugin.watchChange!(file, { event: 'delete' })))
-              )
-            }
-            await Promise.all(promises)
-          }
 
-          return await plugin.buildStart!.call(genContext(compilation))
-        })
+            if (plugin.buildStart) {
+              return await plugin.buildStart.call(context)
+            }
+          })
+        }
 
         if (plugin.buildEnd) {
           compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
