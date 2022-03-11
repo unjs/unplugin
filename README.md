@@ -31,7 +31,7 @@ Currently supports:
 2. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 
-### Hook Context ([`buildStart`](https://rollupjs.org/guide/en/#buildstart), [`buildEnd`](https://rollupjs.org/guide/en/#buildend), [`transform`](https://rollupjs.org/guide/en/#transformers), [`load`](https://rollupjs.org/guide/en/#load), and [`watchChange`](https://rollupjs.org/guide/en/#watchchange))
+### Hook Context
 
 ###### Supported
 
