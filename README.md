@@ -31,15 +31,17 @@ Currently supports:
 2. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 
-### [`buildStart`](https://rollupjs.org/guide/en/#buildstart) Context
+### Hook Context
 
 ###### Supported
 
 | Hook | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
 | ---- | :----: | :--: | :-------: | :-------: | :-----: |
 | [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+4. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
 
 ## Usage
 
@@ -170,6 +172,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-icons](https://github.com/antfu/unplugin-icons)
 - [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
 - [unplugin-upload-cdn](https://github.com/zenotsai/unplugin-upload-cdn)
+- [unplugin-web-ext](https://github.com/jwr12135/unplugin-web-ext)
 
 ## License
 
