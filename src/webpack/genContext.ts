@@ -1,6 +1,6 @@
 import { resolve } from 'path'
-// eslint-disable-next-line import/named
-import { RawSource } from 'webpack-sources'
+// eslint-disable-next-line import/default
+import sources from 'webpack-sources'
 import type { Compilation } from 'webpack'
 import type { UnpluginBuildContext } from 'src'
 
@@ -18,7 +18,7 @@ export default function genContext (compilation: Compilation):UnpluginBuildConte
           outFileName,
           // @ts-ignore
           sources
-            ? new RawSource(
+            ? new sources.RawSource(
               // @ts-expect-error types mismatch
               typeof emittedFile.source === 'string'
                 ? emittedFile.source
