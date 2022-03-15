@@ -1,3 +1,12 @@
+## [0.5.1](https://github.com/unjs/unplugin/compare/v0.5.0...v0.5.1) (2022-03-15)
+
+
+### Bug Fixes
+
+* deps on `webpack-sources` instead of `webpack` ([5f14fa8](https://github.com/unjs/unplugin/commit/5f14fa8a0f6eb03f959a7860c9516494a8721d4a))
+
+
+
 # [0.5.0](https://github.com/unjs/unplugin/compare/v0.4.0...v0.5.0) (2022-03-15)
 
 
