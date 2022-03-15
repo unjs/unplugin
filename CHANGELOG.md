@@ -1,3 +1,12 @@
+## [0.5.2](https://github.com/unjs/unplugin/compare/v0.5.1...v0.5.2) (2022-03-15)
+
+
+### Bug Fixes
+
+* esm compact of `webpack-sources` ([9edae1b](https://github.com/unjs/unplugin/commit/9edae1bd17ed1ab09dc45a858ad5f011d3120e9f))
+
+
+
 ## [0.5.1](https://github.com/unjs/unplugin/compare/v0.5.0...v0.5.1) (2022-03-15)
 
 
