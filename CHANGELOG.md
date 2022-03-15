@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/unjs/unplugin/compare/v0.4.0...v0.5.0) (2022-03-15)
+
+
+### Features
+
+* add context functions to more hooks, fix async hooks ([#57](https://github.com/unjs/unplugin/issues/57)) ([3bfd523](https://github.com/unjs/unplugin/commit/3bfd523aee983775287e03a4874f16205573e2ee))
+
+
+
 # [0.4.0](https://github.com/unjs/unplugin/compare/v0.3.3...v0.4.0) (2022-03-07)
 
 
