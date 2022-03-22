@@ -106,7 +106,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                 // if the resolved module is not exists,
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
-                  resolved = plugin.__virtualModulePrefix + id
+                  resolved = plugin.__virtualModulePrefix + backSlash(resolved)
                   // webpack virtual module should pass in the correct path
                   plugin.__vfs!.writeModule(resolved, '')
                   plugin.__vfsModules!.add(resolved)
