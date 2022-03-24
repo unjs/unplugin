@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/unjs/unplugin/compare/v0.5.2...v0.6.0) (2022-03-24)
+
+
+### Features
+
+* respect resolved id instead of raw request id ([#58](https://github.com/unjs/unplugin/issues/58)) ([468da3e](https://github.com/unjs/unplugin/commit/468da3eda9d18eab02371b31560e2c4cd21373b4))
+
+
+
 ## [0.5.2](https://github.com/unjs/unplugin/compare/v0.5.1...v0.5.2) (2022-03-15)
 
 

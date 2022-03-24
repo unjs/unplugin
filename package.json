@@ -1,6 +1,6 @@
 {
   "name": "unplugin",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Unified plugin system for build tools",
   "repository": "unjs/unplugin",
   "license": "MIT",
