@@ -1,3 +1,12 @@
+## [0.6.1](https://github.com/unjs/unplugin/compare/v0.6.0...v0.6.1) (2022-03-31)
+
+
+### Bug Fixes
+
+* **webpack:** apply slash normalization on `transformInclude` ([90d6a75](https://github.com/unjs/unplugin/commit/90d6a75f2b7018705c0a0f110231043324a93548))
+
+
+
 # [0.6.0](https://github.com/unjs/unplugin/compare/v0.5.2...v0.6.0) (2022-03-24)
 
 
