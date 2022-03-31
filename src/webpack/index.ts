@@ -53,7 +53,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                 return false
               }
               if (plugin.transformInclude) {
-                return plugin.transformInclude(id)
+                return plugin.transformInclude(slash(id))
               } else {
                 return true
               }
