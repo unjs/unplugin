@@ -173,6 +173,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
 - [unplugin-upload-cdn](https://github.com/zenotsai/unplugin-upload-cdn)
 - [unplugin-web-ext](https://github.com/jwr12135/unplugin-web-ext)
+- [unplugin-properties](https://github.com/pd4d10/unplugin-properties)
 
 ## License
 
