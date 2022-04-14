@@ -1,3 +1,12 @@
+## [0.6.2](https://github.com/unjs/unplugin/compare/v0.6.1...v0.6.2) (2022-04-14)
+
+
+### Bug Fixes
+
+* avoid rollup options being passed to vite plugin ([#63](https://github.com/unjs/unplugin/issues/63)) ([8e408a3](https://github.com/unjs/unplugin/commit/8e408a3bd02c0b9991cd96b092236320cc75ee96))
+
+
+
 ## [0.6.1](https://github.com/unjs/unplugin/compare/v0.6.0...v0.6.1) (2022-03-31)
 
 
