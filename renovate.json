@@ -1,5 +1,11 @@
 {
   "extends": [
     "@nuxtjs"
+  ],
+  "packageRules": [
+    {
+      "depTypeList": ["peerDependencies"],
+      "enabled": false
+    }
   ]
 }
