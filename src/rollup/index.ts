@@ -12,7 +12,7 @@ export function getRollupPlugin <UserOptions = {}> (
   }
 }
 
-export function toRollupPlugin (plugin: UnpluginOptions): RollupPlugin {
+export function toRollupPlugin (plugin: UnpluginOptions, containRollupOptions = true): RollupPlugin {
   if (plugin.transform && plugin.transformInclude) {
     const _transform = plugin.transform
     plugin.transform = function (code, id) {
@@ -23,7 +23,7 @@ export function toRollupPlugin (plugin: UnpluginOptions): RollupPlugin {
     }
   }
 
-  if (plugin.rollup) {
+  if (plugin.rollup && containRollupOptions) {
     Object.assign(plugin, plugin.rollup)
   }
 
