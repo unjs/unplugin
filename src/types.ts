@@ -1,4 +1,4 @@
-import type { EmittedAsset, Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMap } from 'rollup'
+import type { EmittedAsset, ResolveIdHook, Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMap } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin } from 'esbuild'
@@ -29,11 +29,11 @@ export interface UnpluginOptions {
   buildStart?: (this: UnpluginBuildContext) => Promise<void> | void;
   buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void;
   transformInclude?: (id: string) => boolean;
-  transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
+  transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string,) => Thenable<TransformResult>;
   load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (id: string, importer?: string) => Thenable<string | ExternalIdResult | null | undefined>
-  watchChange?: (this: UnpluginBuildContext, id: string, change: {event: 'create' | 'update' | 'delete'}) => void
+  resolveId?: (...args: Parameters<ResolveIdHook>) => Thenable<string | ExternalIdResult | null | undefined>
 
+  watchChange?: (this: UnpluginBuildContext, id: string, change: {event: 'create' | 'update' | 'delete'}) => void
   // framework specify extends
   rollup?: Partial<RollupPlugin>
   webpack?: (compiler: WebpackCompiler) => void
