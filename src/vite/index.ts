@@ -10,7 +10,7 @@ export function getVitePlugin <UserOptions = {}> (
     }
     const rawPlugin = factory(userOptions, meta)
 
-    const plugin = toRollupPlugin(rawPlugin) as VitePlugin
+    const plugin = toRollupPlugin(rawPlugin, false) as VitePlugin
 
     if (rawPlugin.vite) {
       Object.assign(plugin, rawPlugin.vite)
