@@ -174,6 +174,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-upload-cdn](https://github.com/zenotsai/unplugin-upload-cdn)
 - [unplugin-web-ext](https://github.com/jwr12135/unplugin-web-ext)
 - [unplugin-properties](https://github.com/pd4d10/unplugin-properties)
+- [unplugin-moment-to-dayjs](https://github.com/1247748612/unplugin-moment-to-dayjs)
 
 ## License
 
