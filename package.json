@@ -45,7 +45,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "enhanced-resolve": "^5.9.3",
     "esbuild": "^0.14.38",
-    "eslint": "^8.13.0",
+    "eslint": "^8.14.0",
     "fast-glob": "^3.2.11",
     "fs-extra": "^10.1.0",
     "jiti": "^1.13.0",
