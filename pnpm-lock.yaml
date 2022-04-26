@@ -21,7 +21,7 @@ specifiers:
   rollup: ^2.70.2
   tsup: ^5.12.6
   typescript: ^4.6.3
-  vite: ^2.9.5
+  vite: ^2.9.6
   vitest: ^0.10.0
   webpack: ^5.72.0
   webpack-cli: ^4.9.2
@@ -53,7 +53,7 @@ devDependencies:
   rollup: 2.70.2
   tsup: 5.12.6_typescript@4.6.3
   typescript: 4.6.3
-  vite: 2.9.5
+  vite: 2.9.6
   vitest: 0.10.0
   webpack: 5.72.0_b92c0e84c2acb434e31521ad39b3ed8a
   webpack-cli: 4.9.2_webpack@5.72.0
@@ -3659,8 +3659,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite/2.9.5:
-    resolution: {integrity: sha512-dvMN64X2YEQgSXF1lYabKXw3BbN6e+BL67+P3Vy4MacnY+UzT1AfkHiioFSi9+uiDUiaDy7Ax/LQqivk6orilg==}
+  /vite/2.9.6:
+    resolution: {integrity: sha512-3IffdrByHW95Yjv0a13TQOQfJs7L5dVlSPuTt432XLbRMriWbThqJN2k/IS6kXn5WY4xBLhK9XoaWay1B8VzUw==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -3708,7 +3708,7 @@ packages:
       local-pkg: 0.4.1
       tinypool: 0.1.2
       tinyspy: 0.3.2
-      vite: 2.9.5
+      vite: 2.9.6
     transitivePeerDependencies:
       - less
       - sass
