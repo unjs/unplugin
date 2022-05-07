@@ -1,7 +1,5 @@
-export function slash (path: string) {
-  return path.replace(/\\/g, '/')
-}
+import { sep } from 'path'
 
-export function backSlash (path: string) {
-  return path.replace(/\//g, '\\')
+export function slash (path: string) {
+  return path.replace(/[\\/]/g, sep)
 }

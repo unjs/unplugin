@@ -4,7 +4,7 @@ import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { Resolver, ResolveRequest } from 'enhanced-resolve'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
-import { slash, backSlash } from './utils'
+import { slash } from './utils'
 import genContext from './genContext'
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
 const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.js')
@@ -86,7 +86,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                   return callback()
                 }
 
-                const id = backSlash(request.request)
+                const id = slash(request.request)
 
                 // filter out invalid requests
                 if (id.startsWith(plugin.__virtualModulePrefix)) {
@@ -106,7 +106,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                 // if the resolved module is not exists,
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
-                  resolved = plugin.__virtualModulePrefix + backSlash(resolved)
+                  resolved = plugin.__virtualModulePrefix + slash(resolved)
                   // webpack virtual module should pass in the correct path
                   plugin.__vfs!.writeModule(resolved, '')
                   plugin.__vfsModules!.add(resolved)
