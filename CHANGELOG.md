@@ -1,3 +1,12 @@
+## [0.6.3](https://github.com/unjs/unplugin/compare/v0.6.2...v0.6.3) (2022-05-07)
+
+
+### Bug Fixes
+
+* **webpack:** use path separator instead backslash ([#84](https://github.com/unjs/unplugin/issues/84)) ([b827bed](https://github.com/unjs/unplugin/commit/b827bed29b4644626bbf62294ba7a0ec4ad38d15))
+
+
+
 ## [0.6.2](https://github.com/unjs/unplugin/compare/v0.6.1...v0.6.2) (2022-04-14)
 
 
