@@ -23,7 +23,7 @@ specifiers:
   typescript: ^4.6.4
   vite: ^2.9.8
   vitest: ^0.12.3
-  webpack: ^5.72.0
+  webpack: ^5.72.1
   webpack-cli: ^4.9.2
   webpack-sources: ^3.2.3
   webpack-virtual-modules: ^0.4.3
@@ -55,8 +55,8 @@ devDependencies:
   typescript: 4.6.4
   vite: 2.9.8
   vitest: 0.12.3
-  webpack: 5.72.0_xewa5bgcvs2djyyvegwttm7nri
-  webpack-cli: 4.9.2_webpack@5.72.0
+  webpack: 5.72.1_xewa5bgcvs2djyyvegwttm7nri
+  webpack-cli: 4.9.2_webpack@5.72.1
 
 packages:
 
@@ -580,14 +580,14 @@ packages:
       '@xtuc/long': 4.2.2
     dev: true
 
-  /@webpack-cli/configtest/1.1.1_q7qo2wgeiyigo3znjsjh7f36ue:
+  /@webpack-cli/configtest/1.1.1_smhu6mcfcg7aivfsuosc335k3u:
     resolution: {integrity: sha512-1FBc1f9G4P/AxMqIgfZgeOTuRnwZMten8E7zap5zgpPInnCrP8D4Q81+4CWIch8i/Nf7nXjP0v6CjjbHOrXhKg==}
     peerDependencies:
       webpack: 4.x.x || 5.x.x
       webpack-cli: 4.x.x
     dependencies:
-      webpack: 5.72.0_xewa5bgcvs2djyyvegwttm7nri
-      webpack-cli: 4.9.2_webpack@5.72.0
+      webpack: 5.72.1_xewa5bgcvs2djyyvegwttm7nri
+      webpack-cli: 4.9.2_webpack@5.72.1
     dev: true
 
   /@webpack-cli/info/1.4.1_webpack-cli@4.9.2:
@@ -596,7 +596,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: 7.8.1
-      webpack-cli: 4.9.2_webpack@5.72.0
+      webpack-cli: 4.9.2_webpack@5.72.1
     dev: true
 
   /@webpack-cli/serve/1.6.1_webpack-cli@4.9.2:
@@ -608,7 +608,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.9.2_webpack@5.72.0
+      webpack-cli: 4.9.2_webpack@5.72.1
     dev: true
 
   /@xtuc/ieee754/1.2.0:
@@ -627,20 +627,12 @@ packages:
       through: 2.3.8
     dev: true
 
-  /acorn-import-assertions/1.8.0_acorn@8.7.0:
+  /acorn-import-assertions/1.8.0_acorn@8.7.1:
     resolution: {integrity: sha512-m7VZ3jwz4eK6A4Vtt8Ew1/mNbP24u0FhdyfA7fSvnJR6LMdfOYnmuIrrJAgrYfYJ10F/otaHTtrtrtmHdMNzEw==}
     peerDependencies:
       acorn: ^8
     dependencies:
-      acorn: 8.7.0
-    dev: true
-
-  /acorn-jsx/5.3.2_acorn@8.7.0:
-    resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
-    peerDependencies:
-      acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
-    dependencies:
-      acorn: 8.7.0
+      acorn: 8.7.1
     dev: true
 
   /acorn-jsx/5.3.2_acorn@8.7.1:
@@ -649,12 +641,6 @@ packages:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       acorn: 8.7.1
-    dev: true
-
-  /acorn/8.7.0:
-    resolution: {integrity: sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
     dev: true
 
   /acorn/8.7.1:
@@ -1903,8 +1889,8 @@ packages:
     resolution: {integrity: sha512-bvdyLmJMfwkV3NCRl5ZhJf22zBFo1y8bYh3VYb+bfzqNB4Je68P2sSuXyuFquzWLebHpNd2/d5uv7yoP9ISnGQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
-      acorn: 8.7.0
-      acorn-jsx: 5.3.2_acorn@8.7.0
+      acorn: 8.7.1
+      acorn-jsx: 5.3.2_acorn@8.7.1
       eslint-visitor-keys: 3.3.0
     dev: true
 
@@ -3542,7 +3528,7 @@ packages:
       uuid: 3.4.0
     dev: true
 
-  /terser-webpack-plugin/5.3.0_7m4vrr5pcg6juvld3psuif5zsi:
+  /terser-webpack-plugin/5.3.0_fiumfraq6k46f244cfxacunjs4:
     resolution: {integrity: sha512-LPIisi3Ol4chwAaPP8toUJ3L4qCM1G0wao7L3qNv57Drezxj6+VEyySpPw4B1HSO2Eg/hDY/MNF5XihCAoqnsQ==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -3564,7 +3550,7 @@ packages:
       serialize-javascript: 6.0.0
       source-map: 0.6.1
       terser: 5.10.0
-      webpack: 5.72.0_xewa5bgcvs2djyyvegwttm7nri
+      webpack: 5.72.1_xewa5bgcvs2djyyvegwttm7nri
     dev: true
 
   /terser/5.10.0:
@@ -3876,7 +3862,7 @@ packages:
       graceful-fs: 4.2.9
     dev: true
 
-  /webpack-cli/4.9.2_webpack@5.72.0:
+  /webpack-cli/4.9.2_webpack@5.72.1:
     resolution: {integrity: sha512-m3/AACnBBzK/kMTcxWHcZFPrw/eQuY4Df1TxvIWfWM2x7mRqBQCqKEd96oCUa9jkapLBaFfRce33eGDb4Pr7YQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
@@ -3897,7 +3883,7 @@ packages:
         optional: true
     dependencies:
       '@discoveryjs/json-ext': 0.5.6
-      '@webpack-cli/configtest': 1.1.1_q7qo2wgeiyigo3znjsjh7f36ue
+      '@webpack-cli/configtest': 1.1.1_smhu6mcfcg7aivfsuosc335k3u
       '@webpack-cli/info': 1.4.1_webpack-cli@4.9.2
       '@webpack-cli/serve': 1.6.1_webpack-cli@4.9.2
       colorette: 2.0.16
@@ -3907,7 +3893,7 @@ packages:
       import-local: 3.0.3
       interpret: 2.2.0
       rechoir: 0.7.1
-      webpack: 5.72.0_xewa5bgcvs2djyyvegwttm7nri
+      webpack: 5.72.1_xewa5bgcvs2djyyvegwttm7nri
       webpack-merge: 5.8.0
     dev: true
 
@@ -3927,8 +3913,8 @@ packages:
     resolution: {integrity: sha512-5NUqC2JquIL2pBAAo/VfBP6KuGkHIZQXW/lNKupLPfhViwh8wNsu0BObtl09yuKZszeEUfbXz8xhrHvSG16Nqw==}
     dev: false
 
-  /webpack/5.72.0_xewa5bgcvs2djyyvegwttm7nri:
-    resolution: {integrity: sha512-qmSmbspI0Qo5ld49htys8GY9XhS9CGqFoHTsOVAnjBdg0Zn79y135R+k4IR4rKK6+eKaabMhJwiVB7xw0SJu5w==}
+  /webpack/5.72.1_xewa5bgcvs2djyyvegwttm7nri:
+    resolution: {integrity: sha512-dXG5zXCLspQR4krZVR6QgajnZOjW2K/djHvdcRaDQvsjV9z9vaW6+ja5dZOYbqBBjF6kGXka/2ZyxNdc+8Jung==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     peerDependencies:
@@ -3942,8 +3928,8 @@ packages:
       '@webassemblyjs/ast': 1.11.1
       '@webassemblyjs/wasm-edit': 1.11.1
       '@webassemblyjs/wasm-parser': 1.11.1
-      acorn: 8.7.0
-      acorn-import-assertions: 1.8.0_acorn@8.7.0
+      acorn: 8.7.1
+      acorn-import-assertions: 1.8.0_acorn@8.7.1
       browserslist: 4.19.1
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.9.3
@@ -3952,15 +3938,15 @@ packages:
       events: 3.3.0
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.9
-      json-parse-better-errors: 1.0.2
+      json-parse-even-better-errors: 2.3.1
       loader-runner: 4.2.0
       mime-types: 2.1.34
       neo-async: 2.6.2
       schema-utils: 3.1.1
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.0_7m4vrr5pcg6juvld3psuif5zsi
+      terser-webpack-plugin: 5.3.0_fiumfraq6k46f244cfxacunjs4
       watchpack: 2.3.1
-      webpack-cli: 4.9.2_webpack@5.72.0
+      webpack-cli: 4.9.2_webpack@5.72.1
       webpack-sources: 3.2.3
     transitivePeerDependencies:
       - '@swc/core'
