@@ -22,7 +22,7 @@ specifiers:
   tsup: ^5.12.7
   typescript: ^4.6.4
   vite: ^2.9.8
-  vitest: ^0.11.0
+  vitest: ^0.12.3
   webpack: ^5.72.0
   webpack-cli: ^4.9.2
   webpack-sources: ^3.2.3
@@ -54,7 +54,7 @@ devDependencies:
   tsup: 5.12.7_typescript@4.6.4
   typescript: 4.6.4
   vite: 2.9.8
-  vitest: 0.11.0
+  vitest: 0.12.3
   webpack: 5.72.0_xewa5bgcvs2djyyvegwttm7nri
   webpack-cli: 4.9.2_webpack@5.72.0
 
@@ -3818,8 +3818,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.11.0:
-    resolution: {integrity: sha512-QHhlmfBDseotUlHLQ7OTSKIDmpOt1Vqt5Djqsp5mOzmY9UNqwKkRs/Ys2Jy5rvRNfasVRbnw1MXQKdBPQYUIcw==}
+  /vitest/0.12.3:
+    resolution: {integrity: sha512-Dc4uJAcnUampdJ6+C8IasrmL+Px+oDhS9gxeHlL9uwUzoM0ae2WydAK9UF2THxHszfZogLGT37atQwOkj1Lqvg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
