@@ -18,11 +18,11 @@ specifiers:
   fs-extra: ^10.1.0
   jiti: ^1.13.0
   magic-string: ^0.26.2
-  rollup: ^2.72.1
+  rollup: ^2.73.0
   tsup: ^5.12.7
   typescript: ^4.6.4
   vite: ^2.9.9
-  vitest: ^0.12.5
+  vitest: ^0.12.6
   webpack: ^5.72.1
   webpack-cli: ^4.9.2
   webpack-sources: ^3.2.3
@@ -50,11 +50,11 @@ devDependencies:
   fs-extra: 10.1.0
   jiti: 1.13.0
   magic-string: 0.26.2
-  rollup: 2.72.1
+  rollup: 2.73.0
   tsup: 5.12.7_typescript@4.6.4
   typescript: 4.6.4
   vite: 2.9.9
-  vitest: 0.12.5
+  vitest: 0.12.6
   webpack: 5.72.1_trd5457yevqsb2bwysmcv2rd44
   webpack-cli: 4.9.2_webpack@5.72.1
 
@@ -3241,8 +3241,8 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /rollup/2.72.1:
-    resolution: {integrity: sha512-NTc5UGy/NWFGpSqF1lFY8z9Adri6uhyMLI6LvPAXdBKoPRFhIIiBUpt+Qg2awixqO3xvzSijjhnb4+QEZwJmxA==}
+  /rollup/2.73.0:
+    resolution: {integrity: sha512-h/UngC3S4Zt28mB3g0+2YCMegT5yoftnQplwzPqGZcKvlld5e+kT/QRmJiL+qxGyZKOYpgirWGdLyEO1b0dpLQ==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3668,7 +3668,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 3.1.0
       resolve-from: 5.0.0
-      rollup: 2.72.1
+      rollup: 2.73.0
       source-map: 0.7.3
       sucrase: 3.20.3
       tree-kill: 1.2.2
@@ -3799,13 +3799,13 @@ packages:
       esbuild: 0.14.39
       postcss: 8.4.13
       resolve: 1.22.0
-      rollup: 2.72.1
+      rollup: 2.73.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.12.5:
-    resolution: {integrity: sha512-cUq1HZDrY6pZlu19ToD71Np1dm/IUxS0eXdyd9EvpKy7vdroXGr6aI4ggB+TGQM/gz6P/3Tsk4n0yvcSjpe1ow==}
+  /vitest/0.12.6:
+    resolution: {integrity: sha512-YWbCTv0XKBuBw5YtuW/iufuguoi8QhGpYyi2g57Oo7akpscMkkWTAaZGgY0ux1oJJtO/pc/8GFt0EF32WFBUUQ==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:

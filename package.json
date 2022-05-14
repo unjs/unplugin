@@ -51,11 +51,11 @@
     "fs-extra": "^10.1.0",
     "jiti": "^1.13.0",
     "magic-string": "^0.26.2",
-    "rollup": "^2.72.1",
+    "rollup": "^2.73.0",
     "tsup": "^5.12.7",
     "typescript": "^4.6.4",
     "vite": "^2.9.9",
-    "vitest": "^0.12.5",
+    "vitest": "^0.12.6",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2"
   },
