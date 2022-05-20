@@ -22,7 +22,7 @@ specifiers:
   tsup: ^5.12.8
   typescript: ^4.6.4
   vite: ^2.9.9
-  vitest: ^0.12.6
+  vitest: ^0.12.7
   webpack: ^5.72.1
   webpack-cli: ^4.9.2
   webpack-sources: ^3.2.3
@@ -54,7 +54,7 @@ devDependencies:
   tsup: 5.12.8_typescript@4.6.4
   typescript: 4.6.4
   vite: 2.9.9
-  vitest: 0.12.6
+  vitest: 0.12.7
   webpack: 5.72.1_trd5457yevqsb2bwysmcv2rd44
   webpack-cli: 4.9.2_webpack@5.72.1
 
@@ -892,7 +892,7 @@ packages:
     dev: true
 
   /check-error/1.0.2:
-    resolution: {integrity: sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=}
+    resolution: {integrity: sha512-BrgHpW9NURQgzoNyjfq0Wu6VFO6D7IZEmJNdtgNqpzGG8RuNFHt2jQxWlAs4HMe119chBnv+34syEZtc6IhLtA==}
     dev: true
 
   /chokidar/3.5.3:
@@ -3809,8 +3809,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.12.6:
-    resolution: {integrity: sha512-YWbCTv0XKBuBw5YtuW/iufuguoi8QhGpYyi2g57Oo7akpscMkkWTAaZGgY0ux1oJJtO/pc/8GFt0EF32WFBUUQ==}
+  /vitest/0.12.7:
+    resolution: {integrity: sha512-rQsb9i/zEw+HtiTNr+5p+tOUMu0Ojp0jtZc/6FfE4T1xL2bhMq74tfUgu7hav3rFF9eGKpJeZBVlEszjdCuYQg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -3831,6 +3831,7 @@ packages:
       '@types/chai': 4.3.1
       '@types/chai-subset': 1.3.3
       chai: 4.3.6
+      debug: 4.3.4
       local-pkg: 0.4.1
       tinypool: 0.1.3
       tinyspy: 0.3.2
@@ -3839,6 +3840,7 @@ packages:
       - less
       - sass
       - stylus
+      - supports-color
     dev: true
 
   /vue-eslint-parser/8.0.1_eslint@8.15.0:
