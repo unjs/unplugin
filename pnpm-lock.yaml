@@ -18,7 +18,7 @@ specifiers:
   fs-extra: ^10.1.0
   jiti: ^1.13.0
   magic-string: ^0.26.2
-  rollup: ^2.74.0
+  rollup: ^2.74.1
   tsup: ^5.12.8
   typescript: ^4.6.4
   vite: ^2.9.9
@@ -50,7 +50,7 @@ devDependencies:
   fs-extra: 10.1.0
   jiti: 1.13.0
   magic-string: 0.26.2
-  rollup: 2.74.0
+  rollup: 2.74.1
   tsup: 5.12.8_typescript@4.6.4
   typescript: 4.6.4
   vite: 2.9.9
@@ -3233,8 +3233,8 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /rollup/2.74.0:
-    resolution: {integrity: sha512-RRwXTX5+ObPJhcMV6zP3RdHvy90/lBOUfbzL7IKkFjMJGAqeBGZiv9nZWm/DoTESaTE3GBkkzbU9QVN2AuCkjw==}
+  /rollup/2.74.1:
+    resolution: {integrity: sha512-K2zW7kV8Voua5eGkbnBtWYfMIhYhT9Pel2uhBk2WO5eMee161nPze/XRfvEQPFYz7KgrCCnmh2Wy0AMFLGGmMA==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3673,7 +3673,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 3.1.0
       resolve-from: 5.0.0
-      rollup: 2.74.0
+      rollup: 2.74.1
       source-map: 0.8.0-beta.0
       sucrase: 3.20.3
       tree-kill: 1.2.2
@@ -3804,7 +3804,7 @@ packages:
       esbuild: 0.14.39
       postcss: 8.4.13
       resolve: 1.22.0
-      rollup: 2.74.0
+      rollup: 2.74.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
