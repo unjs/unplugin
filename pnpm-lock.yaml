@@ -19,7 +19,7 @@ specifiers:
   jiti: ^1.13.0
   magic-string: ^0.26.2
   rollup: ^2.74.1
-  tsup: ^5.12.8
+  tsup: ^6.0.1
   typescript: ^4.7.2
   vite: ^2.9.9
   vitest: ^0.12.9
@@ -51,7 +51,7 @@ devDependencies:
   jiti: 1.13.0
   magic-string: 0.26.2
   rollup: 2.74.1
-  tsup: 5.12.8_typescript@4.7.2
+  tsup: 6.0.1_typescript@4.7.2
   typescript: 4.7.2
   vite: 2.9.9
   vitest: 0.12.9
@@ -3639,12 +3639,19 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
-  /tsup/5.12.8_typescript@4.7.2:
-    resolution: {integrity: sha512-fSBzUBtrnAQ+XKPfj1KcZ2Pl0EUlKBqpbTmRAs+2mL34fQlowrm6ccQgOYyMe9MMAcejMP6/7Rw3qKjx1lreZA==}
+  /tsup/6.0.1_typescript@4.7.2:
+    resolution: {integrity: sha512-2Pl1YkEEvzfg4aYgwUILaHV0wwZQKO7mNHMQChyzdCNlQqf11eug7gWk86XCb3CvRofCXBX87x73BTGjyS3cOQ==}
+    engines: {node: '>=14'}
     hasBin: true
     peerDependencies:
+      '@swc/core': ^1
+      postcss: ^8.4.12
       typescript: ^4.1.0
     peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      postcss:
+        optional: true
       typescript:
         optional: true
     dependencies:
