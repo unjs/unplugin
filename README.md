@@ -37,6 +37,7 @@ Currently supports:
 
 | Hook | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
 | ---- | :----: | :--: | :-------: | :-------: | :-----: |
+| [`this.parse`](https://rollupjs.org/guide/en/#thisparse) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ✅ |

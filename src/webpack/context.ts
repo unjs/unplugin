@@ -2,10 +2,19 @@ import { resolve } from 'path'
 // eslint-disable-next-line import/default
 import sources from 'webpack-sources'
 import type { Compilation } from 'webpack'
+import { Parser } from 'acorn'
 import type { UnpluginBuildContext } from 'src'
 
-export default function genContext (compilation: Compilation):UnpluginBuildContext {
+export function createContext (compilation: Compilation): UnpluginBuildContext {
   return {
+    parse (code: string, opts: any = {}) {
+      return Parser.parse(code, {
+        sourceType: 'module',
+        ecmaVersion: 'latest',
+        locations: true,
+        ...opts
+      })
+    },
     addWatchFile (id) {
       (compilation.fileDependencies ?? compilation.compilationDependencies).add(
         resolve(process.cwd(), id)

@@ -3,7 +3,8 @@ import path from 'path'
 import chokidar from 'chokidar'
 import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
-import type { RawSourceMap } from '@ampproject/remapping/dist/types/types'
+import { Parser } from 'acorn'
+import { RawSourceMap } from '@ampproject/remapping'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
 import { combineSourcemaps, fixSourceMap, guessLoader } from './utils'
 
@@ -28,6 +29,14 @@ export function getEsbuildPlugin <UserOptions = {}> (
           const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
 
           const context:UnpluginBuildContext = {
+            parse (code: string, opts: any = {}) {
+              return Parser.parse(code, {
+                sourceType: 'module',
+                ecmaVersion: 'latest',
+                locations: true,
+                ...opts
+              })
+            },
             addWatchFile (id) {
               watchList.add(path.resolve(id))
             },

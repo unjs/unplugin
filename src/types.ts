@@ -1,4 +1,4 @@
-import type { EmittedAsset, Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMap } from 'rollup'
+import type { AcornNode, EmittedAsset, Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMap } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin } from 'esbuild'
@@ -21,6 +21,7 @@ export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void;
   emitFile: (emittedFile: EmittedAsset) => void;
   getWatchFiles: () => string[];
+  parse: (input: string, options?: any) => AcornNode;
 }
 
 export interface UnpluginOptions {

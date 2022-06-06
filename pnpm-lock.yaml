@@ -8,6 +8,7 @@ specifiers:
   '@types/fs-extra': ^9.0.13
   '@types/node': ^17.0.31
   '@types/webpack-sources': ^3.2.0
+  acorn: ^8.7.1
   bumpp: ^7.1.1
   chokidar: ^3.5.3
   conventional-changelog-cli: ^2.2.2
@@ -29,6 +30,7 @@ specifiers:
   webpack-virtual-modules: ^0.4.3
 
 dependencies:
+  acorn: 8.7.1
   chokidar: 3.5.3
   webpack-sources: 3.2.3
   webpack-virtual-modules: 0.4.3
@@ -647,7 +649,6 @@ packages:
     resolution: {integrity: sha512-Xx54uLJQZ19lKygFXOWsscKUbsBZW0CPykPhVQdhIeIwrbPmJzqeASDInc8nKBnp/JT6igTs82qPXz069H8I/A==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-    dev: true
 
   /add-stream/1.0.0:
     resolution: {integrity: sha1-anmQQ3ynNtXhKI25K9MmbV9csqo=}

@@ -5,7 +5,8 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { Resolver, ResolveRequest } from 'enhanced-resolve'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 import { slash, backSlash } from './utils'
-import genContext from './genContext'
+import { createContext } from './context'
+
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
 const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.js')
 const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.js')
@@ -154,7 +155,7 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         if (plugin.watchChange || plugin.buildStart) {
           compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
-            const context = genContext(compilation)
+            const context = createContext(compilation)
             if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
               const promises:Promise<void>[] = []
               if (compiler.modifiedFiles) {
@@ -178,7 +179,7 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         if (plugin.buildEnd) {
           compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-            await plugin.buildEnd!.call(genContext(compilation))
+            await plugin.buildEnd!.call(createContext(compilation))
           })
         }
       }
