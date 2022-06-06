@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/unjs/unplugin/compare/v0.6.3...v0.7.0) (2022-06-06)
+
+
+### Features
+
+* support `this.parse`, close [#90](https://github.com/unjs/unplugin/issues/90) ([8f5c6ad](https://github.com/unjs/unplugin/commit/8f5c6ad6a7f8e1cf615da1c492482d525cd2a9b6))
+
+
+
 ## [0.6.3](https://github.com/unjs/unplugin/compare/v0.6.2...v0.6.3) (2022-05-07)
 
 
