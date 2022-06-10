@@ -41,6 +41,9 @@ Currently supports:
 | [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.warn`](https://rollupjs.org/guide/en/#thiswarn) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.errror`](https://rollupjs.org/guide/en/#thiserror) | ✅ | ✅ | ✅ | ✅ | ✅ |
+
 
 4. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
 
