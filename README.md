@@ -41,6 +41,9 @@ Currently supports:
 | [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.warn`](https://rollupjs.org/guide/en/#thiswarn) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.errror`](https://rollupjs.org/guide/en/#thiserror) | ✅ | ✅ | ✅ | ✅ | ✅ |
+
 
 4. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
 
@@ -177,6 +180,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-properties](https://github.com/pd4d10/unplugin-properties)
 - [unplugin-moment-to-dayjs](https://github.com/1247748612/unplugin-moment-to-dayjs)
 - [unplugin-object-3d](https://github.com/m0ksem/unplugin-object-3d)
+- [unplugin-parcel-css](https://github.com/ssssota/unplugin-parcel-css)
 
 ## License
 
