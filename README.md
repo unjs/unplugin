@@ -179,6 +179,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-web-ext](https://github.com/jwr12135/unplugin-web-ext)
 - [unplugin-properties](https://github.com/pd4d10/unplugin-properties)
 - [unplugin-moment-to-dayjs](https://github.com/1247748612/unplugin-moment-to-dayjs)
+- [unplugin-object-3d](https://github.com/m0ksem/unplugin-object-3d)
 - [unplugin-parcel-css](https://github.com/ssssota/unplugin-parcel-css)
 
 ## License
