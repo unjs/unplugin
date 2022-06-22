@@ -113,10 +113,17 @@ export function getWebpackPlugin<UserOptions = {}> (
                   plugin.__vfsModules!.add(resolved)
                 }
 
+                let query = ''
+                const queryIndex = id.indexOf('?')
+                if(queryIndex >= 0) {
+                  query = id.slice(queryIndex)
+                }
+
                 // construct the new request
                 const newRequest = {
                   ...request,
-                  request: resolved
+                  // concat raw query for newRequest.request
+                  request: resolved + query
                 }
 
                 // redirect the resolver
