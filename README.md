@@ -181,6 +181,11 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-moment-to-dayjs](https://github.com/1247748612/unplugin-moment-to-dayjs)
 - [unplugin-object-3d](https://github.com/m0ksem/unplugin-object-3d)
 - [unplugin-parcel-css](https://github.com/ssssota/unplugin-parcel-css)
+- [unplugin-vue](https://github.com/sxzz/unplugin-vue)
+- [unplugin-vue-define-options](https://github.com/sxzz/unplugin-vue-define-options)
+- [unplugin-jsx-string](https://github.com/sxzz/unplugin-jsx-string)
+- [unplugin-ast](https://github.com/sxzz/unplugin-ast)
+- [unplugin-element-plus](https://github.com/element-plus/unplugin-element-plus)
 
 ## License
 
