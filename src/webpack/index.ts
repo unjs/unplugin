@@ -115,7 +115,7 @@ export function getWebpackPlugin<UserOptions = {}> (
 
                 let query = ''
                 const queryIndex = id.indexOf('?')
-                if(queryIndex >= 0) {
+                if (queryIndex >= 0) {
                   query = id.slice(queryIndex)
                 }
 
