@@ -104,6 +104,14 @@ export function getWebpackPlugin<UserOptions = {}> (
                 // TODO: support external
                 // const isExternal = typeof result === 'string' ? false : result.external === true
 
+                // make sure resolved without query
+                let resolvedQuery = ''
+                const queryIndex = resolved.indexOf('?')
+                if (queryIndex >= 0) {
+                  resolvedQuery = resolved.slice(queryIndex)
+                  resolved = resolved.slice(0, queryIndex)
+                }
+
                 // if the resolved module is not exists,
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
@@ -113,17 +121,11 @@ export function getWebpackPlugin<UserOptions = {}> (
                   plugin.__vfsModules!.add(resolved)
                 }
 
-                let query = ''
-                const queryIndex = id.indexOf('?')
-                if (queryIndex >= 0) {
-                  query = id.slice(queryIndex)
-                }
-
                 // construct the new request
                 const newRequest = {
                   ...request,
-                  // concat raw query for newRequest.request
-                  request: resolved + query
+                  // concat resolved query for newRequest.request
+                  request: resolved + resolvedQuery
                 }
 
                 // redirect the resolver
