@@ -33,7 +33,7 @@
     "acorn": "^8.7.1",
     "chokidar": "^3.5.3",
     "webpack-sources": "^3.2.3",
-    "webpack-virtual-modules": "^0.4.3"
+    "webpack-virtual-modules": "^0.4.4"
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.2.0",
