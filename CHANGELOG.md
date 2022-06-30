@@ -1,3 +1,12 @@
+## [0.7.1](https://github.com/unjs/unplugin/compare/v0.7.0...v0.7.1) (2022-06-30)
+
+
+### Features
+
+* accept vite 3.0 ([c07200f](https://github.com/unjs/unplugin/commit/c07200f231b02fd162d64c5c362db3948e677f80))
+
+
+
 # [0.7.0](https://github.com/unjs/unplugin/compare/v0.6.3...v0.7.0) (2022-06-06)
 
 
