@@ -63,7 +63,7 @@
   "peerDependencies": {
     "esbuild": ">=0.13",
     "rollup": "^2.50.0",
-    "vite": "^2.3.0",
+    "vite": "^2.3.0 || ^3.0.0-0",
     "webpack": "4 || 5"
   },
   "peerDependenciesMeta": {
