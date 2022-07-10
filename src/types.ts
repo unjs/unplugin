@@ -32,7 +32,7 @@ export interface UnpluginOptions {
   transformInclude?: (id: string) => boolean;
   transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
   load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (id: string, importer?: string) => Thenable<string | ExternalIdResult | null | undefined>
+  resolveId?: (id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
   watchChange?: (this: UnpluginBuildContext, id: string, change: {event: 'create' | 'update' | 'delete'}) => void
 
   // framework specify extends
