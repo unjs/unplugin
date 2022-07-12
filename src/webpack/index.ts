@@ -2,7 +2,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { Resolver, ResolveRequest } from 'enhanced-resolve'
+import type { ResolvePluginInstance } from 'webpack'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 import { slash, backSlash } from './utils'
 import { createContext } from './context'
@@ -79,58 +79,63 @@ export function getWebpackPlugin<UserOptions = {}> (
           plugin.__vfsModules = new Set()
           plugin.__vfs = vfs
 
-          const resolver = {
-            apply (resolver: Resolver) {
+          const resolverPlugin: ResolvePluginInstance = {
+            apply (resolver) {
               const target = resolver.ensureHook('resolve')
-              const tap = () => async (request: ResolveRequest, resolveContext: any, callback: any) => {
-                if (!request.request) {
-                  return callback()
-                }
-
-                const id = backSlash(request.request)
-
-                // filter out invalid requests
-                if (id.startsWith(plugin.__virtualModulePrefix)) {
-                  return callback()
-                }
-
-                // call hook
-                const result = await plugin.resolveId!(slash(id))
-                if (result == null) {
-                  return callback()
-                }
-                let resolved = typeof result === 'string' ? result : result.id
-
-                // TODO: support external
-                // const isExternal = typeof result === 'string' ? false : result.external === true
-
-                // if the resolved module is not exists,
-                // we treat it as a virtual module
-                if (!fs.existsSync(resolved)) {
-                  resolved = plugin.__virtualModulePrefix + backSlash(resolved)
-                  // webpack virtual module should pass in the correct path
-                  plugin.__vfs!.writeModule(resolved, '')
-                  plugin.__vfsModules!.add(resolved)
-                }
-
-                // construct the new request
-                const newRequest = {
-                  ...request,
-                  request: resolved
-                }
-
-                // redirect the resolver
-                resolver.doResolve(target, newRequest, null, resolveContext, callback)
-              }
 
               resolver
                 .getHook('resolve')
-                .tapAsync('unplugin', tap())
+                .tapAsync(plugin.name, async (request, resolveContext, callback) => {
+                  if (!request.request) {
+                    return callback()
+                  }
+
+                  const id = backSlash(request.request)
+
+                  // filter out invalid requests
+                  if (id.startsWith(plugin.__virtualModulePrefix)) {
+                    return callback()
+                  }
+
+                  const requestContext = (request as unknown as { context: { issuer: string } }).context
+                  const importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
+                  const isEntry = requestContext.issuer === ''
+
+                  // call hook
+                  const result = await plugin.resolveId!(slash(id), importer, { isEntry })
+
+                  if (result == null) {
+                    return callback()
+                  }
+
+                  let resolved = typeof result === 'string' ? result : result.id
+
+                  // TODO: support external
+                  // const isExternal = typeof result === 'string' ? false : result.external === true
+
+                  // If the resolved module does not exist,
+                  // we treat it as a virtual module
+                  if (!fs.existsSync(resolved)) {
+                    resolved = plugin.__virtualModulePrefix + backSlash(resolved)
+                    // webpack virtual module should pass in the correct path
+                    plugin.__vfs!.writeModule(resolved, '')
+                    plugin.__vfsModules!.add(resolved)
+                  }
+
+                  // construct the new request
+                  const newRequest = {
+                    ...request,
+                    request: resolved
+                  }
+
+                  // redirect the resolver
+                  resolver.doResolve(target, newRequest, null, resolveContext, callback)
+                })
             }
           }
 
           compiler.options.resolve.plugins = compiler.options.resolve.plugins || []
-          compiler.options.resolve.plugins.push(resolver)
+          compiler.options.resolve.plugins.push(resolverPlugin)
         }
 
         // load hook

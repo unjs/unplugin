@@ -94,7 +94,14 @@ export function getEsbuildPlugin <UserOptions = {}> (
 
           if (plugin.resolveId) {
             onResolve({ filter: onResolveFilter }, async (args) => {
-              const result = await plugin.resolveId!(args.path, args.importer)
+              const isEntry = args.kind === 'entry-point'
+              const result = await plugin.resolveId!(
+                args.path,
+                // We explicitly have this if statement here for consistency with the integration of other bundelers.
+                // Here, `args.importer` is just an empty string on entry files whereas the euqivalent on other bundlers is `undefined.`
+                isEntry ? undefined : args.importer,
+                { isEntry }
+              )
               if (typeof result === 'string') {
                 return { path: result, namespace: plugin.name }
               } else if (typeof result === 'object' && result !== null) {
