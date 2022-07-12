@@ -1,3 +1,12 @@
+## [0.7.2](https://github.com/unjs/unplugin/compare/v0.7.1...v0.7.2) (2022-07-12)
+
+
+### Features
+
+* add `isEntry` flag to `resolveId` hook ([#138](https://github.com/unjs/unplugin/issues/138)) ([3b082ed](https://github.com/unjs/unplugin/commit/3b082edb47cc0babae4bd16c3918a5a773dbe539))
+
+
+
 ## [0.7.1](https://github.com/unjs/unplugin/compare/v0.7.0...v0.7.1) (2022-06-30)
 
 
