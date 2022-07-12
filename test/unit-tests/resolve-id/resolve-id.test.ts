@@ -1,14 +1,12 @@
 import * as path from 'path'
-import { it, describe, expect, vi, afterEach } from 'vitest'
+import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
 import * as vite from 'vite'
 import * as rollup from 'rollup'
 import { webpack } from 'webpack'
 import * as esbuild from 'esbuild'
 import { createUnplugin, UnpluginOptions } from '../../../src'
 
-const createUnpluginWithcallback = (
-  resolveIdCallback: UnpluginOptions['resolveId']
-) => {
+function createUnpluginWithCallback (resolveIdCallback: UnpluginOptions['resolveId']) {
   return createUnplugin(() => ({
     name: 'test-plugin',
     resolveId: resolveIdCallback
@@ -16,30 +14,30 @@ const createUnpluginWithcallback = (
 }
 
 // We extract this check because all bundlers should behave the same
-function checkResolveIdHook (resolveIdCallback): void {
+function checkResolveIdHook (resolveIdCallback: Mock): void {
   expect.assertions(4)
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
-    expect.stringMatching(/(?:\/|\\)entry\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)entry\.js$/),
     undefined,
     expect.objectContaining({ isEntry: true })
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './proxy-export',
-    expect.stringMatching(/(?:\/|\\)entry\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)entry\.js$/),
     expect.objectContaining({ isEntry: false })
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './default-export',
-    expect.stringMatching(/(?:\/|\\)proxy-export\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)proxy-export\.js$/),
     expect.objectContaining({ isEntry: false })
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './named-export',
-    expect.stringMatching(/(?:\/|\\)proxy-export\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)proxy-export\.js$/),
     expect.objectContaining({ isEntry: false })
   )
 }
@@ -51,7 +49,7 @@ describe('resolveId hook', () => {
 
   it('vite', async () => {
     const mockResolveIdHook = vi.fn(() => undefined)
-    const plugin = createUnpluginWithcallback(mockResolveIdHook).vite
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).vite
 
     await vite.build({
       clearScreen: false,
@@ -70,7 +68,7 @@ describe('resolveId hook', () => {
 
   it('rollup', async () => {
     const mockResolveIdHook = vi.fn(() => undefined)
-    const plugin = createUnpluginWithcallback(mockResolveIdHook).rollup
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).rollup
 
     await rollup.rollup({
       input: path.resolve(__dirname, 'test-src/entry.js'),
@@ -82,7 +80,7 @@ describe('resolveId hook', () => {
 
   it('webpack', async () => {
     const mockResolveIdHook = vi.fn(() => undefined)
-    const plugin = createUnpluginWithcallback(mockResolveIdHook).webpack
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).webpack
 
     await new Promise((resolve) => {
       webpack(
@@ -99,7 +97,7 @@ describe('resolveId hook', () => {
 
   it('esbuild', async () => {
     const mockResolveIdHook = vi.fn(() => undefined)
-    const plugin = createUnpluginWithcallback(mockResolveIdHook).esbuild
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).esbuild
 
     await esbuild.build({
       entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
