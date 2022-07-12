@@ -20,26 +20,26 @@ function checkResolveIdHook (resolveIdCallback): void {
   expect.assertions(4)
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
-    expect.stringMatching(/(?:\/|\\\\)entry\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)entry\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
     undefined,
     expect.objectContaining({ isEntry: true })
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './proxy-export',
-    expect.stringMatching(/(?:\/|\\\\)entry\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)entry\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
     expect.objectContaining({ isEntry: false })
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './default-export',
-    expect.stringMatching(/(?:\/|\\\\)proxy-export\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)proxy-export\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
     expect.objectContaining({ isEntry: false })
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './named-export',
-    expect.stringMatching(/(?:\/|\\\\)proxy-export\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
+    expect.stringMatching(/(?:\/|\\)proxy-export\.js$/), // regex to check path needs to be OS agnostic (unix/windows)
     expect.objectContaining({ isEntry: false })
   )
 }
