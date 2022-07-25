@@ -55,17 +55,18 @@ export function getWebpackPlugin<UserOptions = {}> (
                 return []
               }
 
-              if (plugin.transformInclude != null && !plugin.transformInclude(slash(data.resource + data.resourceQuery))) {
+              const id = slash(data.resource + data.resourceQuery)
+              if (!plugin.transformInclude || plugin.transformInclude(id)) {
+                return [{
+                  loader: TRANSFORM_LOADER,
+                  ident: plugin.name,
+                  options: {
+                    unpluginName: plugin.name
+                  }
+                }]
+              } else {
                 return []
               }
-
-              return [{
-                loader: TRANSFORM_LOADER,
-                ident: plugin.name,
-                options: {
-                  unpluginName: plugin.name
-                }
-              }]
             }
           })
         }
