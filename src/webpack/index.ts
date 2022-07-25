@@ -50,8 +50,8 @@ export function getWebpackPlugin<UserOptions = {}> (
         if (plugin.transform) {
           compiler.options.module.rules.push({
             enforce: plugin.enforce,
-            use: (data: { resource: string, resourceQuery: string } | null) => {
-              if (data == null) {
+            use: (data: { resource: string | null, resourceQuery: string }) => {
+              if (data.resource == null) {
                 return []
               }
 
