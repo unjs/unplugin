@@ -51,11 +51,11 @@ export function getWebpackPlugin<UserOptions = {}> (
           compiler.options.module.rules.push({
             enforce: plugin.enforce,
             use: (data: { resource: string, resourceQuery: string } | null) => {
-              if (data == null || !plugin.transformInclude) {
+              if (data == null) {
                 return []
               }
 
-              if (!plugin.transformInclude(slash(data.resource + data.resourceQuery))) {
+              if (plugin.transformInclude != null && !plugin.transformInclude(slash(data.resource + data.resourceQuery))) {
                 return []
               }
 
