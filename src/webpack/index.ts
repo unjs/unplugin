@@ -49,23 +49,23 @@ export function getWebpackPlugin<UserOptions = {}> (
         // transform hook
         if (plugin.transform) {
           compiler.options.module.rules.push({
-            include (id: string) {
-              if (id == null) {
-                return false
-              }
-              if (plugin.transformInclude) {
-                return plugin.transformInclude(slash(id))
-              } else {
-                return true
-              }
-            },
             enforce: plugin.enforce,
-            use: [{
-              loader: TRANSFORM_LOADER,
-              options: {
-                unpluginName: plugin.name
+            use: (data: { resource: string, resourceQuery: string } | null) => {
+              if (data == null || !plugin.transformInclude) {
+                return []
               }
-            }]
+
+              if (!plugin.transformInclude(slash(data.resource + data.resourceQuery))) {
+                return []
+              }
+
+              return [{
+                loader: TRANSFORM_LOADER,
+                options: {
+                  unpluginName: plugin.name
+                }
+              }]
+            }
           })
         }
 
