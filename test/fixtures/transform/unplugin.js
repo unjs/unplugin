@@ -23,7 +23,14 @@ module.exports = createUnplugin((options, meta) => {
         return null
       }
 
-      s.overwrite(index, index + '__UNPLUGIN__'.length, `[Injected ${options.msg}]`)
+      const injectedCode = `[Injected ${options.msg}]`
+
+      if (id.includes(injectedCode)) {
+        throw new Error('File was already transformed')
+      }
+
+      s.overwrite(index, index + '__UNPLUGIN__'.length, injectedCode)
+
       return {
         code: s.toString(),
         map: s.generateMap({
