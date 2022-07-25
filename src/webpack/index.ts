@@ -61,6 +61,7 @@ export function getWebpackPlugin<UserOptions = {}> (
 
               return [{
                 loader: TRANSFORM_LOADER,
+                ident: plugin.name,
                 options: {
                   unpluginName: plugin.name
                 }
