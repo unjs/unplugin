@@ -6,7 +6,7 @@ const r = (...args: string[]) => resolve(__dirname, '../dist', ...args)
 
 describe('transform build', () => {
   it('vite', async () => {
-    const content = await fs.readFile(r('vite/main.js.es.js'), 'utf-8')
+    const content = await fs.readFile(r('vite/main.js.mjs'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Vite]')
