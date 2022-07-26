@@ -22,7 +22,7 @@ export default async function load (this: LoaderContext<any>, source: string, ma
     id = id.slice(plugin.__virtualModulePrefix.length)
   }
 
-  const res = await plugin.load.call(Object.assign(this._compilation && createContext(this._compilation), context), slash(id))
+  const res = await plugin.load.call(Object.assign(this._compilation && createContext(this._compilation) as any, context), slash(id))
 
   if (res == null) {
     callback(null, source, map)
