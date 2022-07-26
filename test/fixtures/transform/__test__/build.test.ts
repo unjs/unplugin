@@ -10,6 +10,7 @@ describe('transform build', () => {
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Vite]')
+    expect(content).toContain('QUERY: [Injected Vite]')
   })
 
   it('rollup', async () => {
@@ -24,6 +25,7 @@ describe('transform build', () => {
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Webpack]')
+    expect(content).toContain('QUERY: [Injected Webpack]')
   })
 
   it('esbuild', async () => {
@@ -31,5 +33,6 @@ describe('transform build', () => {
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Esbuild]')
+    expect(content).toContain('QUERY: [Injected Esbuild]')
   })
 })

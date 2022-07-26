@@ -2,7 +2,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { ResolvePluginInstance } from 'webpack'
+import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
 import { slash, backSlash } from './utils'
 import { createContext } from './context'
@@ -48,24 +48,26 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         // transform hook
         if (plugin.transform) {
+          const useLoader: RuleSetUseItem[] = [{
+            loader: TRANSFORM_LOADER,
+            ident: plugin.name,
+            options: {
+              unpluginName: plugin.name
+            }
+          }]
+          const useNone: RuleSetUseItem[] = []
           compiler.options.module.rules.push({
-            include (id: string) {
-              if (id == null) {
-                return false
-              }
-              if (plugin.transformInclude) {
-                return plugin.transformInclude(slash(id))
-              } else {
-                return true
-              }
-            },
             enforce: plugin.enforce,
-            use: [{
-              loader: TRANSFORM_LOADER,
-              options: {
-                unpluginName: plugin.name
+            use: (data: { resource: string | null, resourceQuery: string }) => {
+              if (data.resource == null) {
+                return useNone
               }
-            }]
+              const id = slash(data.resource + (data.resourceQuery || ''))
+              if (!plugin.transformInclude || plugin.transformInclude(id)) {
+                return useLoader
+              }
+              return useNone
+            }
           })
         }
 

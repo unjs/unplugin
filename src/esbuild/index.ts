@@ -112,6 +112,8 @@ export function getEsbuildPlugin <UserOptions = {}> (
 
           if (plugin.load || plugin.transform) {
             onLoad({ filter: onLoadFilter }, async (args) => {
+              const id = args.path + args.suffix
+
               const errors: PartialMessage[] = []
               const warnings: PartialMessage[] = []
               const pluginContext: UnpluginContext = {
@@ -125,7 +127,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
               let code: string | undefined, map: SourceMap | null | undefined
 
               if (plugin.load) {
-                const result = await plugin.load.call(Object.assign(context, pluginContext), args.path)
+                const result = await plugin.load.call(Object.assign(context, pluginContext), id)
                 if (typeof result === 'string') {
                   code = result
                 } else if (typeof result === 'object' && result !== null) {
@@ -149,7 +151,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
                 return { contents: code, errors, warnings, loader: guessLoader(args.path), resolveDir }
               }
 
-              if (!plugin.transformInclude || plugin.transformInclude(args.path)) {
+              if (!plugin.transformInclude || plugin.transformInclude(id)) {
                 if (!code) {
                   // caution: 'utf8' assumes the input file is not in binary.
                   // if you want your plugin handle binary files, make sure to
@@ -157,7 +159,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
                   code = await fs.promises.readFile(args.path, 'utf8')
                 }
 
-                const result = await plugin.transform.call(Object.assign(context, pluginContext), code, args.path)
+                const result = await plugin.transform.call(Object.assign(context, pluginContext), code, id)
                 if (typeof result === 'string') {
                   code = result
                 } else if (typeof result === 'object' && result !== null) {
