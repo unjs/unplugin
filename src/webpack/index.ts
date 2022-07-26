@@ -48,25 +48,25 @@ export function getWebpackPlugin<UserOptions = {}> (
 
         // transform hook
         if (plugin.transform) {
-          const loaderItem: RuleSetUseItem = {
+          const useLoader: RuleSetUseItem[] = [{
             loader: TRANSFORM_LOADER,
             ident: plugin.name,
             options: {
               unpluginName: plugin.name
             }
-          }
+          }]
+          const useNone: RuleSetUseItem[] = []
           compiler.options.module.rules.push({
             enforce: plugin.enforce,
             use: (data: { resource: string | null, resourceQuery: string }) => {
               if (data.resource == null) {
-                return []
+                return useNone
               }
-              const id = slash(data.resource + data.resourceQuery)
+              const id = slash(data.resource + (data.resourceQuery || ''))
               if (!plugin.transformInclude || plugin.transformInclude(id)) {
-                return [loaderItem]
-              } else {
-                return []
+                return useLoader
               }
+              return useNone
             }
           })
         }
