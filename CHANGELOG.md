@@ -1,3 +1,12 @@
+# [0.8.0](https://github.com/unjs/unplugin/compare/v0.7.2...v0.8.0) (2022-07-26)
+
+
+### Bug Fixes
+
+* webpack and esbuild query string support ([#144](https://github.com/unjs/unplugin/issues/144)) ([24f8fa1](https://github.com/unjs/unplugin/commit/24f8fa11f1103464ba3ead05de41eef5b49fd6a4))
+
+
+
 ## [0.7.2](https://github.com/unjs/unplugin/compare/v0.7.1...v0.7.2) (2022-07-12)
 
 
