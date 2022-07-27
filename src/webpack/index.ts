@@ -8,8 +8,16 @@ import { slash, backSlash } from './utils'
 import { createContext } from './context'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
-const TRANSFORM_LOADER = resolve(_dirname, 'webpack/loaders/transform.js')
-const LOAD_LOADER = resolve(_dirname, 'webpack/loaders/load.js')
+
+const TRANSFORM_LOADER = resolve(
+  _dirname,
+  __BUNDLED__ ? 'webpack/loaders/transform' : '../../dist/webpack/loaders/transform'
+)
+
+const LOAD_LOADER = resolve(
+  _dirname,
+  __BUNDLED__ ? 'webpack/loaders/load' : '../../dist/webpack/loaders/load'
+)
 
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -141,10 +149,10 @@ export function getWebpackPlugin<UserOptions = {}> (
         }
 
         // load hook
-        if (plugin.load && plugin.__vfsModules) {
+        if (plugin.load) {
           compiler.options.module.rules.push({
-            include (id) {
-              return id != null && plugin.__vfsModules!.has(id)
+            include () {
+              return true
             },
             enforce: plugin.enforce,
             use: [{
