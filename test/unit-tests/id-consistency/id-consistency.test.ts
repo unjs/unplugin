@@ -27,7 +27,7 @@ function createUnpluginWithCallback (
 }
 
 // We extract this check because all bundlers should behave the same
-function checkResolveIdHook (
+function checkHookCalls (
   resolveIdCallback: Mock,
   transformIncludeCallback: Mock,
   transformCallback: Mock,
@@ -91,7 +91,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       }
     })
 
-    checkResolveIdHook(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
   it('rollup', async () => {
@@ -113,7 +113,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       external: ['path']
     })
 
-    checkResolveIdHook(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
   it('webpack', async () => {
@@ -143,7 +143,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       )
     })
 
-    checkResolveIdHook(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
   it('esbuild', async () => {
@@ -167,6 +167,6 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       external: ['path']
     })
 
-    checkResolveIdHook(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 })
