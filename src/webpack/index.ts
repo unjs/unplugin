@@ -4,7 +4,7 @@ import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
-import { slash, backSlash } from './utils'
+import { normalizeAbsolutePath } from '../utils'
 import { createContext } from './context'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
@@ -19,6 +19,10 @@ const LOAD_LOADER = resolve(
   __BUNDLED__ ? 'webpack/loaders/load' : '../../dist/webpack/loaders/load'
 )
 
+// We need the prefix of virtual modules to be an absolute path so webpack let's us load them (even if it's made up)
+// In the loader we strip the made up prefix path again
+const VIRTUAL_MODULE_PREFIX = resolve(process.cwd(), '_virtual_')
+
 export function getWebpackPlugin<UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
 ): UnpluginInstance<UserOptions>['webpack'] {
@@ -32,14 +36,12 @@ export function getWebpackPlugin<UserOptions = {}> (
           }
         }
 
-        const virtualModulePrefix = resolve(process.cwd(), '_virtual_')
-
         const rawPlugin = factory(userOptions, meta)
         const plugin = Object.assign(
           rawPlugin,
           {
             __unpluginMeta: meta,
-            __virtualModulePrefix: virtualModulePrefix
+            __virtualModulePrefix: VIRTUAL_MODULE_PREFIX
           }
         ) as ResolvedUnpluginOptions
 
@@ -70,7 +72,7 @@ export function getWebpackPlugin<UserOptions = {}> (
               if (data.resource == null) {
                 return useNone
               }
-              const id = slash(data.resource + (data.resourceQuery || ''))
+              const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
               if (!plugin.transformInclude || plugin.transformInclude(id)) {
                 return useLoader
               }
@@ -100,25 +102,25 @@ export function getWebpackPlugin<UserOptions = {}> (
                     return callback()
                   }
 
-                  const id = backSlash(request.request)
-
                   // filter out invalid requests
-                  if (id.startsWith(plugin.__virtualModulePrefix)) {
+                  if (normalizeAbsolutePath(request.request).startsWith(plugin.__virtualModulePrefix)) {
                     return callback()
                   }
+
+                  const id = normalizeAbsolutePath(request.request)
 
                   const requestContext = (request as unknown as { context: { issuer: string } }).context
                   const importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
                   const isEntry = requestContext.issuer === ''
 
                   // call hook
-                  const result = await plugin.resolveId!(slash(id), importer, { isEntry })
+                  const resolveIdResult = await plugin.resolveId!(id, importer, { isEntry })
 
-                  if (result == null) {
+                  if (resolveIdResult == null) {
                     return callback()
                   }
 
-                  let resolved = typeof result === 'string' ? result : result.id
+                  let resolved = typeof resolveIdResult === 'string' ? resolveIdResult : resolveIdResult.id
 
                   // TODO: support external
                   // const isExternal = typeof result === 'string' ? false : result.external === true
@@ -126,7 +128,11 @@ export function getWebpackPlugin<UserOptions = {}> (
                   // If the resolved module does not exist,
                   // we treat it as a virtual module
                   if (!fs.existsSync(resolved)) {
-                    resolved = plugin.__virtualModulePrefix + backSlash(resolved)
+                    resolved = normalizeAbsolutePath(
+                      plugin.__virtualModulePrefix +
+                      encodeURIComponent(resolved) // URI encode id so webpack doesn't think it's part of the path
+                    )
+
                     // webpack virtual module should pass in the correct path
                     plugin.__vfs!.writeModule(resolved, '')
                     plugin.__vfsModules!.add(resolved)
