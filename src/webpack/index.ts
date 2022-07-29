@@ -56,6 +56,8 @@ export function getWebpackPlugin<UserOptions = {}> (
           })
         })
 
+        const externalModules = new Set<string>()
+
         // transform hook
         if (plugin.transform) {
           const useLoader: RuleSetUseItem[] = [{
@@ -122,8 +124,10 @@ export function getWebpackPlugin<UserOptions = {}> (
 
                   let resolved = typeof resolveIdResult === 'string' ? resolveIdResult : resolveIdResult.id
 
-                  // TODO: support external
-                  // const isExternal = typeof result === 'string' ? false : result.external === true
+                  const isExternal = typeof resolveIdResult === 'string' ? false : resolveIdResult.external === true
+                  if (isExternal) {
+                    externalModules.add(resolved)
+                  }
 
                   // If the resolved module does not exist,
                   // we treat it as a virtual module
@@ -157,8 +161,14 @@ export function getWebpackPlugin<UserOptions = {}> (
         // load hook
         if (plugin.load) {
           compiler.options.module.rules.push({
-            include () {
-              return true
+            include (id) { // Don't run load hook for external modules
+              if (id.startsWith(plugin.__virtualModulePrefix)) {
+                // If module is a virtual one, we first need to strip its prefix and decode it
+                const decodedId = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
+                return !externalModules.has(decodedId)
+              } else {
+                return !externalModules.has(id)
+              }
             },
             enforce: plugin.enforce,
             use: [{
