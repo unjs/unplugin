@@ -7,9 +7,6 @@ import * as esbuild from 'esbuild'
 import { createUnplugin, UnpluginOptions } from '../../../src'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
-const proxyExportFilePath = path.resolve(__dirname, './test-src/proxy-export.js')
-const defaultExportFilePath = path.resolve(__dirname, './test-src/default-export.js')
-const namedExportFilePath = path.resolve(__dirname, './test-src/sub-folder/named-export.js')
 
 function createUnpluginWithCallback (
   resolveIdCallback: UnpluginOptions['resolveId'],
@@ -33,29 +30,31 @@ function checkHookCalls (
   transformCallback: Mock,
   loadCallback: Mock
 ): void {
+  // Ensure that all bundlers call the hooks the same amount of times
   expect(resolveIdCallback).toHaveBeenCalledTimes(4)
+  expect(transformIncludeCallback).toHaveBeenCalledTimes(4)
+  expect(transformCallback).toHaveBeenCalledTimes(4)
+  expect(loadCallback).toHaveBeenCalledTimes(4)
+
+  // Ensure that each hook was called with 4 unique ids
+  expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(4)
+  expect(new Set(transformIncludeCallback.mock.calls.map(call => call[0]))).toHaveLength(4)
+  expect(new Set(transformCallback.mock.calls.map(call => call[1]))).toHaveLength(4)
+  expect(new Set(loadCallback.mock.calls.map(call => call[0]))).toHaveLength(4)
+
+  // Ensure that the `resolveId` hook was called with expected values
   expect(resolveIdCallback).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
   expect(resolveIdCallback).toHaveBeenCalledWith('./proxy-export', expect.anything(), expect.anything())
   expect(resolveIdCallback).toHaveBeenCalledWith('./sub-folder/named-export', expect.anything(), expect.anything())
   expect(resolveIdCallback).toHaveBeenCalledWith('./default-export', expect.anything(), expect.anything())
 
-  expect(transformIncludeCallback).toHaveBeenCalledTimes(4)
-  expect(transformIncludeCallback).toHaveBeenCalledWith(entryFilePath)
-  expect(transformIncludeCallback).toHaveBeenCalledWith(proxyExportFilePath)
-  expect(transformIncludeCallback).toHaveBeenCalledWith(namedExportFilePath)
-  expect(transformIncludeCallback).toHaveBeenCalledWith(defaultExportFilePath)
-
-  expect(transformCallback).toHaveBeenCalledTimes(4)
-  expect(transformCallback).toHaveBeenCalledWith(expect.anything(), entryFilePath)
-  expect(transformCallback).toHaveBeenCalledWith(expect.anything(), proxyExportFilePath)
-  expect(transformCallback).toHaveBeenCalledWith(expect.anything(), namedExportFilePath)
-  expect(transformCallback).toHaveBeenCalledWith(expect.anything(), defaultExportFilePath)
-
-  expect(loadCallback).toHaveBeenCalledTimes(4)
-  expect(loadCallback).toHaveBeenCalledWith(entryFilePath)
-  expect(loadCallback).toHaveBeenCalledWith(proxyExportFilePath)
-  expect(loadCallback).toHaveBeenCalledWith(namedExportFilePath)
-  expect(loadCallback).toHaveBeenCalledWith(defaultExportFilePath)
+  // Ensure that the `transformInclude`, `transform` and `load` hooks were called with the same (absolute) ids
+  const ids = transformIncludeCallback.mock.calls.map(call => call[0])
+  ids.forEach((id) => {
+    expect(path.isAbsolute(id)).toBe(true)
+    expect(transformCallback).toHaveBeenCalledWith(expect.anything(), id)
+    expect(loadCallback).toHaveBeenCalledWith(id)
+  })
 }
 
 describe('id parameter should be consistent accross hooks and plugins', () => {
@@ -81,7 +80,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       plugins: [{ ...plugin(), enforce: 'pre' }], // we need to define `enforce` here for the plugin to be run
       build: {
         lib: {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
+          entry: entryFilePath,
           name: 'TestLib'
         },
         rollupOptions: {
@@ -108,7 +107,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
     ).rollup
 
     await rollup.rollup({
-      input: path.resolve(__dirname, 'test-src/entry.js'),
+      input: entryFilePath,
       plugins: [plugin()],
       external: ['path']
     })
@@ -132,7 +131,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
     await new Promise<void>((resolve) => {
       webpack(
         {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
+          entry: entryFilePath,
           plugins: [plugin()],
           externals: ['path'],
           mode: 'production'
@@ -160,7 +159,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
     ).esbuild
 
     await esbuild.build({
-      entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      entryPoints: [entryFilePath],
       plugins: [plugin()],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
