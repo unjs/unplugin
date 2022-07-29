@@ -1,7 +1,7 @@
 import type { LoaderContext } from 'webpack'
 import { UnpluginContext } from '../../types'
 import { createContext } from '../context'
-import { slash } from '../utils'
+import { normalizeAbsolutePath } from '../../utils'
 
 export default async function load (this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
@@ -19,10 +19,13 @@ export default async function load (this: LoaderContext<any>, source: string, ma
   }
 
   if (id.startsWith(plugin.__virtualModulePrefix)) {
-    id = id.slice(plugin.__virtualModulePrefix.length)
+    id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
   }
 
-  const res = await plugin.load.call(Object.assign(this._compilation && createContext(this._compilation) as any, context), slash(id))
+  const res = await plugin.load.call(
+    Object.assign(this._compilation && createContext(this._compilation) as any, context),
+    normalizeAbsolutePath(id)
+  )
 
   if (res == null) {
     callback(null, source, map)
