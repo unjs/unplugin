@@ -1,10 +1,7 @@
 import * as path from 'path'
 import { it, describe, expect, vi, afterEach } from 'vitest'
-import * as vite from 'vite'
-import * as rollup from 'rollup'
-import { webpack } from 'webpack'
-import * as esbuild from 'esbuild'
 import { createUnplugin } from '../../../src'
+import { build } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 
@@ -47,7 +44,7 @@ describe('load hook should not be called when resolveId hook returned `external:
   it('vite', async () => {
     const plugin = createMockedUnplugin().vite
 
-    await vite.build({
+    await build.vite({
       clearScreen: false,
       plugins: [{ ...plugin(), enforce: 'pre' }], // we need to define `enforce` here for the plugin to be run
       build: {
@@ -68,7 +65,7 @@ describe('load hook should not be called when resolveId hook returned `external:
   it('rollup', async () => {
     const plugin = createMockedUnplugin().rollup
 
-    await rollup.rollup({
+    await build.rollup({
       input: entryFilePath,
       plugins: [plugin()],
       external: ['path']
@@ -81,7 +78,7 @@ describe('load hook should not be called when resolveId hook returned `external:
     const plugin = createMockedUnplugin().webpack
 
     await new Promise<void>((resolve) => {
-      webpack(
+      build.webpack(
         {
           entry: entryFilePath,
           plugins: [plugin()],
@@ -100,7 +97,7 @@ describe('load hook should not be called when resolveId hook returned `external:
   it('esbuild', async () => {
     const plugin = createMockedUnplugin().esbuild
 
-    await esbuild.build({
+    await build.esbuild({
       entryPoints: [entryFilePath],
       plugins: [plugin()],
       bundle: true, // actually traverse imports

@@ -1,10 +1,7 @@
 import * as path from 'path'
 import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
-import * as vite from 'vite'
-import * as rollup from 'rollup'
-import { webpack } from 'webpack'
-import * as esbuild from 'esbuild'
 import { createUnplugin, UnpluginOptions } from '../../../src'
+import { build } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 
@@ -75,7 +72,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockLoadHook
     ).vite
 
-    await vite.build({
+    await build.vite({
       clearScreen: false,
       plugins: [{ ...plugin(), enforce: 'pre' }], // we need to define `enforce` here for the plugin to be run
       build: {
@@ -106,7 +103,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockLoadHook
     ).rollup
 
-    await rollup.rollup({
+    await build.rollup({
       input: entryFilePath,
       plugins: [plugin()],
       external: ['path']
@@ -129,7 +126,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
     ).webpack
 
     await new Promise<void>((resolve) => {
-      webpack(
+      build.webpack(
         {
           entry: entryFilePath,
           plugins: [plugin()],
@@ -158,7 +155,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockLoadHook
     ).esbuild
 
-    await esbuild.build({
+    await build.esbuild({
       entryPoints: [entryFilePath],
       plugins: [plugin()],
       bundle: true, // actually traverse imports
