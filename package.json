@@ -27,7 +27,7 @@
     "prepublishOnly": "nr build",
     "release": "bumpp --commit --push --tag --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
     "test": "nr lint && nr test:build && vitest run",
-    "test:build": "nr build && jiti scripts/buildFixtures.ts"
+    "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
     "acorn": "^8.8.0",
