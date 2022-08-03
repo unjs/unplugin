@@ -18,12 +18,16 @@ async function run () {
       await fs.remove(join(path, 'dist'))
     }
     console.log(c.yellow(c.inverse(c.bold('\n  Vite  '))), name, '\n')
+    execSync('npx vite --version', { cwd: path, stdio: 'inherit' })
     execSync('npx vite build', { cwd: path, stdio: 'inherit' })
     console.log(c.red(c.inverse(c.bold('\n  Rollup  '))), name, '\n')
+    execSync('npx rollup --version', { cwd: path, stdio: 'inherit' })
     execSync('npx rollup -c', { cwd: path, stdio: 'inherit' })
     console.log(c.blue(c.inverse(c.bold('\n  Webpack  '))), name, '\n')
+    execSync('npx webpack --version', { cwd: path, stdio: 'inherit' })
     execSync('npx webpack', { cwd: path, stdio: 'inherit' })
     console.log(c.yellow(c.inverse(c.bold('\n  Esbuild  '))), name, '\n')
+    execSync('npx esbuild --version', { cwd: path, stdio: 'inherit' })
     execSync('node esbuild.config.js', { cwd: path, stdio: 'inherit' })
   }
 }
