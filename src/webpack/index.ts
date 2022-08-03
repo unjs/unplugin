@@ -11,12 +11,12 @@ const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLT
 
 const TRANSFORM_LOADER = resolve(
   _dirname,
-  __BUNDLED__ ? 'webpack/loaders/transform' : '../../dist/webpack/loaders/transform'
+  __DEV__ ? '../../dist/webpack/loaders/transform' : 'webpack/loaders/transform'
 )
 
 const LOAD_LOADER = resolve(
   _dirname,
-  __BUNDLED__ ? 'webpack/loaders/load' : '../../dist/webpack/loaders/load'
+  __DEV__ ? '../../dist/webpack/loaders/load' : 'webpack/loaders/load'
 )
 
 // We need the prefix of virtual modules to be an absolute path so webpack let's us load them (even if it's made up)

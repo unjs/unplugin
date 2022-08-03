@@ -13,6 +13,6 @@ export const tsup: Options = {
     'src/webpack/loaders/transform.ts'
   ],
   define: {
-    __BUNDLED__: 'true'
+    __DEV__: 'false'
   }
 }
