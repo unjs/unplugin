@@ -49,11 +49,7 @@ export function getWebpackPlugin<UserOptions = {}> (
         // transform hook
         if (plugin.transform) {
           const useLoader: RuleSetUseItem[] = [{
-            loader: TRANSFORM_LOADER,
-            ident: plugin.name,
-            options: {
-              unpluginName: plugin.name
-            }
+            loader: `${TRANSFORM_LOADER}?unpluginName=${encodeURIComponent(plugin.name)}`
           }]
           const useNone: RuleSetUseItem[] = []
           compiler.options.module.rules.push({
