@@ -19,6 +19,7 @@ specifiers:
   fs-extra: ^10.1.0
   jiti: ^1.14.0
   magic-string: ^0.26.2
+  picocolors: ^1.0.0
   rollup: ^2.77.2
   tsup: ^6.2.0
   typescript: ^4.7.4
@@ -52,6 +53,7 @@ devDependencies:
   fs-extra: 10.1.0
   jiti: 1.14.0
   magic-string: 0.26.2
+  picocolors: 1.0.0
   rollup: 2.77.2
   tsup: 6.2.0_typescript@4.7.4
   typescript: 4.7.4

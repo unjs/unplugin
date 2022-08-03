@@ -2,7 +2,7 @@ import * as path from 'path'
 import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
 import * as vite from 'vite'
 import * as rollup from 'rollup'
-import { webpack } from 'webpack'
+import * as webpack from 'webpack'
 import * as esbuild from 'esbuild'
 import { createUnplugin, UnpluginOptions } from '../../../src'
 
@@ -83,7 +83,7 @@ describe('resolveId hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).webpack
 
     await new Promise((resolve) => {
-      webpack(
+      (webpack.webpack || webpack)(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
           plugins: [plugin()]
