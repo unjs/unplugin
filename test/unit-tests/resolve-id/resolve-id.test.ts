@@ -83,7 +83,8 @@ describe('resolveId hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).webpack
 
     await new Promise((resolve) => {
-      (webpack.webpack || webpack)(
+      // @ts-ignore
+      (webpack.webpack || webpack.default || webpack)(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
           plugins: [plugin()]
