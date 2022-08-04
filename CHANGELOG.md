@@ -1,3 +1,12 @@
+## [0.8.1](https://github.com/unjs/unplugin/compare/v0.8.0...v0.8.1) (2022-08-04)
+
+
+### Bug Fixes
+
+* fix webpack 4 by not using loader options ([#149](https://github.com/unjs/unplugin/issues/149)) ([b68fbc4](https://github.com/unjs/unplugin/commit/b68fbc4b702a2c8dd99eb1d77a74a765df072995))
+
+
+
 # [0.8.0](https://github.com/unjs/unplugin/compare/v0.7.2...v0.8.0) (2022-07-26)
 
 
