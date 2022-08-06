@@ -94,6 +94,12 @@ export function getEsbuildPlugin <UserOptions = {}> (
 
           if (plugin.resolveId) {
             onResolve({ filter: onResolveFilter }, async (args) => {
+              if (initialOptions.external?.includes(args.path)) {
+                // We don't want to call the `resolveId` hook for external modules, since rollup doesn't do
+                // that and we want to have consistent behaviour across bundlers
+                return undefined
+              }
+
               const isEntry = args.kind === 'entry-point'
               const result = await plugin.resolveId!(
                 args.path,

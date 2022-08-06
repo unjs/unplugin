@@ -11,5 +11,8 @@ export const tsup: Options = {
     'src/index.ts',
     'src/webpack/loaders/load.ts',
     'src/webpack/loaders/transform.ts'
-  ]
+  ],
+  define: {
+    __DEV__: 'false'
+  }
 }

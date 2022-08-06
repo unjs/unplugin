@@ -15,7 +15,6 @@ export function getVitePlugin <UserOptions = {}> (
     if (rawPlugin.vite) {
       Object.assign(plugin, rawPlugin.vite)
     }
-
     return plugin
   }
 }
