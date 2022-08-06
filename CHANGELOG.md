@@ -1,3 +1,12 @@
+# [0.9.0](https://github.com/unjs/unplugin/compare/v0.8.1...v0.9.0) (2022-08-06)
+
+
+### Bug Fixes
+
+* ensure consistent `id`s across hooks and bundlers ([#145](https://github.com/unjs/unplugin/issues/145)) ([335f403](https://github.com/unjs/unplugin/commit/335f403bfba35bee4e251493824786ae1689a9e7))
+
+
+
 ## [0.8.1](https://github.com/unjs/unplugin/compare/v0.8.0...v0.8.1) (2022-08-04)
 
 
