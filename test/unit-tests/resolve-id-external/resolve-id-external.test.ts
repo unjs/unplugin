@@ -83,7 +83,8 @@ describe('load hook should not be called when resolveId hook returned `external:
           entry: entryFilePath,
           plugins: [plugin()],
           externals: ['path'],
-          mode: 'production'
+          mode: 'production',
+          target: 'node' // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
         },
         () => {
           resolve()
