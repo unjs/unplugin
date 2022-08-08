@@ -1,7 +1,7 @@
 import * as path from 'path'
 import { it, describe, expect, vi, afterEach } from 'vitest'
-import { createUnplugin } from '../../../src'
 import { build } from '../utils'
+import { createUnplugin } from 'unplugin'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 

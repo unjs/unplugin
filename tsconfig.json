@@ -10,9 +10,15 @@
     "resolveJsonModule": true,
     "types": [
       "node"
-    ]
+    ],
+    "paths": {
+      "unplugin": [
+        "./src/index.ts"
+      ]
+    }
   },
   "include": [
-    "src"
+    "src",
+    "test"
   ]
 }
