@@ -4,6 +4,7 @@ import { build } from '../utils'
 import { createUnplugin, UnpluginOptions } from 'unplugin'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
+const externals = ['path']
 
 function createUnpluginWithCallback (
   resolveIdCallback: UnpluginOptions['resolveId'],
@@ -27,17 +28,18 @@ function checkHookCalls (
   transformCallback: Mock,
   loadCallback: Mock
 ): void {
+  const EXPECT_CALLED_TIMES = 4
   // Ensure that all bundlers call the hooks the same amount of times
-  expect(resolveIdCallback).toHaveBeenCalledTimes(4)
-  expect(transformIncludeCallback).toHaveBeenCalledTimes(4)
-  expect(transformCallback).toHaveBeenCalledTimes(4)
-  expect(loadCallback).toHaveBeenCalledTimes(4)
+  expect(resolveIdCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
+  expect(transformIncludeCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
+  expect(transformCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
+  expect(loadCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
 
-  // Ensure that each hook was called with 4 unique ids
-  expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(4)
-  expect(new Set(transformIncludeCallback.mock.calls.map(call => call[0]))).toHaveLength(4)
-  expect(new Set(transformCallback.mock.calls.map(call => call[1]))).toHaveLength(4)
-  expect(new Set(loadCallback.mock.calls.map(call => call[0]))).toHaveLength(4)
+  // Ensure that each hook was called with unique ids
+  expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(transformIncludeCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(transformCallback.mock.calls.map(call => call[1]))).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(loadCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
 
   // Ensure that the `resolveId` hook was called with expected values
   expect(resolveIdCallback).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
@@ -81,7 +83,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
           name: 'TestLib'
         },
         rollupOptions: {
-          external: ['path']
+          external: externals
         },
         write: false // don't output anything
       }
@@ -106,7 +108,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
     await build.rollup({
       input: entryFilePath,
       plugins: [plugin()],
-      external: ['path']
+      external: externals
     })
 
     checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
@@ -130,7 +132,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
         {
           entry: entryFilePath,
           plugins: [plugin()],
-          externals: ['path'],
+          externals,
           mode: 'production',
           target: 'node' // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
         },
@@ -161,7 +163,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       plugins: [plugin()],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
-      external: ['path']
+      external: externals
     })
 
     checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)

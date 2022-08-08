@@ -4,6 +4,7 @@ import { build } from '../utils'
 import { createUnplugin } from 'unplugin'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
+const externals = ['path']
 
 describe('load hook should not be called when resolveId hook returned `external: true`', () => {
   const mockResolveIdHook = vi.fn((id: string) => {
@@ -53,7 +54,7 @@ describe('load hook should not be called when resolveId hook returned `external:
           name: 'TestLib'
         },
         rollupOptions: {
-          external: ['path']
+          external: externals
         },
         write: false // don't output anything
       }
@@ -68,7 +69,7 @@ describe('load hook should not be called when resolveId hook returned `external:
     await build.rollup({
       input: entryFilePath,
       plugins: [plugin()],
-      external: ['path']
+      external: externals
     })
 
     checkHookCalls()
@@ -82,7 +83,7 @@ describe('load hook should not be called when resolveId hook returned `external:
         {
           entry: entryFilePath,
           plugins: [plugin()],
-          externals: ['path'],
+          externals,
           mode: 'production',
           target: 'node' // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
         },
@@ -103,7 +104,7 @@ describe('load hook should not be called when resolveId hook returned `external:
       plugins: [plugin()],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
-      external: ['path']
+      external: externals
     })
 
     checkHookCalls()
