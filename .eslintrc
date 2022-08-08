@@ -4,6 +4,7 @@
   ],
   "rules": {
     "no-use-before-define": "off",
-    "import/no-named-as-default-member": "off"
+    "import/no-named-as-default-member": "off",
+    "no-restricted-imports": ["error", "path"]
   }
 }

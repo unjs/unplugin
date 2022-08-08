@@ -1,5 +1,5 @@
 import fs, { existsSync, mkdirSync } from 'fs'
-import path from 'path'
+import { resolve, dirname } from 'pathe'
 import chokidar from 'chokidar'
 import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
@@ -38,12 +38,12 @@ export function getEsbuildPlugin <UserOptions = {}> (
               })
             },
             addWatchFile (id) {
-              watchList.add(path.resolve(id))
+              watchList.add(resolve(id))
             },
             emitFile (emittedFile) {
               const outFileName = emittedFile.fileName || emittedFile.name
               if (initialOptions.outdir && emittedFile.source && outFileName) {
-                fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
+                fs.writeFileSync(resolve(initialOptions.outdir, outFileName), emittedFile.source)
               }
             },
             getWatchFiles () {
@@ -128,7 +128,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
               }
               // because we use `namespace` to simulate virtual modules，
               // it is required to forward `resolveDir` for esbuild to find dependencies.
-              const resolveDir = path.dirname(args.path)
+              const resolveDir = dirname(args.path)
 
               let code: string | undefined, map: SourceMap | null | undefined
 

@@ -1,4 +1,4 @@
-import { extname } from 'path'
+import { extname } from 'pathe'
 import remapping from '@ampproject/remapping'
 import type {
   DecodedSourceMap,

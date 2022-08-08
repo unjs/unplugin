@@ -1,4 +1,4 @@
-import * as path from 'path'
+import { resolve } from 'pathe'
 import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
 import { build } from '../utils'
 import { createUnplugin, UnpluginOptions } from 'unplugin'
@@ -53,7 +53,7 @@ describe('resolveId hook', () => {
       plugins: [{ ...plugin(), enforce: 'pre' }], // we need to define `enforce` here for the plugin to be run
       build: {
         lib: {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
+          entry: resolve(__dirname, 'test-src/entry.js'),
           name: 'TestLib'
         },
         write: false // don't output anything
@@ -68,7 +68,7 @@ describe('resolveId hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).rollup
 
     await build.rollup({
-      input: path.resolve(__dirname, 'test-src/entry.js'),
+      input: resolve(__dirname, 'test-src/entry.js'),
       plugins: [plugin()]
     })
 
@@ -79,13 +79,14 @@ describe('resolveId hook', () => {
     const mockResolveIdHook = vi.fn(() => undefined)
     const plugin = createUnpluginWithCallback(mockResolveIdHook).webpack
 
-    await new Promise((resolve) => {
+    // eslint-disable-next-line promise/param-names
+    await new Promise((r) => {
       build.webpack(
         {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
+          entry: resolve(__dirname, 'test-src/entry.js'),
           plugins: [plugin()]
         },
-        resolve
+        r
       )
     })
 
@@ -97,7 +98,7 @@ describe('resolveId hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).esbuild
 
     await build.esbuild({
-      entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      entryPoints: [resolve(__dirname, 'test-src/entry.js')],
       plugins: [plugin()],
       bundle: true, // actually traverse imports
       write: false // don't pollute console

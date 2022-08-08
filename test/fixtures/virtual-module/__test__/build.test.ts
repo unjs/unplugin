@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { resolve } from 'pathe'
 import fs from 'fs-extra'
 import { describe, it, expect } from 'vitest'
 
