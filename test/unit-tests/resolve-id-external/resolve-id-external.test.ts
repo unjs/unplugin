@@ -1,9 +1,9 @@
-import { resolve } from 'pathe'
+import * as path from 'path'
 import { it, describe, expect, vi, afterEach } from 'vitest'
 import { build } from '../utils'
 import { createUnplugin } from 'unplugin'
 
-const entryFilePath = resolve(__dirname, './test-src/entry.js')
+const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 
 describe('load hook should not be called when resolveId hook returned `external: true`', () => {
   const mockResolveIdHook = vi.fn((id: string) => {

@@ -1,4 +1,4 @@
-import { isAbsolute, normalize } from 'pathe'
+import { isAbsolute, normalize } from 'path'
 
 /**
  * Normalizes a given path when it's absolute. Normalizing means returning a new path by converting

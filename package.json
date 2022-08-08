@@ -32,7 +32,6 @@
   "dependencies": {
     "acorn": "^8.8.0",
     "chokidar": "^3.5.3",
-    "pathe": "^0.3.3",
     "webpack-sources": "^3.2.3",
     "webpack-virtual-modules": "^0.4.4"
   },

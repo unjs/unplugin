@@ -1,4 +1,4 @@
-const { resolve } = require('pathe')
+const { resolve } = require('path')
 const { vite } = require('./unplugin')
 
 module.exports = {

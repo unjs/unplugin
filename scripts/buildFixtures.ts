@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
+import { resolve, join } from 'path'
 import { execSync } from 'child_process'
-import { resolve, join } from 'pathe'
 import fs from 'fs-extra'
 import c from 'picocolors'
 

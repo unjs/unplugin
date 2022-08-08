@@ -1,4 +1,4 @@
-import { resolve } from 'pathe'
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
 
 export default defineConfig({

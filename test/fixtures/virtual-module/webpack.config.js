@@ -1,4 +1,4 @@
-const { resolve } = require('pathe')
+const { resolve } = require('path')
 const { webpack } = require('./unplugin')
 
 module.exports = {

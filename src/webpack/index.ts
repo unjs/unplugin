@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { fileURLToPath } from 'url'
-import { resolve, dirname } from 'pathe'
+import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'

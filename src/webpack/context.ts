@@ -1,4 +1,4 @@
-import { resolve } from 'pathe'
+import { resolve } from 'path'
 // eslint-disable-next-line import/default
 import sources from 'webpack-sources'
 import type { Compilation } from 'webpack'
