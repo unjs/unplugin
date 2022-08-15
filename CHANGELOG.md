@@ -1,3 +1,12 @@
+## [0.9.2](https://github.com/unjs/unplugin/compare/v0.9.1...v0.9.2) (2022-08-15)
+
+
+### Bug Fixes
+
+* **types:** `transformInclude` support nullish values ([6df169f](https://github.com/unjs/unplugin/commit/6df169f054081ab2efb2ec6d17fb67a04b01d082))
+
+
+
 ## [0.9.1](https://github.com/unjs/unplugin/compare/v0.9.0...v0.9.1) (2022-08-15)
 
 
