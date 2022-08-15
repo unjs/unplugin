@@ -1,3 +1,12 @@
+## [0.9.1](https://github.com/unjs/unplugin/compare/v0.9.0...v0.9.1) (2022-08-15)
+
+
+### Bug Fixes
+
+* **types:** support required options ([53954df](https://github.com/unjs/unplugin/commit/53954df7d034ead6716ed0899022ac4d72971753))
+
+
+
 # [0.9.0](https://github.com/unjs/unplugin/compare/v0.8.1...v0.9.0) (2022-08-06)
 
 
