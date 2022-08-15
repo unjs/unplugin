@@ -18,7 +18,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
     const meta: UnpluginContextMeta = {
       framework: 'esbuild'
     }
-    const plugin = factory(userOptions, meta)
+    const plugin = factory(userOptions!, meta)
 
     return {
       name: plugin.name,

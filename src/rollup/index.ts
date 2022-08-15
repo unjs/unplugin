@@ -7,7 +7,7 @@ export function getRollupPlugin <UserOptions = {}> (
     const meta: UnpluginContextMeta = {
       framework: 'rollup'
     }
-    const rawPlugin = factory(userOptions, meta)
+    const rawPlugin = factory(userOptions!, meta)
     return toRollupPlugin(rawPlugin)
   }
 }

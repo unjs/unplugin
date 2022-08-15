@@ -54,13 +54,16 @@ export interface ResolvedUnpluginOptions extends UnpluginOptions {
   __virtualModulePrefix: string
 }
 
-export type UnpluginFactory<UserOptions> = (options: UserOptions | undefined, meta: UnpluginContextMeta) => UnpluginOptions
+export type UnpluginFactory<UserOptions> = (options: UserOptions, meta: UnpluginContextMeta) => UnpluginOptions
+export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserOptions
+  ? (options?: UserOptions) => Return
+  : (options: UserOptions) => Return
 
 export interface UnpluginInstance<UserOptions> {
-  rollup: (options?: UserOptions) => RollupPlugin;
-  webpack: (options?: UserOptions) => WebpackPluginInstance;
-  vite: (options?: UserOptions) => VitePlugin;
-  esbuild: (options?: UserOptions) => EsbuildPlugin;
+  rollup: UnpluginFactoryOutput<UserOptions, RollupPlugin>
+  webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
+  vite: UnpluginFactoryOutput<UserOptions, VitePlugin>
+  esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   raw: UnpluginFactory<UserOptions>
 }
 

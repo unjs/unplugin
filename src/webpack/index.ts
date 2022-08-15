@@ -36,7 +36,7 @@ export function getWebpackPlugin<UserOptions = {}> (
           }
         }
 
-        const rawPlugin = factory(userOptions, meta)
+        const rawPlugin = factory(userOptions!, meta)
         const plugin = Object.assign(
           rawPlugin,
           {

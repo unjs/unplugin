@@ -8,7 +8,7 @@ export function getVitePlugin <UserOptions = {}> (
     const meta: UnpluginContextMeta = {
       framework: 'vite'
     }
-    const rawPlugin = factory(userOptions, meta)
+    const rawPlugin = factory(userOptions!, meta)
 
     const plugin = toRollupPlugin(rawPlugin, false) as VitePlugin
 
