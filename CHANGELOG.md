@@ -1,3 +1,12 @@
+## [0.9.3](https://github.com/unjs/unplugin/compare/v0.9.2...v0.9.3) (2022-08-18)
+
+
+### Bug Fixes
+
+* **webpack:** avoid repeat set __vfsModules value ([#155](https://github.com/unjs/unplugin/issues/155)) ([de5af69](https://github.com/unjs/unplugin/commit/de5af69440afe8433f86d82101335b65e4b8097d))
+
+
+
 ## [0.9.2](https://github.com/unjs/unplugin/compare/v0.9.1...v0.9.2) (2022-08-15)
 
 
