@@ -134,6 +134,7 @@ export function getWebpackPlugin<UserOptions = {}> (
                     )
 
                     // webpack virtual module should pass in the correct path
+                    // https://github.com/unjs/unplugin/pull/155
                     if (!plugin.__vfsModules!.has(resolved)) {
                       plugin.__vfs!.writeModule(resolved, '')
                       plugin.__vfsModules!.add(resolved)
