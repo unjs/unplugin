@@ -6,14 +6,17 @@ module.exports = createUnplugin(() => {
     resolveId (id) {
       return id.startsWith('virtual/') ? id : null
     },
+    loadInclude (id) {
+      return id.startsWith('virtual/')
+    },
     load (id) {
       if (id === 'virtual/1') {
         return 'export default "VIRTUAL:ONE"'
-      }
-      if (id === 'virtual/2') {
+      } else if (id === 'virtual/2') {
         return 'export default "VIRTUAL:TWO"'
+      } else {
+        throw new Error(`Unexpected id: ${id}`)
       }
-      return null
     }
   }
 })

@@ -132,7 +132,7 @@ export function getEsbuildPlugin <UserOptions = {}> (
 
               let code: string | undefined, map: SourceMap | null | undefined
 
-              if (plugin.load) {
+              if (plugin.load && (!plugin.loadInclude || plugin.loadInclude(id))) {
                 const result = await plugin.load.call(Object.assign(context, pluginContext), id)
                 if (typeof result === 'string') {
                   code = result

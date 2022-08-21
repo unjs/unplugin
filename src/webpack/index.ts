@@ -160,14 +160,18 @@ export function getWebpackPlugin<UserOptions = {}> (
         // load hook
         if (plugin.load) {
           compiler.options.module.rules.push({
-            include (id) { // Don't run load hook for external modules
+            include (id) {
               if (id.startsWith(plugin.__virtualModulePrefix)) {
-                // If module is a virtual one, we first need to strip its prefix and decode it
-                const decodedId = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
-                return !externalModules.has(decodedId)
-              } else {
-                return !externalModules.has(id)
+                id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
               }
+
+              // load include filter
+              if (plugin.loadInclude && !plugin.loadInclude(id)) {
+                return false
+              }
+
+              // Don't run load hook for external modules
+              return !externalModules.has(id)
             },
             enforce: plugin.enforce,
             use: [{

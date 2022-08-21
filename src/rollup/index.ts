@@ -23,6 +23,16 @@ export function toRollupPlugin (plugin: UnpluginOptions, containRollupOptions = 
     }
   }
 
+  if (plugin.load && plugin.loadInclude) {
+    const _load = plugin.load
+    plugin.load = function (id) {
+      if (plugin.loadInclude && !plugin.loadInclude(id)) {
+        return null
+      }
+      return _load.call(this, id)
+    }
+  }
+
   if (plugin.rollup && containRollupOptions) {
     Object.assign(plugin, plugin.rollup)
   }
