@@ -1,3 +1,12 @@
+## [0.9.4](https://github.com/unjs/unplugin/compare/v0.9.3...v0.9.4) (2022-08-21)
+
+
+### Features
+
+* introduce new `loadInclude` hook ([#157](https://github.com/unjs/unplugin/issues/157)) ([7482dc1](https://github.com/unjs/unplugin/commit/7482dc1fcd359ece333a05ad60b1c952f689a945))
+
+
+
 ## [0.9.3](https://github.com/unjs/unplugin/compare/v0.9.2...v0.9.3) (2022-08-18)
 
 
