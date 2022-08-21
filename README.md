@@ -24,6 +24,7 @@ Currently supports:
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
 | [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌ <sup>2</sup> | ✅ | ✅ | ✅ | ❌ <sup>2</sup> |
 | [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `loadInclude`<sup>1</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
 | [`watchChange`](https://rollupjs.org/guide/en/#watchchange) | ✅ | ✅ | ✅ | ✅ | ✅ |
 
