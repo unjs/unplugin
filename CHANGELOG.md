@@ -1,3 +1,12 @@
+## [0.9.5](https://github.com/unjs/unplugin/compare/v0.9.4...v0.9.5) (2022-08-25)
+
+
+### Bug Fixes
+
+* **types:** align source map with rollup ([#161](https://github.com/unjs/unplugin/issues/161)) ([95d2e45](https://github.com/unjs/unplugin/commit/95d2e4562bdadb458ce504e74805a77d6a33ba93))
+
+
+
 ## [0.9.4](https://github.com/unjs/unplugin/compare/v0.9.3...v0.9.4) (2022-08-21)
 
 
