@@ -1,4 +1,4 @@
-import type { AcornNode, EmittedAsset, Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMap } from 'rollup'
+import type { AcornNode, EmittedAsset, Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin } from 'esbuild'
@@ -13,7 +13,7 @@ export {
 
 export type Thenable<T> = T | Promise<T>
 
-export type TransformResult = string | { code: string; map?: SourceMap | null; } | null | undefined
+export type TransformResult = string | { code: string; map?: SourceMapInput | null; } | null | undefined
 
 export type ExternalIdResult = { id: string, external?: boolean }
 
