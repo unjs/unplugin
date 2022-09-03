@@ -55,7 +55,7 @@ import { createUnplugin } from 'unplugin'
 
 export const unplugin = createUnplugin((options: UserOptions) => {
   return {
-    name: 'my-first-unplugin',
+    name: 'unplugin-prefixed-name',
     // webpack's id filter is outside of loader logic,
     // an additional hook is needed for better perf on webpack
     transformInclude (id) {
@@ -81,11 +81,11 @@ export const esbuildPlugin = unplugin.esbuild
 
 ```ts
 // vite.config.ts
-import MyUnplugin from './my-unplugin'
+import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    MyUnplugin.vite({ /* options */ })
+    UnpluginFeature.vite({ /* options */ })
   ]
 }
 ```
@@ -94,11 +94,11 @@ export default {
 
 ```ts
 // rollup.config.js
-import MyUnplugin from './my-unplugin'
+import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    MyUnplugin.rollup({ /* options */ })
+    UnpluginFeature.rollup({ /* options */ })
   ]
 }
 ```
@@ -109,7 +109,7 @@ export default {
 // webpack.config.js
 module.exports = {
   plugins: [
-    require('./my-unplugin').webpack({ /* options */ })
+    require('./unplugin-feature').webpack({ /* options */ })
   ]
 }
 ```
@@ -122,7 +122,7 @@ import { build } from 'esbuild'
 
 build({
   plugins: [
-    require('./my-unplugin').esbuild({ /* options */ })
+    require('./unplugin-feature').esbuild({ /* options */ })
   ]
 })
 ```
@@ -138,10 +138,10 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 
   return {
     // common unplugin hooks
-    name: 'my-first-unplugin',
+    name: 'unplugin-prefixed-name',
     transformInclude (id) { /* ... */ },
     transform (code) { /* ... */  },
-    
+
     // framework specific hooks
     vite: {
       // Vite config
@@ -165,6 +165,24 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
   }
 })
 ```
+
+## Conventions
+
+- Plugins powered by unplugin should have a clear name with `unplugin-` prefix.
+- Include `unplugin` keyword in `package.json`.
+- To provide better DX, packages could export 2 kinds of entry points:
+  - Default export: the returned value of `createUnplugin` function
+
+     ```ts
+     import UnpluginFeature from 'unplugin-feature'
+     ```
+
+  - Subpath exports: properties of the returned value of `createUnplugin` function for each framework users
+
+     ```ts
+     import VitePlugin from 'unplugin-feature/vite'
+     ```
+  - Refer to [unplugin-starter](https://github.com/antfu/unplugin-starter) for more details about this setup.
 
 ## Starter Templates
 
