@@ -169,7 +169,8 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 ## Conventions
 
 - Plugins powered by unplugin should have a clear name with `unplugin-` prefix.
-- Packages should export 2 kinds of entry points:
+- Include `unplugin` keyword in `package.json`.
+- To provide better DX, packages could export 2 kinds of entry points:
   - Default export: the returned value of `createUnplugin` function
 
      ```ts
@@ -181,8 +182,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
      ```ts
      import VitePlugin from 'unplugin-feature/vite'
      ```
-
-- Include `unplugin` keyword in `package.json`.
+  - Refer to [unplugin-starter](https://github.com/antfu/unplugin-starter) for more details about this setup.
 
 ## Starter Templates
 
