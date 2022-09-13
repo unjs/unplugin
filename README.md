@@ -208,4 +208,4 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 
 ## License
 
-[MIT](./LICENSE) License © 2021 Nuxt Contrib
+[MIT](./LICENSE) License © 2021 Nuxt Contributors
