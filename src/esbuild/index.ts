@@ -1,4 +1,4 @@
-import fs, { existsSync, mkdirSync } from 'fs'
+import fs from 'fs'
 import path from 'path'
 import chokidar from 'chokidar'
 import type { PartialMessage } from 'esbuild'
@@ -52,8 +52,8 @@ export function getEsbuildPlugin <UserOptions = {}> (
           }
 
           // Ensure output directory exists for this.emitFile
-          if (initialOptions.outdir && !existsSync(initialOptions.outdir)) {
-            mkdirSync(initialOptions.outdir, { recursive: true })
+          if (initialOptions.outdir && !fs.existsSync(initialOptions.outdir)) {
+            fs.mkdirSync(initialOptions.outdir, { recursive: true })
           }
 
           if (plugin.buildStart) {

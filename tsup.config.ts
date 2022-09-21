@@ -12,6 +12,12 @@ export const tsup: Options = {
     'src/webpack/loaders/load.ts',
     'src/webpack/loaders/transform.ts'
   ],
+  external: [
+    'vite',
+    'webpack',
+    'rollup',
+    'esbuild'
+  ],
   define: {
     __DEV__: 'false'
   }
