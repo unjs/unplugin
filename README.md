@@ -187,6 +187,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 ## Starter Templates
 
 - [unplugin-starter](https://github.com/antfu/unplugin-starter)
+- [create-unplugin](https://github.com/jwr12135/create-unplugin) <sup><code>Community</code></sup>
 
 ## Examples
 
