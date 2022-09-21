@@ -1,6 +1,6 @@
 {
   "name": "unplugin",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "packageManager": "pnpm@7.11.0",
   "description": "Unified plugin system for build tools",
   "repository": "unjs/unplugin",

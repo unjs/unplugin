@@ -1,3 +1,12 @@
+## [0.9.6](https://github.com/unjs/unplugin/compare/v0.9.5...v0.9.6) (2022-09-21)
+
+
+### Bug Fixes
+
+* remove all peer dependency, close [#170](https://github.com/unjs/unplugin/issues/170) ([6d3d5af](https://github.com/unjs/unplugin/commit/6d3d5af6b00eef367ab03182229a9efa125bd61b))
+
+
+
 ## [0.9.5](https://github.com/unjs/unplugin/compare/v0.9.4...v0.9.5) (2022-08-25)
 
 
