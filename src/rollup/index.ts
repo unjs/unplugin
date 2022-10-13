@@ -10,7 +10,7 @@ export function getRollupPlugin <UserOptions = {}> (
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
     const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin))
-    return plugins.length > 1 ? plugins : plugins[0]
+    return plugins.length === 1 ? plugins[0] : plugins
   }
 }
 

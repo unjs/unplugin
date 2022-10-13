@@ -204,9 +204,8 @@ export function getEsbuildPlugin <UserOptions = {}> (
         for (const plugin of plugins) { setup(plugin)(build) }
       }
 
-    return {
-      name: meta.esbuildHostName ?? `unplugin-host-${i++}`,
-      setup: plugins.length > 1 ? setupMutiplePlugins() : setup(plugins[0])
-    }
+    return plugins.length === 1
+      ? { name: plugins[0].name, setup: setup(plugins[0]) }
+      : { name: meta.esbuildHostName ?? `unplugin-host-${i++}`, setup: setupMutiplePlugins() }
   }
 }
