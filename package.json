@@ -30,6 +30,7 @@
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
+    "@antfu/utils": "^0.5.2",
     "acorn": "^8.8.0",
     "chokidar": "^3.5.3",
     "webpack-sources": "^3.2.3",

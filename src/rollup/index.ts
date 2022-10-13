@@ -1,3 +1,4 @@
+import { toArray } from '@antfu/utils'
 import { UnpluginInstance, UnpluginFactory, UnpluginOptions, RollupPlugin, UnpluginContextMeta } from '../types'
 
 export function getRollupPlugin <UserOptions = {}> (
@@ -7,8 +8,9 @@ export function getRollupPlugin <UserOptions = {}> (
     const meta: UnpluginContextMeta = {
       framework: 'rollup'
     }
-    const rawPlugin = factory(userOptions!, meta)
-    return toRollupPlugin(rawPlugin)
+    const rawPlugins = toArray(factory(userOptions!, meta))
+    const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin))
+    return plugins.length > 0 ? plugins : plugins[0]
   }
 }
 

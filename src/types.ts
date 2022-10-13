@@ -3,6 +3,7 @@ import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin } from 'esbuild'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
+import type { Arrayable } from '@antfu/utils'
 
 export {
   EsbuildPlugin,
@@ -65,25 +66,32 @@ export interface ResolvedUnpluginOptions extends UnpluginOptions {
   __virtualModulePrefix: string
 }
 
-export type UnpluginFactory<UserOptions> = (options: UserOptions, meta: UnpluginContextMeta) => UnpluginOptions
+export type UnpluginFactory<UserOptions> = (options: UserOptions, meta: UnpluginContextMeta) =>
+  Arrayable<UnpluginOptions>
 export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserOptions
   ? (options?: UserOptions) => Return
   : (options: UserOptions) => Return
 
 export interface UnpluginInstance<UserOptions> {
-  rollup: UnpluginFactoryOutput<UserOptions, RollupPlugin>
-  webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
-  vite: UnpluginFactoryOutput<UserOptions, VitePlugin>
+  rollup: UnpluginFactoryOutput<UserOptions, Arrayable<RollupPlugin>>
+  webpack: UnpluginFactoryOutput<UserOptions, Arrayable<WebpackPluginInstance>>
+  vite: UnpluginFactoryOutput<UserOptions, Arrayable<VitePlugin>>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   raw: UnpluginFactory<UserOptions>
 }
 
-export interface UnpluginContextMeta extends Partial<RollupContextMeta> {
-  framework: 'rollup' | 'vite' | 'webpack' | 'esbuild'
-  webpack?: {
+export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
+  framework: 'rollup' | 'vite'
+} | {
+  framework: 'webpack'
+  webpack: {
     compiler: WebpackCompiler
   }
-}
+} | {
+  framework: 'esbuild'
+  /** Set the host plugin name of esbuild when returning multiple plugins */
+  esbuildHostName?: string,
+})
 
 export interface UnpluginContext {
   error(message: any): void
