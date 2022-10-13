@@ -74,8 +74,8 @@ export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserO
 
 export interface UnpluginInstance<UserOptions> {
   rollup: UnpluginFactoryOutput<UserOptions, Arrayable<RollupPlugin>>
-  webpack: UnpluginFactoryOutput<UserOptions, Arrayable<WebpackPluginInstance>>
   vite: UnpluginFactoryOutput<UserOptions, Arrayable<VitePlugin>>
+  webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   raw: UnpluginFactory<UserOptions>
 }
