@@ -1,7 +1,8 @@
 import * as path from 'path'
 import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
+import { toArray } from '@antfu/utils'
 import { build } from '../utils'
-import { createUnplugin, UnpluginOptions } from 'unplugin'
+import { createUnplugin, UnpluginOptions, VitePlugin } from 'unplugin'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 const externals = ['path']
@@ -73,10 +74,12 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockTransformHook,
       mockLoadHook
     ).vite
+    // we need to define `enforce` here for the plugin to be run
+    const plugins = toArray(plugin()).map((plugin): VitePlugin => ({ ...plugin, enforce: 'pre' }))
 
     await build.vite({
       clearScreen: false,
-      plugins: [{ ...plugin(), enforce: 'pre' }], // we need to define `enforce` here for the plugin to be run
+      plugins: [plugins],
       build: {
         lib: {
           entry: entryFilePath,

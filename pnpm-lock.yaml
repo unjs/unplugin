@@ -21,7 +21,7 @@ specifiers:
   jiti: ^1.16.0
   magic-string: ^0.26.3
   picocolors: ^1.0.0
-  rollup: ^2.79.0
+  rollup: ^3.1.0
   tsup: ^6.2.3
   typescript: ^4.8.3
   vite: ^3.1.3
@@ -56,7 +56,7 @@ devDependencies:
   jiti: 1.16.0
   magic-string: 0.26.3
   picocolors: 1.0.0
-  rollup: 2.79.0
+  rollup: 3.1.0
   tsup: 6.2.3_typescript@4.8.3
   typescript: 4.8.3
   vite: 3.1.3
@@ -3362,6 +3362,14 @@ packages:
   /rollup/2.79.0:
     resolution: {integrity: sha512-x4KsrCgwQ7ZJPcFA/SUu6QVcYlO7uRLfLAy0DSA4NS2eG8japdbpM50ToH7z4iObodRYOJ0soneF0iaQRJ6zhA==}
     engines: {node: '>=10.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /rollup/3.1.0:
+    resolution: {integrity: sha512-GEvr+COcXicr4nuih6mpt2Eydq5lZ72z0RrKx1H4/Q2ouT34OHrIIJ9OUj2sZqUhq7QL8Hp8Q8BoWbjL/6ccRQ==}
+    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2

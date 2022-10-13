@@ -19,6 +19,6 @@ export function getVitePlugin <UserOptions = {}> (
       return plugin
     })
 
-    return plugins
+    return plugins.length > 1 ? plugins : plugins[0]
   }
 }
