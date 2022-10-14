@@ -2,42 +2,70 @@ const MagicString = require('magic-string')
 const { createUnplugin } = require('unplugin')
 
 module.exports = createUnplugin((options, meta) => {
-  return {
-    name: 'transform-fixture',
-    resolveId (id) {
-      // Rollup doesn't know how to import module with query string so we ignore the module
-      if (id.includes('?query-param=query-value') && meta.framework === 'rollup') {
+  return [
+    {
+      name: 'transform-fixture-pre',
+      resolveId (id) {
+        // Rollup doesn't know how to import module with query string so we ignore the module
+        if (id.includes('?query-param=query-value') && meta.framework === 'rollup') {
+          return {
+            id,
+            external: true
+          }
+        }
+      },
+      transformInclude (id) {
+        return id.match(/[/\\]target\.js$/) || id.includes('?query-param=query-value')
+      },
+      transform (code, id) {
+        const s = new MagicString(code)
+        const index = code.indexOf('__UNPLUGIN__')
+        if (index === -1) {
+          return null
+        }
+
+        const injectedCode = `[Injected ${options.msg}]`
+
+        if (id.includes(injectedCode)) {
+          throw new Error('File was already transformed')
+        }
+
+        s.overwrite(index, index + '__UNPLUGIN__'.length, injectedCode)
+
         return {
-          id,
-          external: true
+          code: s.toString(),
+          map: s.generateMap({
+            source: id,
+            includeContent: true
+          })
         }
       }
     },
-    transformInclude (id) {
-      return id.match(/[/\\]target\.js$/) || id.includes('?query-param=query-value')
-    },
-    transform (code, id) {
-      const s = new MagicString(code)
-      const index = code.indexOf('__UNPLUGIN__')
-      if (index === -1) {
-        return null
-      }
+    {
+      name: 'transform-fixture-post',
+      transformInclude (id) {
+        return id.match(/[/\\]target\.js$/) || id.includes('?query-param=query-value')
+      },
+      transform (code, id) {
+        const s = new MagicString(code)
 
-      const injectedCode = `[Injected ${options.msg}]`
+        if (!code.includes('Injected')) {
+          return null
+        }
 
-      if (id.includes(injectedCode)) {
-        throw new Error('File was already transformed')
-      }
+        s.replace(
+          'Injected',
+          'Injected Post'
+        )
 
-      s.overwrite(index, index + '__UNPLUGIN__'.length, injectedCode)
-
-      return {
-        code: s.toString(),
-        map: s.generateMap({
-          source: id,
-          includeContent: true
-        })
+        return {
+          code: s.toString(),
+          map: s.generateMap({
+            source: id,
+            includeContent: true
+          })
+        }
       }
     }
-  }
+  ]
 })

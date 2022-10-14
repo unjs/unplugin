@@ -9,30 +9,30 @@ describe('transform build', () => {
     const content = await fs.readFile(r('vite/main.js.mjs'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
-    expect(content).toContain('TARGET: [Injected Vite]')
-    expect(content).toContain('QUERY: [Injected Vite]')
+    expect(content).toContain('TARGET: [Injected Post Vite]')
+    expect(content).toContain('QUERY: [Injected Post Vite]')
   })
 
   it('rollup', async () => {
     const content = await fs.readFile(r('rollup/main.js'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
-    expect(content).toContain('TARGET: [Injected Rollup]')
+    expect(content).toContain('TARGET: [Injected Post Rollup]')
   })
 
   it('webpack', async () => {
     const content = await fs.readFile(r('webpack/main.js'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
-    expect(content).toContain('TARGET: [Injected Webpack]')
-    expect(content).toContain('QUERY: [Injected Webpack]')
+    expect(content).toContain('TARGET: [Injected Post Webpack]')
+    expect(content).toContain('QUERY: [Injected Post Webpack]')
   })
 
   it('esbuild', async () => {
     const content = await fs.readFile(r('esbuild/main.js'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
-    expect(content).toContain('TARGET: [Injected Esbuild]')
-    expect(content).toContain('QUERY: [Injected Esbuild]')
+    expect(content).toContain('TARGET: [Injected Post Esbuild]')
+    expect(content).toContain('QUERY: [Injected Post Esbuild]')
   })
 })
