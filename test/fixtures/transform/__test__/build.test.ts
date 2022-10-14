@@ -32,7 +32,7 @@ describe('transform build', () => {
     const content = await fs.readFile(r('esbuild/main.js'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
-    expect(content).toContain('TARGET: [Injected Post Esbuild]')
-    expect(content).toContain('QUERY: [Injected Post Esbuild]')
+    expect(content).toContain('TARGET: [Injected Esbuild]')
+    expect(content).toContain('QUERY: [Injected Esbuild]')
   })
 })
