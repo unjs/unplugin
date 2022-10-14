@@ -75,6 +75,34 @@ export const webpackPlugin = unplugin.webpack
 export const esbuildPlugin = unplugin.esbuild
 ```
 
+#### Nested Plugins
+
+Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behave like a single one. For example:
+
+```ts
+import { createUnplugin } from 'unplugin'
+
+export const unplugin = createUnplugin((options: UserOptions) => {
+  return [
+    {
+      name: 'plugin-a',
+      transform (code) {
+        // ...
+      }
+    },
+    {
+      name: 'plugin-b',
+      resolveId (id) {
+        // ...
+      }
+    }
+  ]
+})
+```
+
+> **Note**
+> When using with Rollup, it requires users to have Rollup v3.1.0 or above to have nested plugin working.
+
 ### Plugin Installation
 
 ###### Vite
