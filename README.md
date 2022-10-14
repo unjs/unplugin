@@ -202,11 +202,13 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-object-3d](https://github.com/m0ksem/unplugin-object-3d)
 - [unplugin-parcel-css](https://github.com/ssssota/unplugin-parcel-css)
 - [unplugin-vue](https://github.com/sxzz/unplugin-vue)
-- [unplugin-vue-define-options](https://github.com/sxzz/unplugin-vue-define-options)
+- [unplugin-vue-macros](https://github.com/sxzz/unplugin-vue-macros)
+- [unplugin-vue-define-options](https://github.com/sxzz/unplugin-vue-macros/tree/main/packages/define-options)
 - [unplugin-jsx-string](https://github.com/sxzz/unplugin-jsx-string)
 - [unplugin-ast](https://github.com/sxzz/unplugin-ast)
 - [unplugin-element-plus](https://github.com/element-plus/unplugin-element-plus)
+- [unplugin-glob](https://github.com/sxzz/unplugin-glob)
 
 ## License
 
-[MIT](./LICENSE) License © 2021 Nuxt Contrib
+[MIT](./LICENSE) License © 2021-PRESENT Nuxt Contrib
