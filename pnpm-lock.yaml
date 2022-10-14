@@ -3,7 +3,6 @@ lockfileVersion: 5.4
 specifiers:
   '@ampproject/remapping': ^2.2.0
   '@antfu/ni': ^0.18.0
-  '@antfu/utils': ^0.5.2
   '@nuxtjs/eslint-config-typescript': ^11.0.0
   '@types/express': ^4.17.14
   '@types/fs-extra': ^9.0.13
@@ -40,7 +39,6 @@ dependencies:
 devDependencies:
   '@ampproject/remapping': 2.2.0
   '@antfu/ni': 0.18.0
-  '@antfu/utils': 0.5.2
   '@nuxtjs/eslint-config-typescript': 11.0.0_irgkl5vooow2ydyo6aokmferha
   '@types/express': 4.17.14
   '@types/fs-extra': 9.0.13
@@ -77,10 +75,6 @@ packages:
   /@antfu/ni/0.18.0:
     resolution: {integrity: sha512-D0eek5EV8wOUpZNVAs/mPyeC5TMWFXqchqCyPiR6Lj5FgmSJw0EpFLqAczHX0O5+Jc07N7NBwBip85Gi1MBJnA==}
     hasBin: true
-    dev: true
-
-  /@antfu/utils/0.5.2:
-    resolution: {integrity: sha512-CQkeV+oJxUazwjlHD0/3ZD08QWKuGQkhnrKo3e6ly5pd48VUpXbb77q0xMU4+vc2CkJnDS02Eq/M9ugyX20XZA==}
     dev: true
 
   /@babel/code-frame/7.16.0:
@@ -3688,7 +3682,7 @@ packages:
       uuid: 3.4.0
     dev: true
 
-  /terser-webpack-plugin/5.3.0_e3bo37day5nwq65pmjednvqp4y:
+  /terser-webpack-plugin/5.3.0_di4apdo7jreu4m3njbmdg5wbiy:
     resolution: {integrity: sha512-LPIisi3Ol4chwAaPP8toUJ3L4qCM1G0wao7L3qNv57Drezxj6+VEyySpPw4B1HSO2Eg/hDY/MNF5XihCAoqnsQ==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -3709,18 +3703,14 @@ packages:
       schema-utils: 3.1.1
       serialize-javascript: 6.0.0
       source-map: 0.6.1
-      terser: 5.10.0_acorn@8.8.0
+      terser: 5.10.0
       webpack: 5.74.0_vgvrjbnzfr7c2lfp65u2r6rd34
-    transitivePeerDependencies:
-      - acorn
     dev: true
 
-  /terser/5.10.0_acorn@8.8.0:
+  /terser/5.10.0:
     resolution: {integrity: sha512-AMmF99DMfEDiRJfxfY5jj5wNH/bYO09cniSqhfoyxc8sFoYIgkJy86G04UoZU5VjlpnplVu0K6Tx6E9b5+DlHA==}
     engines: {node: '>=10'}
     hasBin: true
-    peerDependencies:
-      acorn: ^8.5.0
     peerDependenciesMeta:
       acorn:
         optional: true
@@ -4143,7 +4133,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.1.1
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.0_e3bo37day5nwq65pmjednvqp4y
+      terser-webpack-plugin: 5.3.0_di4apdo7jreu4m3njbmdg5wbiy
       watchpack: 2.4.0
       webpack-cli: 4.10.0_webpack@5.74.0
       webpack-sources: 3.2.3

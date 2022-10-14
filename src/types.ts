@@ -3,7 +3,7 @@ import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin } from 'esbuild'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { Arrayable } from '@antfu/utils'
+import type { Arrayable } from './utils'
 
 export {
   EsbuildPlugin,

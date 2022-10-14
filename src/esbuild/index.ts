@@ -5,9 +5,8 @@ import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import { Parser } from 'acorn'
 import { RawSourceMap } from '@ampproject/remapping'
-import { toArray } from '@antfu/utils'
 import type { EsbuildPlugin, UnpluginBuildContext, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
-import { combineSourcemaps, fixSourceMap, guessLoader } from './utils'
+import { toArray, combineSourcemaps, fixSourceMap, guessLoader } from './utils'
 
 const watchListRecord: Record<string, chokidar.FSWatcher> = {}
 const watchList: Set<string> = new Set()

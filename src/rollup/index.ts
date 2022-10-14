@@ -1,5 +1,5 @@
-import { toArray } from '@antfu/utils'
 import { UnpluginInstance, UnpluginFactory, UnpluginOptions, RollupPlugin, UnpluginContextMeta } from '../types'
+import { toArray } from '../utils'
 
 export function getRollupPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>

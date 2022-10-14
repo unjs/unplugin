@@ -7,6 +7,8 @@ import type {
 import type { Loader } from 'esbuild'
 import type { SourceMap } from 'rollup'
 
+export * from '../utils'
+
 const ExtToLoader: Record<string, Loader> = {
   '.js': 'js',
   '.mjs': 'js',

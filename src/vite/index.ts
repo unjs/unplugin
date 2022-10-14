@@ -1,6 +1,6 @@
-import { toArray } from '@antfu/utils'
 import { toRollupPlugin } from '../rollup'
 import { UnpluginInstance, UnpluginFactory, VitePlugin, UnpluginContextMeta } from '../types'
+import { toArray } from '../utils'
 
 export function getVitePlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>

@@ -3,9 +3,8 @@ import { fileURLToPath } from 'url'
 import { resolve, dirname } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
-import { toArray } from '@antfu/utils'
 import type { UnpluginContextMeta, UnpluginInstance, UnpluginFactory, WebpackCompiler, ResolvedUnpluginOptions } from '../types'
-import { normalizeAbsolutePath } from '../utils'
+import { normalizeAbsolutePath, toArray } from '../utils'
 import { createContext } from './context'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))

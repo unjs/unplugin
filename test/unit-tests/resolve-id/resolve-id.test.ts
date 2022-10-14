@@ -1,7 +1,6 @@
 import * as path from 'path'
 import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
-import { toArray } from '@antfu/utils'
-import { build } from '../utils'
+import { build, toArray } from '../utils'
 import { createUnplugin, UnpluginOptions, VitePlugin } from 'unplugin'
 
 function createUnpluginWithCallback (resolveIdCallback: UnpluginOptions['resolveId']) {

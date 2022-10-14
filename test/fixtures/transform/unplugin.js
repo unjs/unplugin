@@ -1,5 +1,5 @@
-const { createUnplugin } = require('unplugin')
 const MagicString = require('magic-string')
+const { createUnplugin } = require('unplugin')
 
 module.exports = createUnplugin((options, meta) => {
   return {
