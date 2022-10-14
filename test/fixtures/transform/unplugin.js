@@ -47,12 +47,11 @@ module.exports = createUnplugin((options, meta) => {
         return id.match(/[/\\]target\.js$/) || id.includes('?query-param=query-value')
       },
       transform (code, id) {
-        const s = new MagicString(code)
-
         if (!code.includes('Injected')) {
           return null
         }
 
+        const s = new MagicString(code)
         s.replace(
           'Injected',
           'Injected Post'

@@ -198,13 +198,15 @@ export function getEsbuildPlugin <UserOptions = {}> (
         }
       })
 
-    const setupMutiplePlugins = ():EsbuildPlugin['setup'] =>
+    const setupMultiplePlugins = ():EsbuildPlugin['setup'] =>
       (build) => {
-        for (const plugin of plugins) { setup(plugin)(build) }
+        for (const plugin of plugins) {
+          setup(plugin)(build)
+        }
       }
 
     return plugins.length === 1
       ? { name: plugins[0].name, setup: setup(plugins[0]) }
-      : { name: meta.esbuildHostName ?? `unplugin-host-${i++}`, setup: setupMutiplePlugins() }
+      : { name: meta.esbuildHostName ?? `unplugin-host-${i++}`, setup: setupMultiplePlugins() }
   }
 }

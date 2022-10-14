@@ -29,6 +29,9 @@ export function getWebpackPlugin<UserOptions = {}> (
   return (userOptions?: UserOptions) => {
     return {
       apply (compiler: WebpackCompiler) {
+        const injected = compiler.$unpluginContext || {}
+        compiler.$unpluginContext = injected
+
         const meta: UnpluginContextMeta = {
           framework: 'webpack',
           webpack: {
@@ -47,8 +50,6 @@ export function getWebpackPlugin<UserOptions = {}> (
           ) as ResolvedUnpluginOptions
 
           // inject context object to share with loaders
-          const injected = compiler.$unpluginContext || {}
-          compiler.$unpluginContext = injected
           injected[plugin.name] = plugin
 
           compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
@@ -65,7 +66,7 @@ export function getWebpackPlugin<UserOptions = {}> (
               loader: `${TRANSFORM_LOADER}?unpluginName=${encodeURIComponent(plugin.name)}`
             }]
             const useNone: RuleSetUseItem[] = []
-            compiler.options.module.rules.push({
+            compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
               use: (data: { resource: string | null, resourceQuery: string }) => {
                 if (data.resource == null) {
@@ -160,7 +161,7 @@ export function getWebpackPlugin<UserOptions = {}> (
 
           // load hook
           if (plugin.load) {
-            compiler.options.module.rules.push({
+            compiler.options.module.rules.unshift({
               include (id) {
                 if (id.startsWith(plugin.__virtualModulePrefix)) {
                   id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
