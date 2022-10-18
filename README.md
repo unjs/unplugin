@@ -83,9 +83,10 @@ Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behav
 
 | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
 | :----: | :--: | :-------: | :-------: | :-----: |
-| ✅ `>=3.1` | ✅ | ✅ | ✅ | ⚠️<sup>5</sup> |
+| ✅ `>=3.1`<sup>5</sup> | ✅ | ✅ | ✅ | ⚠️<sup>6</sup> |
 
-5. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
+5. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin aurthor should ask users to a have a Rollup version of `>=3.1.0` when using nested plugins. For singe plugin format, unplugin works for any versions of Rollup.
+6. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
 
 ###### Usage
 
@@ -179,13 +180,14 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 
     // framework specific hooks
     vite: {
-      // Vite config
+      // Vite plugin
       configureServer(server) {
         // configure Vite server
-      }
+      },
+      // ...
     },
     rollup: {
-      // Rollup config
+      // Rollup plugin
     },
     webpack(compiler) {
       // configure Webpack compiler
@@ -224,7 +226,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-starter](https://github.com/antfu/unplugin-starter)
 - [create-unplugin](https://github.com/jwr12135/create-unplugin) <sup><code>Community</code></sup>
 
-## Examples
+## Community Showcases
 
 - [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)
 - [unplugin-vue2-script-setup](https://github.com/antfu/unplugin-vue2-script-setup)
