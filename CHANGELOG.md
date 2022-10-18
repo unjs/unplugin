@@ -1,3 +1,12 @@
+# [0.10.0](https://github.com/unjs/unplugin/compare/v0.9.6...v0.10.0) (2022-10-18)
+
+
+### Features
+
+* support nested plugins ([#176](https://github.com/unjs/unplugin/issues/176)) ([d35e055](https://github.com/unjs/unplugin/commit/d35e0552d06118a0efc39b02641fcc4f3176fdd6))
+
+
+
 ## [0.9.6](https://github.com/unjs/unplugin/compare/v0.9.5...v0.9.6) (2022-09-21)
 
 
