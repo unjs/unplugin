@@ -82,7 +82,7 @@ Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behav
 ###### Supported
 
 | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
-| :----: | :----: | :--: | :-------: | :-------: | :-----: |
+| :----: | :--: | :-------: | :-------: | :-----: |
 | ✅ `>=3.1` | ✅ | ✅ | ✅ | ⚠️<sup>5</sup> |
 
 5. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
