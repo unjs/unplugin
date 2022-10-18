@@ -1,5 +1,6 @@
 import { toRollupPlugin } from '../rollup'
 import { UnpluginInstance, UnpluginFactory, VitePlugin, UnpluginContextMeta } from '../types'
+import { toArray } from '../utils'
 
 export function getVitePlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -8,13 +9,16 @@ export function getVitePlugin <UserOptions = {}> (
     const meta: UnpluginContextMeta = {
       framework: 'vite'
     }
-    const rawPlugin = factory(userOptions!, meta)
+    const rawPlugins = toArray(factory(userOptions!, meta))
 
-    const plugin = toRollupPlugin(rawPlugin, false) as VitePlugin
+    const plugins = rawPlugins.map((rawPlugin) => {
+      const plugin = toRollupPlugin(rawPlugin, false) as VitePlugin
+      if (rawPlugin.vite) {
+        Object.assign(plugin, rawPlugin.vite)
+      }
+      return plugin
+    })
 
-    if (rawPlugin.vite) {
-      Object.assign(plugin, rawPlugin.vite)
-    }
-    return plugin
+    return plugins.length === 1 ? plugins[0] : plugins
   }
 }

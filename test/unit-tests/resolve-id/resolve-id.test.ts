@@ -1,7 +1,7 @@
 import * as path from 'path'
 import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
-import { build } from '../utils'
-import { createUnplugin, UnpluginOptions } from 'unplugin'
+import { build, toArray } from '../utils'
+import { createUnplugin, UnpluginOptions, VitePlugin } from 'unplugin'
 
 function createUnpluginWithCallback (resolveIdCallback: UnpluginOptions['resolveId']) {
   return createUnplugin(() => ({
@@ -47,10 +47,12 @@ describe('resolveId hook', () => {
   it('vite', async () => {
     const mockResolveIdHook = vi.fn(() => undefined)
     const plugin = createUnpluginWithCallback(mockResolveIdHook).vite
+    // we need to define `enforce` here for the plugin to be run
+    const plugins = toArray(plugin()).map((plugin): VitePlugin => ({ ...plugin, enforce: 'pre' }))
 
     await build.vite({
       clearScreen: false,
-      plugins: [{ ...plugin(), enforce: 'pre' }], // we need to define `enforce` here for the plugin to be run
+      plugins: [plugins],
       build: {
         lib: {
           entry: path.resolve(__dirname, 'test-src/entry.js'),

@@ -75,7 +75,42 @@ export const webpackPlugin = unplugin.webpack
 export const esbuildPlugin = unplugin.esbuild
 ```
 
-### Plugin Installation
+## Nested Plugins
+
+Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behave like a single one. For example:
+
+###### Supported
+
+| Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
+| :----: | :--: | :-------: | :-------: | :-----: |
+| ✅ `>=3.1` | ✅ | ✅ | ✅ | ⚠️<sup>5</sup> |
+
+5. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
+
+###### Usage
+
+```ts
+import { createUnplugin } from 'unplugin'
+
+export const unplugin = createUnplugin((options: UserOptions) => {
+  return [
+    {
+      name: 'plugin-a',
+      transform (code) {
+        // ...
+      }
+    },
+    {
+      name: 'plugin-b',
+      resolveId (id) {
+        // ...
+      }
+    }
+  ]
+})
+```
+
+## Plugin Installation
 
 ###### Vite
 

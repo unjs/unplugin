@@ -1,4 +1,5 @@
 import { UnpluginInstance, UnpluginFactory, UnpluginOptions, RollupPlugin, UnpluginContextMeta } from '../types'
+import { toArray } from '../utils'
 
 export function getRollupPlugin <UserOptions = {}> (
   factory: UnpluginFactory<UserOptions>
@@ -7,8 +8,9 @@ export function getRollupPlugin <UserOptions = {}> (
     const meta: UnpluginContextMeta = {
       framework: 'rollup'
     }
-    const rawPlugin = factory(userOptions!, meta)
-    return toRollupPlugin(rawPlugin)
+    const rawPlugins = toArray(factory(userOptions!, meta))
+    const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin))
+    return plugins.length === 1 ? plugins[0] : plugins
   }
 }
 
