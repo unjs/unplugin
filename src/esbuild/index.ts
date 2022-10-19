@@ -60,14 +60,21 @@ export function getEsbuildPlugin <UserOptions = {}> (
           onStart(() => plugin.buildStart!.call(context))
         }
 
-        if (plugin.buildEnd || initialOptions.watch) {
+        if (plugin.buildEnd || plugin.writeBundle || initialOptions.watch) {
           const rebuild = () => build({
             ...initialOptions,
             watch: false
           })
 
           onEnd(async () => {
-            await plugin.buildEnd!.call(context)
+            if (plugin.buildEnd) {
+              await plugin.buildEnd.call(context)
+            }
+
+            if (plugin.writeBundle) {
+              await plugin.writeBundle()
+            }
+
             if (initialOptions.watch) {
               Object.keys(watchListRecord).forEach((id) => {
                 if (!watchList.has(id)) {
