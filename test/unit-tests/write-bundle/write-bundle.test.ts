@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import { it, describe, expect, vi, afterEach, Mock, beforeAll } from 'vitest'
-import { build, toArray } from '../utils'
+import { build, toArray, webpackVersion } from '../utils'
 import { createUnplugin, UnpluginOptions, VitePlugin } from 'unplugin'
 
 function createUnpluginWithCallback (writeBundleCallback: UnpluginOptions['writeBundle']) {
@@ -90,21 +90,33 @@ describe('writeBundle hook', () => {
     const mockResolveIdHook = vi.fn(generateMockWriteBundleHook(path.resolve(__dirname, 'test-out/webpack')))
     const plugin = createUnpluginWithCallback(mockResolveIdHook).webpack
 
+    const webpack4Options = {
+      entry: path.resolve(__dirname, 'test-src/entry.js'),
+      cache: false,
+      output: {
+        path: path.resolve(__dirname, 'test-out/webpack'),
+        filename: 'output.js',
+        libraryTarget: 'commonjs'
+      },
+      plugins: [plugin()],
+      devtool: 'source-map'
+    }
+
+    const webpack5Options = {
+      entry: path.resolve(__dirname, 'test-src/entry.js'),
+      plugins: [plugin()],
+      devtool: 'source-map',
+      output: {
+        path: path.resolve(__dirname, 'test-out/webpack'),
+        filename: 'output.js',
+        library: {
+          type: 'commonjs'
+        }
+      }
+    }
+
     await new Promise((resolve) => {
-      build.webpack(
-        {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()],
-          devtool: 'source-map',
-          output: {
-            path: path.resolve(__dirname, 'test-out/webpack'),
-            filename: 'output.js',
-            libraryTarget: 'commonjs',
-            library: {
-              type: 'commonjs'
-            }
-          }
-        },
+      build.webpack(webpackVersion!.startsWith('4') ? webpack4Options : webpack5Options,
         resolve
       )
     })
