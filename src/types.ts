@@ -29,12 +29,16 @@ export interface UnpluginOptions {
   name: string;
   enforce?: 'post' | 'pre' | undefined;
 
+  // Build Hooks
   buildStart?: (this: UnpluginBuildContext) => Promise<void> | void;
   buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void;
   transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
   load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
   resolveId?: (id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
   watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
+
+  // Output Generation Hooks
+  writeBundle?: () => Promise<void> | void
 
   /**
    * Custom predicate function to filter modules to be loaded.
