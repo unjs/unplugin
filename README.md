@@ -27,11 +27,12 @@ Currently supports:
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
 | [`watchChange`](https://rollupjs.org/guide/en/#watchchange) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`buildEnd`](https://rollupjs.org/guide/en/#buildend) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`writeBundle`](https://rollupjs.org/guide/en/#writebundle) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 2. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for following usage examples.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
+4. The `writeBundle` hook currently doesn't pass any arguments.
 
 ### Hook Context
 
