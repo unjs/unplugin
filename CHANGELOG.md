@@ -1,3 +1,12 @@
+## [0.10.1](https://github.com/unjs/unplugin/compare/v0.10.0...v0.10.1) (2022-10-22)
+
+
+### Features
+
+* add `writeBundle` hook ([#179](https://github.com/unjs/unplugin/issues/179)) ([160ec72](https://github.com/unjs/unplugin/commit/160ec72e936ca96fd5ed91ab765e9912d09c1017))
+
+
+
 # [0.10.0](https://github.com/unjs/unplugin/compare/v0.9.6...v0.10.0) (2022-10-18)
 
 
