@@ -218,6 +218,12 @@ export function getWebpackPlugin<UserOptions = {}> (
               await plugin.buildEnd!.call(createContext(compilation))
             })
           }
+
+          if (plugin.writeBundle) {
+            compiler.hooks.afterEmit.tap(plugin.name, () => {
+              plugin.writeBundle!()
+            })
+          }
         }
       }
     }

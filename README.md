@@ -27,10 +27,12 @@ Currently supports:
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
 | [`watchChange`](https://rollupjs.org/guide/en/#watchchange) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`buildEnd`](https://rollupjs.org/guide/en/#buildend) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 2. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for following usage examples.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
+4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 
 ### Hook Context
 
@@ -40,13 +42,13 @@ Currently supports:
 | ---- | :----: | :--: | :-------: | :-------: | :-----: |
 | [`this.parse`](https://rollupjs.org/guide/en/#thisparse) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.warn`](https://rollupjs.org/guide/en/#thiswarn) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.error`](https://rollupjs.org/guide/en/#thiserror) | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 
-4. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
+5. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
 
 ## Usage
 
@@ -83,10 +85,10 @@ Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behav
 
 | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
 | :----: | :--: | :-------: | :-------: | :-----: |
-| ✅ `>=3.1`<sup>5</sup> | ✅ | ✅ | ✅ | ⚠️<sup>6</sup> |
+| ✅ `>=3.1`<sup>6</sup> | ✅ | ✅ | ✅ | ⚠️<sup>7</sup> |
 
-5. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin aurthor should ask users to a have a Rollup version of `>=3.1.0` when using nested plugins. For singe plugin format, unplugin works for any versions of Rollup.
-6. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
+6. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin aurthor should ask users to a have a Rollup version of `>=3.1.0` when using nested plugins. For singe plugin format, unplugin works for any versions of Rollup.
+7. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
 
 ###### Usage
 
