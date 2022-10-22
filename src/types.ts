@@ -38,7 +38,7 @@ export interface UnpluginOptions {
   watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
 
   // Output Generation Hooks
-  writeBundle?: () => Promise<void> | void
+  writeBundle?: (this: void) => Promise<void> | void
 
   /**
    * Custom predicate function to filter modules to be loaded.
