@@ -1,3 +1,12 @@
+## [0.10.2](https://github.com/unjs/unplugin/compare/v0.10.1...v0.10.2) (2022-10-25)
+
+
+### Features
+
+* **types:** improve return types ([dc05040](https://github.com/unjs/unplugin/commit/dc050408e77eb5ed249bd56e0958a29fad21e2d8))
+
+
+
 ## [0.10.1](https://github.com/unjs/unplugin/compare/v0.10.0...v0.10.1) (2022-10-22)
 
 
