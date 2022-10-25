@@ -3,7 +3,6 @@ import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin } from 'esbuild'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { Arrayable } from './utils'
 
 export {
   EsbuildPlugin,
@@ -70,18 +69,20 @@ export interface ResolvedUnpluginOptions extends UnpluginOptions {
   __virtualModulePrefix: string
 }
 
-export type UnpluginFactory<UserOptions> = (options: UserOptions, meta: UnpluginContextMeta) =>
-  Arrayable<UnpluginOptions>
+export type UnpluginFactory<UserOptions, Nested extends boolean> = (options: UserOptions, meta: UnpluginContextMeta) =>
+  Nested extends true
+    ? Array<UnpluginOptions>
+    : UnpluginOptions
 export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserOptions
   ? (options?: UserOptions) => Return
   : (options: UserOptions) => Return
 
-export interface UnpluginInstance<UserOptions> {
-  rollup: UnpluginFactoryOutput<UserOptions, Arrayable<RollupPlugin>>
-  vite: UnpluginFactoryOutput<UserOptions, Arrayable<VitePlugin>>
+export interface UnpluginInstance<UserOptions, Nested extends boolean> {
+  rollup: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RollupPlugin> : RollupPlugin>
+  vite: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<VitePlugin> : VitePlugin>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
-  raw: UnpluginFactory<UserOptions>
+  raw: UnpluginFactory<UserOptions, Nested>
 }
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
