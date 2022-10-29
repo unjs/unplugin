@@ -16,6 +16,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         node: [14, 16, 18]
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
