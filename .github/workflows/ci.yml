@@ -37,6 +37,8 @@ jobs:
 
       - name: Install Webpack 4
         run: pnpm i webpack@4
+        if: ${{ matrix.node != 18 }}
 
       - name: Test with Webpack 4
         run: pnpm run test
+        if: ${{ matrix.node != 18 }}
