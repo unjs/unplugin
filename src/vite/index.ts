@@ -2,10 +2,10 @@ import { toRollupPlugin } from '../rollup'
 import type { UnpluginContextMeta, UnpluginFactory, UnpluginInstance, VitePlugin } from '../types'
 import { toArray } from '../utils'
 
-export function getVitePlugin <UserOptions = {}>(
-  factory: UnpluginFactory<UserOptions>,
-): UnpluginInstance<UserOptions>['vite'] {
-  return (userOptions?: UserOptions) => {
+export function getVitePlugin <UserOptions = {}, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'vite',
     }
@@ -20,5 +20,5 @@ export function getVitePlugin <UserOptions = {}>(
     })
 
     return plugins.length === 1 ? plugins[0] : plugins
-  }
+  }) as UnpluginInstance<UserOptions, Nested>['vite']
 }
