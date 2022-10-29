@@ -1,12 +1,12 @@
-import { UnpluginInstance, UnpluginFactory, UnpluginOptions, RollupPlugin, UnpluginContextMeta } from '../types'
+import type { RollupPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
 import { toArray } from '../utils'
 
-export function getRollupPlugin <UserOptions = {}> (
-  factory: UnpluginFactory<UserOptions>
+export function getRollupPlugin <UserOptions = {}>(
+  factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['rollup'] {
   return (userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
-      framework: 'rollup'
+      framework: 'rollup',
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
     const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin))
@@ -14,13 +14,13 @@ export function getRollupPlugin <UserOptions = {}> (
   }
 }
 
-export function toRollupPlugin (plugin: UnpluginOptions, containRollupOptions = true): RollupPlugin {
+export function toRollupPlugin(plugin: UnpluginOptions, containRollupOptions = true): RollupPlugin {
   if (plugin.transform && plugin.transformInclude) {
     const _transform = plugin.transform
     plugin.transform = function (code, id) {
-      if (plugin.transformInclude && !plugin.transformInclude(id)) {
+      if (plugin.transformInclude && !plugin.transformInclude(id))
         return null
-      }
+
       return _transform.call(this, code, id)
     }
   }
@@ -28,16 +28,15 @@ export function toRollupPlugin (plugin: UnpluginOptions, containRollupOptions = 
   if (plugin.load && plugin.loadInclude) {
     const _load = plugin.load
     plugin.load = function (id) {
-      if (plugin.loadInclude && !plugin.loadInclude(id)) {
+      if (plugin.loadInclude && !plugin.loadInclude(id))
         return null
-      }
+
       return _load.call(this, id)
     }
   }
 
-  if (plugin.rollup && containRollupOptions) {
+  if (plugin.rollup && containRollupOptions)
     Object.assign(plugin, plugin.rollup)
-  }
 
   return plugin
 }

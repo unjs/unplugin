@@ -1,34 +1,33 @@
-/* eslint-disable no-redeclare */
 import { getEsbuildPlugin } from './esbuild'
 import { getRollupPlugin } from './rollup'
-import { UnpluginInstance, UnpluginFactory } from './types'
+import type { UnpluginFactory, UnpluginInstance } from './types'
 import { getVitePlugin } from './vite'
 import { getWebpackPlugin } from './webpack'
 
-export function createUnplugin<UserOptions> (
+export function createUnplugin<UserOptions>(
   factory: UnpluginFactory<UserOptions, false>
 ): UnpluginInstance<UserOptions, false>
-export function createUnplugin<UserOptions> (
+export function createUnplugin<UserOptions>(
   factory: UnpluginFactory<UserOptions, true>
 ): UnpluginInstance<UserOptions, true>
-export function createUnplugin<UserOptions, Nested extends boolean> (
-  factory: UnpluginFactory<UserOptions, Nested>
+export function createUnplugin<UserOptions, Nested extends boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
 ): UnpluginInstance<UserOptions, Nested> {
   return {
-    get esbuild () {
+    get esbuild() {
       return getEsbuildPlugin(factory)
     },
-    get rollup () {
+    get rollup() {
       return getRollupPlugin(factory)
     },
-    get vite () {
+    get vite() {
       return getVitePlugin(factory)
     },
-    get webpack () {
+    get webpack() {
       return getWebpackPlugin(factory)
     },
-    get raw () {
+    get raw() {
       return factory
-    }
+    },
   }
 }

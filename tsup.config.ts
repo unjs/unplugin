@@ -10,15 +10,15 @@ export const tsup: Options = {
   entryPoints: [
     'src/index.ts',
     'src/webpack/loaders/load.ts',
-    'src/webpack/loaders/transform.ts'
+    'src/webpack/loaders/transform.ts',
   ],
   external: [
     'vite',
     'webpack',
     'rollup',
-    'esbuild'
+    'esbuild',
   ],
   define: {
-    __DEV__: 'false'
-  }
+    __DEV__: 'false',
+  },
 }

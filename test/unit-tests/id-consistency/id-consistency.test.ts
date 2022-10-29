@@ -1,32 +1,34 @@
 import * as path from 'path'
-import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
+import type { Mock } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import type { UnpluginOptions, VitePlugin } from 'unplugin'
+import { createUnplugin } from 'unplugin'
 import { build, toArray } from '../utils'
-import { createUnplugin, UnpluginOptions, VitePlugin } from 'unplugin'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 const externals = ['path']
 
-function createUnpluginWithCallback (
+function createUnpluginWithCallback(
   resolveIdCallback: UnpluginOptions['resolveId'],
   transformIncludeCallback: UnpluginOptions['transformInclude'],
   transformCallback: UnpluginOptions['transform'],
-  loadCallback: UnpluginOptions['load']
+  loadCallback: UnpluginOptions['load'],
 ) {
   return createUnplugin(() => ({
     name: 'test-plugin',
     resolveId: resolveIdCallback,
     transformInclude: transformIncludeCallback,
     transform: transformCallback,
-    load: loadCallback
+    load: loadCallback,
   }))
 }
 
 // We extract this check because all bundlers should behave the same
-function checkHookCalls (
+function checkHookCalls(
   resolveIdCallback: Mock,
   transformIncludeCallback: Mock,
   transformCallback: Mock,
-  loadCallback: Mock
+  loadCallback: Mock,
 ): void {
   const EXPECT_CALLED_TIMES = 4
   // Ensure that all bundlers call the hooks the same amount of times
@@ -71,7 +73,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockResolveIdHook,
       mockTransformIncludeHook,
       mockTransformHook,
-      mockLoadHook
+      mockLoadHook,
     ).vite
     // we need to define `enforce` here for the plugin to be run
     const plugins = toArray(plugin()).map((plugin): VitePlugin => ({ ...plugin, enforce: 'pre' }))
@@ -82,13 +84,13 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       build: {
         lib: {
           entry: entryFilePath,
-          name: 'TestLib'
+          name: 'TestLib',
         },
         rollupOptions: {
-          external: externals
+          external: externals,
         },
-        write: false // don't output anything
-      }
+        write: false, // don't output anything
+      },
     })
 
     checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
@@ -104,13 +106,13 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockResolveIdHook,
       mockTransformIncludeHook,
       mockTransformHook,
-      mockLoadHook
+      mockLoadHook,
     ).rollup
 
     await build.rollup({
       input: entryFilePath,
       plugins: [plugin()],
-      external: externals
+      external: externals,
     })
 
     checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
@@ -126,7 +128,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockResolveIdHook,
       mockTransformIncludeHook,
       mockTransformHook,
-      mockLoadHook
+      mockLoadHook,
     ).webpack
 
     await new Promise<void>((resolve) => {
@@ -136,11 +138,11 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
           plugins: [plugin()],
           externals,
           mode: 'production',
-          target: 'node' // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
+          target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
         },
         () => {
           resolve()
-        }
+        },
       )
     })
 
@@ -157,7 +159,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       mockResolveIdHook,
       mockTransformIncludeHook,
       mockTransformHook,
-      mockLoadHook
+      mockLoadHook,
     ).esbuild
 
     await build.esbuild({
@@ -165,7 +167,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       plugins: [plugin()],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
-      external: externals
+      external: externals,
     })
 
     checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)

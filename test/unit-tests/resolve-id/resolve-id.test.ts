@@ -1,41 +1,43 @@
 import * as path from 'path'
-import { it, describe, expect, vi, afterEach, Mock } from 'vitest'
+import type { Mock } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import type { UnpluginOptions, VitePlugin } from 'unplugin'
+import { createUnplugin } from 'unplugin'
 import { build, toArray } from '../utils'
-import { createUnplugin, UnpluginOptions, VitePlugin } from 'unplugin'
 
-function createUnpluginWithCallback (resolveIdCallback: UnpluginOptions['resolveId']) {
+function createUnpluginWithCallback(resolveIdCallback: UnpluginOptions['resolveId']) {
   return createUnplugin(() => ({
     name: 'test-plugin',
-    resolveId: resolveIdCallback
+    resolveId: resolveIdCallback,
   }))
 }
 
 // We extract this check because all bundlers should behave the same
-function checkResolveIdHook (resolveIdCallback: Mock): void {
+function checkResolveIdHook(resolveIdCallback: Mock): void {
   expect.assertions(4)
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     expect.stringMatching(/(?:\/|\\)entry\.js$/),
     undefined,
-    expect.objectContaining({ isEntry: true })
+    expect.objectContaining({ isEntry: true }),
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './proxy-export',
     expect.stringMatching(/(?:\/|\\)entry\.js$/),
-    expect.objectContaining({ isEntry: false })
+    expect.objectContaining({ isEntry: false }),
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './default-export',
     expect.stringMatching(/(?:\/|\\)proxy-export\.js$/),
-    expect.objectContaining({ isEntry: false })
+    expect.objectContaining({ isEntry: false }),
   )
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     './named-export',
     expect.stringMatching(/(?:\/|\\)proxy-export\.js$/),
-    expect.objectContaining({ isEntry: false })
+    expect.objectContaining({ isEntry: false }),
   )
 }
 
@@ -56,10 +58,10 @@ describe('resolveId hook', () => {
       build: {
         lib: {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          name: 'TestLib'
+          name: 'TestLib',
         },
-        write: false // don't output anything
-      }
+        write: false, // don't output anything
+      },
     })
 
     checkResolveIdHook(mockResolveIdHook)
@@ -71,7 +73,7 @@ describe('resolveId hook', () => {
 
     await build.rollup({
       input: path.resolve(__dirname, 'test-src/entry.js'),
-      plugins: [plugin()]
+      plugins: [plugin()],
     })
 
     checkResolveIdHook(mockResolveIdHook)
@@ -85,9 +87,9 @@ describe('resolveId hook', () => {
       build.webpack(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()]
+          plugins: [plugin()],
         },
-        resolve
+        resolve,
       )
     })
 
@@ -102,7 +104,7 @@ describe('resolveId hook', () => {
       entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
       plugins: [plugin()],
       bundle: true, // actually traverse imports
-      write: false // don't pollute console
+      write: false, // don't pollute console
     })
 
     checkResolveIdHook(mockResolveIdHook)

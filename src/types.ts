@@ -1,4 +1,4 @@
-import type { AcornNode, EmittedAsset, Plugin as RollupPlugin, PluginContextMeta as RollupContextMeta, SourceMapInput } from 'rollup'
+import type { AcornNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin } from 'esbuild'
@@ -8,30 +8,30 @@ export {
   EsbuildPlugin,
   RollupPlugin,
   VitePlugin,
-  WebpackCompiler
+  WebpackCompiler,
 }
 
 export type Thenable<T> = T | Promise<T>
 
-export type TransformResult = string | { code: string; map?: SourceMapInput | null; } | null | undefined
+export type TransformResult = string | { code: string; map?: SourceMapInput | null } | null | undefined
 
-export type ExternalIdResult = { id: string, external?: boolean }
+export interface ExternalIdResult { id: string; external?: boolean }
 
 export interface UnpluginBuildContext {
-  addWatchFile: (id: string) => void;
-  emitFile: (emittedFile: EmittedAsset) => void;
-  getWatchFiles: () => string[];
-  parse: (input: string, options?: any) => AcornNode;
+  addWatchFile: (id: string) => void
+  emitFile: (emittedFile: EmittedAsset) => void
+  getWatchFiles: () => string[]
+  parse: (input: string, options?: any) => AcornNode
 }
 
 export interface UnpluginOptions {
-  name: string;
-  enforce?: 'post' | 'pre' | undefined;
+  name: string
+  enforce?: 'post' | 'pre' | undefined
 
   // Build Hooks
-  buildStart?: (this: UnpluginBuildContext) => Promise<void> | void;
-  buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void;
-  transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>;
+  buildStart?: (this: UnpluginBuildContext) => Promise<void> | void
+  buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void
+  transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
   load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
   resolveId?: (id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
   watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
@@ -43,12 +43,12 @@ export interface UnpluginOptions {
    * Custom predicate function to filter modules to be loaded.
    * When omitted, all modules will be included (might have potential perf impact on Webpack).
    */
-  loadInclude?: (id: string) => boolean | null | undefined;
+  loadInclude?: (id: string) => boolean | null | undefined
   /**
    * Custom predicate function to filter modules to be transformed.
    * When omitted, all modules will be included (might have potential perf impact on Webpack).
    */
-  transformInclude?: (id: string) => boolean | null | undefined;
+  transformInclude?: (id: string) => boolean | null | undefined
 
   // framework specify extends
   rollup?: Partial<RollupPlugin>
@@ -70,9 +70,9 @@ export interface ResolvedUnpluginOptions extends UnpluginOptions {
 }
 
 export type UnpluginFactory<UserOptions, Nested extends boolean> = (options: UserOptions, meta: UnpluginContextMeta) =>
-  Nested extends true
-    ? Array<UnpluginOptions>
-    : UnpluginOptions
+Nested extends true
+  ? Array<UnpluginOptions>
+  : UnpluginOptions
 export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserOptions
   ? (options?: UserOptions) => Return
   : (options: UserOptions) => Return
@@ -95,7 +95,7 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
 } | {
   framework: 'esbuild'
   /** Set the host plugin name of esbuild when returning multiple plugins */
-  esbuildHostName?: string,
+  esbuildHostName?: string
 })
 
 export interface UnpluginContext {

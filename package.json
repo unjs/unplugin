@@ -3,13 +3,13 @@
   "version": "0.10.2",
   "packageManager": "pnpm@7.14.0",
   "description": "Unified plugin system for build tools",
-  "repository": "unjs/unplugin",
   "license": "MIT",
+  "repository": "unjs/unplugin",
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
     },
     "./dist/webpack/loaders/load": "./dist/webpack/loaders/load.js",
     "./dist/webpack/loaders/transform": "./dist/webpack/loaders/transform.js"
@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.2.0",
+    "@antfu/eslint-config": "^0.27.0",
     "@antfu/ni": "^0.18.3",
-    "@nuxtjs/eslint-config-typescript": "^11.0.0",
     "@types/express": "^4.17.14",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.11.5",
