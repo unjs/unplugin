@@ -23,7 +23,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch src",
-    "lint": "eslint --ext ts .",
+    "lint": "eslint --cache --ext ts .",
+    "lint:fix": "nr lint --fix",
     "prepublishOnly": "nr build",
     "release": "bumpp --commit --push --tag --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
     "test": "nr lint && nr test:build && vitest run",

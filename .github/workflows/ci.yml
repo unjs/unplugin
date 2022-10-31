@@ -33,7 +33,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [14, 16]
+        node: [14, 16, 18]
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
@@ -54,6 +55,8 @@ jobs:
 
       - name: Install Webpack 4
         run: pnpm i webpack@4
+        if: ${{ matrix.node != 18 }}
 
       - name: Test with Webpack 4
         run: pnpm run test
+        if: ${{ matrix.node != 18 }}
