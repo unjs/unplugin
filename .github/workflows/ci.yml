@@ -9,6 +9,24 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Setup
+        run: npm i -g @antfu/ni
+
+      - name: Install
+        run: nci
+
+      - name: Lint
+        run: nr lint
+
   ci:
     runs-on: ${{ matrix.os }}
 

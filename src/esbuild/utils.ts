@@ -2,7 +2,7 @@ import { extname } from 'path'
 import remapping from '@ampproject/remapping'
 import type {
   DecodedSourceMap,
-  RawSourceMap
+  RawSourceMap,
 } from '@ampproject/remapping/dist/types/types'
 import type { Loader } from 'esbuild'
 import type { SourceMap } from 'rollup'
@@ -24,30 +24,30 @@ const ExtToLoader: Record<string, Loader> = {
   '.scss': 'css',
   '.sass': 'css',
   '.json': 'json',
-  '.txt': 'text'
+  '.txt': 'text',
 }
 
-export function guessLoader (id: string): Loader {
+export function guessLoader(id: string): Loader {
   return ExtToLoader[extname(id).toLowerCase()] || 'js'
 }
 
 // `load` and `transform` may return a sourcemap without toString and toUrl,
 // but esbuild needs them, we fix the two methods
-export function fixSourceMap (map: RawSourceMap): SourceMap {
+export function fixSourceMap(map: RawSourceMap): SourceMap {
   if (!('toString' in map)) {
     Object.defineProperty(map, 'toString', {
       enumerable: false,
-      value: function toString () {
+      value: function toString() {
         return JSON.stringify(this)
-      }
+      },
     })
   }
   if (!('toUrl' in map)) {
     Object.defineProperty(map, 'toUrl', {
       enumerable: false,
-      value: function toUrl () {
-        return 'data:application/json;charset=utf-8;base64,' + Buffer.from(this.toString()).toString('base64')
-      }
+      value: function toUrl() {
+        return `data:application/json;charset=utf-8;base64,${Buffer.from(this.toString()).toString('base64')}`
+      },
     })
   }
   return map as SourceMap
@@ -58,44 +58,42 @@ const nullSourceMap: RawSourceMap = {
   names: [],
   sources: [],
   mappings: '',
-  version: 3
+  version: 3,
 }
-export function combineSourcemaps (
+export function combineSourcemaps(
   filename: string,
-  sourcemapList: Array<DecodedSourceMap | RawSourceMap>
+  sourcemapList: Array<DecodedSourceMap | RawSourceMap>,
 ): RawSourceMap {
   sourcemapList = sourcemapList.filter(m => m.sources)
 
   if (
-    sourcemapList.length === 0 ||
-    sourcemapList.every(m => m.sources.length === 0)
-  ) {
+    sourcemapList.length === 0
+    || sourcemapList.every(m => m.sources.length === 0)
+  )
     return { ...nullSourceMap }
-  }
 
   // We don't declare type here so we can convert/fake/map as RawSourceMap
   let map // : SourceMap
   let mapIndex = 1
-  const useArrayInterface =
-    sourcemapList.slice(0, -1).find(m => m.sources.length !== 1) === undefined
+  const useArrayInterface
+    = sourcemapList.slice(0, -1).find(m => m.sources.length !== 1) === undefined
   if (useArrayInterface) {
     map = remapping(sourcemapList, () => null, true)
-  } else {
+  }
+  else {
     map = remapping(
       sourcemapList[0],
-      function loader (sourcefile) {
-        if (sourcefile === filename && sourcemapList[mapIndex]) {
+      (sourcefile) => {
+        if (sourcefile === filename && sourcemapList[mapIndex])
           return sourcemapList[mapIndex++]
-        } else {
+        else
           return { ...nullSourceMap }
-        }
       },
-      true
+      true,
     )
   }
-  if (!map.file) {
+  if (!map.file)
     delete map.file
-  }
 
   return map as RawSourceMap
 }

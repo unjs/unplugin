@@ -10,12 +10,11 @@ import { isAbsolute, normalize } from 'path'
  * @param path - Path to normalize.
  * @returns a new normalized path.
  */
-export function normalizeAbsolutePath (path: string) {
-  if (isAbsolute(path)) {
+export function normalizeAbsolutePath(path: string) {
+  if (isAbsolute(path))
     return normalize(path)
-  } else {
+  else
     return path
-  }
 }
 
 /**
@@ -28,8 +27,9 @@ export type Nullable<T> = T | null | undefined
   */
 export type Arrayable<T> = T | Array<T>
 
-export function toArray<T> (array?: Nullable<Arrayable<T>>): Array<T> {
+export function toArray<T>(array?: Nullable<Arrayable<T>>): Array<T> {
   array = array || []
-  if (Array.isArray(array)) { return array }
+  if (Array.isArray(array))
+    return array
   return [array]
 }

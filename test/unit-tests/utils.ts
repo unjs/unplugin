@@ -16,5 +16,5 @@ export const build = {
   webpack: webpackBuild,
   rollup: rollupBuild,
   vite: viteBuild,
-  esbuild: esbuildBuild
+  esbuild: esbuildBuild,
 }

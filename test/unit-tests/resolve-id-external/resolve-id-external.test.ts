@@ -1,7 +1,8 @@
 import * as path from 'path'
-import { it, describe, expect, vi, afterEach } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import type { VitePlugin } from 'unplugin'
+import { createUnplugin } from 'unplugin'
 import { build, toArray } from '../utils'
-import { VitePlugin, createUnplugin } from 'unplugin'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 const externals = ['path']
@@ -11,23 +12,24 @@ describe('load hook should not be called when resolveId hook returned `external:
     if (id === 'external-module') {
       return {
         id,
-        external: true
+        external: true,
       }
-    } else {
+    }
+    else {
       return null
     }
   })
   const mockLoadHook = vi.fn(() => undefined)
 
-  function createMockedUnplugin () {
+  function createMockedUnplugin() {
     return createUnplugin(() => ({
       name: 'test-plugin',
       resolveId: mockResolveIdHook,
-      load: mockLoadHook
+      load: mockLoadHook,
     }))
   }
   // We extract this check because all bundlers should behave the same
-  function checkHookCalls (): void {
+  function checkHookCalls(): void {
     expect(mockResolveIdHook).toHaveBeenCalledTimes(3)
     expect(mockResolveIdHook).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
     expect(mockResolveIdHook).toHaveBeenCalledWith('./internal-module.js', expect.anything(), expect.anything())
@@ -53,13 +55,13 @@ describe('load hook should not be called when resolveId hook returned `external:
       build: {
         lib: {
           entry: entryFilePath,
-          name: 'TestLib'
+          name: 'TestLib',
         },
         rollupOptions: {
-          external: externals
+          external: externals,
         },
-        write: false // don't output anything
-      }
+        write: false, // don't output anything
+      },
     })
 
     checkHookCalls()
@@ -71,7 +73,7 @@ describe('load hook should not be called when resolveId hook returned `external:
     await build.rollup({
       input: entryFilePath,
       plugins: [plugin()],
-      external: externals
+      external: externals,
     })
 
     checkHookCalls()
@@ -87,11 +89,11 @@ describe('load hook should not be called when resolveId hook returned `external:
           plugins: [plugin()],
           externals,
           mode: 'production',
-          target: 'node' // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
+          target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
         },
         () => {
           resolve()
-        }
+        },
       )
     })
 
@@ -106,7 +108,7 @@ describe('load hook should not be called when resolveId hook returned `external:
       plugins: [plugin()],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
-      external: externals
+      external: externals,
     })
 
     checkHookCalls()
