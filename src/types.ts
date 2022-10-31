@@ -69,7 +69,7 @@ export interface ResolvedUnpluginOptions extends UnpluginOptions {
   __virtualModulePrefix: string
 }
 
-export type UnpluginFactory<UserOptions, Nested extends boolean> = (options: UserOptions, meta: UnpluginContextMeta) =>
+export type UnpluginFactory<UserOptions, Nested extends boolean = boolean> = (options: UserOptions, meta: UnpluginContextMeta) =>
 Nested extends true
   ? Array<UnpluginOptions>
   : UnpluginOptions
@@ -77,7 +77,7 @@ export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserO
   ? (options?: UserOptions) => Return
   : (options: UserOptions) => Return
 
-export interface UnpluginInstance<UserOptions, Nested extends boolean> {
+export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean> {
   rollup: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RollupPlugin> : RollupPlugin>
   vite: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<VitePlugin> : VitePlugin>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>

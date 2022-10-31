@@ -1,17 +1,17 @@
 import type { RollupPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
 import { toArray } from '../utils'
 
-export function getRollupPlugin <UserOptions = {}>(
-  factory: UnpluginFactory<UserOptions>,
-): UnpluginInstance<UserOptions>['rollup'] {
-  return (userOptions?: UserOptions) => {
+export function getRollupPlugin <UserOptions = {}, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'rollup',
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
     const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin))
     return plugins.length === 1 ? plugins[0] : plugins
-  }
+  }) as UnpluginInstance<UserOptions, Nested>['rollup']
 }
 
 export function toRollupPlugin(plugin: UnpluginOptions, containRollupOptions = true): RollupPlugin {
