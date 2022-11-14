@@ -13,7 +13,7 @@ const watchList: Set<string> = new Set()
 
 let i = 0
 
-export function getEsbuildPlugin <UserOptions = {}>(
+export function getEsbuildPlugin<UserOptions = {}>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['esbuild'] {
   return (userOptions?: UserOptions): EsbuildPlugin => {

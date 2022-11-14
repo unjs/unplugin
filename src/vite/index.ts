@@ -2,7 +2,7 @@ import { toRollupPlugin } from '../rollup'
 import type { UnpluginContextMeta, UnpluginFactory, UnpluginInstance, VitePlugin } from '../types'
 import { toArray } from '../utils'
 
-export function getVitePlugin <UserOptions = {}, Nested extends boolean = boolean>(
+export function getVitePlugin<UserOptions = {}, Nested extends boolean = boolean>(
   factory: UnpluginFactory<UserOptions, Nested>,
 ) {
   return ((userOptions?: UserOptions) => {
