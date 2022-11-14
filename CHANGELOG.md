@@ -1,5 +1,6 @@
 # [1.0.0](https://github.com/unjs/unplugin/compare/v0.10.2...v1.0.0) (2022-11-14)
 
+No breaking changes, bumping the version to mark it as stable.
 
 ### Bug Fixes
 
