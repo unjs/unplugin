@@ -1,3 +1,13 @@
+# [1.0.0](https://github.com/unjs/unplugin/compare/v0.10.2...v1.0.0) (2022-11-14)
+
+
+### Bug Fixes
+
+* add types to export map ([#191](https://github.com/unjs/unplugin/issues/191)) ([b0c1021](https://github.com/unjs/unplugin/commit/b0c1021903bd2d1df73699f4215d2b92e1d2216f))
+* internal TS type errors ([#187](https://github.com/unjs/unplugin/issues/187)) ([20987e9](https://github.com/unjs/unplugin/commit/20987e98f389647a4614d8848e8eb4b3b099e7db))
+
+
+
 ## [0.10.2](https://github.com/unjs/unplugin/compare/v0.10.1...v0.10.2) (2022-10-25)
 
 
