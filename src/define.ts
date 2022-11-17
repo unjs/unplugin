@@ -4,13 +4,7 @@ import type { UnpluginFactory, UnpluginInstance } from './types'
 import { getVitePlugin } from './vite'
 import { getWebpackPlugin } from './webpack'
 
-export function createUnplugin<UserOptions>(
-  factory: UnpluginFactory<UserOptions, false>
-): UnpluginInstance<UserOptions, false>
-export function createUnplugin<UserOptions>(
-  factory: UnpluginFactory<UserOptions, true>
-): UnpluginInstance<UserOptions, true>
-export function createUnplugin<UserOptions, Nested extends boolean>(
+export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
   factory: UnpluginFactory<UserOptions, Nested>,
 ): UnpluginInstance<UserOptions, Nested> {
   return {
