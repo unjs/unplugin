@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@nuxtjs"
+    "github>unjs/renovate-config"
   ],
   "packageRules": [
     {
