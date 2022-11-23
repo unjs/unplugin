@@ -247,6 +247,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-ast](https://github.com/sxzz/unplugin-ast)
 - [unplugin-element-plus](https://github.com/element-plus/unplugin-element-plus)
 - [unplugin-glob](https://github.com/sxzz/unplugin-glob)
+- [unplugin-sentry](https://github.com/kricsleo/unplugin-sentry)
 
 ## License
 
