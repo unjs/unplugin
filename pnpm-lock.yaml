@@ -16,7 +16,7 @@ specifiers:
   esbuild: ^0.15.16
   eslint: ^8.28.0
   fast-glob: ^3.2.12
-  fs-extra: ^10.1.0
+  fs-extra: ^11.0.0
   jiti: ^1.16.0
   magic-string: ^0.26.7
   picocolors: ^1.0.0
@@ -50,7 +50,7 @@ devDependencies:
   esbuild: 0.15.16
   eslint: 8.28.0
   fast-glob: 3.2.12
-  fs-extra: 10.1.0
+  fs-extra: 11.0.0
   jiti: 1.16.0
   magic-string: 0.26.7
   picocolors: 1.0.0
@@ -2165,9 +2165,9 @@ packages:
     resolution: {integrity: sha512-8/sOawo8tJ4QOBX8YlQBMxL8+RLZfxMQOif9o0KUKTNTjMYElWPE0r/m5VNFxTRd0NSw8qSy8dajrwX4RYI1Hw==}
     dev: true
 
-  /fs-extra/10.1.0:
-    resolution: {integrity: sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==}
-    engines: {node: '>=12'}
+  /fs-extra/11.0.0:
+    resolution: {integrity: sha512-4YxRvMi4P5C3WQTvdRfrv5UVqbISpqjORFQAW5QPiKAauaxNCwrEdIi6pG3tDFhKKpMen+enEhHIzB/tvIO+/w==}
+    engines: {node: '>=14.14'}
     dependencies:
       graceful-fs: 4.2.9
       jsonfile: 6.1.0
