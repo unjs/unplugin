@@ -55,7 +55,7 @@
     "jiti": "^1.16.0",
     "magic-string": "^0.26.7",
     "picocolors": "^1.0.0",
-    "rollup": "^3.5.0",
+    "rollup": "^3.5.1",
     "tsup": "^6.5.0",
     "typescript": "^4.9.3",
     "vite": "^3.2.4",
