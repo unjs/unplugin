@@ -20,10 +20,10 @@ specifiers:
   jiti: ^1.16.0
   magic-string: ^0.27.0
   picocolors: ^1.0.0
-  rollup: ^3.5.1
+  rollup: ^3.6.0
   tsup: ^6.5.0
   typescript: ^4.9.3
-  vite: ^3.2.4
+  vite: ^3.2.5
   vitest: ^0.25.3
   webpack: ^5.75.0
   webpack-cli: ^4.10.0
@@ -54,10 +54,10 @@ devDependencies:
   jiti: 1.16.0
   magic-string: 0.27.0
   picocolors: 1.0.0
-  rollup: 3.5.1
+  rollup: 3.6.0
   tsup: 6.5.0_typescript@4.9.3
   typescript: 4.9.3
-  vite: 3.2.4_@types+node@18.11.10
+  vite: 3.2.5_@types+node@18.11.10
   vitest: 0.25.3
   webpack: 5.75.0_dscivcikr7qcnoxge67rg2v3se
   webpack-cli: 4.10.0_webpack@5.75.0
@@ -3507,8 +3507,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rollup/3.5.1:
-    resolution: {integrity: sha512-hdQWTvPeiAbM6SUkxV70HdGUVxsgsc+CLy5fuh4KdgUBJ0SowXiix8gANgXoG3wEuLwfoJhCT2V+WwxfWq9Ikw==}
+  /rollup/3.6.0:
+    resolution: {integrity: sha512-qCgiBeSu2/AIOKWGFMiRkjPlGlcVwxAjwpGKQZOQYng+83Hip4PjrWHm7EQX1wnrvRqfTytEihRRfLHdX+hR4g==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3972,7 +3972,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 3.1.0
       resolve-from: 5.0.0
-      rollup: 3.5.1
+      rollup: 3.6.0
       source-map: 0.8.0-beta.0
       sucrase: 3.20.3
       tree-kill: 1.2.2
@@ -4081,8 +4081,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite/3.2.4_@types+node@18.11.10:
-    resolution: {integrity: sha512-Z2X6SRAffOUYTa+sLy3NQ7nlHFU100xwanq1WDwqaiFiCe+25zdxP1TfCS5ojPV2oDDcXudHIoPnI1Z/66B7Yw==}
+  /vite/3.2.5_@types+node@18.11.10:
+    resolution: {integrity: sha512-4mVEpXpSOgrssFZAOmGIr85wPHKvaDAcXqxVxVRZhljkJOMZi1ibLibzjLHzJvcok8BMguLc7g1W6W/GqZbLdQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -4150,7 +4150,7 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.0
       tinyspy: 1.0.2
-      vite: 3.2.4_@types+node@18.11.10
+      vite: 3.2.5_@types+node@18.11.10
     transitivePeerDependencies:
       - less
       - sass
