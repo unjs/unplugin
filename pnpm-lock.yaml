@@ -23,7 +23,7 @@ specifiers:
   rollup: ^3.7.3
   tsup: ^6.5.0
   typescript: ^4.9.4
-  vite: ^3.2.5
+  vite: ^4.0.0
   vitest: ^0.25.7
   webpack: ^5.75.0
   webpack-cli: ^4.10.0
@@ -57,7 +57,7 @@ devDependencies:
   rollup: 3.7.3
   tsup: 6.5.0_typescript@4.9.4
   typescript: 4.9.4
-  vite: 3.2.5_@types+node@18.11.13
+  vite: 4.0.0_@types+node@18.11.13
   vitest: 0.25.7
   webpack: 5.75.0_77lato3srcyswwm73wikbvbjge
   webpack-cli: 4.10.0_webpack@5.75.0
@@ -3538,8 +3538,8 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /postcss/8.4.18:
-    resolution: {integrity: sha512-Wi8mWhncLJm11GATDaQKobXSNEYGUHeQLiQqDFG1qQ5UTDPTEvKw0Xt5NsTpktGTwLps3ByrWsBrG0rB8YQ9oA==}
+  /postcss/8.4.19:
+    resolution: {integrity: sha512-h+pbPsyhlYj6N2ozBmHhHrs9DzGmbaarbLvWipMRO7RLS+v4onj26MPFXA5OBYFxyqYhUJK456SwDcY9H2/zsA==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.4
@@ -3725,14 +3725,6 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.0
-    dev: true
-
-  /rollup/2.79.1:
-    resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
-    engines: {node: '>=10.0.0'}
-    hasBin: true
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /rollup/3.7.3:
@@ -4309,8 +4301,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite/3.2.5_@types+node@18.11.13:
-    resolution: {integrity: sha512-4mVEpXpSOgrssFZAOmGIr85wPHKvaDAcXqxVxVRZhljkJOMZi1ibLibzjLHzJvcok8BMguLc7g1W6W/GqZbLdQ==}
+  /vite/4.0.0_@types+node@18.11.13:
+    resolution: {integrity: sha512-ynad+4kYs8Jcnn8J7SacS9vAbk7eMy0xWg6E7bAhS1s79TK+D7tVFGXVZ55S7RNLRROU1rxoKlvZ/qjaB41DGA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -4335,10 +4327,10 @@ packages:
         optional: true
     dependencies:
       '@types/node': 18.11.13
-      esbuild: 0.15.18
-      postcss: 8.4.18
+      esbuild: 0.16.4
+      postcss: 8.4.19
       resolve: 1.22.1
-      rollup: 2.79.1
+      rollup: 3.7.3
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -4378,7 +4370,7 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.0
       tinyspy: 1.0.2
-      vite: 3.2.5_@types+node@18.11.13
+      vite: 4.0.0_@types+node@18.11.13
     transitivePeerDependencies:
       - less
       - sass
