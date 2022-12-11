@@ -24,7 +24,9 @@ export function getEsbuildPlugin<UserOptions = {}>(
 
     const setup = (plugin: UnpluginOptions): EsbuildPlugin['setup'] =>
       plugin.esbuild?.setup
-      ?? (({ onStart, onEnd, onResolve, onLoad, initialOptions, esbuild: { build } }) => {
+      ?? ((pluginBuild) => {
+        const { onStart, onEnd, onResolve, onLoad, initialOptions, esbuild: { build } } = pluginBuild
+        meta.build = pluginBuild
         const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/
         const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
 

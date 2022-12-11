@@ -1,7 +1,7 @@
 import type { AcornNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
-import type { Plugin as EsbuildPlugin } from 'esbuild'
+import type { Plugin as EsbuildPlugin, PluginBuild } from 'esbuild'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export {
@@ -94,6 +94,7 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   }
 } | {
   framework: 'esbuild'
+  build?: PluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
 })
