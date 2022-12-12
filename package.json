@@ -1,6 +1,6 @@
 {
   "name": "unplugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "packageManager": "pnpm@7.18.1",
   "description": "Unified plugin system for build tools",
   "license": "MIT",

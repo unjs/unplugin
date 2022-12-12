@@ -1,3 +1,17 @@
+## [1.0.1](https://github.com/unjs/unplugin/compare/v1.0.0...v1.0.1) (2022-12-12)
+
+
+### Bug Fixes
+
+* **types:** add Nested generic to createUnplugin ([#194](https://github.com/unjs/unplugin/issues/194)) ([971df69](https://github.com/unjs/unplugin/commit/971df698b24e8c008df9d7a00e27facf0b820f6e))
+
+
+### Features
+
+* **esbuild:** add plugin build context to meta ([#226](https://github.com/unjs/unplugin/issues/226)) ([00830c3](https://github.com/unjs/unplugin/commit/00830c35395565383845d9436bb30df5004d01fd))
+
+
+
 # [1.0.0](https://github.com/unjs/unplugin/compare/v0.10.2...v1.0.0) (2022-11-14)
 
 No breaking changes, bumping the version to mark it as stable.
