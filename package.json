@@ -43,7 +43,7 @@
     "@antfu/ni": "^0.18.8",
     "@types/express": "^4.17.15",
     "@types/fs-extra": "^9.0.13",
-    "@types/node": "^18.11.16",
+    "@types/node": "^18.11.17",
     "@types/webpack-sources": "^3.2.0",
     "bumpp": "^8.2.1",
     "conventional-changelog-cli": "^2.2.2",
