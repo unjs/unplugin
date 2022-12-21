@@ -23,8 +23,8 @@ specifiers:
   rollup: ^3.7.5
   tsup: ^6.5.0
   typescript: ^4.9.4
-  vite: ^4.0.2
-  vitest: ^0.26.1
+  vite: ^4.0.3
+  vitest: ^0.26.2
   webpack: ^5.75.0
   webpack-cli: 4.10.0
   webpack-sources: ^3.2.3
@@ -57,8 +57,8 @@ devDependencies:
   rollup: 3.7.5
   tsup: 6.5.0_typescript@4.9.4
   typescript: 4.9.4
-  vite: 4.0.2_@types+node@18.11.17
-  vitest: 0.26.1
+  vite: 4.0.3_@types+node@18.11.17
+  vitest: 0.26.2
   webpack: 5.75.0_3yhl75r3vlv5o5yq2ncvty7ap4
   webpack-cli: 4.10.0_webpack@5.75.0
 
@@ -4334,8 +4334,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite-node/0.26.1_@types+node@18.11.17:
-    resolution: {integrity: sha512-5FJSKZZJz48zFRKHE55WyevZe61hLMQEsqGn+ungfd60kxEztFybZ3yG9ToGFtOWNCCy7Vn5EVuXD8bdeHOSdw==}
+  /vite-node/0.26.2_@types+node@18.11.17:
+    resolution: {integrity: sha512-4M/zlatItZAyvrQG+82zQBhgDjRZRhVJYFW4T9wcAKh7eMmSiPOVSeI5zsV9UzHXgCcIDKX0o0r3s4OxExTHqg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     dependencies:
@@ -4344,7 +4344,7 @@ packages:
       pathe: 0.2.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.0.2_@types+node@18.11.17
+      vite: 4.0.3_@types+node@18.11.17
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4355,8 +4355,8 @@ packages:
       - terser
     dev: true
 
-  /vite/4.0.2_@types+node@18.11.17:
-    resolution: {integrity: sha512-QJaY3R+tFlTagH0exVqbgkkw45B+/bXVBzF2ZD1KB5Z8RiAoiKo60vSUf6/r4c2Vh9jfGBKM4oBI9b4/1ZJYng==}
+  /vite/4.0.3_@types+node@18.11.17:
+    resolution: {integrity: sha512-HvuNv1RdE7deIfQb8mPk51UKjqptO/4RXZ5yXSAvurd5xOckwS/gg8h9Tky3uSbnjYTgUm0hVCet1cyhKd73ZA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -4389,8 +4389,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.26.1:
-    resolution: {integrity: sha512-qTLRnjYmjmJpHlLUtErxtlRqGCe8WItFhGXKklpWivu7CLP9KXN9iTezROe+vf51Kb+BB/fzxK6fUG9DvFGL5Q==}
+  /vitest/0.26.2:
+    resolution: {integrity: sha512-Jvqxh6SDy9SsuslkDjts0iDewDIdq4rveEt69YgDuAb1tVDGV0lDepVaeAFraoySWqneJmOt4TngFFNhlw7GfA==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -4424,8 +4424,8 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.0
       tinyspy: 1.0.2
-      vite: 4.0.2_@types+node@18.11.17
-      vite-node: 0.26.1_@types+node@18.11.17
+      vite: 4.0.3_@types+node@18.11.17
+      vite-node: 0.26.2_@types+node@18.11.17
     transitivePeerDependencies:
       - less
       - sass
