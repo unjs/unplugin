@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "version": "1.0.1",
-  "packageManager": "pnpm@7.19.0",
+  "packageManager": "pnpm@7.20.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "repository": "unjs/unplugin",
@@ -55,7 +55,7 @@
     "jiti": "^1.16.0",
     "magic-string": "^0.27.0",
     "picocolors": "^1.0.0",
-    "rollup": "^3.8.0",
+    "rollup": "^3.8.1",
     "tsup": "^6.5.0",
     "typescript": "^4.9.4",
     "vite": "^4.0.3",
