@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "version": "1.0.1",
-  "packageManager": "pnpm@7.22.0",
+  "packageManager": "pnpm@7.23.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "repository": "unjs/unplugin",
@@ -48,7 +48,7 @@
     "bumpp": "^8.2.1",
     "conventional-changelog-cli": "^2.2.2",
     "enhanced-resolve": "^5.12.0",
-    "esbuild": "^0.16.15",
+    "esbuild": "^0.16.16",
     "eslint": "^8.31.0",
     "fast-glob": "^3.2.12",
     "fs-extra": "^11.1.0",
