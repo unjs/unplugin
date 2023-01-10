@@ -17,7 +17,7 @@ specifiers:
   eslint: ^8.31.0
   fast-glob: ^3.2.12
   fs-extra: ^11.1.0
-  jiti: ^1.16.1
+  jiti: ^1.16.2
   magic-string: ^0.27.0
   picocolors: ^1.0.0
   rollup: ^3.9.1
@@ -51,7 +51,7 @@ devDependencies:
   eslint: 8.31.0
   fast-glob: 3.2.12
   fs-extra: 11.1.0
-  jiti: 1.16.1
+  jiti: 1.16.2
   magic-string: 0.27.0
   picocolors: 1.0.0
   rollup: 3.9.1
@@ -2931,8 +2931,8 @@ packages:
       supports-color: 8.1.1
     dev: true
 
-  /jiti/1.16.1:
-    resolution: {integrity: sha512-kJUp4Bj44uTaZAwG6R2/GjbodOWHULn8Swue0B7tY8v5BpTkUvDR+zBM5tsbC4x/jCeYDZ+mAdrUIScwIo4oPw==}
+  /jiti/1.16.2:
+    resolution: {integrity: sha512-OKBOVWmU3FxDt/UH4zSwiKPuc1nihFZiOD722FuJlngvLz2glX1v2/TJIgoA4+mrpnXxHV6dSAoCvPcYQtoG5A==}
     hasBin: true
     dev: true
 
