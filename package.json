@@ -8,9 +8,9 @@
   "sideEffects": false,
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs"
     },
     "./dist/webpack/loaders/load": "./dist/webpack/loaders/load.js",
     "./dist/webpack/loaders/transform": "./dist/webpack/loaders/transform.js"
