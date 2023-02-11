@@ -42,7 +42,7 @@
     "@antfu/eslint-config": "^0.35.1",
     "@antfu/ni": "^0.19.0",
     "@types/express": "^4.17.17",
-    "@types/fs-extra": "^9.0.13",
+    "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.19",
     "@types/webpack-sources": "^3.2.0",
     "bumpp": "^8.2.1",
