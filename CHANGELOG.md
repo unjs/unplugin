@@ -1,3 +1,13 @@
+# [1.1.0](https://github.com/unjs/unplugin/compare/v1.0.1...v1.1.0) (2023-02-15)
+
+
+### Bug Fixes
+
+* compact with new magic-string type ([979c88f](https://github.com/unjs/unplugin/commit/979c88fa77e80bb9911f9db1d699999906acc3ec))
+* move types to the first field ([#270](https://github.com/unjs/unplugin/issues/270)) ([60b9f7c](https://github.com/unjs/unplugin/commit/60b9f7c86d06be49de4c2e9caffb64fa8e74495a))
+
+
+
 ## [1.0.1](https://github.com/unjs/unplugin/compare/v1.0.0...v1.0.1) (2022-12-12)
 
 
