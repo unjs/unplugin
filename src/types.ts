@@ -13,7 +13,18 @@ export {
 
 export type Thenable<T> = T | Promise<T>
 
-export type TransformResult = string | { code: string; map?: SourceMapInput | null } | null | undefined
+export interface SourceMapCompact {
+  file?: string
+  mappings: string
+  names: string[]
+  sourceRoot?: string
+  sources: string[]
+  // In magic-string v0.27.0, `sourcesContent` becomes nullable, while rollup haven't catch up yet
+  sourcesContent?: (string | null)[]
+  version: number
+}
+
+export type TransformResult = string | { code: string; map?: SourceMapInput | SourceMapCompact | null } | null | undefined
 
 export interface ExternalIdResult { id: string; external?: boolean }
 
