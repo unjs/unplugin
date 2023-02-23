@@ -9,7 +9,7 @@ specifiers:
   '@types/node': ^18.14.0
   '@types/webpack-sources': ^3.2.0
   acorn: ^8.8.2
-  bumpp: ^8.2.1
+  bumpp: ^9.0.0
   chokidar: ^3.5.3
   conventional-changelog-cli: ^2.2.2
   enhanced-resolve: ^5.12.0
@@ -44,7 +44,7 @@ devDependencies:
   '@types/fs-extra': 11.0.1
   '@types/node': 18.14.0
   '@types/webpack-sources': 3.2.0
-  bumpp: 8.2.1
+  bumpp: 9.0.0
   conventional-changelog-cli: 2.2.2
   enhanced-resolve: 5.12.0
   esbuild: 0.17.9
@@ -1364,17 +1364,16 @@ packages:
       semver: 7.3.8
     dev: true
 
-  /bumpp/8.2.1:
-    resolution: {integrity: sha512-4tHKsWC2mqHQvdjZ4AXgVhS2xMsz8qQ4zYt87vGRXW5tqAjrYa/UJqy7s/dGYI2OIe9ghBdiFhKpyKEX9SXffg==}
+  /bumpp/9.0.0:
+    resolution: {integrity: sha512-I2+JLFQin46NioHg6wi23hYQMVExiJyGblARp5fIHUzLv3rRz9me38eUe2xlQCAl7Ys9X+SlhTaIkttTxiL6cQ==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
       '@jsdevtools/ez-spawn': 3.0.4
-      cac: 6.7.12
+      cac: 6.7.14
       fast-glob: 3.2.12
-      kleur: 4.1.5
       prompts: 2.4.2
-      semver: 7.3.5
+      semver: 7.3.8
     dev: true
 
   /bundle-require/4.0.1_esbuild@0.17.9:
@@ -1385,11 +1384,6 @@ packages:
     dependencies:
       esbuild: 0.17.9
       load-tsconfig: 0.2.3
-    dev: true
-
-  /cac/6.7.12:
-    resolution: {integrity: sha512-rM7E2ygtMkJqD9c7WnFU6fruFcN3xe4FM5yUmgxhZzIKJk4uHl9U/fhwdajGFQbQuv43FAUo1Fe8gX/oIKDeSA==}
-    engines: {node: '>=8'}
     dev: true
 
   /cac/6.7.14:
@@ -3240,11 +3234,6 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /kleur/4.1.5:
-    resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
-    engines: {node: '>=6'}
-    dev: true
-
   /levn/0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -4069,14 +4058,6 @@ packages:
   /semver/6.3.0:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
-    dev: true
-
-  /semver/7.3.5:
-    resolution: {integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      lru-cache: 6.0.0
     dev: true
 
   /semver/7.3.8:
