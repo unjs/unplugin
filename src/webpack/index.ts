@@ -2,7 +2,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { ResolvePluginInstance } from 'webpack'
+import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
 import type { ResolvedUnpluginOptions, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import { normalizeAbsolutePath, toArray } from '../utils'
 import { createContext } from './context'
@@ -50,6 +50,11 @@ export function getWebpackPlugin<UserOptions = {}>(
 
           // transform hook
           if (plugin.transform) {
+            const loaders: RuleSetUseItem[] = [{
+              loader: TRANSFORM_LOADER,
+              options: { plugin },
+              ident: plugin.name,
+            }]
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
               use: (data: { resource: string | null; resourceQuery: string }) => {
@@ -57,12 +62,8 @@ export function getWebpackPlugin<UserOptions = {}>(
                   return []
 
                 const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
-                if (!plugin.transformInclude || plugin.transformInclude(id)) {
-                  return [{
-                    loader: TRANSFORM_LOADER,
-                    options: { plugin },
-                  }]
-                }
+                if (!plugin.transformInclude || plugin.transformInclude(id))
+                  return loaders
 
                 return []
               },
