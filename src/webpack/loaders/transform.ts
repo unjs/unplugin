@@ -4,7 +4,7 @@ import { createContext } from '../context'
 
 export default async function transform(this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
-  const { plugin } = this.getOptions()
+  const { plugin } = this.query
 
   if (!plugin?.transform)
     return callback(null, source, map)
