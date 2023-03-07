@@ -16,6 +16,17 @@ let i = 0
 export function getEsbuildPlugin<UserOptions = {}>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['esbuild'] {
+  function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string) {
+    if (map) {
+      if (!map.sourcesContent || map.sourcesContent.length === 0)
+        map.sourcesContent = [code]
+
+      map = fixSourceMap(map as RawSourceMap)
+      code += `\n//# sourceMappingURL=${map.toUrl()}`
+    }
+    return code
+  }
+
   return (userOptions?: UserOptions): EsbuildPlugin => {
     const meta: UnpluginContextMeta = {
       framework: 'esbuild',
@@ -48,7 +59,7 @@ export function getEsbuildPlugin<UserOptions = {}>(
               fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
           },
           getWatchFiles() {
-            return Array.from(watchList)
+            return [...watchList]
           },
         }
 
@@ -150,14 +161,9 @@ export function getEsbuildPlugin<UserOptions = {}>(
               if (code === undefined)
                 return null
 
-              if (map) {
-              // fix missing sourcesContent, esbuild depends on it
-                if (!map.sourcesContent || map.sourcesContent.length === 0)
-                  map.sourcesContent = [code]
+              if (map)
+                code = processCodeWithSourceMap(map, code)
 
-                map = fixSourceMap(map as RawSourceMap)
-                code += `\n//# sourceMappingURL=${map.toUrl()}`
-              }
               return { contents: code, errors, warnings, loader: guessLoader(args.path), resolveDir }
             }
 
@@ -191,13 +197,8 @@ export function getEsbuildPlugin<UserOptions = {}>(
             }
 
             if (code) {
-              if (map) {
-                if (!map.sourcesContent || map.sourcesContent.length === 0)
-                  map.sourcesContent = [code]
-
-                map = fixSourceMap(map as RawSourceMap)
-                code += `\n//# sourceMappingURL=${map.toUrl()}`
-              }
+              if (map)
+                code = processCodeWithSourceMap(map, code)
               return { contents: code, errors, warnings, loader: guessLoader(args.path), resolveDir }
             }
           })
