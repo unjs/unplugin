@@ -73,25 +73,23 @@ export function getEsbuildPlugin<UserOptions = {}>(
               await plugin.writeBundle()
 
             if (initialOptions.watch) {
-              Object.keys(watchListRecord).forEach((id) => {
+              for (const id of watchList.keys()) {
                 if (!watchList.has(id)) {
-                  watchListRecord[id].close()
+                  await watchListRecord[id].close()
                   delete watchListRecord[id]
                 }
-              })
-              watchList.forEach((id) => {
-                if (!Object.keys(watchListRecord).includes(id)) {
+                else if (!watchListRecord[id]) {
                   watchListRecord[id] = chokidar.watch(id)
                   watchListRecord[id].on('change', async () => {
                     await plugin.watchChange?.call(context, id, { event: 'update' })
-                    rebuild()
+                    await rebuild()
                   })
                   watchListRecord[id].on('unlink', async () => {
                     await plugin.watchChange?.call(context, id, { event: 'delete' })
-                    rebuild()
+                    await rebuild()
                   })
                 }
-              })
+              }
             }
           })
         }
