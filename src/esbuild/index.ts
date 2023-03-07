@@ -84,11 +84,11 @@ export function getEsbuildPlugin<UserOptions = {}>(
                   watchListRecord[id] = chokidar.watch(id)
                   watchListRecord[id].on('change', async () => {
                     await plugin.watchChange?.call(context, id, { event: 'update' })
-                    rebuild()
+                    await rebuild()
                   })
                   watchListRecord[id].on('unlink', async () => {
                     await plugin.watchChange?.call(context, id, { event: 'delete' })
-                    rebuild()
+                    await rebuild()
                   })
                 }
               })
