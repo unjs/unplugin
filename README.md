@@ -62,12 +62,12 @@ export const unplugin = createUnplugin((options: UserOptions) => {
     name: 'unplugin-prefixed-name',
     // webpack's id filter is outside of loader logic,
     // an additional hook is needed for better perf on webpack
-    transformInclude (id) {
+    transformInclude(id) {
       return id.endsWith('.vue')
     },
     // just like rollup transform
-    transform (code) {
-      return code.replace(/<template>/, `<template><div>Injected</div>`)
+    transform(code) {
+      return code.replace(/<template>/, '<template><div>Injected</div>')
     },
     // more hooks coming
   }
@@ -101,13 +101,13 @@ export const unplugin = createUnplugin((options: UserOptions) => {
   return [
     {
       name: 'plugin-a',
-      transform (code) {
+      transform(code) {
         // ...
       }
     },
     {
       name: 'plugin-b',
-      resolveId (id) {
+      resolveId(id) {
         // ...
       }
     }
@@ -179,8 +179,8 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
   return {
     // common unplugin hooks
     name: 'unplugin-prefixed-name',
-    transformInclude (id) { /* ... */ },
-    transform (code) { /* ... */  },
+    transformInclude(id) { /* ... */ },
+    transform(code) { /* ... */ },
 
     // framework specific hooks
     vite: {
@@ -198,10 +198,10 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
     },
     esbuild: {
       // change the filter of onResolve and onLoad
-      onResolveFilter?: RegExp
-      onLoadFilter?: RegExp
+      onResolveFilter?: RegExp,
+      onLoadFilter?: RegExp,
       // or you can completely replace the setup logic
-      setup?: EsbuildPlugin['setup']
+      setup?: EsbuildPlugin.setup
     }
   }
 })
@@ -227,8 +227,8 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 
 ## Starter Templates
 
-- [unplugin-starter](https://github.com/antfu/unplugin-starter)
-- [create-unplugin](https://github.com/jwr12135/create-unplugin) <sup><code>Community</code></sup>
+- [antfu/unplugin-starter](https://github.com/antfu/unplugin-starter)
+- [jwr12135/create-unplugin](https://github.com/jwr12135/create-unplugin)
 - [sxzz/unplugin-starter](https://github.com/sxzz/unplugin-starter)
 
 ## Community Showcases
