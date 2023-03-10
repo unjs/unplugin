@@ -1,11 +1,10 @@
 import fs from 'fs'
 import path from 'path'
-import type { BuildOptions, PartialMessage } from 'esbuild'
+import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
-import { Parser } from 'acorn'
 import type { RawSourceMap } from '@ampproject/remapping'
 import type { EsbuildPlugin, UnpluginBuildContext, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
-import { combineSourcemaps, fixSourceMap, guessLoader, toArray } from './utils'
+import { combineSourcemaps, createEsbuildContext, guessLoader, processCodeWithSourceMap, toArray } from './utils'
 
 let i = 0
 
@@ -27,7 +26,7 @@ export function getEsbuildPlugin<UserOptions = {}>(
         const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/
         const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
 
-        const context: UnpluginBuildContext = getEsbuildContext(initialOptions)
+        const context: UnpluginBuildContext = createEsbuildContext(initialOptions)
 
         if (plugin.buildStart)
           onStart(() => plugin.buildStart!.call(context))
@@ -150,42 +149,4 @@ export function getEsbuildPlugin<UserOptions = {}>(
       ? { name: plugins[0].name, setup: setup(plugins[0]) }
       : { name: meta.esbuildHostName ?? `unplugin-host-${i++}`, setup: setupMultiplePlugins() }
   }
-}
-
-function getEsbuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
-  return {
-    parse(code: string, opts: any = {}) {
-      return Parser.parse(code, {
-        sourceType: 'module',
-        ecmaVersion: 'latest',
-        locations: true,
-        ...opts,
-      })
-    },
-    addWatchFile() {
-    },
-    emitFile(emittedFile) {
-      // Ensure output directory exists for this.emitFile
-      if (initialOptions.outdir && !fs.existsSync(initialOptions.outdir))
-        fs.mkdirSync(initialOptions.outdir, { recursive: true })
-
-      const outFileName = emittedFile.fileName || emittedFile.name
-      if (initialOptions.outdir && emittedFile.source && outFileName)
-        fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
-    },
-    getWatchFiles() {
-      return []
-    },
-  }
-}
-
-function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string) {
-  if (map) {
-    if (!map.sourcesContent || map.sourcesContent.length === 0)
-      map.sourcesContent = [code]
-
-    map = fixSourceMap(map as RawSourceMap)
-    code += `\n//# sourceMappingURL=${map.toUrl()}`
-  }
-  return code
 }
