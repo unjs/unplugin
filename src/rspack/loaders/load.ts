@@ -1,13 +1,13 @@
-import type { LoaderContext } from 'webpack'
-import type { UnpluginContext } from '../../types'
-import { createContext } from '../context'
+import type { LoaderContext } from '@rspack/core'
+import type { UnpluginContext, UnpluginOptions } from '../../types'
+import { createRspackContext } from '../context'
 import { normalizeAbsolutePath } from '../../utils'
 
-export default async function load(this: LoaderContext<any>, source: string, map: any) {
+export default async function load(this: LoaderContext, source: string, map: any) {
   const callback = this.async()
-  const { unpluginName } = this.query
-  const plugin = this._compiler?.$unpluginContext[unpluginName]
-  let id = this.resource
+
+  const id = this.resource
+  const { plugin } = this.getOptions() as { plugin: UnpluginOptions }
 
   if (!plugin?.load || !id)
     return callback(null, source, map)
@@ -17,11 +17,15 @@ export default async function load(this: LoaderContext<any>, source: string, map
     warn: error => this.emitWarning(typeof error === 'string' ? new Error(error) : error),
   }
 
-  if (id.startsWith(plugin.__virtualModulePrefix))
-    id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
+  // TODO: virtual module
+  // if (id.startsWith(plugin.__virtualModulePrefix))
+  //   id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
   const res = await plugin.load.call(
-    Object.assign(this._compilation && createContext(this._compilation) as any, context),
+    Object.assign(
+      this._compilation && createRspackContext(this._compilation),
+      context,
+    ),
     normalizeAbsolutePath(id),
   )
 
