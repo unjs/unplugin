@@ -4,6 +4,7 @@ import type { Mock } from 'vitest'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import type { UnpluginOptions, VitePlugin } from 'unplugin'
 import { createUnplugin } from 'unplugin'
+import type { RspackOptions } from '@rspack/core'
 import { build, toArray, webpackVersion } from '../utils'
 
 function createUnpluginWithCallback(writeBundleCallback: UnpluginOptions['writeBundle']) {
@@ -121,6 +122,31 @@ describe('writeBundle hook', () => {
       build.webpack(webpackVersion!.startsWith('4') ? webpack4Options : webpack5Options,
         resolve,
       )
+    })
+
+    checkWriteBundleHook(mockResolveIdHook)
+  })
+
+  it('rspack', async () => {
+    expect.assertions(3)
+    const mockResolveIdHook = vi.fn(generateMockWriteBundleHook(path.resolve(__dirname, 'test-out/rspack')))
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).rspack
+
+    const rspackOptions: RspackOptions = {
+      entry: path.resolve(__dirname, 'test-src/entry.js'),
+      plugins: [plugin()],
+      devtool: 'source-map',
+      output: {
+        path: path.resolve(__dirname, 'test-out/rspack'),
+        filename: 'output.js',
+        library: {
+          type: 'commonjs',
+        },
+      },
+    }
+
+    await new Promise((resolve) => {
+      build.rspack(rspackOptions, resolve)
     })
 
     checkWriteBundleHook(mockResolveIdHook)

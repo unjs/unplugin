@@ -25,6 +25,7 @@ function createUnpluginWithCallback(
 
 // We extract this check because all bundlers should behave the same
 function checkHookCalls(
+  name: 'webpack' | 'rollup' | 'vite' | 'rspack' | 'esbuild',
   resolveIdCallback: Mock,
   transformIncludeCallback: Mock,
   transformCallback: Mock,
@@ -32,22 +33,26 @@ function checkHookCalls(
 ): void {
   const EXPECT_CALLED_TIMES = 4
   // Ensure that all bundlers call the hooks the same amount of times
-  expect(resolveIdCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
+  if (name !== 'rspack')
+    expect(resolveIdCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
   expect(transformIncludeCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
   expect(transformCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
   expect(loadCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
 
   // Ensure that each hook was called with unique ids
-  expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
+  if (name !== 'rspack')
+    expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
   expect(new Set(transformIncludeCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
   expect(new Set(transformCallback.mock.calls.map(call => call[1]))).toHaveLength(EXPECT_CALLED_TIMES)
   expect(new Set(loadCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
 
+  if (name !== 'rspack') {
   // Ensure that the `resolveId` hook was called with expected values
-  expect(resolveIdCallback).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
-  expect(resolveIdCallback).toHaveBeenCalledWith('./proxy-export', expect.anything(), expect.anything())
-  expect(resolveIdCallback).toHaveBeenCalledWith('./sub-folder/named-export', expect.anything(), expect.anything())
-  expect(resolveIdCallback).toHaveBeenCalledWith('./default-export', expect.anything(), expect.anything())
+    expect(resolveIdCallback).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
+    expect(resolveIdCallback).toHaveBeenCalledWith('./proxy-export', expect.anything(), expect.anything())
+    expect(resolveIdCallback).toHaveBeenCalledWith('./sub-folder/named-export', expect.anything(), expect.anything())
+    expect(resolveIdCallback).toHaveBeenCalledWith('./default-export', expect.anything(), expect.anything())
+  }
 
   // Ensure that the `transformInclude`, `transform` and `load` hooks were called with the same (absolute) ids
   const ids = transformIncludeCallback.mock.calls.map(call => call[0])
@@ -93,7 +98,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       },
     })
 
-    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls('vite', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
   it('rollup', async () => {
@@ -115,7 +120,7 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       external: externals,
     })
 
-    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls('rollup', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
   it('webpack', async () => {
@@ -146,7 +151,37 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       )
     })
 
-    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls('webpack', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+  })
+
+  it('rspack', async () => {
+    const mockResolveIdHook = vi.fn(() => undefined)
+    const mockTransformIncludeHook = vi.fn(() => true)
+    const mockTransformHook = vi.fn(() => undefined)
+    const mockLoadHook = vi.fn(() => undefined)
+
+    const plugin = createUnpluginWithCallback(
+      mockResolveIdHook,
+      mockTransformIncludeHook,
+      mockTransformHook,
+      mockLoadHook,
+    ).rspack
+
+    await new Promise<void>((resolve) => {
+      build.rspack(
+        {
+          entry: entryFilePath,
+          plugins: [plugin()],
+          externals: externals[0],
+          mode: 'production',
+        },
+        () => {
+          resolve()
+        },
+      )
+    })
+
+    checkHookCalls('rspack', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
   it('esbuild', async () => {
@@ -170,6 +205,6 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
       external: externals,
     })
 
-    checkHookCalls(mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+    checkHookCalls('esbuild', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 })
