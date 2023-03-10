@@ -1,32 +1,17 @@
 import fs from 'fs'
 import path from 'path'
-import chokidar from 'chokidar'
-import type { PartialMessage } from 'esbuild'
+import type { BuildOptions, PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import { Parser } from 'acorn'
 import type { RawSourceMap } from '@ampproject/remapping'
 import type { EsbuildPlugin, UnpluginBuildContext, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
 import { combineSourcemaps, fixSourceMap, guessLoader, toArray } from './utils'
 
-const watchListRecord: Record<string, chokidar.FSWatcher> = {}
-const watchList: Set<string> = new Set()
-
 let i = 0
 
 export function getEsbuildPlugin<UserOptions = {}>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['esbuild'] {
-  function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string) {
-    if (map) {
-      if (!map.sourcesContent || map.sourcesContent.length === 0)
-        map.sourcesContent = [code]
-
-      map = fixSourceMap(map as RawSourceMap)
-      code += `\n//# sourceMappingURL=${map.toUrl()}`
-    }
-    return code
-  }
-
   return (userOptions?: UserOptions): EsbuildPlugin => {
     const meta: UnpluginContextMeta = {
       framework: 'esbuild',
@@ -35,75 +20,25 @@ export function getEsbuildPlugin<UserOptions = {}>(
 
     const setup = (plugin: UnpluginOptions): EsbuildPlugin['setup'] =>
       plugin.esbuild?.setup
-      ?? ((pluginBuild) => {
-        const { onStart, onEnd, onResolve, onLoad, initialOptions, esbuild: { build } } = pluginBuild
-        meta.build = pluginBuild
+      ?? ((build) => {
+        meta.build = build
+        const { onStart, onEnd, onResolve, onLoad, initialOptions } = build
+
         const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/
         const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
 
-        const context: UnpluginBuildContext = {
-          parse(code: string, opts: any = {}) {
-            return Parser.parse(code, {
-              sourceType: 'module',
-              ecmaVersion: 'latest',
-              locations: true,
-              ...opts,
-            })
-          },
-          addWatchFile(id) {
-            watchList.add(path.resolve(id))
-          },
-          emitFile(emittedFile) {
-            const outFileName = emittedFile.fileName || emittedFile.name
-            if (initialOptions.outdir && emittedFile.source && outFileName)
-              fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
-          },
-          getWatchFiles() {
-            return [...watchList]
-          },
-        }
-
-        // Ensure output directory exists for this.emitFile
-        if (initialOptions.outdir && !fs.existsSync(initialOptions.outdir))
-          fs.mkdirSync(initialOptions.outdir, { recursive: true })
+        const context: UnpluginBuildContext = getEsbuildContext(initialOptions)
 
         if (plugin.buildStart)
           onStart(() => plugin.buildStart!.call(context))
 
-        if (plugin.buildEnd || plugin.writeBundle || initialOptions.watch) {
-          const rebuild = () => build({
-            ...initialOptions,
-            watch: false,
-          })
-
+        if (plugin.buildEnd || plugin.writeBundle) {
           onEnd(async () => {
             if (plugin.buildEnd)
               await plugin.buildEnd.call(context)
 
             if (plugin.writeBundle)
               await plugin.writeBundle()
-
-            if (initialOptions.watch) {
-              Object.keys(watchListRecord).forEach((id) => {
-                if (!watchList.has(id)) {
-                  watchListRecord[id].close()
-                  delete watchListRecord[id]
-                }
-              })
-              watchList.forEach((id) => {
-                if (!Object.keys(watchListRecord).includes(id)) {
-                  watchListRecord[id] = chokidar.watch(id)
-                  watchListRecord[id].on('change', async () => {
-                    await plugin.watchChange?.call(context, id, { event: 'update' })
-                    rebuild()
-                  })
-                  watchListRecord[id].on('unlink', async () => {
-                    await plugin.watchChange?.call(context, id, { event: 'delete' })
-                    rebuild()
-                  })
-                }
-              })
-            }
           })
         }
 
@@ -215,4 +150,42 @@ export function getEsbuildPlugin<UserOptions = {}>(
       ? { name: plugins[0].name, setup: setup(plugins[0]) }
       : { name: meta.esbuildHostName ?? `unplugin-host-${i++}`, setup: setupMultiplePlugins() }
   }
+}
+
+function getEsbuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
+  return {
+    parse(code: string, opts: any = {}) {
+      return Parser.parse(code, {
+        sourceType: 'module',
+        ecmaVersion: 'latest',
+        locations: true,
+        ...opts,
+      })
+    },
+    addWatchFile() {
+    },
+    emitFile(emittedFile) {
+      // Ensure output directory exists for this.emitFile
+      if (initialOptions.outdir && !fs.existsSync(initialOptions.outdir))
+        fs.mkdirSync(initialOptions.outdir, { recursive: true })
+
+      const outFileName = emittedFile.fileName || emittedFile.name
+      if (initialOptions.outdir && emittedFile.source && outFileName)
+        fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
+    },
+    getWatchFiles() {
+      return []
+    },
+  }
+}
+
+function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string) {
+  if (map) {
+    if (!map.sourcesContent || map.sourcesContent.length === 0)
+      map.sourcesContent = [code]
+
+    map = fixSourceMap(map as RawSourceMap)
+    code += `\n//# sourceMappingURL=${map.toUrl()}`
+  }
+  return code
 }
