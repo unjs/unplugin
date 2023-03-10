@@ -2,7 +2,7 @@ import { resolve } from 'path'
 import sources from 'webpack-sources'
 import type { Compilation } from 'webpack'
 import { Parser } from 'acorn'
-import type { UnpluginBuildContext } from 'src'
+import type { UnpluginBuildContext } from '../types'
 
 export function createContext(compilation: Compilation): UnpluginBuildContext {
   return {

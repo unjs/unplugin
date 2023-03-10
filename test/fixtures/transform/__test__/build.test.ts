@@ -36,4 +36,12 @@ describe('transform build', () => {
     expect(content).toContain('TARGET: [Injected Post Esbuild]')
     expect(content).toContain('QUERY: [Injected Post Esbuild]')
   })
+
+  it.only('rspack', async () => {
+    const content = await fs.readFile(r('rspack/main.js'), 'utf-8')
+
+    expect(content).toContain('NON-TARGET: __UNPLUGIN__')
+    expect(content).toContain('TARGET: [Injected Post Rspack]')
+    expect(content).toContain('QUERY: [Injected Post Rspack]')
+  })
 })
