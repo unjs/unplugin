@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/unjs/unplugin/compare/v1.1.0...v1.2.0) (2023-03-10)
+
+
+### Features
+
+* **webpack:** use loader options, improve compactiblity with webpack 5 & rspack ([#279](https://github.com/unjs/unplugin/issues/279)) ([a8817bd](https://github.com/unjs/unplugin/commit/a8817bd992c8c65a603dcc43b33ebe78f9cd703c))
+
+
+
 # [1.1.0](https://github.com/unjs/unplugin/compare/v1.0.1...v1.1.0) (2023-02-15)
 
 
