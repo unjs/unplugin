@@ -4,14 +4,14 @@ const { vite } = require('./unplugin')
 module.exports = {
   root: __dirname,
   plugins: [
-    vite()
+    vite(),
   ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/main.js'),
       name: 'main',
-      fileName: 'main.js'
+      fileName: 'main.js',
     },
-    outDir: 'dist/vite'
-  }
+    outDir: 'dist/vite',
+  },
 }

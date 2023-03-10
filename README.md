@@ -11,6 +11,7 @@ Currently supports:
 - [Vite](https://vitejs.dev/)
 - [Rollup](https://rollupjs.org/)
 - [Webpack](https://webpack.js.org/)
+- [Rspack](https://www.rspack.dev/)
 - [esbuild](https://esbuild.github.io/)
 
 ## Hooks
@@ -24,8 +25,8 @@ Currently supports:
 | [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ❌   |
 | [`buildStart`](https://rollupjs.org/guide/en/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
 | [`resolveId`](https://rollupjs.org/guide/en/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
-| `loadInclude`<sup>2</sup>                                               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
-| [`load`](https://rollupjs.org/guide/en/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ❌   |
+| `loadInclude`<sup>2</sup>                                               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
+| [`load`](https://rollupjs.org/guide/en/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
 | `transformInclude`<sup>2</sup>                                          |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
 | [`transform`](https://rollupjs.org/guide/en/#transformers)              |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
 | [`watchChange`](https://rollupjs.org/guide/en/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
@@ -76,6 +77,7 @@ export const unplugin = createUnplugin((options: UserOptions) => {
 export const vitePlugin = unplugin.vite
 export const rollupPlugin = unplugin.rollup
 export const webpackPlugin = unplugin.webpack
+export const rspackPlugin = unplugin.rspack
 export const esbuildPlugin = unplugin.esbuild
 ```
 
@@ -85,9 +87,9 @@ Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behav
 
 ###### Supported
 
-|         Rollup         | Vite | Webpack 4 | Webpack 5 |    esbuild     |
-| :--------------------: | :--: | :-------: | :-------: | :------------: |
-| ✅ `>=3.1`<sup>6</sup> |  ✅  |    ✅     |    ✅     | ⚠️<sup>7</sup> |
+|         Rollup         | Vite | Webpack 4 | Webpack 5 | Rspack |    esbuild     |
+| :--------------------: | :--: | :-------: | :-------: | :----: | :------------: |
+| ✅ `>=3.1`<sup>6</sup> |  ✅  |    ✅     |    ✅     |   ✅   | ⚠️<sup>7</sup> |
 
 6. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin aurthor should ask users to a have a Rollup version of `>=3.1.0` when using nested plugins. For singe plugin format, unplugin works for any versions of Rollup.
 7. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
@@ -125,9 +127,7 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.vite({
-      /* options */
-    }),
+    UnpluginFeature.vite({ /* options */ }),
   ],
 }
 ```
@@ -140,9 +140,7 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.rollup({
-      /* options */
-    }),
+    UnpluginFeature.rollup({ /* options */ }),
   ],
 }
 ```
@@ -153,9 +151,7 @@ export default {
 // webpack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').webpack({
-      /* options */
-    }),
+    require('./unplugin-feature').webpack({ /* options */ }),
   ],
 }
 ```
@@ -168,11 +164,21 @@ import { build } from 'esbuild'
 
 build({
   plugins: [
-    require('./unplugin-feature').esbuild({
-      /* options */
-    }),
+    require('./unplugin-feature').esbuild({ /* options */ }),
   ],
 })
+```
+
+
+###### Rspack
+
+```ts
+// rspack.config.js
+module.exports = {
+  plugins: [
+    require('./unplugin-feature').rspack({ /* options */ }),
+  ],
+}
 ```
 
 ### Framework-specific Logic
@@ -181,17 +187,13 @@ While `unplugin` provides compatible layers for some hooks, the functionality of
 
 ```ts
 export const unplugin = createUnplugin((options: UserOptions, meta) => {
-  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack' | 'esbuild'
+  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack' | 'rspack' | 'esbuild'
 
   return {
     // common unplugin hooks
     name: 'unplugin-prefixed-name',
-    transformInclude(id) {
-      /* ... */
-    },
-    transform(code) {
-      /* ... */
-    },
+    transformInclude(id) { /* ... */ },
+    transform(code) { /* ... */ },
 
     // framework specific hooks
     vite: {
@@ -207,12 +209,15 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
     webpack(compiler) {
       // configure Webpack compiler
     },
+    rspack(compiler) {
+      // configure Rspack compiler
+    },
     esbuild: {
       // change the filter of onResolve and onLoad
-      onResolveFilter: RegExp,
-      onLoadFilter: RegExp,
+      onResolveFilter?: RegExp,
+      onLoadFilter?: RegExp,
       // or you can completely replace the setup logic
-      setup: EsbuildPlugin.setup,
+      setup?: EsbuildPlugin.setup,
     },
   }
 })

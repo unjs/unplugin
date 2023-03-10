@@ -19,6 +19,11 @@ const TRANSFORM_LOADER = resolve(
   __DEV__ ? '../../dist/rspack/loaders/transform' : 'rspack/loaders/transform',
 )
 
+const LOAD_LOADER = resolve(
+  _dirname,
+  __DEV__ ? '../../dist/rspack/loaders/load' : 'rspack/loaders/load',
+)
+
 export function getRspackPlugin<UserOptions = {}>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['rspack'] {
@@ -40,6 +45,18 @@ export function getRspackPlugin<UserOptions = {}>(
               options: { plugin },
             }
 
+            compiler.options.module.rules.unshift({
+              include: /.*/,
+              use,
+            })
+          }
+
+          // load hook
+          if (plugin.load) {
+            const use: RuleSetUseItem = {
+              loader: LOAD_LOADER,
+              options: { plugin },
+            }
             compiler.options.module.rules.unshift({
               include: /.*/,
               use,

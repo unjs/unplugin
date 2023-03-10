@@ -12,14 +12,13 @@ export default async function load(this: LoaderContext, source: string, map: any
   if (!plugin?.load || !id)
     return callback(null, source, map)
 
+  if (plugin.loadInclude && !plugin.loadInclude(id))
+    return callback(null, source, map)
+
   const context: UnpluginContext = {
     error: error => this.emitError(typeof error === 'string' ? new Error(error) : error),
     warn: error => this.emitWarning(typeof error === 'string' ? new Error(error) : error),
   }
-
-  // TODO: virtual module
-  // if (id.startsWith(plugin.__virtualModulePrefix))
-  //   id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
   const res = await plugin.load.call(
     Object.assign(
