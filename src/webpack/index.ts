@@ -29,9 +29,6 @@ export function getWebpackPlugin<UserOptions = {}>(
   return (userOptions?: UserOptions) => {
     return {
       apply(compiler: WebpackCompiler) {
-        const injected = compiler.$unpluginContext || {}
-        compiler.$unpluginContext = injected
-
         const meta: UnpluginContextMeta = {
           framework: 'webpack',
           webpack: {
@@ -49,34 +46,26 @@ export function getWebpackPlugin<UserOptions = {}>(
             },
           ) as ResolvedUnpluginOptions
 
-          // inject context object to share with loaders
-          injected[plugin.name] = plugin
-
-          compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
-            compilation.hooks.childCompiler.tap(plugin.name, (childCompiler) => {
-              childCompiler.$unpluginContext = injected
-            })
-          })
-
           const externalModules = new Set<string>()
 
           // transform hook
           if (plugin.transform) {
-            const useLoader: RuleSetUseItem[] = [{
-              loader: `${TRANSFORM_LOADER}?unpluginName=${encodeURIComponent(plugin.name)}`,
+            const loaders: RuleSetUseItem[] = [{
+              loader: TRANSFORM_LOADER,
+              options: { plugin },
+              ident: plugin.name,
             }]
-            const useNone: RuleSetUseItem[] = []
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
               use: (data: { resource: string | null; resourceQuery: string }) => {
                 if (data.resource == null)
-                  return useNone
+                  return []
 
                 const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
                 if (!plugin.transformInclude || plugin.transformInclude(id))
-                  return useLoader
+                  return loaders
 
-                return useNone
+                return []
               },
             })
           }
@@ -173,7 +162,7 @@ export function getWebpackPlugin<UserOptions = {}>(
               use: [{
                 loader: LOAD_LOADER,
                 options: {
-                  unpluginName: plugin.name,
+                  plugin,
                 },
               }],
             })

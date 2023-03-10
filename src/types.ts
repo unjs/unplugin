@@ -114,9 +114,3 @@ export interface UnpluginContext {
   error(message: any): void
   warn(message: any): void
 }
-
-declare module 'webpack' {
-  interface Compiler {
-    $unpluginContext: Record<string, ResolvedUnpluginOptions>
-  }
-}
