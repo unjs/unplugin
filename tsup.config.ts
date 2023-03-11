@@ -9,8 +9,8 @@ export const tsup: Options = {
   dts: true,
   entryPoints: [
     'src/index.ts',
-    'src/webpack/loaders/load.ts',
-    'src/webpack/loaders/transform.ts',
+    'src/webpack/loaders/*',
+    'src/rspack/loaders/*',
   ],
   external: [
     'vite',

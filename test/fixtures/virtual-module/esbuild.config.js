@@ -7,6 +7,6 @@ build({
   outdir: 'dist/esbuild',
   sourcemap: true,
   plugins: [
-    esbuild()
-  ]
+    esbuild(),
+  ],
 })

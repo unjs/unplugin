@@ -2,6 +2,7 @@ import type { AcornNode, EmittedAsset, PluginContextMeta as RollupContextMeta, P
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin, PluginBuild } from 'esbuild'
+import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export {
@@ -64,6 +65,7 @@ export interface UnpluginOptions {
   // framework specify extends
   rollup?: Partial<RollupPlugin>
   webpack?: (compiler: WebpackCompiler) => void
+  rspack?: (compiler: RspackCompiler) => void
   vite?: Partial<VitePlugin>
   esbuild?: {
     // using regexp in esbuild improves performance
@@ -92,6 +94,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   rollup: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RollupPlugin> : RollupPlugin>
   vite: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<VitePlugin> : VitePlugin>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
+  rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
@@ -108,6 +111,11 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   build?: PluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
+} | {
+  framework: 'rspack'
+  rspack: {
+    compiler: RspackCompiler
+  }
 })
 
 export interface UnpluginContext {

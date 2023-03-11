@@ -4,9 +4,9 @@ export default {
   input: './src/main.js',
   output: {
     dir: './dist/rollup',
-    sourcemap: true
+    sourcemap: true,
   },
   plugins: [
-    rollup({ msg: 'Rollup' })
-  ]
+    rollup({ msg: 'Rollup' }),
+  ],
 }

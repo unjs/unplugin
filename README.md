@@ -7,10 +7,12 @@
 Unified plugin system for build tools.
 
 Currently supports:
+
 - [Vite](https://vitejs.dev/)
 - [Rollup](https://rollupjs.org/)
 - [Webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
+- [Rspack](https://www.rspack.dev/) (⚠️ experimental)
 
 ## Hooks
 
@@ -18,37 +20,38 @@ Currently supports:
 
 ###### Supported
 
-| Hook | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
-| ---- | :----: | :--: | :-------: | :-------: | :-----: |
-| [`enforce`](https://rollupjs.org/guide/en/#enforce) | ❌ <sup>1</sup> | ✅ | ✅ | ✅ | ❌ <sup>1</sup> |
-| [`buildStart`](https://rollupjs.org/guide/en/#buildstart) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`resolveId`](https://rollupjs.org/guide/en/#resolveid) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `loadInclude`<sup>2</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`load`](https://rollupjs.org/guide/en/#load) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
-| `transformInclude`<sup>2</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
-| [`watchChange`](https://rollupjs.org/guide/en/#watchchange) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`buildEnd`](https://rollupjs.org/guide/en/#buildend) | ✅ | ✅ | ✅ | ✅ | ❌ |
-| [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Hook                                                                    |     Rollup      | Vite | Webpack 4 | Webpack 5 |     esbuild     | Rspack |
+| ----------------------------------------------------------------------- | :-------------: | :--: | :-------: | :-------: | :-------------: | :----: |
+| [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ❌   |
+| [`buildStart`](https://rollupjs.org/guide/en/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
+| [`resolveId`](https://rollupjs.org/guide/en/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
+| `loadInclude`<sup>2</sup>                                               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
+| [`load`](https://rollupjs.org/guide/en/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
+| `transformInclude`<sup>2</sup>                                          |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
+| [`transform`](https://rollupjs.org/guide/en/#transformers)              |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
+| [`watchChange`](https://rollupjs.org/guide/en/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
+| [`buildEnd`](https://rollupjs.org/guide/en/#buildend)                   |       ✅        |  ✅  |    ✅     |    ✅     |       ❌        |   ✅   |
+| [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
 
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 2. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for following usage examples.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 
+> **Warning**: The [Rspack](https://www.rspack.dev/) support is experimental. Future changes to Rspack integrations might not follow semver, please pin `unplugin` in your dependency when using. It's not recommended to use in production.
+
 ### Hook Context
 
 ###### Supported
 
-| Hook | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
-| ---- | :----: | :--: | :-------: | :-------: | :-----: |
-| [`this.parse`](https://rollupjs.org/guide/en/#thisparse) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ❌ |
-| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ❌ |
-| [`this.warn`](https://rollupjs.org/guide/en/#thiswarn) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`this.error`](https://rollupjs.org/guide/en/#thiserror) | ✅ | ✅ | ✅ | ✅ | ✅ |
-
+| Hook                                                                       | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild | Rspack |
+| -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :-----: | :----: |
+| [`this.parse`](https://rollupjs.org/guide/en/#thisparse)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
+| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |
+| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
+| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |
+| [`this.warn`](https://rollupjs.org/guide/en/#thiswarn)                     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
+| [`this.error`](https://rollupjs.org/guide/en/#thiserror)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
 
 5. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
 
@@ -76,6 +79,7 @@ export const unplugin = createUnplugin((options: UserOptions) => {
 export const vitePlugin = unplugin.vite
 export const rollupPlugin = unplugin.rollup
 export const webpackPlugin = unplugin.webpack
+export const rspackPlugin = unplugin.rspack
 export const esbuildPlugin = unplugin.esbuild
 ```
 
@@ -85,9 +89,9 @@ Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behav
 
 ###### Supported
 
-| Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
-| :----: | :--: | :-------: | :-------: | :-----: |
-| ✅ `>=3.1`<sup>6</sup> | ✅ | ✅ | ✅ | ⚠️<sup>7</sup> |
+|         Rollup         | Vite | Webpack 4 | Webpack 5 | Rspack |    esbuild     |
+| :--------------------: | :--: | :-------: | :-------: | :----: | :------------: |
+| ✅ `>=3.1`<sup>6</sup> |  ✅  |    ✅     |    ✅     |   ✅   | ⚠️<sup>7</sup> |
 
 6. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin aurthor should ask users to a have a Rollup version of `>=3.1.0` when using nested plugins. For singe plugin format, unplugin works for any versions of Rollup.
 7. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
@@ -103,14 +107,14 @@ export const unplugin = createUnplugin((options: UserOptions) => {
       name: 'plugin-a',
       transform(code) {
         // ...
-      }
+      },
     },
     {
       name: 'plugin-b',
       resolveId(id) {
         // ...
-      }
-    }
+      },
+    },
   ]
 })
 ```
@@ -125,8 +129,8 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.vite({ /* options */ })
-  ]
+    UnpluginFeature.vite({ /* options */ }),
+  ],
 }
 ```
 
@@ -138,8 +142,8 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.rollup({ /* options */ })
-  ]
+    UnpluginFeature.rollup({ /* options */ }),
+  ],
 }
 ```
 
@@ -149,8 +153,8 @@ export default {
 // webpack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').webpack({ /* options */ })
-  ]
+    require('./unplugin-feature').webpack({ /* options */ }),
+  ],
 }
 ```
 
@@ -162,9 +166,21 @@ import { build } from 'esbuild'
 
 build({
   plugins: [
-    require('./unplugin-feature').esbuild({ /* options */ })
-  ]
+    require('./unplugin-feature').esbuild({ /* options */ }),
+  ],
 })
+```
+
+
+###### Rspack
+
+```ts
+// rspack.config.js
+module.exports = {
+  plugins: [
+    require('./unplugin-feature').rspack({ /* options */ }),
+  ],
+}
 ```
 
 ### Framework-specific Logic
@@ -173,8 +189,7 @@ While `unplugin` provides compatible layers for some hooks, the functionality of
 
 ```ts
 export const unplugin = createUnplugin((options: UserOptions, meta) => {
-
-  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack' | 'esbuild'
+  console.log(meta.framework) // 'vite' | 'rollup' | 'webpack' | 'rspack' | 'esbuild'
 
   return {
     // common unplugin hooks
@@ -196,13 +211,16 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
     webpack(compiler) {
       // configure Webpack compiler
     },
+    rspack(compiler) {
+      // configure Rspack compiler
+    },
     esbuild: {
       // change the filter of onResolve and onLoad
       onResolveFilter?: RegExp,
       onLoadFilter?: RegExp,
       // or you can completely replace the setup logic
-      setup?: EsbuildPlugin.setup
-    }
+      setup?: EsbuildPlugin.setup,
+    },
   }
 })
 ```
@@ -212,17 +230,19 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - Plugins powered by unplugin should have a clear name with `unplugin-` prefix.
 - Include `unplugin` keyword in `package.json`.
 - To provide better DX, packages could export 2 kinds of entry points:
+
   - Default export: the returned value of `createUnplugin` function
 
-     ```ts
-     import UnpluginFeature from 'unplugin-feature'
-     ```
+    ```ts
+    import UnpluginFeature from 'unplugin-feature'
+    ```
 
   - Subpath exports: properties of the returned value of `createUnplugin` function for each framework users
 
-     ```ts
-     import VitePlugin from 'unplugin-feature/vite'
-     ```
+    ```ts
+    import VitePlugin from 'unplugin-feature/vite'
+    ```
+
   - Refer to [unplugin-starter](https://github.com/antfu/unplugin-starter) for more details about this setup.
 
 ## Starter Templates
@@ -259,6 +279,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 [MIT](./LICENSE) License © 2021-PRESENT Nuxt Contrib
 
 <!-- Badges -->
+
 [npm-version-src]: https://img.shields.io/npm/v/unplugin?style=flat&colorA=18181B&colorB=F0DB4F
 [npm-version-href]: https://npmjs.com/package/unplugin
 [npm-downloads-src]: https://img.shields.io/npm/dm/unplugin?style=flat&colorA=18181B&colorB=F0DB4F

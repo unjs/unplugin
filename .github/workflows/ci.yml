@@ -52,6 +52,8 @@ jobs:
 
       - name: Test
         run: pnpm run test
+        env:
+          SKIP_RSPACK: ${{ matrix.node == 14 && 'true' || 'false'  }}
 
       - name: Install Webpack 4
         run: pnpm i webpack@4
@@ -60,3 +62,5 @@ jobs:
       - name: Test with Webpack 4
         run: pnpm run test
         if: ${{ matrix.node != 18 }}
+        env:
+          SKIP_RSPACK: 'true'
