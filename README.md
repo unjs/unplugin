@@ -28,7 +28,7 @@ Currently supports:
 | `transformInclude`<sup>2</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`transform`](https://rollupjs.org/guide/en/#transformers) | ✅ | ✅ | ✅ | ✅ | ✅ <sup>3</sup> |
 | [`watchChange`](https://rollupjs.org/guide/en/#watchchange) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`buildEnd`](https://rollupjs.org/guide/en/#buildend) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`buildEnd`](https://rollupjs.org/guide/en/#buildend) | ✅ | ✅ | ✅ | ✅ | ❌ |
 | [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
@@ -43,9 +43,9 @@ Currently supports:
 | Hook | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild |
 | ---- | :----: | :--: | :-------: | :-------: | :-----: |
 | [`this.parse`](https://rollupjs.org/guide/en/#thisparse) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) | ✅ | ✅ | ✅ | ✅ | ❌ |
 | [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) | ✅ | ✅ | ✅ | ✅ | ❌ |
 | [`this.warn`](https://rollupjs.org/guide/en/#thiswarn) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [`this.error`](https://rollupjs.org/guide/en/#thiserror) | ✅ | ✅ | ✅ | ✅ | ✅ |
 
