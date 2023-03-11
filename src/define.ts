@@ -21,6 +21,7 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     get webpack() {
       return getWebpackPlugin(factory)
     },
+    /** @experimental do not use it in production */
     get rspack() {
       return getRspackPlugin(factory)
     },
