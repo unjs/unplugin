@@ -49,7 +49,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "enhanced-resolve": "^5.12.0",
     "esbuild": "^0.17.11",
-    "eslint": "^8.35.0",
+    "eslint": "^8.36.0",
     "fast-glob": "^3.2.12",
     "fs-extra": "^11.1.0",
     "jiti": "^1.17.2",
@@ -60,7 +60,7 @@
     "typescript": "^4.9.5",
     "vite": "^4.1.4",
     "vitest": "^0.29.2",
-    "webpack": "^5.76.0",
+    "webpack": "^5.76.1",
     "webpack-cli": "4.10.0"
   }
 }
