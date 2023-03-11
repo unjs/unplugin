@@ -11,8 +11,8 @@ Currently supports:
 - [Vite](https://vitejs.dev/)
 - [Rollup](https://rollupjs.org/)
 - [Webpack](https://webpack.js.org/)
-- [Rspack](https://www.rspack.dev/)
 - [esbuild](https://esbuild.github.io/)
+- [Rspack](https://www.rspack.dev/) (⚠️ experimental)
 
 ## Hooks
 
