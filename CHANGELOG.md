@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/unjs/unplugin/compare/v1.2.0...v1.3.0) (2023-03-11)
+
+
+### Features
+
+* experimental support for rspack ([#285](https://github.com/unjs/unplugin/issues/285)) ([525f69b](https://github.com/unjs/unplugin/commit/525f69b27722973827f87d061dc810b3a50d6b46))
+
+
+
 # [1.2.0](https://github.com/unjs/unplugin/compare/v1.1.0...v1.2.0) (2023-03-10)
 
 
