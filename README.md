@@ -38,6 +38,8 @@ Currently supports:
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 
+> **Warning**: The [Rspack](https://www.rspack.dev/) support is experimental. Future changes to Rspack integrations might not follow semver, please pin `unplugin` in your dependency when using. It's not recommended to use in production.
+
 ### Hook Context
 
 ###### Supported
