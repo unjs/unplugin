@@ -5,5 +5,5 @@ import { named, proxiedDefault } from './proxy-export'
 process.stdout.write(JSON.stringify({
   named,
   proxiedDefault,
-  path: path.join(__dirname, __filename)
+  path: path.join(__dirname, __filename),
 }))

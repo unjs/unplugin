@@ -24,7 +24,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch src",
-    "lint": "eslint --cache --ext ts .",
+    "lint": "eslint --cache .",
     "lint:fix": "nr lint --fix",
     "prepublishOnly": "nr build",
     "release": "bumpp --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
