@@ -252,6 +252,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-glob](https://github.com/sxzz/unplugin-glob)
 - [unplugin-sentry](https://github.com/kricsleo/unplugin-sentry)
 - [unplugin-imagemin](https://github.com/ErKeLost/unplugin-imagemin)
+- [unplugin-typedotenv](https://github.com/ssssota/typedotenv)
 
 ## License
 
