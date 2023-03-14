@@ -5,8 +5,8 @@ import { normalizeAbsolutePath } from '../../utils'
 
 export default async function load(this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
-  const { plugin } = this.query
-
+  const { unpluginName } = this.query
+  const plugin = this._compiler?.$unpluginContext[unpluginName]
   let id = this.resource
 
   if (!plugin?.load || !id)
