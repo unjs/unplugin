@@ -273,6 +273,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-sentry](https://github.com/kricsleo/unplugin-sentry)
 - [unplugin-imagemin](https://github.com/ErKeLost/unplugin-imagemin)
 - [unplugin-typedotenv](https://github.com/ssssota/typedotenv)
+- [unplugin-svg-component](https://github.com/Jevon617/unplugin-svg-component)
 
 ## License
 
