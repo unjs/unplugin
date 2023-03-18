@@ -2,13 +2,13 @@ import type { LoaderContext } from 'webpack'
 import type { UnpluginContext } from '../../types'
 import { createContext } from '../context'
 
-export default async function transform(this: LoaderContext<any>, source: string, map: any) {
+export default async function transform(this: LoaderContext<{ unpluginName: string }>, source: string, map: any) {
   const callback = this.async()
 
-  let unpluginName
+  let unpluginName: string
   if (typeof this.query === 'string') {
     const query = new URLSearchParams(this.query)
-    unpluginName = query.get('unpluginName')
+    unpluginName = query.get('unpluginName')!
   }
   else {
     unpluginName = this.query.unpluginName
