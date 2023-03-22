@@ -274,6 +274,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 - [unplugin-imagemin](https://github.com/ErKeLost/unplugin-imagemin)
 - [unplugin-typedotenv](https://github.com/ssssota/typedotenv)
 - [unplugin-fonts](https://github.com/cssninjaStudio/unplugin-fonts)
+- [sentry-javascript-bundler-plugins](https://github.com/getsentry/sentry-javascript-bundler-plugins)
 
 ## License
 
