@@ -1,7 +1,7 @@
 .DS_STORE
 .profile
 .vscode
-.idea/
+.idea
 *.log*
 coverage
 dist
