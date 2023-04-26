@@ -30,3 +30,33 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     },
   }
 }
+
+export function creteEsbuildPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getEsbuildPlugin(factory)
+}
+
+export function creteRollupPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getRollupPlugin(factory)
+}
+
+export function creteVitePlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getVitePlugin(factory)
+}
+
+export function creteWebpackPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getWebpackPlugin(factory)
+}
+
+export function creteRspackPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getRspackPlugin(factory)
+}
