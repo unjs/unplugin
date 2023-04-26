@@ -232,18 +232,18 @@ Each of the function takes the same generic factory argument as `createUnplugin`
 
 ```ts
 import {
-  getVitePlugin,
-  getRollupPlugin,
-  getWebpackPlugin,
   creteEsbuildPlugin,
-  getRspackPlugin
-} from "unplugin";
+  getRollupPlugin,
+  getRspackPlugin,
+  getVitePlugin,
+  getWebpackPlugin
+} from 'unplugin'
 
-const vitePlugin = getVitePlugin({ /* options */ });
-const rollupPlugin = getRollupPlugin({ /* options */ });
-const esbuildPlugin = creteEsbuildPlugin({ /* options */ });
-const webpackPlugin = getWebpackPlugin({ /* options */ });
-const rspackPlugin = getRspackPlugin({ /* options */ });
+const vitePlugin = getVitePlugin({ /* options */ })
+const rollupPlugin = getRollupPlugin({ /* options */ })
+const esbuildPlugin = creteEsbuildPlugin({ /* options */ })
+const webpackPlugin = getWebpackPlugin({ /* options */ })
+const rspackPlugin = getRspackPlugin({ /* options */ })
 ```
 
 ## Conventions
