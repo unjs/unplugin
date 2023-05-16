@@ -9,6 +9,9 @@ export {
   EsbuildPlugin,
   RollupPlugin,
   VitePlugin,
+  WebpackPluginInstance,
+  RspackPluginInstance,
+  RspackCompiler,
   WebpackCompiler,
 }
 
