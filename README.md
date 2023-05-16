@@ -225,6 +225,27 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
 })
 ```
 
+### Creating platform specific plugins
+
+The package exports a set of functions in place of `createUnplugin` that allow for the creation of plugins for specific bundlers.
+Each of the function takes the same generic factory argument as `createUnplugin`.
+
+```ts
+import {
+  creteEsbuildPlugin,
+  getRollupPlugin,
+  getRspackPlugin,
+  getVitePlugin,
+  getWebpackPlugin
+} from 'unplugin'
+
+const vitePlugin = getVitePlugin({ /* options */ })
+const rollupPlugin = getRollupPlugin({ /* options */ })
+const esbuildPlugin = creteEsbuildPlugin({ /* options */ })
+const webpackPlugin = getWebpackPlugin({ /* options */ })
+const rspackPlugin = getRspackPlugin({ /* options */ })
+```
+
 ## Conventions
 
 - Plugins powered by unplugin should have a clear name with `unplugin-` prefix.
