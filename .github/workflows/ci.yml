@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [14, 16, 18]
+        node: [16, 18]
       fail-fast: false
 
     steps:
@@ -52,8 +52,6 @@ jobs:
 
       - name: Test
         run: pnpm run test
-        env:
-          SKIP_RSPACK: ${{ matrix.node == 14 && 'true' || 'false'  }}
 
       - name: Install Webpack 4
         run: pnpm i webpack@4
