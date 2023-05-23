@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.2.1",
-    "@antfu/eslint-config": "^0.39.1",
+    "@antfu/eslint-config": "^0.39.3",
     "@antfu/ni": "^0.21.3",
     "@rspack/cli": "^0.1.12",
     "@rspack/core": "^0.1.12",
