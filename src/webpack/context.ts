@@ -1,4 +1,5 @@
 import { resolve } from 'path'
+import { Buffer } from 'buffer'
 import sources from 'webpack-sources'
 import type { Compilation } from 'webpack'
 import { Parser } from 'acorn'

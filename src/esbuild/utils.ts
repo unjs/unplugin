@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { Buffer } from 'buffer'
 import remapping from '@ampproject/remapping'
 import { Parser } from 'acorn'
 import type { DecodedSourceMap, EncodedSourceMap } from '@ampproject/remapping'

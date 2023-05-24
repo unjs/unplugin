@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'
 import sources from 'webpack-sources'
 import type { Compilation } from '@rspack/core'
 import { Parser } from 'acorn'
