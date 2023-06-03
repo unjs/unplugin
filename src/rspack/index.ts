@@ -1,5 +1,4 @@
-import { dirname, resolve } from 'path'
-import { fileURLToPath } from 'url'
+import { resolve } from 'path'
 import type { RspackPluginInstance, RuleSetUseItem } from '@rspack/core'
 import { toArray } from '../utils'
 import type {
@@ -9,18 +8,13 @@ import type {
 } from '../types'
 import { createRspackContext } from './context'
 
-const _dirname
-  = typeof __dirname !== 'undefined'
-    ? __dirname
-    : dirname(fileURLToPath(import.meta.url))
-
 const TRANSFORM_LOADER = resolve(
-  _dirname,
+  __dirname,
   __DEV__ ? '../../dist/rspack/loaders/transform' : 'rspack/loaders/transform',
 )
 
 const LOAD_LOADER = resolve(
-  _dirname,
+  __dirname,
   __DEV__ ? '../../dist/rspack/loaders/load' : 'rspack/loaders/load',
 )
 

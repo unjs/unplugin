@@ -1,21 +1,18 @@
 import fs from 'fs'
-import { fileURLToPath } from 'url'
-import { dirname, resolve } from 'path'
+import { resolve } from 'path'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
 import type { ResolvedUnpluginOptions, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import { normalizeAbsolutePath, toArray } from '../utils'
 import { createContext } from './context'
 
-const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
-
 const TRANSFORM_LOADER = resolve(
-  _dirname,
+  __dirname,
   __DEV__ ? '../../dist/webpack/loaders/transform' : 'webpack/loaders/transform',
 )
 
 const LOAD_LOADER = resolve(
-  _dirname,
+  __dirname,
   __DEV__ ? '../../dist/webpack/loaders/load' : 'webpack/loaders/load',
 )
 

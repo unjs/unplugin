@@ -6,7 +6,9 @@ export const tsup: Options = {
   sourcemap: false,
   clean: true,
   format: ['cjs', 'esm'],
+  target: 'node16.14',
   dts: true,
+  shims: true,
   entryPoints: [
     'src/index.ts',
     'src/webpack/loaders/*',
