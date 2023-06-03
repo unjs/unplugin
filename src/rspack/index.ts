@@ -40,6 +40,7 @@ export function getRspackPlugin<UserOptions = {}>(
             }
 
             compiler.options.module.rules.unshift({
+              enforce: plugin.enforce,
               include: /.*/,
               use,
             })
@@ -52,6 +53,7 @@ export function getRspackPlugin<UserOptions = {}>(
               options: { plugin },
             }
             compiler.options.module.rules.unshift({
+              enforce: plugin.enforce,
               include: /.*/,
               use,
             })

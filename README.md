@@ -22,7 +22,7 @@ Currently supports:
 
 | Hook                                                                    |     Rollup      | Vite | Webpack 4 | Webpack 5 |     esbuild     | Rspack |
 | ----------------------------------------------------------------------- | :-------------: | :--: | :-------: | :-------: | :-------------: | :----: |
-| [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ❌   |
+| [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ✅   |
 | [`buildStart`](https://rollupjs.org/guide/en/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
 | [`resolveId`](https://rollupjs.org/guide/en/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
 | `loadInclude`<sup>2</sup>                                               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
