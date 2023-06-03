@@ -30,13 +30,10 @@ devDependencies:
     version: 0.21.3
   '@rspack/cli':
     specifier: ^0.2.0
-    version: 0.2.0(@types/express@4.17.17)(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0)(webpack@5.85.0)
+    version: 0.2.0(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0)(webpack@5.85.0)
   '@rspack/core':
     specifier: ^0.2.0
     version: 0.2.0(webpack-dev-server@4.13.1)(webpack@5.76.0)
-  '@types/express':
-    specifier: ^4.17.17
-    version: 4.17.17
   '@types/fs-extra':
     specifier: ^11.0.1
     version: 11.0.1
@@ -52,9 +49,6 @@ devDependencies:
   conventional-changelog-cli:
     specifier: ^2.2.2
     version: 2.2.2
-  enhanced-resolve:
-    specifier: ^5.14.1
-    version: 5.14.1
   esbuild:
     specifier: ^0.17.19
     version: 0.17.19
@@ -708,7 +702,7 @@ packages:
       '@rspack/binding-win32-x64-msvc': 0.2.0
     dev: true
 
-  /@rspack/cli@0.2.0(@types/express@4.17.17)(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0)(webpack@5.85.0):
+  /@rspack/cli@0.2.0(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0)(webpack@5.85.0):
     resolution: {integrity: sha512-WfOihULkwV1rJ2329MUXsyLHQ0oB7E4jair5pym8cOWr3NnyZL27Yuc4Kj1VlaVcNDSJtPDFHHcG7Gmkf/WSzQ==}
     hasBin: true
     peerDependencies:
@@ -719,7 +713,7 @@ packages:
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
       '@rspack/core': 0.2.0(webpack-dev-server@4.13.1)(webpack@5.76.0)
-      '@rspack/dev-server': 0.2.0(@rspack/core@0.2.0)(@types/express@4.17.17)(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0)
+      '@rspack/dev-server': 0.2.0(@rspack/core@0.2.0)(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0)
       colorette: 2.0.19
       semver: 6.3.0
       webpack-bundle-analyzer: 4.6.1
@@ -805,7 +799,7 @@ packages:
       - webpack-plugin-serve
     dev: true
 
-  /@rspack/dev-server@0.2.0(@rspack/core@0.2.0)(@types/express@4.17.17)(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0):
+  /@rspack/dev-server@0.2.0(@rspack/core@0.2.0)(esbuild@0.17.19)(react-refresh@0.14.0)(webpack-cli@4.10.0):
     resolution: {integrity: sha512-3A6J31SuAJ+ZD/9AN1w6ejMqOeqkh//6ZuBZRHILDJMfNESwZmcZ2FTTt4fhTdoN78QSczAP9z0SftE0or/2+w==}
     peerDependencies:
       '@rspack/core': '*'
