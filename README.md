@@ -298,6 +298,7 @@ const rspackPlugin = getRspackPlugin({ /* options */ })
 - [sentry-javascript-bundler-plugins](https://github.com/getsentry/sentry-javascript-bundler-plugins)
 - [unplugin-svg-component](https://github.com/Jevon617/unplugin-svg-component)
 - [unplugin-vue-cssvars](https://github.com/baiwusanyu-c/unplugin-vue-cssvars)
+- [unplugin-inject-js-snippet](https://github.com/Levix/unplugin-inject-js-snippet)
 
 ## License
 
