@@ -65,8 +65,7 @@ export function getRspackPlugin<UserOptions = {}>(
           if (plugin.buildStart) {
             compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
               const context = createRspackContext(compilation)
-              if (plugin.buildStart)
-                return plugin.buildStart.call(context)
+              return plugin.buildStart!.call(context)
             })
           }
 
