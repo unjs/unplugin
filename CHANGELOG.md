@@ -1,3 +1,20 @@
+## [1.3.2](https://github.com/unjs/unplugin/compare/v1.3.1...v1.3.2) (2023-07-03)
+
+
+### Bug Fixes
+
+* add type export ([#304](https://github.com/unjs/unplugin/issues/304)) ([127616d](https://github.com/unjs/unplugin/commit/127616da037f261fc7dd0255c5e984512803a4d1))
+
+
+### Features
+
+* add top-level functions to create platform-specific plugins ([#301](https://github.com/unjs/unplugin/issues/301)) ([efbbba5](https://github.com/unjs/unplugin/commit/efbbba595096657d94f39a3e8953d1ed60de86dc))
+* add unplugin-fonts ([#292](https://github.com/unjs/unplugin/issues/292)) ([80a61d1](https://github.com/unjs/unplugin/commit/80a61d10bfbb46fabaf7c55f5e11877901dc2d77))
+* **rspack:** support `enforce` ([856b073](https://github.com/unjs/unplugin/commit/856b0736dbb658ffd6cf32d246359683b622b36f))
+* **rspack:** support buildStart ([#319](https://github.com/unjs/unplugin/issues/319)) ([c9bbc97](https://github.com/unjs/unplugin/commit/c9bbc97e6587085c161b29cd0699dae09a42dd88))
+
+
+
 ## [1.3.1](https://github.com/unjs/unplugin/compare/v1.3.0...v1.3.1) (2023-03-14)
 
 
