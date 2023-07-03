@@ -47,7 +47,7 @@
     "@types/node": "^20.3.3",
     "@types/webpack-sources": "^3.2.0",
     "bumpp": "^9.1.1",
-    "conventional-changelog-cli": "^2.2.2",
+    "conventional-changelog-cli": "^3.0.0",
     "esbuild": "^0.18.11",
     "eslint": "^8.44.0",
     "fast-glob": "^3.3.0",
