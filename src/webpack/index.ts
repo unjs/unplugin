@@ -57,27 +57,6 @@ export function getWebpackPlugin<UserOptions = {}>(
 
           const externalModules = new Set<string>()
 
-          // transform hook
-          if (plugin.transform) {
-            const useLoader: RuleSetUseItem[] = [{
-              loader: `${TRANSFORM_LOADER}?unpluginName=${encodeURIComponent(plugin.name)}`,
-            }]
-            const useNone: RuleSetUseItem[] = []
-            compiler.options.module.rules.unshift({
-              enforce: plugin.enforce,
-              use: (data: { resource: string | null; resourceQuery: string }) => {
-                if (data.resource == null)
-                  return useNone
-
-                const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
-                if (!plugin.transformInclude || plugin.transformInclude(id))
-                  return useLoader
-
-                return useNone
-              },
-            })
-          }
-
           // resolveId hook
           if (plugin.resolveId) {
             let vfs = compiler.options.plugins.find(i => i instanceof VirtualModulesPlugin) as VirtualModulesPlugin
@@ -173,6 +152,27 @@ export function getWebpackPlugin<UserOptions = {}>(
                   unpluginName: plugin.name,
                 },
               }],
+            })
+          }
+
+          // transform hook
+          if (plugin.transform) {
+            const useLoader: RuleSetUseItem[] = [{
+              loader: `${TRANSFORM_LOADER}?unpluginName=${encodeURIComponent(plugin.name)}`,
+            }]
+            const useNone: RuleSetUseItem[] = []
+            compiler.options.module.rules.unshift({
+              enforce: plugin.enforce,
+              use: (data: { resource: string | null; resourceQuery: string }) => {
+                if (data.resource == null)
+                  return useNone
+
+                const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
+                if (!plugin.transformInclude || plugin.transformInclude(id))
+                  return useLoader
+
+                return useNone
+              },
             })
           }
 
