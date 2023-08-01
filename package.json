@@ -8,7 +8,10 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "require": "./dist/index.d.ts",
+        "import": "./dist/index.d.mts"
+      },
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
