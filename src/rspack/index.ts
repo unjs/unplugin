@@ -32,7 +32,6 @@ export function getRspackPlugin<UserOptions = {}>(
         }
         const rawPlugins = toArray(factory(userOptions!, meta))
         for (const plugin of rawPlugins) {
-       
           // load hook
           if (plugin.load) {
             const use: RuleSetUseItem = {
