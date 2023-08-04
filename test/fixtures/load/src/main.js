@@ -1,3 +1,3 @@
-import msg1 from 'virtual/1'
+import msg1 from './msg'
 
 console.log(msg1)
