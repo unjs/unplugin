@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { resolve } from 'path'
+import process from 'process'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
 import type { ResolvedUnpluginOptions, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
@@ -20,7 +21,7 @@ const LOAD_LOADER = resolve(
 // In the loader we strip the made up prefix path again
 const VIRTUAL_MODULE_PREFIX = resolve(process.cwd(), '_virtual_')
 
-export function getWebpackPlugin<UserOptions = {}>(
+export function getWebpackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['webpack'] {
   return (userOptions?: UserOptions) => {

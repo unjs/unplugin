@@ -18,7 +18,7 @@ const LOAD_LOADER = resolve(
   __DEV__ ? '../../dist/rspack/loaders/load' : 'rspack/loaders/load',
 )
 
-export function getRspackPlugin<UserOptions = {}>(
+export function getRspackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['rspack'] {
   return (userOptions?: UserOptions): RspackPluginInstance => {

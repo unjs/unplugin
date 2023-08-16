@@ -34,7 +34,7 @@ Currently supports:
 | [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
 
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
-2. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for following usage examples.
+2. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for the following usage examples.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 
@@ -93,8 +93,8 @@ Since `v0.10.0`, unplugin supports constructing multiple nested plugins to behav
 | :--------------------: | :--: | :-------: | :-------: | :----: | :------------: |
 | ✅ `>=3.1`<sup>6</sup> |  ✅  |    ✅     |    ✅     |   ✅   | ⚠️<sup>7</sup> |
 
-6. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin aurthor should ask users to a have a Rollup version of `>=3.1.0` when using nested plugins. For singe plugin format, unplugin works for any versions of Rollup.
-7. Since esbuild does not have a built-in transform phase, the `transform` hook of nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
+6. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin author should ask users to have a Rollup version of `>=3.1.0` when using nested plugins. For single plugin format, unplugin works for any version of Rollup.
+7. Since esbuild does not have a built-in transform phase, the `transform` hook of the nested plugin will not work on esbuild yet. Other hooks like `load` or `resolveId` work fine. We will try to find a way to support it in the future.
 
 ###### Usage
 
@@ -216,10 +216,10 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
     },
     esbuild: {
       // change the filter of onResolve and onLoad
-      onResolveFilter?: RegExp,
-      onLoadFilter?: RegExp,
+      // onResolveFilter?: RegExp,
+      // onLoadFilter?: RegExp,
       // or you can completely replace the setup logic
-      setup?: EsbuildPlugin.setup,
+      // setup?: EsbuildPlugin.setup,
     },
   }
 })

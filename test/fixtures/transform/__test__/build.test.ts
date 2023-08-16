@@ -1,4 +1,5 @@
 import { resolve } from 'path'
+import process from 'process'
 import fs from 'fs-extra'
 import { describe, expect, it } from 'vitest'
 

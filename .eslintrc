@@ -1,7 +1,8 @@
 {
   "extends": "@antfu",
   "rules": {
-    "unicorn/prefer-node-protocol": "off"
+    "unicorn/prefer-node-protocol": "off",
+    "n/prefer-global/process": "off"
   },
   "overrides": [
     {

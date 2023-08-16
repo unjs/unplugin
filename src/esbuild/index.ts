@@ -8,7 +8,7 @@ import { combineSourcemaps, createEsbuildContext, guessLoader, processCodeWithSo
 
 let i = 0
 
-export function getEsbuildPlugin<UserOptions = {}>(
+export function getEsbuildPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['esbuild'] {
   return (userOptions?: UserOptions): EsbuildPlugin => {
