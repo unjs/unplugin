@@ -264,15 +264,17 @@ const rspackPlugin = createRspackPlugin({ /* options */ })
     import VitePlugin from 'unplugin-feature/vite'
     ```
 
-  - Refer to [unplugin-starter](https://github.com/antfu/unplugin-starter) for more details about this setup.
+  - Refer to [unplugin-starter](https://github.com/unplugin/unplugin-starter) for more details about this setup.
 
 ## Starter Templates
 
-- [antfu/unplugin-starter](https://github.com/antfu/unplugin-starter)
+- [unplugin/unplugin-starter](https://github.com/unplugin/unplugin-starter)
 - [jwr12135/create-unplugin](https://github.com/jwr12135/create-unplugin)
 - [sxzz/unplugin-starter](https://github.com/sxzz/unplugin-starter)
 
 ## Community Showcases
+
+> We have started a GitHub organization to host and collaborate on popular unplugin plugins: [github.com/unplugin](https://github.com/unplugin). You can go there to find more plugins or even join us with your own plugins!
 
 - [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)
 - [unplugin-vue2-script-setup](https://github.com/antfu/unplugin-vue2-script-setup)
