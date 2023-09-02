@@ -19,6 +19,7 @@ export const tsup: Options = {
     'webpack',
     'rollup',
     'esbuild',
+    'bun',
   ],
   define: {
     __DEV__: 'false',

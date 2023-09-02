@@ -50,6 +50,8 @@
     "@types/node": "^20.5.7",
     "@types/webpack-sources": "^3.2.0",
     "bumpp": "^9.2.0",
+    "bun": "^0.8.1",
+    "bun-types": "^0.8.1",
     "conventional-changelog-cli": "^3.0.0",
     "esbuild": "^0.19.2",
     "eslint": "^8.48.0",

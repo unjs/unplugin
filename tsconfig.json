@@ -9,7 +9,8 @@
     "declaration": true,
     "resolveJsonModule": true,
     "types": [
-      "node"
+      "node",
+      "bun-types"
     ],
     "paths": {
       "unplugin": [
