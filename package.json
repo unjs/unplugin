@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "version": "1.4.0",
-  "packageManager": "pnpm@8.7.0",
+  "packageManager": "pnpm@8.7.1",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "repository": "unjs/unplugin",
@@ -43,11 +43,11 @@
   "devDependencies": {
     "@ampproject/remapping": "^2.2.1",
     "@antfu/eslint-config": "^0.41.0",
-    "@antfu/ni": "^0.21.6",
+    "@antfu/ni": "^0.21.8",
     "@rspack/cli": "^0.3.1",
     "@rspack/core": "^0.3.1",
     "@types/fs-extra": "^11.0.1",
-    "@types/node": "^20.5.7",
+    "@types/node": "^20.5.9",
     "@types/webpack-sources": "^3.2.0",
     "bumpp": "^9.2.0",
     "conventional-changelog-cli": "^3.0.0",
