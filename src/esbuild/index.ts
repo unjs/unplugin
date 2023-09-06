@@ -98,7 +98,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               if (map)
                 code = processCodeWithSourceMap(map, code)
 
-              return { contents: code, errors, warnings, loader: guessLoader(args.path), resolveDir }
+              return { contents: code, errors, warnings, loader: plugin.esbuild?.loader ?? guessLoader(args.path), resolveDir }
             }
 
             if (!plugin.transformInclude || plugin.transformInclude(id)) {
@@ -133,7 +133,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             if (code) {
               if (map)
                 code = processCodeWithSourceMap(map, code)
-              return { contents: code, errors, warnings, loader: guessLoader(args.path), resolveDir }
+              return { contents: code, errors, warnings, loader: plugin.esbuild?.loader ?? guessLoader(args.path), resolveDir }
             }
           })
         }
