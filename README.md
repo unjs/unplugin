@@ -192,12 +192,12 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
   console.log(meta.framework) // 'vite' | 'rollup' | 'webpack' | 'rspack' | 'esbuild'
 
   return {
-    // common unplugin hooks
+    // Common unplugin hooks
     name: 'unplugin-prefixed-name',
     transformInclude(id) { /* ... */ },
     transform(code) { /* ... */ },
 
-    // framework specific hooks
+    // Framework specific hooks
     vite: {
       // Vite plugin
       configureServer(server) {
@@ -209,16 +209,21 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
       // Rollup plugin
     },
     webpack(compiler) {
-      // configure Webpack compiler
+      // Configure Webpack compiler
     },
     rspack(compiler) {
-      // configure Rspack compiler
+      // Configure Rspack compiler
     },
     esbuild: {
-      // change the filter of onResolve and onLoad
+      // Change the filter of onResolve and onLoad
       // onResolveFilter?: RegExp,
       // onLoadFilter?: RegExp,
-      // or you can completely replace the setup logic
+
+      // Tell esbuild how to interpret the contents. By default unplugin tries to guess the loader
+      // from file extension (eg: .js -> "js", .jsx -> 'jsx')
+      // loader?: (Loader | (code: string, id: string) => Loader)
+
+      // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,
     },
   }
