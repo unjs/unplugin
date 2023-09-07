@@ -75,7 +75,7 @@ export interface UnpluginOptions {
     onResolveFilter?: RegExp
     onLoadFilter?: RegExp
     setup?: EsbuildPlugin['setup']
-    loader?: Loader
+    loader?: Loader | ((code: string, id: string) => Loader)
   }
 }
 

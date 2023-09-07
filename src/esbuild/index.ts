@@ -4,7 +4,7 @@ import type { PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type { RawSourceMap } from '@ampproject/remapping'
 import type { EsbuildPlugin, UnpluginBuildContext, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
-import { combineSourcemaps, createEsbuildContext, guessLoader, processCodeWithSourceMap, toArray } from './utils'
+import { combineSourcemaps, createEsbuildContext, guessLoader, processCodeWithSourceMap, toArray, unwrapLoader } from './utils'
 
 let i = 0
 
@@ -25,6 +25,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
         const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/
         const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
+        const loader = plugin.esbuild?.loader ?? guessLoader
 
         const context: UnpluginBuildContext = createEsbuildContext(initialOptions)
 
@@ -98,7 +99,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               if (map)
                 code = processCodeWithSourceMap(map, code)
 
-              return { contents: code, errors, warnings, loader: plugin.esbuild?.loader ?? guessLoader(args.path), resolveDir }
+              return { contents: code, errors, warnings, loader: unwrapLoader(loader, code, args.path), resolveDir }
             }
 
             if (!plugin.transformInclude || plugin.transformInclude(id)) {
@@ -133,7 +134,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             if (code) {
               if (map)
                 code = processCodeWithSourceMap(map, code)
-              return { contents: code, errors, warnings, loader: plugin.esbuild?.loader ?? guessLoader(args.path), resolveDir }
+              return { contents: code, errors, warnings, loader: unwrapLoader(loader, code, args.path), resolveDir }
             }
           })
         }

@@ -28,8 +28,19 @@ const ExtToLoader: Record<string, Loader> = {
   '.txt': 'text',
 }
 
-export function guessLoader(id: string): Loader {
+export function guessLoader(code: string, id: string): Loader {
   return ExtToLoader[path.extname(id).toLowerCase()] || 'js'
+}
+
+export function unwrapLoader(
+  loader: Loader | ((code: string, id: string) => Loader),
+  code: string,
+  id: string,
+): Loader {
+  if (typeof loader === 'function')
+    return loader(code, id)
+
+  return loader
 }
 
 // `load` and `transform` may return a sourcemap without toString and toUrl,
