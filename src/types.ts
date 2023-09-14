@@ -2,13 +2,16 @@ import type { AcornNode, EmittedAsset, PluginContextMeta as RollupContextMeta, P
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin, PluginBuild } from 'esbuild'
+import type { BunPlugin, PluginBuilder } from 'bun'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export {
   EsbuildPlugin,
+  BunPlugin,
   RollupPlugin,
   VitePlugin,
+
   WebpackPluginInstance,
   RspackPluginInstance,
   RspackCompiler,
@@ -76,6 +79,12 @@ export interface UnpluginOptions {
     onLoadFilter?: RegExp
     setup?: EsbuildPlugin['setup']
   }
+  bun?: {
+    // using regexp in bun improves performance
+    onResolveFilter?: RegExp
+    onLoadFilter?: RegExp
+    setup?: BunPlugin['setup']
+  }
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
@@ -99,6 +108,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
+  bun: UnpluginFactoryOutput<UserOptions, BunPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
@@ -114,6 +124,11 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   build?: PluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
+} | {
+  framework: 'bun'
+  build?: PluginBuilder
+  /** Set the host plugin name of esbuild when returning multiple plugins */
+  bunHostName?: string
 } | {
   framework: 'rspack'
   rspack: {

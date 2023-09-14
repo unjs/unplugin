@@ -46,6 +46,9 @@ devDependencies:
   bumpp:
     specifier: ^9.2.0
     version: 9.2.0
+  bun-types:
+    specifier: ^1.0.1
+    version: 1.0.1
   conventional-changelog-cli:
     specifier: ^3.0.0
     version: 3.0.0
@@ -2064,6 +2067,10 @@ packages:
       semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /bun-types@1.0.1:
+    resolution: {integrity: sha512-7NrXqhMIaNKmWn2dSWEQ50znMZqrN/5Z0NBMXvQTRu/+Y1CvoXRznFy0pnqLe024CeZgVdXoEpARNO1JZLAPGw==}
     dev: true
 
   /bundle-require@4.0.1(esbuild@0.18.11):
