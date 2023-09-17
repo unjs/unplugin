@@ -32,13 +32,12 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
         }
         const rawPlugins = toArray(factory(userOptions!, meta))
         for (const plugin of rawPlugins) {
-          // transform hook
-          if (plugin.transform) {
+          // load hook
+          if (plugin.load) {
             const use: RuleSetUseItem = {
-              loader: TRANSFORM_LOADER,
+              loader: LOAD_LOADER,
               options: { plugin },
             }
-
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
               include: /.*/,
@@ -46,12 +45,13 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
             })
           }
 
-          // load hook
-          if (plugin.load) {
+          // transform hook
+          if (plugin.transform) {
             const use: RuleSetUseItem = {
-              loader: LOAD_LOADER,
+              loader: TRANSFORM_LOADER,
               options: { plugin },
             }
+
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
               include: /.*/,
