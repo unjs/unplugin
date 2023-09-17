@@ -23,8 +23,8 @@ export function normalizeAbsolutePath(path: string) {
 export type Nullable<T> = T | null | undefined
 
 /**
-  * Array, or not yet
-  */
+ * Array, or not yet
+ */
 export type Arrayable<T> = T | Array<T>
 
 export function toArray<T>(array?: Nullable<Arrayable<T>>): Array<T> {

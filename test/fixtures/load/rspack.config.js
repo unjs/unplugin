@@ -1,7 +1,7 @@
 const { resolve } = require('path')
 const { rspack } = require('./unplugin')
 
-/** @type import('@rspack/core').Configuration */
+/** @type {import('@rspack/core').Configuration} */
 module.exports = {
   mode: 'development',
   entry: resolve(__dirname, 'src/main.js'),
