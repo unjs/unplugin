@@ -3,6 +3,7 @@ import type { Mock } from 'vitest'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { UnpluginOptions, VitePlugin } from 'unplugin'
 import { createUnplugin } from 'unplugin'
+import Bun from 'bun'
 import { build, toArray } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
@@ -25,7 +26,7 @@ function createUnpluginWithCallback(
 
 // We extract this check because all bundlers should behave the same
 function checkHookCalls(
-  name: 'webpack' | 'rollup' | 'vite' | 'rspack' | 'esbuild',
+  name: 'webpack' | 'rollup' | 'vite' | 'rspack' | 'esbuild' | 'bun',
   resolveIdCallback: Mock,
   transformIncludeCallback: Mock,
   transformCallback: Mock,
@@ -206,5 +207,29 @@ describe('id parameter should be consistent accross hooks and plugins', () => {
     })
 
     checkHookCalls('esbuild', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
+  })
+
+  it('bun', async () => {
+    const mockResolveIdHook = vi.fn(() => undefined)
+    const mockTransformIncludeHook = vi.fn(() => true)
+    const mockTransformHook = vi.fn(() => undefined)
+    const mockLoadHook = vi.fn(() => undefined)
+
+    const plugin = createUnpluginWithCallback(
+      mockResolveIdHook,
+      mockTransformIncludeHook,
+      mockTransformHook,
+      mockLoadHook,
+    ).bun
+
+    await Bun.build({
+      entrypoints: [entryFilePath],
+      plugins: [plugin()],
+      // @ts-expect-error - documentation mentions outdir can be false, but types don't allow it
+      outdir: false,
+      external: externals,
+    })
+
+    checkHookCalls('bun', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 })
