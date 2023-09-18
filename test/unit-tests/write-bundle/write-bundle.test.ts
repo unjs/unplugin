@@ -5,6 +5,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import type { UnpluginOptions, VitePlugin } from 'unplugin'
 import { createUnplugin } from 'unplugin'
 import type { RspackOptions } from '@rspack/core'
+import Bun from 'bun'
 import { build, toArray, webpackVersion } from '../utils'
 
 function createUnpluginWithCallback(writeBundleCallback: UnpluginOptions['writeBundle']) {
@@ -164,6 +165,23 @@ describe('writeBundle hook', () => {
       outfile: path.resolve(__dirname, 'test-out/esbuild/output.js'),
       format: 'cjs',
       sourcemap: true,
+    })
+
+    checkWriteBundleHook(mockResolveIdHook)
+  })
+
+  it('build', async () => {
+    expect.assertions(3)
+    const mockResolveIdHook = vi.fn(generateMockWriteBundleHook(path.resolve(__dirname, 'test-out/bun')))
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
+
+    await Bun.build({
+      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      plugins: [plugin()],
+      // @ts-expect-error - documentation mentions outfile can be passed, but types don't allow it
+      outfile: path.resolve(__dirname, 'test-out/bun/output.js'),
+      format: 'esm',
+      sourcemap: 'inline',
     })
 
     checkWriteBundleHook(mockResolveIdHook)

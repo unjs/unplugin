@@ -4,9 +4,11 @@ import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
+import type { BunPlugin, PluginBuilder } from 'bun'
 
 export {
   EsbuildPlugin,
+  BunPlugin,
   RollupPlugin,
   VitePlugin,
   WebpackPluginInstance,
@@ -77,6 +79,11 @@ export interface UnpluginOptions {
     setup?: EsbuildPlugin['setup']
     loader?: Loader | ((code: string, id: string) => Loader)
   }
+  bun?: {
+    onResolveFilter?: RegExp
+    onLoadFilter?: RegExp
+    setup?: BunPlugin['setup']
+  }
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
@@ -100,6 +107,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
+  bun: UnpluginFactoryOutput<UserOptions, BunPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
@@ -115,6 +123,11 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   build?: PluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
+} | {
+  framework: 'bun'
+  build?: PluginBuilder
+  /** Set the host plugin name of esbuild when returning multiple plugins */
+  bunHostName?: string
 } | {
   framework: 'rspack'
   rspack: {

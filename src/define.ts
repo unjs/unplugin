@@ -1,3 +1,4 @@
+import { getBunPlugin } from './bun'
 import { getEsbuildPlugin } from './esbuild'
 import { getRollupPlugin } from './rollup'
 import { getRspackPlugin } from './rspack'
@@ -25,6 +26,10 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     get rspack() {
       return getRspackPlugin(factory)
     },
+    /** @experimental do not use it in production */
+    get bun() {
+      return getBunPlugin(factory)
+    },
     get raw() {
       return factory
     },
@@ -35,6 +40,12 @@ export function createEsbuildPlugin<UserOptions, Nested extends boolean = boolea
   factory: UnpluginFactory<UserOptions, Nested>,
 ) {
   return getEsbuildPlugin(factory)
+}
+
+export function createBunPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getBunPlugin(factory)
 }
 
 export function createRollupPlugin<UserOptions, Nested extends boolean = boolean>(
