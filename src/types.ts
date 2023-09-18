@@ -1,7 +1,7 @@
 import type { AcornNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
-import type { Plugin as EsbuildPlugin, PluginBuild } from 'esbuild'
+import type { Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { BunPlugin, PluginBuilder } from 'bun'
@@ -77,6 +77,7 @@ export interface UnpluginOptions {
     onResolveFilter?: RegExp
     onLoadFilter?: RegExp
     setup?: EsbuildPlugin['setup']
+    loader?: Loader | ((code: string, id: string) => Loader)
   }
   bun?: {
     onResolveFilter?: RegExp

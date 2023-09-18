@@ -1,3 +1,18 @@
+# [1.5.0](https://github.com/unjs/unplugin/compare/v1.4.0...v1.5.0) (2023-09-17)
+
+
+### Bug Fixes
+
+* add ESM dts ([6b38ae3](https://github.com/unjs/unplugin/commit/6b38ae33479a035321b930e5f498e9089a1dcb22))
+* adjust webpack rspack hooks sequence ([#326](https://github.com/unjs/unplugin/issues/326)) ([63e027a](https://github.com/unjs/unplugin/commit/63e027a53d7cc8aec2b71d94a325429134bb46fb))
+
+
+### Features
+
+* **esbuild:** added support for esbuild loader option ([#337](https://github.com/unjs/unplugin/issues/337)) ([a94366c](https://github.com/unjs/unplugin/commit/a94366c2940c8f1e1d548ecef38795696822e3ce))
+
+
+
 # [1.4.0](https://github.com/unjs/unplugin/compare/v1.3.2...v1.4.0) (2023-07-16)
 
 

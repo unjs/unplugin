@@ -1,14 +1,15 @@
 const { resolve } = require('path')
-const { rspack } = require('./unplugin')
+const { webpack } = require('./unplugin')
 
-/** @type {import('@rspack/core').Configuration} */
 module.exports = {
   mode: 'development',
   entry: resolve(__dirname, 'src/main.js'),
   output: {
-    path: resolve(__dirname, 'dist/rspack'),
+    path: resolve(__dirname, 'dist/webpack'),
     filename: 'main.js',
   },
-  plugins: [rspack({ msg: 'Rspack' })],
+  plugins: [
+    webpack({ msg: 'Webpack' }),
+  ],
   devtool: 'source-map',
 }
