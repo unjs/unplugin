@@ -8,8 +8,7 @@ import type {
 import { toArray } from '../utils'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>,
-  Nested extends boolean = boolean,
+  UserOptions = Record<string, never>, Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
@@ -45,7 +44,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
         return {
           content: res.code,
           moduleType: 'js',
-          sourceMap: res.map.mappings,
+          sourceMap: JSON.stringify(res.map),
         }
       },
     }
