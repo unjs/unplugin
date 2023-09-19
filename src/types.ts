@@ -99,6 +99,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   vite: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<VitePlugin> : VitePlugin>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
+  farm: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RollupPlugin> : RollupPlugin>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
@@ -120,6 +121,8 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   rspack: {
     compiler: RspackCompiler
   }
+} | {
+  framework: 'farm'
 })
 
 export interface UnpluginContext {
