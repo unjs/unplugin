@@ -31,4 +31,7 @@ module.exports = {
   plugins: [
     farm({ msg: 'Farm' }),
   ],
+  server: {
+    hmr: false,
+  },
 }
