@@ -32,14 +32,21 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
 
     //   return _transform.call(this, code, id)
     // }
+    // TODO: resolvePath
     const _transform = plugin.transform
     plugin.transform = {
-      filters: { resolvedPaths: [] },
+      filters: { resolvedPaths: ['msg.js$'] },
       executor(params) {
         if (plugin.transformInclude && !plugin.transformInclude(id))
           return null
 
-        return _transform.call(this, params.content, params.resolvedPath)
+        const res = _transform(params.content, params.resolvedPath)
+
+        return {
+          content: res.code,
+          moduleType: 'js',
+          sourceMap: res.map.mappings,
+        }
       },
     }
   }
@@ -55,10 +62,14 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
     // }
     plugin.load = {
       filters: {
-        resolvedPaths: [],
+        resolvedPaths: ['msg.js$'],
       },
       executor(id) {
-        return _load.call(this, id)
+        const res = _load(id.resolvedPath)
+        return {
+          content: res,
+          moduleType: 'js',
+        }
       },
     }
   }
