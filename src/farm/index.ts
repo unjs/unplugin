@@ -103,7 +103,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
  * 1. 增量构建
  * 2. 重构 resolver
  * 3. 接入一些 js 生态 (unplugin)
- * 4. 重构 node 流程 规范化
- * 5. 感觉还可以接一下 fervid 的 vue compiler
- * 6. 用户DX 热更新报错白屏
+ * 4. 重构 node 规范化基础配置流程 不重要！
+ * 5. 接 fervid 的 vue compiler 不重要！
+ * 6. 用户DX 修复一些体验 bug e.g: 热更新报错白屏
  */
