@@ -1,3 +1,4 @@
+import type { PluginLoadHookParam } from '@farmfe/core/binding'
 import type {
   RollupPlugin,
   UnpluginContextMeta,
@@ -29,7 +30,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
       filters: {
         resolvedPaths: ['.*'],
       },
-      executor(id: any) {
+      executor(id: PluginLoadHookParam) {
         if (plugin.loadInclude && !plugin.loadInclude(id.resolvedPath))
           return null
         const loader = guessIdLoader(id.resolvedPath)
