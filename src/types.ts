@@ -77,6 +77,7 @@ export interface UnpluginOptions {
     setup?: EsbuildPlugin['setup']
     loader?: Loader | ((code: string, id: string) => Loader)
   }
+  farm?: any
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
