@@ -6,9 +6,11 @@ import type {
   UnpluginOptions,
 } from '../types'
 import { toArray } from '../utils'
+import { guessIdLoader } from './utils'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>, Nested extends boolean = boolean,
+  UserOptions = Record<string, never>,
+  Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
@@ -22,7 +24,6 @@ export function getFarmPlugin<
 }
 
 export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
-  // 根据loadInclude 出来的结果，决定在 load 中执行的 id
   if (plugin.transform && plugin.transformInclude) {
     // const _transform = plugin.transform
     // plugin.transform = function (code, id) {
@@ -34,17 +35,22 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
     // TODO: resolvePath
     const _transform = plugin.transform
     plugin.transform = {
-      filters: { resolvedPaths: ['.*$'] },
+      filters: { resolvedPaths: ['.*'] },
       executor(params) {
-        if (plugin.transformInclude && !plugin.transformInclude(id))
+        const loader = guessIdLoader(params.resolvedPath)
+        if (
+          plugin.transformInclude
+          && !plugin.transformInclude(params.resolvedPath)
+        )
           return null
+        if (plugin.transformInclude(params.resolvedPath)) {
+          const resource = _transform(params.content, params.resolvedPath)
 
-        const res = _transform(params.content, params.resolvedPath)
-
-        return {
-          content: res.code,
-          moduleType: 'js',
-          sourceMap: JSON.stringify(res.map),
+          return {
+            content: resource.code,
+            moduleType: loader,
+            sourceMap: JSON.stringify(resource.map),
+          }
         }
       },
     }
@@ -53,7 +59,6 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
   if (plugin.load && plugin.loadInclude) {
     const _load = plugin.load
     // plugin.load = function (id) {
-    //   console.log(id);
     //   if (plugin.loadInclude && !plugin.loadInclude(id))
     //     return null
 
@@ -61,19 +66,23 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
     // }
     plugin.load = {
       filters: {
-        resolvedPaths: ['.*$'],
+        resolvedPaths: ['.*'],
       },
       executor(id) {
-        const res = _load(id.resolvedPath)
-        return {
-          content: res,
-          moduleType: 'js',
+        const loader = guessIdLoader(id.resolvedPath)
+        if (plugin.loadInclude(id.resolvedPath)) {
+          const content = _load(id.resolvedPath)
+
+          return {
+            content,
+            moduleType: loader,
+          }
         }
       },
     }
   }
-  delete plugin.transformInclude
-  delete plugin.loadInclude
+  // delete plugin.transformInclude
+  // delete plugin.loadInclude
 
   // if (plugin.rollup && containRollupOptions)
   //   Object.assign(plugin, plugin.rollup)
