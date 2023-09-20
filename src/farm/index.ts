@@ -1,6 +1,6 @@
-import type { PluginLoadHookParam } from '@farmfe/core/binding'
+import type { PluginLoadHookParam, PluginLoadHookResult } from '@farmfe/core/binding'
+import type { JsPlugin } from '@farmfe/core'
 import type {
-  RollupPlugin,
   UnpluginContextMeta,
   UnpluginFactory,
   UnpluginInstance,
@@ -10,8 +10,7 @@ import { toArray } from '../utils'
 import { guessIdLoader, transformQuery } from './utils'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>,
-  Nested extends boolean = boolean,
+  UserOptions = Record<string, never>, Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
@@ -23,14 +22,14 @@ export function getFarmPlugin<
   }) as UnpluginInstance<UserOptions, Nested>['rollup']
 }
 
-export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
+export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   if (plugin.load) {
-    const _load: any = plugin.load
+    const _load = plugin.load
     plugin.load = {
       filters: {
         resolvedPaths: ['.*'],
       },
-      executor(id: PluginLoadHookParam) {
+      executor(id: PluginLoadHookParam): PluginLoadHookResult | null {
         if (plugin.loadInclude && !plugin.loadInclude(id.resolvedPath))
           return null
         const loader = guessIdLoader(id.resolvedPath)
@@ -88,7 +87,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
     } as any
   }
 
-  return plugin
+  return plugin as any
 }
 
 /**
