@@ -17,7 +17,6 @@ export function getFarmPlugin<
       framework: 'farm',
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
-
     const plugins = rawPlugins.map(plugin => toFarmPlugin(plugin))
     return plugins.length === 1 ? plugins[0] : plugins
   }) as UnpluginInstance<UserOptions, Nested>['rollup']

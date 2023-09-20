@@ -29,7 +29,7 @@ module.exports = createUnplugin((options, meta) => {
           throw new Error('File was already transformed')
 
         s.overwrite(index, index + '__UNPLUGIN__'.length, injectedCode)
-
+        console.log(s.toString())
         return {
           code: s.toString(),
           map: s.generateMap({
