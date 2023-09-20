@@ -1,3 +1,4 @@
+import * as querystring from 'node:querystring'
 import type {
   RollupPlugin,
   UnpluginContextMeta,
@@ -36,6 +37,14 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
     plugin.transform = {
       filters: { resolvedPaths: ['.*'] },
       executor(params) {
+        if (params.query.length) {
+          const queryParamsObject = {}
+          params.query.forEach(([param, value]) => {
+            queryParamsObject[param] = value
+          })
+          const transformQuery = querystring.stringify(queryParamsObject)
+          params.resolvedPath = `${params.resolvedPath}?${transformQuery}`
+        }
         const loader = guessIdLoader(params.resolvedPath)
         if (
           plugin.transformInclude
@@ -96,4 +105,5 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
  * 3. 接入一些 js 生态 (unplugin)
  * 4. 重构 node 流程 规范化
  * 5. 感觉还可以接一下 fervid 的 vue compiler
+ * 6. 用户DX 热更新报错白屏
  */

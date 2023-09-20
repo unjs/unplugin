@@ -11,6 +11,7 @@ module.exports = {
     },
     output: {
       path: './dist/farm',
+      entryFilename: 'main.[ext]',
       targetEnv: 'node',
       format: 'cjs',
     },
