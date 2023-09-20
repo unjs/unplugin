@@ -35,7 +35,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
     // TODO: resolvePath
     const _transform = plugin.transform
     plugin.transform = {
-      filters: { resolvedPaths: ['msg.js$'] },
+      filters: { resolvedPaths: ['.*$'] },
       executor(params) {
         if (plugin.transformInclude && !plugin.transformInclude(id))
           return null
@@ -62,7 +62,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
     // }
     plugin.load = {
       filters: {
-        resolvedPaths: ['msg.js$'],
+        resolvedPaths: ['.*$'],
       },
       executor(id) {
         const res = _load(id.resolvedPath)
