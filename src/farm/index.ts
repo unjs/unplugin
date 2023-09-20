@@ -1,4 +1,3 @@
-import * as querystring from 'node:querystring'
 import type {
   RollupPlugin,
   UnpluginContextMeta,
@@ -7,7 +6,7 @@ import type {
   UnpluginOptions,
 } from '../types'
 import { toArray } from '../utils'
-import { guessIdLoader } from './utils'
+import { guessIdLoader, transformQuery } from './utils'
 
 export function getFarmPlugin<
   UserOptions = Record<string, never>,
@@ -24,76 +23,69 @@ export function getFarmPlugin<
 }
 
 export function toFarmPlugin(plugin: UnpluginOptions): RollupPlugin {
-  if (plugin.transform && plugin.transformInclude) {
-    // const _transform = plugin.transform
-    // plugin.transform = function (code, id) {
-    //   if (plugin.transformInclude && !plugin.transformInclude(id))
-    //     return null
+  if (plugin.load) {
+    const _load: any = plugin.load
+    plugin.load = {
+      filters: {
+        resolvedPaths: ['.*'],
+      },
+      executor(id: any) {
+        if (plugin.loadInclude && !plugin.loadInclude(id.resolvedPath))
+          return null
+        const loader = guessIdLoader(id.resolvedPath)
+        const shouldLoadInclude
+          = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
+        const content = _load(id.resolvedPath)
 
-    //   return _transform.call(this, code, id)
-    // }
-    // TODO: resolvePath
-    const _transform = plugin.transform
+        if (shouldLoadInclude) {
+          return {
+            content,
+            moduleType: loader,
+          }
+        }
+
+        return {
+          content,
+          moduleType: loader,
+        }
+      },
+    } as any
+  }
+
+  if (plugin.transform) {
+    const _transform: any = plugin.transform
     plugin.transform = {
       filters: { resolvedPaths: ['.*'] },
-      executor(params) {
-        if (params.query.length) {
-          const queryParamsObject = {}
-          params.query.forEach(([param, value]) => {
-            queryParamsObject[param] = value
-          })
-          const transformQuery = querystring.stringify(queryParamsObject)
-          params.resolvedPath = `${params.resolvedPath}?${transformQuery}`
-        }
-        const loader = guessIdLoader(params.resolvedPath)
+      executor(params: any) {
+        if (params.query.length)
+          transformQuery(params)
+
         if (
           plugin.transformInclude
           && !plugin.transformInclude(params.resolvedPath)
         )
           return null
-        if (plugin.transformInclude(params.resolvedPath)) {
-          const resource = _transform(params.content, params.resolvedPath)
 
+        const loader = guessIdLoader(params.resolvedPath)
+        const shouldTransformInclude
+          = plugin.transformInclude
+          && plugin.transformInclude(params.resolvedPath)
+        const resource: any = _transform(params.content, params.resolvedPath)
+        if (shouldTransformInclude) {
           return {
             content: resource.code,
             moduleType: loader,
             sourceMap: JSON.stringify(resource.map),
           }
         }
-      },
-    }
-  }
-
-  if (plugin.load && plugin.loadInclude) {
-    const _load = plugin.load
-    // plugin.load = function (id) {
-    //   if (plugin.loadInclude && !plugin.loadInclude(id))
-    //     return null
-
-    //   return _load.call(this, id)
-    // }
-    plugin.load = {
-      filters: {
-        resolvedPaths: ['.*'],
-      },
-      executor(id) {
-        const loader = guessIdLoader(id.resolvedPath)
-        if (plugin.loadInclude(id.resolvedPath)) {
-          const content = _load(id.resolvedPath)
-
-          return {
-            content,
-            moduleType: loader,
-          }
+        return {
+          content: resource.code,
+          moduleType: loader,
+          sourceMap: JSON.stringify(resource.map),
         }
       },
-    }
+    } as any
   }
-  // delete plugin.transformInclude
-  // delete plugin.loadInclude
-
-  // if (plugin.rollup && containRollupOptions)
-  //   Object.assign(plugin, plugin.rollup)
 
   return plugin
 }
