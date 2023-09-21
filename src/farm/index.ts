@@ -1,16 +1,30 @@
-import type { PluginLoadHookParam, PluginLoadHookResult } from '@farmfe/core/binding'
+import fs from 'fs'
+import path from 'path'
+import type {
+  PluginLoadHookParam,
+  PluginLoadHookResult,
+  PluginTransformHookParam,
+  PluginTransformHookResult,
+} from '@farmfe/core/binding'
 import type { JsPlugin } from '@farmfe/core'
 import type {
+  TransformResult,
   UnpluginContextMeta,
   UnpluginFactory,
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
 import { toArray } from '../utils'
-import { guessIdLoader, transformQuery } from './utils'
+import {
+  convertEnforceToPriority,
+  convertWatchEventChange,
+  guessIdLoader,
+  transformQuery,
+} from './utils'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>, Nested extends boolean = boolean,
+  UserOptions = Record<string, never>,
+  Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
@@ -23,40 +37,87 @@ export function getFarmPlugin<
 }
 
 export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
+  const farmPlugin: JsPlugin = {
+    name: plugin.name,
+    priority: convertEnforceToPriority(plugin.enforce),
+  }
+
+  if (plugin.buildStart) {
+    const _buildStart = plugin.buildStart
+    farmPlugin.buildStart = {
+      async executor() {
+        await _buildStart()
+      },
+    }
+  }
+
+  if (plugin.resolveId) {
+    const _resolveId = plugin.resolveId
+    farmPlugin.resolve = {
+      filters: { sources: ['.*'], importers: ['.*'] },
+      async executor(params) {
+        const resolvedIdPath = path.resolve(
+          process.cwd(),
+          params.importer?.relativePath ?? '',
+        )
+        const isEntry = params.kind.entry === 'index'
+        // const paths = path.resolve(process.cwd(), params.importer?.relativePath)
+        const resolvedPath = await _resolveId(
+          params.source,
+          resolvedIdPath ?? null,
+          { isEntry },
+        )
+        if (resolvedPath) {
+          return {
+            resolvedPath,
+            query: [],
+            sideEffects: false,
+            external: false,
+            meta: {},
+          }
+        }
+      },
+    }
+  }
+
   if (plugin.load) {
     const _load = plugin.load
-    plugin.load = {
+    farmPlugin.load = {
       filters: {
         resolvedPaths: ['.*'],
       },
-      executor(id: PluginLoadHookParam): PluginLoadHookResult | null {
+      async executor(
+        id: PluginLoadHookParam,
+      ): Promise<PluginLoadHookResult | null> {
         if (plugin.loadInclude && !plugin.loadInclude(id.resolvedPath))
           return null
         const loader = guessIdLoader(id.resolvedPath)
         const shouldLoadInclude
           = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
-        const content = _load(id.resolvedPath)
+        const content
+          = _load.call(this, id.resolvedPath)
+          ?? (await fs.promises.readFile(id.resolvedPath, 'utf8'))
 
         if (shouldLoadInclude) {
           return {
             content,
             moduleType: loader,
-          }
+          } as PluginLoadHookResult
         }
 
         return {
           content,
           moduleType: loader,
-        }
+        } as PluginLoadHookResult
       },
     } as any
   }
 
   if (plugin.transform) {
-    const _transform: any = plugin.transform
-    plugin.transform = {
+    const _transform = plugin.transform
+    farmPlugin.transform = {
       filters: { resolvedPaths: ['.*'] },
-      executor(params: any) {
+      async executor(params: PluginTransformHookParam) {
         if (params.query.length)
           transformQuery(params)
 
@@ -70,32 +131,73 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const shouldTransformInclude
           = plugin.transformInclude
           && plugin.transformInclude(params.resolvedPath)
-        const resource: any = _transform(params.content, params.resolvedPath)
-        if (shouldTransformInclude) {
+        const resource: TransformResult = await _transform.call(
+          this,
+          params.content,
+          params.resolvedPath,
+        )
+        if (resource && typeof resource !== 'string') {
+          if (shouldTransformInclude) {
+            return {
+              content: resource.code,
+              moduleType: loader,
+              sourceMap: JSON.stringify(resource.map),
+            } as PluginTransformHookResult
+          }
           return {
             content: resource.code,
             moduleType: loader,
             sourceMap: JSON.stringify(resource.map),
-          }
-        }
-        return {
-          content: resource.code,
-          moduleType: loader,
-          sourceMap: JSON.stringify(resource.map),
+          } as PluginTransformHookResult
         }
       },
     } as any
   }
 
-  return plugin as any
+  if (plugin.watchChange) {
+    const _watchChange = plugin.watchChange
+    farmPlugin.updateModules = {
+      async executor(param) {
+        // To be compatible with unplugin, we ensure that only one file is changed at a time.
+        const updatePathContent = param.paths[0]
+        const ModifiedPath = updatePathContent[0]
+        const eventChange = convertWatchEventChange(updatePathContent[1])
+        _watchChange(ModifiedPath, eventChange)
+      },
+    }
+  }
+
+  if (plugin.buildEnd) {
+    const _buildEnd = plugin.buildEnd
+    farmPlugin.buildEnd = {
+      executor() {
+        _buildEnd()
+      },
+    }
+  }
+
+  if (plugin.writeBundle) {
+    const _writeBundle = plugin.writeBundle
+    farmPlugin.finish = {
+      executor() {
+        _writeBundle()
+      },
+    }
+  }
+
+  return farmPlugin
 }
 
 /**
- * v1.0.0 beta
- * 1. 增量构建
- * 2. 重构 resolver
- * 3. 接入一些 js 生态 (unplugin)
- * 4. 重构 node 规范化基础配置流程 不重要！
- * 5. 接 fervid 的 vue compiler 不重要！
- * 6. 用户DX 修复一些体验 bug e.g: 热更新报错白屏
+ * Degree of completion
+ * enforce ✅
+ * buildStart ✅
+ * resolveId ✅
+ * loadInclude ✅
+ * load ✅
+ * transformInclude ✅
+ * transform ✅
+ * watchChange ✅
+ * buildEnd ✅
+ * writeBundle ✅
  */

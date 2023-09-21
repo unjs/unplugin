@@ -13,6 +13,7 @@ Currently supports:
 - [Webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/) (⚠️ experimental)
+- [Farm](https://farm-fe.github.io/) (⚠️ experimental)
 
 ## Hooks
 
@@ -20,18 +21,18 @@ Currently supports:
 
 ###### Supported
 
-| Hook                                                                    |     Rollup      | Vite | Webpack 4 | Webpack 5 |     esbuild     | Rspack |
-| ----------------------------------------------------------------------- | :-------------: | :--: | :-------: | :-------: | :-------------: | :----: |
-| [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ✅   |
-| [`buildStart`](https://rollupjs.org/guide/en/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`resolveId`](https://rollupjs.org/guide/en/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
-| `loadInclude`<sup>2</sup>                                               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`load`](https://rollupjs.org/guide/en/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
-| `transformInclude`<sup>2</sup>                                          |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`transform`](https://rollupjs.org/guide/en/#transformers)              |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
-| [`watchChange`](https://rollupjs.org/guide/en/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ❌        |   ❌   |
-| [`buildEnd`](https://rollupjs.org/guide/en/#buildend)                   |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
+| Hook                                                                    |     Rollup      | Vite | Webpack 4 | Webpack 5 |     esbuild     | Rspack | Farm |
+| ----------------------------------------------------------------------- | :-------------: | :--: | :-------: | :-------: | :-------------: | :----: | ---- |
+| [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ✅   | ✅   |
+| [`buildStart`](https://rollupjs.org/guide/en/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   | ✅   |
+| [`resolveId`](https://rollupjs.org/guide/en/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   | ✅   |
+| `loadInclude`<sup>2</sup>                                               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   | ✅   |
+| [`load`](https://rollupjs.org/guide/en/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   | ✅   |
+| `transformInclude`<sup>2</sup>                                          |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   | ✅   |
+| [`transform`](https://rollupjs.org/guide/en/#transformers)              |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   | ✅   |
+| [`watchChange`](https://rollupjs.org/guide/en/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ❌        |   ❌   | ✅   |
+| [`buildEnd`](https://rollupjs.org/guide/en/#buildend)                   |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   | ✅   |
+| [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   | ✅   |
 
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 2. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for the following usage examples.
@@ -129,7 +130,9 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.vite({ /* options */ }),
+    UnpluginFeature.vite({
+      /* options */
+    }),
   ],
 }
 ```
@@ -142,7 +145,9 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.rollup({ /* options */ }),
+    UnpluginFeature.rollup({
+      /* options */
+    }),
   ],
 }
 ```
@@ -153,7 +158,9 @@ export default {
 // webpack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').webpack({ /* options */ }),
+    require('./unplugin-feature').webpack({
+      /* options */
+    }),
   ],
 }
 ```
@@ -166,11 +173,12 @@ import { build } from 'esbuild'
 
 build({
   plugins: [
-    require('./unplugin-feature').esbuild({ /* options */ }),
+    require('./unplugin-feature').esbuild({
+      /* options */
+    }),
   ],
 })
 ```
-
 
 ###### Rspack
 
@@ -178,7 +186,9 @@ build({
 // rspack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').rspack({ /* options */ }),
+    require('./unplugin-feature').rspack({
+      /* options */
+    }),
   ],
 }
 ```
@@ -194,8 +204,12 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
   return {
     // Common unplugin hooks
     name: 'unplugin-prefixed-name',
-    transformInclude(id) { /* ... */ },
-    transform(code) { /* ... */ },
+    transformInclude(id) {
+      /* ... */
+    },
+    transform(code) {
+      /* ... */
+    },
 
     // Framework specific hooks
     vite: {
@@ -218,11 +232,9 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
       // Change the filter of onResolve and onLoad
       // onResolveFilter?: RegExp,
       // onLoadFilter?: RegExp,
-
       // Tell esbuild how to interpret the contents. By default unplugin tries to guess the loader
       // from file extension (eg: .js -> "js", .jsx -> 'jsx')
       // loader?: (Loader | (code: string, id: string) => Loader)
-
       // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,
     },
@@ -241,14 +253,24 @@ import {
   createRollupPlugin,
   createRspackPlugin,
   createVitePlugin,
-  createWebpackPlugin
+  createWebpackPlugin,
 } from 'unplugin'
 
-const vitePlugin = createVitePlugin({ /* options */ })
-const rollupPlugin = createRollupPlugin({ /* options */ })
-const esbuildPlugin = createEsbuildPlugin({ /* options */ })
-const webpackPlugin = createWebpackPlugin({ /* options */ })
-const rspackPlugin = createRspackPlugin({ /* options */ })
+const vitePlugin = createVitePlugin({
+  /* options */
+})
+const rollupPlugin = createRollupPlugin({
+  /* options */
+})
+const esbuildPlugin = createEsbuildPlugin({
+  /* options */
+})
+const webpackPlugin = createWebpackPlugin({
+  /* options */
+})
+const rspackPlugin = createRspackPlugin({
+  /* options */
+})
 ```
 
 ## Conventions
