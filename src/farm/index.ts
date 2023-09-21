@@ -25,8 +25,7 @@ import {
 } from './utils'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>,
-  Nested extends boolean = boolean,
+  UserOptions = Record<string, never>, Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
@@ -62,14 +61,16 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           process.cwd(),
           params.importer?.relativePath ?? '',
         )
-        const isEntry = params.kind.entry === 'index'
-        // const paths = path.resolve(process.cwd(), params.importer?.relativePath)
+        let isEntry = false
+        if (typeof params.kind === 'object' && params.kind !== null)
+          isEntry = params.kind.entry === 'index'
+
         const resolvedPath = await _resolveId(
           params.source,
           resolvedIdPath ?? null,
           { isEntry },
         )
-        if (resolvedPath) {
+        if (resolvedPath && typeof resolvedPath === 'string') {
           return {
             resolvedPath,
             query: [],
@@ -78,6 +79,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
             meta: {},
           }
         }
+        return null
       },
     }
   }
