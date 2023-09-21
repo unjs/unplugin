@@ -3,6 +3,8 @@ import * as querystring from 'node:querystring'
 
 export * from '../utils'
 
+export type WatchChangeEvents = 'create' | 'update' | 'delete'
+
 const ExtToLoader: Record<string, string> = {
   '.js': 'js',
   '.mjs': 'js',
@@ -40,15 +42,19 @@ export function convertEnforceToPriority(value: 'pre' | 'post' | undefined) {
     post: 99,
   }
 
-  return enforceToPriority[value!] !== undefined ? enforceToPriority[value!] : defaultPriority
+  return enforceToPriority[value!] !== undefined
+    ? enforceToPriority[value!]
+    : defaultPriority
 }
 
-export function convertWatchEventChange(value: 'Added' | 'Updated' | 'Removed') {
+export function convertWatchEventChange(
+  value: WatchChangeEvents,
+) {
   const watchEventChange = {
     Added: 'create',
     Updated: 'update',
     Removed: 'delete',
-  }
+  } as unknown as { [key in WatchChangeEvents]: string }
 
   return watchEventChange[value]
 }

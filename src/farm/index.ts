@@ -3,6 +3,7 @@ import path from 'path'
 import type {
   PluginLoadHookParam,
   PluginLoadHookResult,
+  PluginResolveHookParam,
   PluginTransformHookParam,
   PluginTransformHookResult,
 } from '@farmfe/core/binding'
@@ -15,6 +16,7 @@ import type {
   UnpluginOptions,
 } from '../types'
 import { toArray } from '../utils'
+import type { WatchChangeEvents } from './utils'
 import {
   convertEnforceToPriority,
   convertWatchEventChange,
@@ -46,7 +48,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _buildStart = plugin.buildStart
     farmPlugin.buildStart = {
       async executor() {
-        await _buildStart()
+        await _buildStart.call(this)
       },
     }
   }
@@ -55,7 +57,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _resolveId = plugin.resolveId
     farmPlugin.resolve = {
       filters: { sources: ['.*'], importers: ['.*'] },
-      async executor(params) {
+      async executor(params: PluginResolveHookParam) {
         const resolvedIdPath = path.resolve(
           process.cwd(),
           params.importer?.relativePath ?? '',
@@ -161,8 +163,10 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         // To be compatible with unplugin, we ensure that only one file is changed at a time.
         const updatePathContent = param.paths[0]
         const ModifiedPath = updatePathContent[0]
-        const eventChange = convertWatchEventChange(updatePathContent[1])
-        _watchChange(ModifiedPath, eventChange)
+        const eventChange = convertWatchEventChange(
+          updatePathContent[1] as WatchChangeEvents,
+        )
+        _watchChange.call(this, ModifiedPath, { event: eventChange })
       },
     }
   }
@@ -171,7 +175,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _buildEnd = plugin.buildEnd
     farmPlugin.buildEnd = {
       executor() {
-        _buildEnd()
+        _buildEnd.call(this)
       },
     }
   }
