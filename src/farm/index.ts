@@ -106,7 +106,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const shouldLoadInclude
           = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
         const content
-          = _load.call(this, id.resolvedPath)
+          = await _load.call(this, id.resolvedPath)
           ?? (await fs.promises.readFile(id.resolvedPath, 'utf8'))
 
         if (shouldLoadInclude) {
@@ -175,7 +175,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const eventChange = convertWatchEventChange(
           updatePathContent[1] as WatchChangeEvents,
         )
-        _watchChange.call(this, ModifiedPath, { event: eventChange })
+        await _watchChange.call(this, ModifiedPath, { event: eventChange })
       },
     } as JsPlugin['updateModules']
   }
@@ -183,8 +183,8 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   if (plugin.buildEnd) {
     const _buildEnd = plugin.buildEnd
     farmPlugin.buildEnd = {
-      executor(_, context) {
-        _buildEnd.call(context)
+      async executor(_, context) {
+        await _buildEnd.call(context)
       },
     } as JsPlugin['buildEnd']
   }
@@ -192,8 +192,8 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   if (plugin.writeBundle) {
     const _writeBundle = plugin.writeBundle
     farmPlugin.finish = {
-      executor() {
-        _writeBundle()
+      async executor() {
+        await _writeBundle()
       },
     } as JsPlugin['finish']
   }
