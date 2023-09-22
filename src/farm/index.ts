@@ -25,7 +25,8 @@ import {
 } from './utils'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>, Nested extends boolean = boolean,
+  UserOptions = Record<string, never>,
+  Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
@@ -48,6 +49,9 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
 
   if (plugin.farm?.configDevServer)
     farmPlugin.configDevServer = plugin.farm.configDevServer
+
+  if (plugin.farm?.updateModules)
+    farmPlugin.updateModules = plugin.farm.updateModules
 
   if (plugin.buildStart) {
     const _buildStart = plugin.buildStart
@@ -106,7 +110,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const shouldLoadInclude
           = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
         const content
-          = await _load.call(this, id.resolvedPath)
+          = (await _load.call(this, id.resolvedPath))
           ?? (await fs.promises.readFile(id.resolvedPath, 'utf8'))
 
         if (shouldLoadInclude) {

@@ -9,7 +9,8 @@ module.exports = createUnplugin((options) => {
     loadInclude(id) {
       return targetFileReg.test(id)
     },
-    buildStart() {},
+    buildStart() {
+    },
     resolveId() {
     },
     load(id) {
