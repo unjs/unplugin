@@ -41,9 +41,14 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   const farmPlugin: JsPlugin = {
     name: plugin.name,
     priority: convertEnforceToPriority(plugin.enforce),
-    config: plugin.farm!.config,
-    configDevServer: plugin.farm!.configDevServer,
   }
+
+  if (plugin.farm?.config)
+    farmPlugin.config = plugin.farm.config
+
+  if (plugin.farm?.configDevServer)
+    farmPlugin.configDevServer = plugin.farm.configDevServer
+
   if (plugin.buildStart) {
     const _buildStart = plugin.buildStart
     farmPlugin.buildStart = {
