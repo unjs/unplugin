@@ -41,15 +41,16 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   const farmPlugin: JsPlugin = {
     name: plugin.name,
     priority: convertEnforceToPriority(plugin.enforce),
+    config: plugin.farm!.config,
+    configDevServer: plugin.farm!.configDevServer,
   }
-
   if (plugin.buildStart) {
     const _buildStart = plugin.buildStart
     farmPlugin.buildStart = {
-      async executor() {
-        await _buildStart.call(this)
+      async executor(_, hook) {
+        await _buildStart.call(hook)
       },
-    }
+    } as JsPlugin['buildStart']
   }
 
   if (plugin.resolveId) {
@@ -62,9 +63,10 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           params.importer?.relativePath ?? '',
         )
         let isEntry = false
-        if (typeof params.kind === 'object' && params.kind !== null)
-          isEntry = params.kind.entry === 'index'
-
+        if (typeof params.kind === 'object' && 'entry' in params.kind) {
+          const kindWithEntry = params.kind as { entry: string }
+          isEntry = kindWithEntry.entry === 'index'
+        }
         const resolvedPath = await _resolveId(
           params.source,
           resolvedIdPath ?? null,
@@ -81,7 +83,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         }
         return null
       },
-    }
+    } as JsPlugin['resolve']
   }
 
   if (plugin.load) {
@@ -114,7 +116,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           moduleType: loader,
         } as PluginLoadHookResult
       },
-    } as any
+    } as JsPlugin['load']
   }
 
   if (plugin.transform) {
@@ -155,7 +157,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           } as PluginTransformHookResult
         }
       },
-    } as any
+    } as JsPlugin['transform']
   }
 
   if (plugin.watchChange) {
@@ -170,16 +172,16 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         )
         _watchChange.call(this, ModifiedPath, { event: eventChange })
       },
-    }
+    } as JsPlugin['updateModules']
   }
 
   if (plugin.buildEnd) {
     const _buildEnd = plugin.buildEnd
     farmPlugin.buildEnd = {
-      executor() {
-        _buildEnd.call(this)
+      executor(_, context) {
+        _buildEnd.call(context)
       },
-    }
+    } as JsPlugin['buildEnd']
   }
 
   if (plugin.writeBundle) {
@@ -188,7 +190,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
       executor() {
         _writeBundle()
       },
-    }
+    } as JsPlugin['finish']
   }
 
   return farmPlugin

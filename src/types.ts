@@ -4,6 +4,7 @@ import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
+import type { JsPlugin as FarmPlugin } from '@farmfe/core'
 
 export {
   EsbuildPlugin,
@@ -77,7 +78,7 @@ export interface UnpluginOptions {
     setup?: EsbuildPlugin['setup']
     loader?: Loader | ((code: string, id: string) => Loader)
   }
-  farm?: any
+  farm?: Partial<FarmPlugin>
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
