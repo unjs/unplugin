@@ -1,6 +1,6 @@
 {
   "name": "unplugin-test",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "packageManager": "pnpm@8.7.5",
   "description": "Unified plugin system for build tools",
   "license": "MIT",

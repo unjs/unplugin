@@ -115,9 +115,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const loader = guessIdLoader(id.resolvedPath)
         const shouldLoadInclude
           = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
-        const content
-          = (await _load.call(this, id.resolvedPath))
-          ?? (await fs.promises.readFile(id.resolvedPath, 'utf8'))
+        const content = await _load.call(this, id.resolvedPath)
 
         if (shouldLoadInclude) {
           return {
@@ -148,7 +146,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         )
           return null
 
-        const loader = guessIdLoader(params.resolvedPath)
+        const loader = params.moduleType ?? guessIdLoader(params.resolvedPath)
         const shouldTransformInclude
           = plugin.transformInclude
           && plugin.transformInclude(params.resolvedPath)
