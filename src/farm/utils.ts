@@ -1,5 +1,6 @@
 import path from 'node:path'
 import * as querystring from 'node:querystring'
+import type { TransformResult } from 'src/types'
 
 export * from '../utils'
 
@@ -57,4 +58,12 @@ export function convertWatchEventChange(
   } as unknown as { [key in WatchChangeEvents]: string }
 
   return watchEventChange[value]
+}
+
+export function resolveQuery(url: string) {
+  return querystring.parse(new URL(url).search.slice(1))
+}
+
+export function getContentValue(content: TransformResult): string {
+  return typeof content === 'string' ? content : content!.code
 }

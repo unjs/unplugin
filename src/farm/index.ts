@@ -20,7 +20,9 @@ import type { WatchChangeEvents } from './utils'
 import {
   convertEnforceToPriority,
   convertWatchEventChange,
+  getContentValue,
   guessIdLoader,
+  resolveQuery,
   transformQuery,
 } from './utils'
 
@@ -90,7 +92,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         if (resolvedPath && typeof resolvedPath === 'string') {
           return {
             resolvedPath,
-            query: [],
+            query: [], // TODO queryString
             sideEffects: false,
             external: false,
             meta: {},
@@ -115,19 +117,16 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const loader = guessIdLoader(id.resolvedPath)
         const shouldLoadInclude
           = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
-        const content = await _load.call(this, id.resolvedPath)
-
-        if (shouldLoadInclude) {
-          return {
-            content,
-            moduleType: loader,
-          } as PluginLoadHookResult
-        }
-
-        return {
-          content,
+        const content: TransformResult = await _load.call(this, id.resolvedPath)
+        const loadFarmResult: PluginLoadHookResult = {
+          // TODO maybe sourcemap resolve
+          content: typeof content === 'string' ? content : content!.code,
           moduleType: loader,
-        } as PluginLoadHookResult
+        }
+        if (shouldLoadInclude)
+          return loadFarmResult
+
+        return loadFarmResult
       },
     } as JsPlugin['load']
   }
@@ -158,7 +157,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
 
         if (resource && typeof resource !== 'string') {
           const transformFarmResult: PluginTransformHookResult = {
-            content: resource.code,
+            content: typeof resource === 'string' ? resource : resource!.code,
             moduleType: loader,
             sourceMap: JSON.stringify(resource.map),
           }
