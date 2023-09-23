@@ -25,15 +25,21 @@ import {
 } from './utils'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>,
-  Nested extends boolean = boolean,
+  UserOptions = Record<string, never>, Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'farm',
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
-    const plugins = rawPlugins.map(plugin => toFarmPlugin(plugin))
+    const plugins = rawPlugins.map((rawPlugin) => {
+      const plugin = toFarmPlugin(rawPlugin) as JsPlugin
+      if (rawPlugin.farm)
+        Object.assign(plugin, rawPlugin.farm)
+
+      return plugin
+    })
+
     return plugins.length === 1 ? plugins[0] : plugins
   }) as UnpluginInstance<UserOptions, Nested>['rollup']
 }
@@ -151,19 +157,17 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           params.content,
           params.resolvedPath,
         )
+
         if (resource && typeof resource !== 'string') {
-          if (shouldTransformInclude) {
-            return {
-              content: resource.code,
-              moduleType: loader,
-              sourceMap: JSON.stringify(resource.map),
-            } as PluginTransformHookResult
-          }
-          return {
+          const transformFarmResult: PluginTransformHookResult = {
             content: resource.code,
             moduleType: loader,
             sourceMap: JSON.stringify(resource.map),
-          } as PluginTransformHookResult
+          }
+          if (shouldTransformInclude)
+            return transformFarmResult
+
+          return transformFarmResult
         }
       },
     } as JsPlugin['transform']
