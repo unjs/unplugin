@@ -65,3 +65,9 @@ export function createRspackPlugin<UserOptions, Nested extends boolean = boolean
 ) {
   return getRspackPlugin(factory)
 }
+
+export function createFarmPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getFarmPlugin(factory)
+}
