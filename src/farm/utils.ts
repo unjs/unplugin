@@ -67,3 +67,11 @@ export function resolveQuery(url: string) {
 export function getContentValue(content: TransformResult): string {
   return typeof content === 'string' ? content : content!.code
 }
+
+export function isString(variable: unknown): variable is string {
+  return typeof variable === 'string'
+}
+
+export function isObject(variable: unknown): variable is object {
+  return typeof variable === 'object' && variable !== null
+}

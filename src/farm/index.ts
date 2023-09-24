@@ -22,6 +22,8 @@ import {
   convertWatchEventChange,
   getContentValue,
   guessIdLoader,
+  isObject,
+  isString,
   resolveQuery,
   transformQuery,
 } from './utils'
@@ -81,7 +83,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           params.importer?.relativePath ?? '',
         )
         let isEntry = false
-        if (typeof params.kind === 'object' && 'entry' in params.kind) {
+        if (isObject(params.kind) && 'entry' in params.kind) {
           const kindWithEntry = params.kind as { entry: string }
           isEntry = kindWithEntry.entry === 'index'
         }
@@ -90,7 +92,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           resolvedIdPath ?? null,
           { isEntry },
         )
-        if (typeof resolveIdResult === 'string') {
+        if (isString(resolveIdResult)) {
           return {
             resolvedPath: resolveIdResult,
             query: resolveQuery(resolveIdResult),
@@ -99,7 +101,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
             meta: {},
           }
         }
-        else if (typeof resolveIdResult === 'object') {
+        else if (isObject(resolveIdResult)) {
           return {
             resolvedPath: resolveIdResult?.id,
             query: resolveQuery(resolveIdResult!.id),
