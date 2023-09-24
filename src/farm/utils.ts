@@ -50,12 +50,12 @@ export function convertEnforceToPriority(value: 'pre' | 'post' | undefined) {
 
 export function convertWatchEventChange(
   value: WatchChangeEvents,
-) {
+): WatchChangeEvents {
   const watchEventChange = {
     Added: 'create',
     Updated: 'update',
     Removed: 'delete',
-  } as unknown as { [key in WatchChangeEvents]: string }
+  } as unknown as { [key in WatchChangeEvents]: WatchChangeEvents }
 
   return watchEventChange[value]
 }

@@ -9,11 +9,7 @@ module.exports = createUnplugin((options) => {
     loadInclude(id) {
       return targetFileReg.test(id)
     },
-    buildStart() {
-    },
-    resolveId() {
-    },
-    load(id) {
+    async load(id) {
       const code = fs.readFileSync(id, { encoding: 'utf-8' })
       const str = new MagicString(code)
       const _index = code.indexOf('msg')
@@ -42,12 +38,6 @@ module.exports = createUnplugin((options) => {
           includeContent: true,
         }),
       }
-    },
-    watchChange() {
-    },
-    buildEnd() {
-    },
-    writeBundle() {
     },
   }
 })

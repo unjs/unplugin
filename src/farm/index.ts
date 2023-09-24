@@ -1,4 +1,3 @@
-import fs from 'fs'
 import path from 'path'
 import type {
   PluginLoadHookParam,
@@ -7,9 +6,10 @@ import type {
   PluginTransformHookParam,
   PluginTransformHookResult,
 } from '@farmfe/core/binding'
-import type { JsPlugin } from '@farmfe/core'
+import type { CompilationContext, JsPlugin } from '@farmfe/core'
 import type {
   TransformResult,
+  UnpluginContext,
   UnpluginContextMeta,
   UnpluginFactory,
   UnpluginInstance,
@@ -25,6 +25,7 @@ import {
   resolveQuery,
   transformQuery,
 } from './utils'
+import { createFarmContext } from './context'
 
 export function getFarmPlugin<
   UserOptions = Record<string, never>, Nested extends boolean = boolean,
@@ -43,7 +44,7 @@ export function getFarmPlugin<
     })
 
     return plugins.length === 1 ? plugins[0] : plugins
-  }) as UnpluginInstance<UserOptions, Nested>['rollup']
+  }) as UnpluginInstance<UserOptions>['farm']
 }
 
 export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
@@ -64,8 +65,8 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   if (plugin.buildStart) {
     const _buildStart = plugin.buildStart
     farmPlugin.buildStart = {
-      async executor(_, hook) {
-        await _buildStart.call(hook)
+      async executor(_, context) {
+        await _buildStart.call(createFarmContext(context!))
       },
     } as JsPlugin['buildStart']
   }
@@ -84,23 +85,32 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           const kindWithEntry = params.kind as { entry: string }
           isEntry = kindWithEntry.entry === 'index'
         }
-        const resolvedPath = await _resolveId(
+        const resolveIdResult = await _resolveId(
           params.source,
           resolvedIdPath ?? null,
           { isEntry },
         )
-        if (resolvedPath && typeof resolvedPath === 'string') {
+        if (typeof resolveIdResult === 'string') {
           return {
-            resolvedPath,
-            query: [], // TODO queryString
+            resolvedPath: resolveIdResult,
+            query: resolveQuery(resolveIdResult),
             sideEffects: false,
             external: false,
             meta: {},
           }
         }
+        else if (typeof resolveIdResult === 'object') {
+          return {
+            resolvedPath: resolveIdResult?.id,
+            query: resolveQuery(resolveIdResult!.id),
+            sideEffects: false,
+            external: resolveIdResult?.external,
+            meta: {},
+          }
+        }
         return null
       },
-    } as JsPlugin['resolve']
+    } as unknown as JsPlugin['resolve']
   }
 
   if (plugin.load) {
@@ -111,16 +121,30 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
       },
       async executor(
         id: PluginLoadHookParam,
+        context,
       ): Promise<PluginLoadHookResult | null> {
         if (plugin.loadInclude && !plugin.loadInclude(id.resolvedPath))
           return null
         const loader = guessIdLoader(id.resolvedPath)
         const shouldLoadInclude
           = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
-        const content: TransformResult = await _load.call(this, id.resolvedPath)
+        const farmContext = createFarmContext(context!, id.resolvedPath)
+        const unpluginContext: UnpluginContext = {
+          error: error =>
+            context!.error(
+              typeof error === 'string' ? new Error(error) : error,
+            ),
+          warn: error =>
+            context!.warn(typeof error === 'string' ? new Error(error) : error),
+        }
+
+        const content: TransformResult = await _load.call(
+          Object.assign(unpluginContext, farmContext),
+          id.resolvedPath,
+        )
         const loadFarmResult: PluginLoadHookResult = {
           // TODO maybe sourcemap resolve
-          content: typeof content === 'string' ? content : content!.code,
+          content: getContentValue(content),
           moduleType: loader,
         }
         if (shouldLoadInclude)
@@ -135,7 +159,10 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _transform = plugin.transform
     farmPlugin.transform = {
       filters: { resolvedPaths: ['.*'] },
-      async executor(params: PluginTransformHookParam) {
+      async executor(
+        params: PluginTransformHookParam,
+        context: CompilationContext,
+      ) {
         if (params.query.length)
           transformQuery(params)
 
@@ -149,15 +176,23 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const shouldTransformInclude
           = plugin.transformInclude
           && plugin.transformInclude(params.resolvedPath)
+        const farmContext = createFarmContext(context, params.resolvedPath)
+        const unpluginContext: UnpluginContext = {
+          error: error =>
+            context.error(typeof error === 'string' ? new Error(error) : error),
+          warn: error =>
+            context.warn(typeof error === 'string' ? new Error(error) : error),
+        }
+
         const resource: TransformResult = await _transform.call(
-          this,
+          Object.assign(unpluginContext, farmContext),
           params.content,
           params.resolvedPath,
         )
 
         if (resource && typeof resource !== 'string') {
           const transformFarmResult: PluginTransformHookResult = {
-            content: typeof resource === 'string' ? resource : resource!.code,
+            content: getContentValue(resource),
             moduleType: loader,
             sourceMap: JSON.stringify(resource.map),
           }
@@ -173,14 +208,16 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   if (plugin.watchChange) {
     const _watchChange = plugin.watchChange
     farmPlugin.updateModules = {
-      async executor(param) {
+      async executor(param, context) {
         // To be compatible with unplugin, we ensure that only one file is changed at a time.
         const updatePathContent = param.paths[0]
         const ModifiedPath = updatePathContent[0]
         const eventChange = convertWatchEventChange(
           updatePathContent[1] as WatchChangeEvents,
         )
-        await _watchChange.call(this, ModifiedPath, { event: eventChange })
+        await _watchChange.call(createFarmContext(context!), ModifiedPath, {
+          event: eventChange,
+        })
       },
     } as JsPlugin['updateModules']
   }
@@ -189,7 +226,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _buildEnd = plugin.buildEnd
     farmPlugin.buildEnd = {
       async executor(_, context) {
-        await _buildEnd.call(context)
+        await _buildEnd.call(createFarmContext(context!))
       },
     } as JsPlugin['buildEnd']
   }
@@ -205,17 +242,3 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
 
   return farmPlugin
 }
-
-/**
- * Degree of completion
- * enforce ✅
- * buildStart ✅
- * resolveId ✅
- * loadInclude ✅
- * load ✅
- * transformInclude ✅
- * transform ✅
- * watchChange ✅
- * buildEnd ✅
- * writeBundle ✅
- */
