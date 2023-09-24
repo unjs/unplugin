@@ -52,15 +52,15 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     name: plugin.name,
     priority: convertEnforceToPriority(plugin.enforce),
   }
-
-  if (plugin.farm?.config)
-    farmPlugin.config = plugin.farm.config
-
-  if (plugin.farm?.configDevServer)
-    farmPlugin.configDevServer = plugin.farm.configDevServer
-
-  if (plugin.farm?.updateModules)
-    farmPlugin.updateModules = plugin.farm.updateModules
+  if (plugin.farm) {
+    const { config, configDevServer, updateModules } = plugin.farm
+    if (config)
+      farmPlugin.config = config
+    if (configDevServer)
+      farmPlugin.configDevServer = configDevServer
+    if (updateModules)
+      farmPlugin.updateModules = updateModules
+  }
 
   if (plugin.buildStart) {
     const _buildStart = plugin.buildStart
