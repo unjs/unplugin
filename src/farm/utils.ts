@@ -60,10 +60,6 @@ export function convertWatchEventChange(
   return watchEventChange[value]
 }
 
-export function resolveQuery(url: string) {
-  return querystring.parse(new URL(url).search.slice(1))
-}
-
 export function getContentValue(content: TransformResult): string {
   return typeof content === 'string' ? content : content!.code
 }
@@ -74,4 +70,19 @@ export function isString(variable: unknown): variable is string {
 
 export function isObject(variable: unknown): variable is object {
   return typeof variable === 'object' && variable !== null
+}
+
+export function customParseQueryString(url: string | null) {
+  if (!url)
+    return []
+
+  const queryString = url.split('?')[1]
+
+  const parsedParams = querystring.parse(queryString)
+  const paramsArray = []
+
+  for (const key in parsedParams)
+    paramsArray.push([key, parsedParams[key]])
+
+  return paramsArray
 }

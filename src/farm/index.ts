@@ -20,11 +20,11 @@ import type { WatchChangeEvents } from './utils'
 import {
   convertEnforceToPriority,
   convertWatchEventChange,
+  customParseQueryString,
   getContentValue,
   guessIdLoader,
   isObject,
   isString,
-  resolveQuery,
   transformQuery,
 } from './utils'
 import { createFarmContext } from './context'
@@ -95,7 +95,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         if (isString(resolveIdResult)) {
           return {
             resolvedPath: resolveIdResult,
-            query: resolveQuery(resolveIdResult),
+            query: customParseQueryString(resolveIdResult),
             sideEffects: false,
             external: false,
             meta: {},
@@ -104,7 +104,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         else if (isObject(resolveIdResult)) {
           return {
             resolvedPath: resolveIdResult?.id,
-            query: resolveQuery(resolveIdResult!.id),
+            query: customParseQueryString(resolveIdResult!.id),
             sideEffects: false,
             external: resolveIdResult?.external,
             meta: {},
