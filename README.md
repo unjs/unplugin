@@ -13,7 +13,7 @@ Currently supports:
 - [Webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/) (⚠️ experimental)
-- [Farm](https://farm-fe.github.io/)
+- [Farm](https://farm-fe.github.io/) (⚠️ experimental)
 
 ## Hooks
 
@@ -23,7 +23,7 @@ Currently supports:
 
 | Hook                                                                    |      Rollup      | Vite  | Webpack 4 |   Webpack 5    |    esbuild     | Rspack | Farm  |
 | ----------------------------------------------------------------------- | :-------------: | :--: | :-------: | :-------: | :------------: | :----: | :--: |
-| [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     |       ❌ <sup>1</sup>        |   ✅    |  ✅  |
+| [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ✅    |  ✅  |
 | [`buildStart`](https://rollupjs.org/guide/en/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅    |  ✅  |
 | [`resolveId`](https://rollupjs.org/guide/en/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌    |  ✅  |
 | `loadInclude`<sup>2</sup>                                               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅    |  ✅  |
@@ -39,7 +39,7 @@ Currently supports:
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 
-> **Warning**: The [Rspack](https://www.rspack.dev/) support is experimental. Future changes to Rspack integrations might not follow semver, please pin `unplugin` in your dependency when using. It's not recommended to use in production.
+> **Warning**: The support for [Rspack](https://www.rspack.dev/) and [Farm](https://farm-fe.github.io/) is currently in an experimental stage. Please note that future changes to the integration of Rspack and farm may not strictly adhere to semantic versioning (semver), please pin `unplugin` in your dependency when using. It's not recommended to use in production.
 
 ### Hook Context
 
@@ -131,9 +131,7 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.vite({
-      /* options */
-    }),
+    UnpluginFeature.vite({ /* options */ }),
   ],
 }
 ```
@@ -146,9 +144,7 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.rollup({
-      /* options */
-    }),
+    UnpluginFeature.rollup({ /* options */ }),
   ],
 }
 ```
@@ -159,9 +155,7 @@ export default {
 // webpack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').webpack({
-      /* options */
-    }),
+    require('./unplugin-feature').webpack({ /* options */ }),
   ],
 }
 ```
@@ -174,12 +168,11 @@ import { build } from 'esbuild'
 
 build({
   plugins: [
-    require('./unplugin-feature').esbuild({
-      /* options */
-    }),
+    require('./unplugin-feature').esbuild({ /* options */ }),
   ],
 })
 ```
+
 
 ###### Rspack
 
@@ -187,9 +180,7 @@ build({
 // rspack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').rspack({
-      /* options */
-    }),
+    require('./unplugin-feature').rspack({ /* options */ }),
   ],
 }
 ```
@@ -202,9 +193,7 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.farm({
-      /* options */
-    }),
+    UnpluginFeature.farm({ /* options */ }),
   ],
 }
 ```
@@ -220,12 +209,8 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
   return {
     // Common unplugin hooks
     name: 'unplugin-prefixed-name',
-    transformInclude(id) {
-      /* ... */
-    },
-    transform(code) {
-      /* ... */
-    },
+    transformInclude(id) { /* ... */ },
+    transform(code) { /* ... */ },
 
     // Framework specific hooks
     vite: {
@@ -248,9 +233,11 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
       // Change the filter of onResolve and onLoad
       // onResolveFilter?: RegExp,
       // onLoadFilter?: RegExp,
+
       // Tell esbuild how to interpret the contents. By default unplugin tries to guess the loader
       // from file extension (eg: .js -> "js", .jsx -> 'jsx')
       // loader?: (Loader | (code: string, id: string) => Loader)
+
       // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,
     },
@@ -281,24 +268,12 @@ import {
   createWebpackPlugin,
 } from 'unplugin'
 
-const vitePlugin = createVitePlugin({
-  /* options */
-})
-const rollupPlugin = createRollupPlugin({
-  /* options */
-})
-const esbuildPlugin = createEsbuildPlugin({
-  /* options */
-})
-const webpackPlugin = createWebpackPlugin({
-  /* options */
-})
-const rspackPlugin = createRspackPlugin({
-  /* options */
-})
-const farmPlugin = createFarmPlugin({
-  /* options */
-})
+const vitePlugin = createVitePlugin({ /* options */ })
+const rollupPlugin = createRollupPlugin({ /* options */ })
+const esbuildPlugin = createEsbuildPlugin({ /* options */ })
+const webpackPlugin = createWebpackPlugin({ /* options */ })
+const rspackPlugin = createRspackPlugin({ /* options */ })
+const farmPlugin = createFarmPlugin({ /* options */ })
 ```
 
 ## Conventions
