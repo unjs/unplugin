@@ -21,7 +21,7 @@ Currently supports:
 
 ###### Supported
 
-| Hook                                                                    |      Rollup      | Vite  | Webpack 4 |   Webpack 5    |    esbuild     | Rspack | Farm  |
+| Hook                                                                    |     Rollup      | Vite | Webpack 4 | Webpack 5    |   esbuild     | Rspack | Farm  |
 | ----------------------------------------------------------------------- | :-------------: | :--: | :-------: | :-------: | :------------: | :----: | :--: |
 | [`enforce`](https://rollupjs.org/guide/en/#enforce)                     | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ✅    |  ✅  |
 | [`buildStart`](https://rollupjs.org/guide/en/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅    |  ✅  |
