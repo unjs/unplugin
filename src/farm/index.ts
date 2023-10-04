@@ -160,7 +160,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   if (plugin.transform) {
     const _transform = plugin.transform
     farmPlugin.transform = {
-      filters: { resolvedPaths: ['.*'] },
+      filters: { resolvedPaths: ['.*'], moduleTypes: ['.*'] },
       async executor(
         params: PluginTransformHookParam,
         context: CompilationContext,
