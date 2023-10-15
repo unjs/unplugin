@@ -48,7 +48,7 @@ export interface UnpluginOptions {
   buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void
   transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
   load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
+  resolveId?: (this: UnpluginBuildContext & UnpluginContext, id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
   watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
 
   // Output Generation Hooks
@@ -123,6 +123,9 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
 })
 
 export interface UnpluginContext {
+  // Optional overrides for UnpluginBuildContext
+  addWatchFile?: (id: string) => void
+  getWatchFiles?: () => string[]
   error(message: any): void
   warn(message: any): void
 }

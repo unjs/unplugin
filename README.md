@@ -47,13 +47,14 @@ Currently supports:
 | Hook                                                                       | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild | Rspack |
 | -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :-----: | :----: |
 | [`this.parse`](https://rollupjs.org/guide/en/#thisparse)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |
+| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ❌   |
 | [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |
+| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅<sup>6</sup>    |   ❌   |
 | [`this.warn`](https://rollupjs.org/guide/en/#thiswarn)                     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
 | [`this.error`](https://rollupjs.org/guide/en/#thiserror)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
 
 5. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
+6. Currently, in esbuild, [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) returns an array of only the files explicitly watched via[`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile).
 
 ## Usage
 

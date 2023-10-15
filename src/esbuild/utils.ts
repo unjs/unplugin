@@ -4,9 +4,9 @@ import { Buffer } from 'buffer'
 import remapping from '@ampproject/remapping'
 import { Parser } from 'acorn'
 import type { DecodedSourceMap, EncodedSourceMap } from '@ampproject/remapping'
-import type { BuildOptions, Loader } from 'esbuild'
+import type { BuildOptions, Loader, PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
-import type { UnpluginBuildContext } from '../types'
+import type { UnpluginBuildContext, UnpluginContext } from '../types'
 
 export * from '../utils'
 
@@ -121,6 +121,7 @@ export function createEsbuildContext(initialOptions: BuildOptions): UnpluginBuil
       })
     },
     addWatchFile() {
+      // no-op outside supported hooks (resolveId, load, transform)
     },
     emitFile(emittedFile) {
       // Ensure output directory exists for this.emitFile
@@ -132,9 +133,28 @@ export function createEsbuildContext(initialOptions: BuildOptions): UnpluginBuil
         fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
     },
     getWatchFiles() {
+      // no-op outside supported hooks (resolveId, load, transform)
       return []
     },
   }
+}
+
+export function createEsbuildPluginContext(): {
+  errors: PartialMessage[]
+  warnings: PartialMessage[]
+  watchFiles: string[]
+  pluginContext: UnpluginContext
+} {
+  const errors: PartialMessage[] = []
+  const warnings: PartialMessage[] = []
+  const watchFiles: string[] = []
+  const pluginContext: UnpluginContext = {
+    addWatchFile(id) { watchFiles.push(id) },
+    getWatchFiles() { return watchFiles },
+    error(message) { errors.push({ text: String(message) }) },
+    warn(message) { warnings.push({ text: String(message) }) },
+  }
+  return { errors, warnings, watchFiles, pluginContext }
 }
 
 export function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string) {
