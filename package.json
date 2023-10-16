@@ -59,7 +59,7 @@
     "lint-staged": "^14.0.1",
     "magic-string": "^0.30.3",
     "picocolors": "^1.0.0",
-    "rollup": "^3.29.2",
+    "rollup": "^4.1.4",
     "simple-git-hooks": "^2.9.0",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
