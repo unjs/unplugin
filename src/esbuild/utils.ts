@@ -121,7 +121,7 @@ export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildC
       })
     },
     addWatchFile() {
-      // no-op outside supported hooks (resolveId, load, transform)
+      console.warn('unplugin/esbuild: addWatchFile is no-op outside supported hooks (resolveId, load, transform)')
     },
     emitFile(emittedFile) {
       // Ensure output directory exists for this.emitFile
@@ -133,7 +133,6 @@ export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildC
         fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
     },
     getWatchFiles() {
-      // no-op outside supported hooks (resolveId, load, transform)
       return []
     },
   }
