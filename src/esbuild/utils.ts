@@ -110,7 +110,7 @@ export function combineSourcemaps(
   return map as EncodedSourceMap
 }
 
-export function createEsbuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
+export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -139,22 +139,25 @@ export function createEsbuildContext(initialOptions: BuildOptions): UnpluginBuil
   }
 }
 
-export function createEsbuildPluginContext(): {
-  errors: PartialMessage[]
-  warnings: PartialMessage[]
-  watchFiles: string[]
-  pluginContext: UnpluginContext
-} {
+export function createPluginContext() {
   const errors: PartialMessage[] = []
   const warnings: PartialMessage[] = []
   const watchFiles: string[] = []
   const pluginContext: UnpluginContext = {
-    addWatchFile(id) { watchFiles.push(id) },
-    getWatchFiles() { return watchFiles },
     error(message) { errors.push({ text: String(message) }) },
     warn(message) { warnings.push({ text: String(message) }) },
   }
-  return { errors, warnings, watchFiles, pluginContext }
+  const buildContext: Partial<UnpluginBuildContext> = {
+    addWatchFile(id) { watchFiles.push(id) },
+    getWatchFiles() { return watchFiles },
+  }
+  return {
+    errors,
+    warnings,
+    watchFiles,
+    pluginContext,
+    buildContext,
+  }
 }
 
 export function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string) {

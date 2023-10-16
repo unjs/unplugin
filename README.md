@@ -44,17 +44,17 @@ Currently supports:
 
 ###### Supported
 
-| Hook                                                                       | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild | Rspack |
-| -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :-----: | :----: |
-| [`this.parse`](https://rollupjs.org/guide/en/#thisparse)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ❌   |
-| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅<sup>6</sup>    |   ❌   |
-| [`this.warn`](https://rollupjs.org/guide/en/#thiswarn)                     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.error`](https://rollupjs.org/guide/en/#thiserror)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
+| Hook                                                                       | Rollup | Vite | Webpack 4 | Webpack 5 |    esbuild     | Rspack |
+| -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :------------: | :----: |
+| [`this.parse`](https://rollupjs.org/guide/en/#thisparse)                   |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
+| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ❌   |
+| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
+| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     | ✅<sup>6</sup> |   ❌   |
+| [`this.warn`](https://rollupjs.org/guide/en/#thiswarn)                     |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
+| [`this.error`](https://rollupjs.org/guide/en/#thiserror)                   |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
 
 5. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
-6. Currently, in esbuild, [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) returns an array of only the files explicitly watched via[`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile).
+6. Currently, in esbuild, [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) returns an array of only the files explicitly watched via [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile).
 
 ## Usage
 
@@ -130,7 +130,9 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.vite({ /* options */ }),
+    UnpluginFeature.vite({
+      /* options */
+    }),
   ],
 }
 ```
@@ -143,7 +145,9 @@ import UnpluginFeature from './unplugin-feature'
 
 export default {
   plugins: [
-    UnpluginFeature.rollup({ /* options */ }),
+    UnpluginFeature.rollup({
+      /* options */
+    }),
   ],
 }
 ```
@@ -154,7 +158,9 @@ export default {
 // webpack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').webpack({ /* options */ }),
+    require('./unplugin-feature').webpack({
+      /* options */
+    }),
   ],
 }
 ```
@@ -167,11 +173,12 @@ import { build } from 'esbuild'
 
 build({
   plugins: [
-    require('./unplugin-feature').esbuild({ /* options */ }),
+    require('./unplugin-feature').esbuild({
+      /* options */
+    }),
   ],
 })
 ```
-
 
 ###### Rspack
 
@@ -179,7 +186,9 @@ build({
 // rspack.config.js
 module.exports = {
   plugins: [
-    require('./unplugin-feature').rspack({ /* options */ }),
+    require('./unplugin-feature').rspack({
+      /* options */
+    }),
   ],
 }
 ```
@@ -195,8 +204,12 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
   return {
     // Common unplugin hooks
     name: 'unplugin-prefixed-name',
-    transformInclude(id) { /* ... */ },
-    transform(code) { /* ... */ },
+    transformInclude(id) {
+      /* ... */
+    },
+    transform(code) {
+      /* ... */
+    },
 
     // Framework specific hooks
     vite: {
@@ -219,11 +232,9 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
       // Change the filter of onResolve and onLoad
       // onResolveFilter?: RegExp,
       // onLoadFilter?: RegExp,
-
       // Tell esbuild how to interpret the contents. By default unplugin tries to guess the loader
       // from file extension (eg: .js -> "js", .jsx -> 'jsx')
       // loader?: (Loader | (code: string, id: string) => Loader)
-
       // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,
     },
@@ -242,14 +253,24 @@ import {
   createRollupPlugin,
   createRspackPlugin,
   createVitePlugin,
-  createWebpackPlugin
+  createWebpackPlugin,
 } from 'unplugin'
 
-const vitePlugin = createVitePlugin({ /* options */ })
-const rollupPlugin = createRollupPlugin({ /* options */ })
-const esbuildPlugin = createEsbuildPlugin({ /* options */ })
-const webpackPlugin = createWebpackPlugin({ /* options */ })
-const rspackPlugin = createRspackPlugin({ /* options */ })
+const vitePlugin = createVitePlugin({
+  /* options */
+})
+const rollupPlugin = createRollupPlugin({
+  /* options */
+})
+const esbuildPlugin = createEsbuildPlugin({
+  /* options */
+})
+const webpackPlugin = createWebpackPlugin({
+  /* options */
+})
+const rspackPlugin = createRspackPlugin({
+  /* options */
+})
 ```
 
 ## Conventions

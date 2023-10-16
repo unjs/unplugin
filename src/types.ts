@@ -123,9 +123,6 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
 })
 
 export interface UnpluginContext {
-  // Optional overrides for UnpluginBuildContext
-  addWatchFile?: (id: string) => void
-  getWatchFiles?: () => string[]
   error(message: any): void
   warn(message: any): void
 }

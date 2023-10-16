@@ -3,7 +3,7 @@ import path from 'path'
 import type { SourceMap } from 'rollup'
 import type { RawSourceMap } from '@ampproject/remapping'
 import type { EsbuildPlugin, UnpluginBuildContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
-import { combineSourcemaps, createEsbuildContext, createEsbuildPluginContext, guessLoader, processCodeWithSourceMap, toArray, unwrapLoader } from './utils'
+import { combineSourcemaps, createBuildContext, createPluginContext, guessLoader, processCodeWithSourceMap, toArray, unwrapLoader } from './utils'
 
 let i = 0
 
@@ -26,7 +26,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
         const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
         const loader = plugin.esbuild?.loader ?? guessLoader
 
-        const context: UnpluginBuildContext = createEsbuildContext(initialOptions)
+        const context: UnpluginBuildContext = createBuildContext(initialOptions)
 
         if (plugin.buildStart)
           onStart(() => plugin.buildStart!.call(context))
@@ -49,11 +49,11 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               return undefined
             }
 
-            const { errors, warnings, watchFiles, pluginContext } = createEsbuildPluginContext()
+            const { errors, warnings, watchFiles, pluginContext, buildContext } = createPluginContext()
 
             const isEntry = args.kind === 'entry-point'
             const result = await plugin.resolveId!.call(
-              { ...context, ...pluginContext },
+              { ...context, ...pluginContext, ...buildContext },
               args.path,
               // We explicitly have this if statement here for consistency with the integration of other bundlers.
               // Here, `args.importer` is just an empty string on entry files whereas the equivalent on other bundlers is `undefined.`
@@ -71,7 +71,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
           onLoad({ filter: onLoadFilter }, async (args) => {
             const id = args.path + args.suffix
 
-            const { errors, warnings, watchFiles, pluginContext } = createEsbuildPluginContext()
+            const { errors, warnings, watchFiles, pluginContext, buildContext } = createPluginContext()
 
             // because we use `namespace` to simulate virtual modules，
             // it is required to forward `resolveDir` for esbuild to find dependencies.
@@ -80,7 +80,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             let code: string | undefined, map: SourceMap | null | undefined
 
             if (plugin.load && (!plugin.loadInclude || plugin.loadInclude(id))) {
-              const result = await plugin.load.call({ ...context, ...pluginContext }, id)
+              const result = await plugin.load.call({ ...context, ...pluginContext, ...buildContext }, id)
               if (typeof result === 'string') {
                 code = result
               }
@@ -108,7 +108,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
                 code = await fs.promises.readFile(args.path, 'utf8')
               }
 
-              const result = await plugin.transform.call({ ...context, ...pluginContext }, code, id)
+              const result = await plugin.transform.call({ ...context, ...pluginContext, ...buildContext }, code, id)
               if (typeof result === 'string') {
                 code = result
               }
