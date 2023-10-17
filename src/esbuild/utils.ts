@@ -123,7 +123,7 @@ export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildC
       })
     },
     addWatchFile() {
-      console.warn('unplugin/esbuild: addWatchFile is no-op outside supported hooks (resolveId, load, transform)')
+      throw new Error('unplugin/esbuild: addWatchFile outside supported hooks (resolveId, load, transform)')
     },
     emitFile(emittedFile) {
       // Ensure output directory exists for this.emitFile
