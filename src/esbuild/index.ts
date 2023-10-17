@@ -49,21 +49,36 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               return undefined
             }
 
-            const { errors, warnings, watchFiles, pluginContext, buildContext } = createPluginContext()
+            const { errors, warnings, mixedContext } = createPluginContext(context)
 
             const isEntry = args.kind === 'entry-point'
             const result = await plugin.resolveId!.call(
-              { ...context, ...pluginContext, ...buildContext },
+              mixedContext,
               args.path,
               // We explicitly have this if statement here for consistency with the integration of other bundlers.
               // Here, `args.importer` is just an empty string on entry files whereas the equivalent on other bundlers is `undefined.`
               isEntry ? undefined : args.importer,
               { isEntry },
             )
-            if (typeof result === 'string')
-              return { path: result, namespace: plugin.name, errors, warnings, watchFiles }
-            else if (typeof result === 'object' && result !== null)
-              return { path: result.id, external: result.external, namespace: plugin.name, errors, warnings, watchFiles }
+            if (typeof result === 'string') {
+              return {
+                path: result,
+                namespace: plugin.name,
+                errors,
+                warnings,
+                watchFiles: mixedContext.getWatchFiles(),
+              }
+            }
+            else if (typeof result === 'object' && result !== null) {
+              return {
+                path: result.id,
+                external: result.external,
+                namespace: plugin.name,
+                errors,
+                warnings,
+                watchFiles: mixedContext.getWatchFiles(),
+              }
+            }
           })
         }
 
@@ -71,7 +86,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
           onLoad({ filter: onLoadFilter }, async (args) => {
             const id = args.path + args.suffix
 
-            const { errors, warnings, watchFiles, pluginContext, buildContext } = createPluginContext()
+            const { errors, warnings, mixedContext } = createPluginContext(context)
 
             // because we use `namespace` to simulate virtual modules，
             // it is required to forward `resolveDir` for esbuild to find dependencies.
@@ -80,7 +95,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             let code: string | undefined, map: SourceMap | null | undefined
 
             if (plugin.load && (!plugin.loadInclude || plugin.loadInclude(id))) {
-              const result = await plugin.load.call({ ...context, ...pluginContext, ...buildContext }, id)
+              const result = await plugin.load.call(mixedContext, id)
               if (typeof result === 'string') {
                 code = result
               }
@@ -97,7 +112,14 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               if (map)
                 code = processCodeWithSourceMap(map, code)
 
-              return { contents: code, errors, warnings, watchFiles, loader: unwrapLoader(loader, code, args.path), resolveDir }
+              return {
+                contents: code,
+                errors,
+                warnings,
+                watchFiles: mixedContext.getWatchFiles(),
+                loader: unwrapLoader(loader, code, args.path),
+                resolveDir,
+              }
             }
 
             if (!plugin.transformInclude || plugin.transformInclude(id)) {
@@ -108,7 +130,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
                 code = await fs.promises.readFile(args.path, 'utf8')
               }
 
-              const result = await plugin.transform.call({ ...context, ...pluginContext, ...buildContext }, code, id)
+              const result = await plugin.transform.call(mixedContext, code, id)
               if (typeof result === 'string') {
                 code = result
               }
@@ -132,7 +154,14 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             if (code) {
               if (map)
                 code = processCodeWithSourceMap(map, code)
-              return { contents: code, errors, warnings, watchFiles, loader: unwrapLoader(loader, code, args.path), resolveDir }
+              return {
+                contents: code,
+                errors,
+                warnings,
+                watchFiles: mixedContext.getWatchFiles(),
+                loader: unwrapLoader(loader, code, args.path),
+                resolveDir,
+              }
             }
           })
         }

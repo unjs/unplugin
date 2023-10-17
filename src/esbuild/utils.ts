@@ -111,6 +111,8 @@ export function combineSourcemaps(
 }
 
 export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
+  const watchFiles: string[] = []
+
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -133,29 +135,31 @@ export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildC
         fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
     },
     getWatchFiles() {
-      return []
+      return watchFiles
     },
   }
 }
 
-export function createPluginContext() {
+export function createPluginContext(context: UnpluginBuildContext) {
   const errors: PartialMessage[] = []
   const warnings: PartialMessage[] = []
-  const watchFiles: string[] = []
   const pluginContext: UnpluginContext = {
     error(message) { errors.push({ text: String(message) }) },
     warn(message) { warnings.push({ text: String(message) }) },
   }
-  const buildContext: Partial<UnpluginBuildContext> = {
-    addWatchFile(id) { watchFiles.push(id) },
-    getWatchFiles() { return watchFiles },
+
+  const mixedContext: UnpluginContext & UnpluginBuildContext = {
+    ...context,
+    ...pluginContext,
+    addWatchFile(id: string) {
+      context.getWatchFiles().push(id)
+    },
   }
+
   return {
     errors,
     warnings,
-    watchFiles,
-    pluginContext,
-    buildContext,
+    mixedContext,
   }
 }
 
