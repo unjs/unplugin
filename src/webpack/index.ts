@@ -90,13 +90,13 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
                     // call hook
                     const context = createContext()
-                    let error: Error
+                    let error: Error | undefined
                     const pluginContext: UnpluginContext = {
                       error(msg: string | Error) {
-                        if (error)
-                          console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
-                        else
+                        if (error == null)
                           error = typeof msg === 'string' ? new Error(msg) : msg
+                        else
+                          console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
                       },
                       warn(msg) {
                         console.warn(`unplugin/webpack: warning from resolveId hook: ${msg}`)
@@ -104,6 +104,8 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     }
                     const resolveIdResult = await plugin.resolveId!.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
 
+                    if (error != null)
+                      return callback(error)
                     if (resolveIdResult == null)
                       return callback()
 
