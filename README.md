@@ -47,14 +47,15 @@ Currently supports:
 | Hook                                                                       | Rollup | Vite | Webpack 4 | Webpack 5 |    esbuild     | Rspack |
 | -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :------------: | :----: |
 | [`this.parse`](https://rollupjs.org/guide/en/#thisparse)                   |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
-| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     | ✅<sup>6</sup> |   ❌   |
-| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
-| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     | ✅<sup>6</sup> |   ❌   |
+| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  | ✅<sup>6</sup> |    ✅     | ✅<sup>7</sup> |   ❌   |
+| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  | ✅<sup>6</sup> |    ✅     |       ✅       |   ✅   |
+| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  | ✅<sup>6</sup> |    ✅     | ✅<sup>7</sup> |   ❌   |
 | [`this.warn`](https://rollupjs.org/guide/en/#thiswarn)                     |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
 | [`this.error`](https://rollupjs.org/guide/en/#thiserror)                   |   ✅   |  ✅  |    ✅     |    ✅     |       ✅       |   ✅   |
 
 5. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
-6. Currently, in esbuild, [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisgetwatchfiles) and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) are supported only within `resolveId`, `load`, and `transform` hooks; and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) returns an array of only the files explicitly watched via [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) during the same resolve step (`resolveId` hook) or load step (`load` and `transform` hooks).
+6. Currently, in Webpack, [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisgetwatchfiles), [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile), and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) are not supported within `resolveId` hooks.
+7. Currently, in esbuild, [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisgetwatchfiles) and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) are supported only within `resolveId`, `load`, and `transform` hooks; and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) returns an array of only the files explicitly watched via [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) during the same resolve step (`resolveId` hook) or load step (`load` and `transform` hooks).
 
 ## Usage
 

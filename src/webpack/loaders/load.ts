@@ -21,7 +21,7 @@ export default async function load(this: LoaderContext<any>, source: string, map
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
   const res = await plugin.load.call(
-    Object.assign(this._compilation && createContext(this._compilation) as any, context),
+    { ...this._compilation && createContext(this._compilation) as any, ...context },
     normalizeAbsolutePath(id),
   )
 

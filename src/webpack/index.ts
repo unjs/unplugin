@@ -2,8 +2,8 @@ import fs from 'fs'
 import { resolve } from 'path'
 import process from 'process'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
-import type { ResolvedUnpluginOptions, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
+import type { ResolvePluginInstance, Resolver, RuleSetUseItem } from 'webpack'
+import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import { normalizeAbsolutePath, toArray } from '../utils'
 import { createContext } from './context'
 
@@ -69,7 +69,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
             plugin.__vfs = vfs
 
             const resolverPlugin: ResolvePluginInstance = {
-              apply(resolver) {
+              apply(resolver: Resolver) {
                 const target = resolver.ensureHook('resolve')
 
                 resolver
@@ -89,7 +89,20 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const isEntry = requestContext.issuer === ''
 
                     // call hook
-                    const resolveIdResult = await plugin.resolveId!(id, importer, { isEntry })
+                    const context = createContext()
+                    let error: Error
+                    const pluginContext: UnpluginContext = {
+                      error(msg: string | Error) {
+                        if (error)
+                          console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
+                        else
+                          error = typeof msg === 'string' ? new Error(msg) : msg
+                      },
+                      warn(msg) {
+                        console.warn(`unplugin/webpack: warning from resolveId hook: ${msg}`)
+                      },
+                    }
+                    const resolveIdResult = await plugin.resolveId!.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
 
                     if (resolveIdResult == null)
                       return callback()
