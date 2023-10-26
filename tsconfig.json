@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "target": "ESNext",
+    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "esModuleInterop": true,
-    "strict": true,
-    "declaration": true,
-    "resolveJsonModule": true,
-    "types": [
-      "node"
-    ],
     "paths": {
       "unplugin": [
         "./src/index.ts"
       ]
-    }
+    },
+    "resolveJsonModule": true,
+    "types": [
+      "node"
+    ],
+    "strict": true,
+    "declaration": true,
+    "esModuleInterop": true
   },
   "include": [
     "src",
