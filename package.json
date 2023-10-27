@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "version": "1.5.0",
-  "packageManager": "pnpm@8.9.2",
+  "packageManager": "pnpm@8.10.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "repository": "unjs/unplugin",
@@ -35,7 +35,7 @@
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
-    "acorn": "^8.10.0",
+    "acorn": "^8.11.2",
     "chokidar": "^3.5.3",
     "webpack-sources": "^3.2.3",
     "webpack-virtual-modules": "^0.6.0"
