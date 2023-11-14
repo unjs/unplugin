@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import type { RspackPluginInstance, RuleSetUseItem } from '@rspack/core'
-import { toArray } from '../utils'
+import { normalizeAbsolutePath, toArray } from '../utils'
 import type {
   UnpluginContextMeta,
   UnpluginFactory,
@@ -47,15 +47,28 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
           // transform hook
           if (plugin.transform) {
-            const use: RuleSetUseItem = {
-              loader: TRANSFORM_LOADER,
-              options: { plugin },
-            }
+            const useLoader: RuleSetUseItem[] = [
+              {
+                loader: TRANSFORM_LOADER,
+                options: { plugin },
+              },
+            ]
+            const useNone: RuleSetUseItem[] = []
 
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
-              include: /.*/,
-              use,
+              use: (data) => {
+                if (data.resource == null)
+                  return useNone
+
+                const id = normalizeAbsolutePath(
+                  data.resource + (data.resourceQuery || ''),
+                )
+                if (!plugin.transformInclude || plugin.transformInclude(id))
+                  return useLoader
+
+                return useNone
+              },
             })
           }
 
