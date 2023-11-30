@@ -31,7 +31,7 @@
     "lint:fix": "nr lint --fix",
     "prepublishOnly": "nr build",
     "release": "bumpp --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
-    "test": "nr lint && nr test:build && vitest run",
+    "test": "nr lint && nr test:build && vitest run --no-threads",
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
