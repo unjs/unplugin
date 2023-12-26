@@ -26,7 +26,8 @@ function createResolveIdHook(): Mock {
 }
 
 function checkResolveIdHook(resolveIdCallback: Mock): void {
-  expect.assertions(4 * (1 + propsToTest.length * 2))
+  if (!process.env.IS_WEBPACK_4) // Webpack 4 has different set of assertions
+    expect.assertions(4 * (1 + propsToTest.length * 2))
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     expect.stringMatching(/(?:\/|\\)entry\.js$/),
