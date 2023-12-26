@@ -28,6 +28,9 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
         const context: UnpluginBuildContext = createBuildContext(initialOptions)
 
+        if (plugin.esbuild?.config)
+          plugin.esbuild.config.call(context, initialOptions)
+
         if (plugin.buildStart)
           onStart(() => plugin.buildStart!.call(context))
 

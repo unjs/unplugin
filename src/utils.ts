@@ -48,7 +48,7 @@ export function shouldLoad(id: string, plugin: ResolvedUnpluginOptions, external
 }
 
 export function transformUse(
-  data: { resource?: string; resourceQuery?: string },
+  data: { resource?: string, resourceQuery?: string },
   plugin: ResolvedUnpluginOptions,
   transformLoader: string,
 ) {

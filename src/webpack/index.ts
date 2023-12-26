@@ -167,7 +167,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
           if (plugin.transform) {
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
-              use(data: { resource?: string; resourceQuery?: string }) {
+              use(data: { resource?: string, resourceQuery?: string }) {
                 return transformUse(data, plugin, TRANSFORM_LOADER)
               },
             })
