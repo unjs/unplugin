@@ -1,4 +1,6 @@
-import * as path from 'path' // test external modules
+import * as path from 'path'
+
+// test external modules
 import { named, proxiedDefault } from './proxy-export'
 
 // just some random code to use the imports

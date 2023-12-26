@@ -28,9 +28,9 @@ export interface SourceMapCompact {
   version: number
 }
 
-export type TransformResult = string | { code: string; map?: SourceMapInput | SourceMapCompact | null } | null | undefined
+export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined
 
-export interface ExternalIdResult { id: string; external?: boolean }
+export interface ExternalIdResult { id: string, external?: boolean }
 
 export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void
