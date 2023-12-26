@@ -1,7 +1,8 @@
 import { resolve } from 'path'
-import type { RspackPluginInstance, RuleSetUseItem } from '@rspack/core'
-import { toArray } from '../utils'
+import type { RspackPluginInstance } from '@rspack/core'
+import { shouldLoad, toArray, transformUse } from '../utils'
 import type {
+  ResolvedUnpluginOptions,
   UnpluginContextMeta,
   UnpluginFactory,
   UnpluginInstance,
@@ -10,13 +11,15 @@ import { createRspackContext } from './context'
 
 const TRANSFORM_LOADER = resolve(
   __dirname,
-  __DEV__ ? '../../dist/rspack/loaders/transform' : 'rspack/loaders/transform',
+  __DEV__ ? '../../dist/rspack/loaders/transform.js' : 'rspack/loaders/transform',
 )
 
 const LOAD_LOADER = resolve(
   __dirname,
-  __DEV__ ? '../../dist/rspack/loaders/load' : 'rspack/loaders/load',
+  __DEV__ ? '../../dist/rspack/loaders/load.js' : 'rspack/loaders/load',
 )
+
+const VIRTUAL_MODULE_PREFIX = resolve(process.cwd(), '_virtual_')
 
 export function getRspackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
@@ -24,6 +27,9 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
   return (userOptions?: UserOptions): RspackPluginInstance => {
     return {
       apply(compiler) {
+        const injected = compiler.$unpluginContext || {}
+        compiler.$unpluginContext = injected
+
         const meta: UnpluginContextMeta = {
           framework: 'rspack',
           rspack: {
@@ -31,31 +37,51 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
           },
         }
         const rawPlugins = toArray(factory(userOptions!, meta))
-        for (const plugin of rawPlugins) {
+        for (const rawPlugin of rawPlugins) {
+          const plugin = Object.assign(
+            rawPlugin,
+            {
+              __unpluginMeta: meta,
+              __virtualModulePrefix: VIRTUAL_MODULE_PREFIX,
+            },
+          ) as ResolvedUnpluginOptions
+
+          // inject context object to share with loaders
+          injected[plugin.name] = plugin
+
+          compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
+            if (typeof compilation.hooks.childCompiler === 'undefined')
+              throw new Error('`compilation.hooks.childCompiler` only support by @rspack/core>=0.4.1')
+            compilation.hooks.childCompiler.tap(plugin.name, (childCompiler) => {
+              childCompiler.$unpluginContext = injected
+            })
+          })
+
+          const externalModules = new Set<string>()
+
           // load hook
           if (plugin.load) {
-            const use: RuleSetUseItem = {
-              loader: LOAD_LOADER,
-              options: { plugin },
-            }
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
-              include: /.*/,
-              use,
+              include(id) {
+                return shouldLoad(id, plugin, externalModules)
+              },
+              use: [{
+                loader: LOAD_LOADER,
+                options: {
+                  unpluginName: plugin.name,
+                },
+              }],
             })
           }
 
           // transform hook
           if (plugin.transform) {
-            const use: RuleSetUseItem = {
-              loader: TRANSFORM_LOADER,
-              options: { plugin },
-            }
-
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
-              include: /.*/,
-              use,
+              use(data) {
+                return transformUse(data, plugin, TRANSFORM_LOADER)
+              },
             })
           }
 

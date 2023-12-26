@@ -1,4 +1,5 @@
 import { isAbsolute, normalize } from 'path'
+import type { ResolvedUnpluginOptions } from './types'
 
 /**
  * Normalizes a given path when it's absolute. Normalizing means returning a new path by converting
@@ -32,4 +33,33 @@ export function toArray<T>(array?: Nullable<Arrayable<T>>): Array<T> {
   if (Array.isArray(array))
     return array
   return [array]
+}
+
+export function shouldLoad(id: string, plugin: ResolvedUnpluginOptions, externalModules: Set<string>): boolean {
+  if (id.startsWith(plugin.__virtualModulePrefix))
+    id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
+
+  // load include filter
+  if (plugin.loadInclude && !plugin.loadInclude(id))
+    return false
+
+  // Don't run load hook for external modules
+  return !externalModules.has(id)
+}
+
+export function transformUse(
+  data: { resource?: string; resourceQuery?: string },
+  plugin: ResolvedUnpluginOptions,
+  transformLoader: string,
+) {
+  if (data.resource == null)
+    return []
+
+  const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
+  if (!plugin.transformInclude || plugin.transformInclude(id)) {
+    return [{
+      loader: `${transformLoader}?unpluginName=${encodeURIComponent(plugin.name)}`,
+    }]
+  }
+  return []
 }

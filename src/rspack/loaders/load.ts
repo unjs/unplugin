@@ -1,13 +1,13 @@
 import type { LoaderContext } from '@rspack/core'
-import type { UnpluginContext, UnpluginOptions } from '../../types'
+import type { UnpluginContext } from '../../types'
 import { createRspackContext } from '../context'
 import { normalizeAbsolutePath } from '../../utils'
 
 export default async function load(this: LoaderContext, source: string, map: any) {
   const callback = this.async()
-
+  const { unpluginName } = this.query as { unpluginName: string }
+  const plugin = this._compiler?.$unpluginContext[unpluginName]
   const id = this.resource
-  const { plugin } = this.getOptions() as { plugin: UnpluginOptions }
 
   if (!plugin?.load || !id)
     return callback(null, source, map)

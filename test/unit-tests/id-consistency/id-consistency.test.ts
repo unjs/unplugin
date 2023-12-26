@@ -63,7 +63,7 @@ function checkHookCalls(
   })
 }
 
-describe('id parameter should be consistent accross hooks and plugins', () => {
+describe('id parameter should be consistent across hooks and plugins', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
