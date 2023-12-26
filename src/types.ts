@@ -132,3 +132,9 @@ declare module 'webpack' {
     $unpluginContext: Record<string, ResolvedUnpluginOptions>
   }
 }
+
+declare module '@rspack/core' {
+  interface Compiler {
+    $unpluginContext: Record<string, ResolvedUnpluginOptions>
+  }
+}

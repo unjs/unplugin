@@ -31,7 +31,7 @@
     "lint:fix": "nr lint --fix",
     "prepublishOnly": "nr build",
     "release": "bumpp --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
-    "test": "nr lint && nr test:build && vitest run",
+    "test": "nr lint && nr test:build && vitest run --no-threads",
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
@@ -44,8 +44,8 @@
     "@ampproject/remapping": "^2.2.1",
     "@antfu/eslint-config": "^1.0.0-beta.29",
     "@antfu/ni": "^0.21.8",
-    "@rspack/cli": "^0.3.8",
-    "@rspack/core": "^0.3.8",
+    "@rspack/cli": "^0.4.1",
+    "@rspack/core": "^0.4.1",
     "@types/fs-extra": "^11.0.3",
     "@types/node": "^20.8.9",
     "@types/webpack-sources": "^3.2.2",

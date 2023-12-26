@@ -2,9 +2,9 @@ import fs from 'fs'
 import { resolve } from 'path'
 import process from 'process'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
+import type { ResolvePluginInstance } from 'webpack'
 import type { ResolvedUnpluginOptions, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
-import { normalizeAbsolutePath, toArray } from '../utils'
+import { normalizeAbsolutePath, shouldLoad, toArray, transformUse } from '../utils'
 import { createContext } from './context'
 
 const TRANSFORM_LOADER = resolve(
@@ -136,15 +136,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
           if (plugin.load) {
             compiler.options.module.rules.unshift({
               include(id) {
-                if (id.startsWith(plugin.__virtualModulePrefix))
-                  id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
-
-                // load include filter
-                if (plugin.loadInclude && !plugin.loadInclude(id))
-                  return false
-
-                // Don't run load hook for external modules
-                return !externalModules.has(id)
+                return shouldLoad(id, plugin, externalModules)
               },
               enforce: plugin.enforce,
               use: [{
@@ -158,21 +150,10 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           // transform hook
           if (plugin.transform) {
-            const useLoader: RuleSetUseItem[] = [{
-              loader: `${TRANSFORM_LOADER}?unpluginName=${encodeURIComponent(plugin.name)}`,
-            }]
-            const useNone: RuleSetUseItem[] = []
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
-              use: (data: { resource: string | null; resourceQuery: string }) => {
-                if (data.resource == null)
-                  return useNone
-
-                const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
-                if (!plugin.transformInclude || plugin.transformInclude(id))
-                  return useLoader
-
-                return useNone
+              use(data: { resource?: string; resourceQuery?: string }) {
+                return transformUse(data, plugin, TRANSFORM_LOADER)
               },
             })
           }
