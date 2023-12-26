@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [18, 20]
+        node: [16, 18, 20]
       fail-fast: false
 
     steps:
@@ -55,10 +55,10 @@ jobs:
 
       - name: Install Webpack 4
         run: pnpm i webpack@4
-        if: ${{ matrix.node != 18 }}
+        if: ${{ matrix.node == 16 }}
 
       - name: Test with Webpack 4
         run: pnpm run test
-        if: ${{ matrix.node != 18 }}
+        if: ${{ matrix.node == 16 }}
         env:
           SKIP_RSPACK: 'true'
