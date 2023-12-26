@@ -25,7 +25,8 @@ export default async function transform(this: LoaderContext<{ unpluginName: stri
   }
   const res = await plugin.transform.call(
     { ...this._compilation && createContext(this._compilation) as any, ...context },
-    source, this.resource,
+    source,
+    this.resource,
   )
 
   if (res == null)
