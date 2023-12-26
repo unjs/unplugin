@@ -4,9 +4,9 @@ import { Buffer } from 'buffer'
 import remapping from '@ampproject/remapping'
 import { Parser } from 'acorn'
 import type { DecodedSourceMap, EncodedSourceMap } from '@ampproject/remapping'
-import type { BuildOptions, Loader } from 'esbuild'
+import type { BuildOptions, Loader, PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
-import type { UnpluginBuildContext } from '../types'
+import type { UnpluginBuildContext, UnpluginContext } from '../types'
 
 export * from '../utils'
 
@@ -110,7 +110,9 @@ export function combineSourcemaps(
   return map as EncodedSourceMap
 }
 
-export function createEsbuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
+export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
+  const watchFiles: string[] = []
+
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -121,6 +123,7 @@ export function createEsbuildContext(initialOptions: BuildOptions): UnpluginBuil
       })
     },
     addWatchFile() {
+      throw new Error('unplugin/esbuild: addWatchFile outside supported hooks (resolveId, load, transform)')
     },
     emitFile(emittedFile) {
       // Ensure output directory exists for this.emitFile
@@ -132,8 +135,31 @@ export function createEsbuildContext(initialOptions: BuildOptions): UnpluginBuil
         fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
     },
     getWatchFiles() {
-      return []
+      return watchFiles
     },
+  }
+}
+
+export function createPluginContext(context: UnpluginBuildContext) {
+  const errors: PartialMessage[] = []
+  const warnings: PartialMessage[] = []
+  const pluginContext: UnpluginContext = {
+    error(message) { errors.push({ text: String(message) }) },
+    warn(message) { warnings.push({ text: String(message) }) },
+  }
+
+  const mixedContext: UnpluginContext & UnpluginBuildContext = {
+    ...context,
+    ...pluginContext,
+    addWatchFile(id: string) {
+      context.getWatchFiles().push(id)
+    },
+  }
+
+  return {
+    errors,
+    warnings,
+    mixedContext,
   }
 }
 
