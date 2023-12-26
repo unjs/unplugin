@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [16, 18]
+        node: [18, 20]
       fail-fast: false
 
     steps:
