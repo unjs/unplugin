@@ -222,6 +222,10 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
       // from file extension (eg: .js -> "js", .jsx -> 'jsx')
       // loader?: (Loader | (code: string, id: string) => Loader)
 
+      // Read and/or modify build.initialOptions
+      // [https://esbuild.github.io/plugins/#build-options]
+      // config?: (initialOptions: BuildOptions) => void
+
       // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,
     },
