@@ -1,7 +1,7 @@
 import * as path from 'path'
 import type { Mock } from 'vitest'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { UnpluginOptions, VitePlugin } from 'unplugin'
+import type { UnpluginBuildContext, UnpluginContext, UnpluginOptions, VitePlugin } from 'unplugin'
 import { createUnplugin } from 'unplugin'
 import { build, toArray } from '../utils'
 
@@ -13,8 +13,21 @@ function createUnpluginWithCallback(resolveIdCallback: UnpluginOptions['resolveI
 }
 
 // We extract this check because all bundlers should behave the same
+const propsToTest: (keyof (UnpluginContext & UnpluginBuildContext))[] = ['addWatchFile', 'emitFile', 'getWatchFiles', 'parse', 'error', 'warn']
+
+function createResolveIdHook(): Mock {
+  const mockResolveIdHook = vi.fn(function (this: UnpluginContext & UnpluginBuildContext) {
+    for (const prop of propsToTest) {
+      expect(this).toHaveProperty(prop)
+      expect(this[prop]).toBeInstanceOf(Function)
+    }
+  })
+  return mockResolveIdHook
+}
+
 function checkResolveIdHook(resolveIdCallback: Mock): void {
-  expect.assertions(4)
+  if (!process.env.IS_WEBPACK_4) // Webpack 4 has different set of assertions
+    expect.assertions(4 * (1 + propsToTest.length * 2))
 
   expect(resolveIdCallback).toHaveBeenCalledWith(
     expect.stringMatching(/(?:\/|\\)entry\.js$/),
@@ -47,7 +60,7 @@ describe('resolveId hook', () => {
   })
 
   it('vite', async () => {
-    const mockResolveIdHook = vi.fn(() => undefined)
+    const mockResolveIdHook = createResolveIdHook()
     const plugin = createUnpluginWithCallback(mockResolveIdHook).vite
     // we need to define `enforce` here for the plugin to be run
     const plugins = toArray(plugin()).map((plugin): VitePlugin => ({ ...plugin, enforce: 'pre' }))
@@ -68,7 +81,7 @@ describe('resolveId hook', () => {
   })
 
   it('rollup', async () => {
-    const mockResolveIdHook = vi.fn(() => undefined)
+    const mockResolveIdHook = createResolveIdHook()
     const plugin = createUnpluginWithCallback(mockResolveIdHook).rollup
 
     await build.rollup({
@@ -80,7 +93,7 @@ describe('resolveId hook', () => {
   })
 
   it('webpack', async () => {
-    const mockResolveIdHook = vi.fn(() => undefined)
+    const mockResolveIdHook = createResolveIdHook()
     const plugin = createUnpluginWithCallback(mockResolveIdHook).webpack
 
     await new Promise((resolve) => {
@@ -97,7 +110,7 @@ describe('resolveId hook', () => {
   })
 
   it('esbuild', async () => {
-    const mockResolveIdHook = vi.fn(() => undefined)
+    const mockResolveIdHook = createResolveIdHook()
     const plugin = createUnpluginWithCallback(mockResolveIdHook).esbuild
 
     await build.esbuild({

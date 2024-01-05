@@ -12,9 +12,9 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -33,13 +33,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [16, 18]
+        node: [16, 18, 20]
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set node version to ${{ matrix.node }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - run: corepack enable
@@ -55,10 +55,13 @@ jobs:
 
       - name: Install Webpack 4
         run: pnpm i webpack@4
-        if: ${{ matrix.node != 18 }}
+        if: ${{ matrix.node == 16 }}
+        env:
+          IS_WEBPACK_4: 'true'
 
       - name: Test with Webpack 4
         run: pnpm run test
-        if: ${{ matrix.node != 18 }}
+        if: ${{ matrix.node == 16 }}
         env:
+          IS_WEBPACK_4: 'true'
           SKIP_RSPACK: 'true'

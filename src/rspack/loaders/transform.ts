@@ -1,6 +1,6 @@
 import type { LoaderContext } from '@rspack/core'
 import { createRspackContext } from '../context'
-import type { UnpluginContext, UnpluginOptions } from '../../types'
+import type { UnpluginContext } from '../../types'
 
 export default async function transform(
   this: LoaderContext,
@@ -9,13 +9,19 @@ export default async function transform(
 ) {
   const callback = this.async()
 
+  let unpluginName: string
+  if (typeof this.query === 'string') {
+    const query = new URLSearchParams(this.query)
+    unpluginName = query.get('unpluginName')!
+  }
+  else {
+    unpluginName = (this.query as { unpluginName: string }).unpluginName
+  }
+
   const id = this.resource
-  const { plugin } = this.getOptions() as { plugin: UnpluginOptions }
+  const plugin = this._compiler?.$unpluginContext[unpluginName]
 
   if (!plugin?.transform)
-    return callback(null, source, map)
-
-  if (plugin.transformInclude && !plugin.transformInclude(id))
     return callback(null, source, map)
 
   const context: UnpluginContext = {

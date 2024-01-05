@@ -1,7 +1,7 @@
-import type { AcornNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
+import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
-import type { Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
+import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { JsPlugin as FarmPlugin } from '@farmfe/core'
@@ -29,15 +29,15 @@ export interface SourceMapCompact {
   version: number
 }
 
-export type TransformResult = string | { code: string; map?: SourceMapInput | SourceMapCompact | null } | null | undefined
+export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined
 
-export interface ExternalIdResult { id: string; external?: boolean }
+export interface ExternalIdResult { id: string, external?: boolean }
 
 export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
-  parse: (input: string, options?: any) => AcornNode
+  parse: (input: string, options?: any) => AstNode
 }
 
 export interface UnpluginOptions {
@@ -49,7 +49,7 @@ export interface UnpluginOptions {
   buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void
   transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
   load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
+  resolveId?: (this: UnpluginBuildContext & UnpluginContext, id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
   watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
 
   // Output Generation Hooks
@@ -77,6 +77,7 @@ export interface UnpluginOptions {
     onLoadFilter?: RegExp
     setup?: EsbuildPlugin['setup']
     loader?: Loader | ((code: string, id: string) => Loader)
+    config?: (options: BuildOptions) => void
   }
   farm?: Partial<FarmPlugin>
 }
@@ -133,6 +134,12 @@ export interface UnpluginContext {
 }
 
 declare module 'webpack' {
+  interface Compiler {
+    $unpluginContext: Record<string, ResolvedUnpluginOptions>
+  }
+}
+
+declare module '@rspack/core' {
   interface Compiler {
     $unpluginContext: Record<string, ResolvedUnpluginOptions>
   }

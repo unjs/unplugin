@@ -1,3 +1,22 @@
+# [1.6.0](https://github.com/unjs/unplugin/compare/v1.5.1...v1.6.0) (2023-12-26)
+
+
+### Bug Fixes
+
+* not include everything for rspack ([#354](https://github.com/unjs/unplugin/issues/354)) ([8bb9bb9](https://github.com/unjs/unplugin/commit/8bb9bb982112b6007248680075e5edda806967f5))
+
+
+### Features
+
+* esbuild config option to modify build options ([#357](https://github.com/unjs/unplugin/issues/357)) ([670eb37](https://github.com/unjs/unplugin/commit/670eb3799b077929035933bde62adcf867136cbd))
+* esbuild support for addWatchFile and getWatchFiles ([#345](https://github.com/unjs/unplugin/issues/345)) ([2f65939](https://github.com/unjs/unplugin/commit/2f6593959d6bb3386279aecd391c6f6655b77ecd))
+
+
+
+## [1.5.1](https://github.com/unjs/unplugin/compare/v1.5.0...v1.5.1) (2023-11-16)
+
+
+
 # [1.5.0](https://github.com/unjs/unplugin/compare/v1.4.0...v1.5.0) (2023-09-17)
 
 

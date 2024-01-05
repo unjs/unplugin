@@ -2,9 +2,9 @@ import fs from 'fs'
 import { resolve } from 'path'
 import process from 'process'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { ResolvePluginInstance, RuleSetUseItem } from 'webpack'
-import type { ResolvedUnpluginOptions, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
-import { normalizeAbsolutePath, toArray } from '../utils'
+import type { ResolvePluginInstance, Resolver } from 'webpack'
+import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
+import { normalizeAbsolutePath, shouldLoad, toArray, transformUse } from '../utils'
 import { createContext } from './context'
 
 const TRANSFORM_LOADER = resolve(
@@ -69,7 +69,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
             plugin.__vfs = vfs
 
             const resolverPlugin: ResolvePluginInstance = {
-              apply(resolver) {
+              apply(resolver: Resolver) {
                 const target = resolver.ensureHook('resolve')
 
                 resolver
@@ -89,8 +89,23 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const isEntry = requestContext.issuer === ''
 
                     // call hook
-                    const resolveIdResult = await plugin.resolveId!(id, importer, { isEntry })
+                    const context = createContext()
+                    let error: Error | undefined
+                    const pluginContext: UnpluginContext = {
+                      error(msg: string | Error) {
+                        if (error == null)
+                          error = typeof msg === 'string' ? new Error(msg) : msg
+                        else
+                          console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
+                      },
+                      warn(msg) {
+                        console.warn(`unplugin/webpack: warning from resolveId hook: ${msg}`)
+                      },
+                    }
+                    const resolveIdResult = await plugin.resolveId!.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
 
+                    if (error != null)
+                      return callback(error)
                     if (resolveIdResult == null)
                       return callback()
 
@@ -136,15 +151,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
           if (plugin.load) {
             compiler.options.module.rules.unshift({
               include(id) {
-                if (id.startsWith(plugin.__virtualModulePrefix))
-                  id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
-
-                // load include filter
-                if (plugin.loadInclude && !plugin.loadInclude(id))
-                  return false
-
-                // Don't run load hook for external modules
-                return !externalModules.has(id)
+                return shouldLoad(id, plugin, externalModules)
               },
               enforce: plugin.enforce,
               use: [{
@@ -158,21 +165,10 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           // transform hook
           if (plugin.transform) {
-            const useLoader: RuleSetUseItem[] = [{
-              loader: `${TRANSFORM_LOADER}?unpluginName=${encodeURIComponent(plugin.name)}`,
-            }]
-            const useNone: RuleSetUseItem[] = []
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
-              use: (data: { resource: string | null; resourceQuery: string }) => {
-                if (data.resource == null)
-                  return useNone
-
-                const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
-                if (!plugin.transformInclude || plugin.transformInclude(id))
-                  return useLoader
-
-                return useNone
+              use(data: { resource?: string, resourceQuery?: string }) {
+                return transformUse(data, plugin, TRANSFORM_LOADER)
               },
             })
           }

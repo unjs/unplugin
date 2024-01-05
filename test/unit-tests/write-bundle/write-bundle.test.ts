@@ -119,9 +119,7 @@ describe('writeBundle hook', () => {
     }
 
     await new Promise((resolve) => {
-      build.webpack(webpackVersion!.startsWith('4') ? webpack4Options : webpack5Options,
-        resolve,
-      )
+      build.webpack(webpackVersion!.startsWith('4') ? webpack4Options : webpack5Options, resolve)
     })
 
     checkWriteBundleHook(mockResolveIdHook)

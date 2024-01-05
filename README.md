@@ -34,7 +34,6 @@ Currently supports:
 | [`buildEnd`](https://rollupjs.org/guide/en/#buildend)                   |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
 | [`writeBundle`](https://rollupjs.org/guide/en/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
 
-
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 2. Webpack's id filter is outside of loader logic; an additional hook is needed for better perf on Webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for the following usage examples.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
@@ -49,13 +48,15 @@ Currently supports:
 | Hook                                                                       | Rollup | Vite | Webpack 4 | Webpack 5 | esbuild | Rspack | Farm |
 | -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :-----: | :----: | :--: |
 | [`this.parse`](https://rollupjs.org/guide/en/#thisparse)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
-| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |  ✅  |
-| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
-| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |  ✅  |
+| [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile)     |   ✅   |  ✅  | ✅<sup>6</sup> |    ✅     | ✅<sup>7</sup> |   ❌   |  ✅  |
+| [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile)<sup>5</sup> |   ✅   |  ✅  | ✅<sup>6</sup> |    ✅     |       ✅       |   ✅   |  ✅  |
+| [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles)   |   ✅   |  ✅  | ✅<sup>6</sup> |    ✅     | ✅<sup>7</sup> |   ❌   |  ✅  |
 | [`this.warn`](https://rollupjs.org/guide/en/#thiswarn)                     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
 | [`this.error`](https://rollupjs.org/guide/en/#thiserror)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
 
 5. Currently, [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile) only supports the `EmittedAsset` variant.
+6. Currently, in Webpack, [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisgetwatchfiles), [`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfile), and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) are not supported within `resolveId` hooks.
+7. Currently, in esbuild, [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisgetwatchfiles) and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) are supported only within `resolveId`, `load`, and `transform` hooks; and [`this.getWatchFiles`](https://rollupjs.org/guide/en/#thisgetwatchfiles) returns an array of only the files explicitly watched via [`this.addWatchFile`](https://rollupjs.org/guide/en/#thisaddwatchfile) during the same resolve step (`resolveId` hook) or load step (`load` and `transform` hooks).
 
 ## Usage
 
@@ -174,7 +175,6 @@ build({
 })
 ```
 
-
 ###### Rspack
 
 ```ts
@@ -238,6 +238,10 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
       // Tell esbuild how to interpret the contents. By default unplugin tries to guess the loader
       // from file extension (eg: .js -> "js", .jsx -> 'jsx')
       // loader?: (Loader | (code: string, id: string) => Loader)
+
+      // Read and/or modify build.initialOptions
+      // [https://esbuild.github.io/plugins/#build-options]
+      // config?: (initialOptions: BuildOptions) => void
 
       // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,

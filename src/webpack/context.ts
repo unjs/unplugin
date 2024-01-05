@@ -6,7 +6,7 @@ import type { Compilation } from 'webpack'
 import { Parser } from 'acorn'
 import type { UnpluginBuildContext } from '../types'
 
-export function createContext(compilation: Compilation): UnpluginBuildContext {
+export function createContext(compilation?: Compilation): UnpluginBuildContext {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -17,6 +17,8 @@ export function createContext(compilation: Compilation): UnpluginBuildContext {
       })
     },
     addWatchFile(id) {
+      if (!compilation)
+        throw new Error('unplugin/webpack: addWatchFile outside supported hooks (buildStart, buildEnd, load, transform, watchChange)');
       (compilation.fileDependencies ?? compilation.compilationDependencies).add(
         resolve(process.cwd(), id),
       )
@@ -24,6 +26,8 @@ export function createContext(compilation: Compilation): UnpluginBuildContext {
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
       if (emittedFile.source && outFileName) {
+        if (!compilation)
+          throw new Error('unplugin/webpack: emitFile outside supported hooks  (buildStart, buildEnd, load, transform, watchChange)')
         compilation.emitAsset(
           outFileName,
           sources
@@ -41,6 +45,8 @@ export function createContext(compilation: Compilation): UnpluginBuildContext {
       }
     },
     getWatchFiles() {
+      if (!compilation)
+        throw new Error('unplugin/webpack: getWatchFiles outside supported hooks (buildStart, buildEnd, load, transform, watchChange)')
       return Array.from(
         compilation.fileDependencies ?? compilation.compilationDependencies,
       )
