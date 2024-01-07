@@ -1,4 +1,3 @@
-const { builtinModules } = require('module')
 const { farm } = require('./unplugin')
 
 /**
@@ -15,24 +14,9 @@ module.exports = {
       targetEnv: 'node',
       format: 'cjs',
     },
-    external: [
-      ...builtinModules.map(m => `^${m}$`),
-      ...builtinModules.map(m => `^node:${m}$`),
-    ],
-    partialBundling: {
-      moduleBuckets: [
-        {
-          name: 'node.bundle.js',
-          test: ['.+'],
-        },
-      ],
-    },
     presetEnv: false,
   },
   plugins: [
     farm({ msg: 'Farm' }),
   ],
-  server: {
-    hmr: false,
-  },
 }

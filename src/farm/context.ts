@@ -8,8 +8,8 @@ export function createFarmContext(
   context: CompilationContext,
   currentResolveId?: string,
 ): UnpluginBuildContext & {
-    addWatchFile: (id: string, currentResolveId: string) => void
-  } {
+  addWatchFile: (id: string, currentResolveId: string) => void
+} {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {

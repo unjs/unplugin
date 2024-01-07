@@ -30,7 +30,8 @@ import {
 import { createFarmContext } from './context'
 
 export function getFarmPlugin<
-  UserOptions = Record<string, never>, Nested extends boolean = boolean,
+  UserOptions = Record<string, never>,
+  Nested extends boolean = boolean,
 >(factory: UnpluginFactory<UserOptions, Nested>) {
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
@@ -55,13 +56,18 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     priority: convertEnforceToPriority(plugin.enforce),
   }
   if (plugin.farm) {
-    const { config, configDevServer, updateModules } = plugin.farm
+    const { config, configDevServer, configResolved, configureCompiler, updateModules } = plugin.farm
     if (config)
       farmPlugin.config = config
+      if (configResolved)
+      farmPlugin.configResolved = configResolved
     if (configDevServer)
       farmPlugin.configDevServer = configDevServer
     if (updateModules)
       farmPlugin.updateModules = updateModules
+    if (configureCompiler) {
+      farmPlugin.configureCompiler = configureCompiler 
+    }
   }
 
   if (plugin.buildStart) {
@@ -77,7 +83,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _resolveId = plugin.resolveId
     farmPlugin.resolve = {
       filters: { sources: ['.*'], importers: ['.*'] },
-      async executor(params: PluginResolveHookParam) {
+      async executor(params: PluginResolveHookParam, context) {
         const resolvedIdPath = path.resolve(
           process.cwd(),
           params.importer?.relativePath ?? '',
@@ -87,11 +93,15 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           const kindWithEntry = params.kind as { entry: string }
           isEntry = kindWithEntry.entry === 'index'
         }
-        const resolveIdResult = await _resolveId(
+        const resolveIdResult = await _resolveId.call(
+          // TODO: type error in farm
+          // @ts-ignore
+          createFarmContext(context!),
           params.source,
           resolvedIdPath ?? null,
           { isEntry },
         )
+        
         if (isString(resolveIdResult)) {
           return {
             resolvedPath: resolveIdResult,
