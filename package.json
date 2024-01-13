@@ -1,6 +1,6 @@
 {
   "name": "unplugin-test",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "packageManager": "pnpm@8.12.1",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
@@ -44,8 +44,8 @@
     "@ampproject/remapping": "^2.2.1",
     "@antfu/eslint-config": "^2.6.0",
     "@antfu/ni": "^0.21.12",
-    "@farmfe/cli": "^0.5.11",
-    "@farmfe/core": "^0.14.18",
+    "@farmfe/cli": "^0.6.0",
+    "@farmfe/core": "^0.15.3",
     "@rspack/cli": "^0.4.5",
     "@rspack/core": "^0.4.5",
     "@types/fs-extra": "^11.0.4",
