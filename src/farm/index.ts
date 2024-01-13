@@ -55,21 +55,30 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     name: plugin.name,
     priority: convertEnforceToPriority(plugin.enforce),
   }
-  if (plugin.farm) {
-    const { config, configureDevServer, configResolved, configureCompiler, updateModules, renderResourcePot } = plugin.farm
-    if (config)
-      farmPlugin.config = config
-    if (configResolved)
-      farmPlugin.configResolved = configResolved
-    if (configureDevServer)
-      farmPlugin.configureDevServer = configureDevServer
-    if (updateModules)
-      farmPlugin.updateModules = updateModules
-    if (configureCompiler)
-      farmPlugin.configureCompiler = configureCompiler
+  // if (plugin.farm) {
+  //   const { config, configureDevServer, configResolved, configureCompiler, updateModules, renderResourcePot } = plugin.farm
+  //   if (config)
+  //     farmPlugin.config = config
+  //   if (configResolved)
+  //     farmPlugin.configResolved = configResolved
+  //   if (configureDevServer)
+  //     farmPlugin.configureDevServer = configureDevServer
+  //   if (updateModules)
+  //     farmPlugin.updateModules = updateModules
+  //   if (configureCompiler)
+  //     farmPlugin.configureCompiler = configureCompiler
+  //   if (renderResourcePot)
+  //     farmPlugin.renderResourcePot = renderResourcePot
+  // }
 
-    if (renderResourcePot)
-      farmPlugin.renderResourcePot = renderResourcePot
+  if (plugin.farm) {
+    Object.keys(plugin.farm).forEach((key) => {
+      // @ts-expect-error farm type error
+      if (plugin.farm[key]) {
+        // @ts-expect-error farm type error
+        Reflect.set(farmPlugin, key, plugin.farm[key])
+      }
+    })
   }
 
   if (plugin.buildStart) {
