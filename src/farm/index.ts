@@ -56,18 +56,20 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     priority: convertEnforceToPriority(plugin.enforce),
   }
   if (plugin.farm) {
-    const { config, configDevServer, configResolved, configureCompiler, updateModules } = plugin.farm
+    const { config, configureDevServer, configResolved, configureCompiler, updateModules, renderResourcePot } = plugin.farm
     if (config)
       farmPlugin.config = config
-      if (configResolved)
+    if (configResolved)
       farmPlugin.configResolved = configResolved
-    if (configDevServer)
-      farmPlugin.configDevServer = configDevServer
+    if (configureDevServer)
+      farmPlugin.configureDevServer = configureDevServer
     if (updateModules)
       farmPlugin.updateModules = updateModules
-    if (configureCompiler) {
-      farmPlugin.configureCompiler = configureCompiler 
-    }
+    if (configureCompiler)
+      farmPlugin.configureCompiler = configureCompiler
+
+    if (renderResourcePot)
+      farmPlugin.renderResourcePot = renderResourcePot
   }
 
   if (plugin.buildStart) {
@@ -83,10 +85,10 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _resolveId = plugin.resolveId
     farmPlugin.resolve = {
       filters: { sources: ['.*'], importers: ['.*'] },
-      async executor(params: PluginResolveHookParam, context) {
+      async executor(params: PluginResolveHookParam, context: CompilationContext) {
         const resolvedIdPath = path.resolve(
           process.cwd(),
-          params.importer?.relativePath ?? '',
+          params.importer ?? '',
         )
         let isEntry = false
         if (isObject(params.kind) && 'entry' in params.kind) {
@@ -95,13 +97,13 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         }
         const resolveIdResult = await _resolveId.call(
           // TODO: type error in farm
-          // @ts-ignore
+          // @ts-expect-error need context type
           createFarmContext(context!),
           params.source,
           resolvedIdPath ?? null,
           { isEntry },
         )
-        
+
         if (isString(resolveIdResult)) {
           return {
             resolvedPath: resolveIdResult,
