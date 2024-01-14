@@ -29,6 +29,10 @@ export interface SourceMapCompact {
   version: number
 }
 
+export interface JsPluginExtended extends FarmPlugin {
+  [key: string]: any
+}
+
 export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined
 
 export interface ExternalIdResult { id: string, external?: boolean }

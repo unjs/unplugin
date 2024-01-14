@@ -8,6 +8,7 @@ import type {
 } from '@farmfe/core/binding'
 import type { CompilationContext, JsPlugin } from '@farmfe/core'
 import type {
+  JsPluginExtended,
   TransformResult,
   UnpluginContext,
   UnpluginContextMeta,
@@ -55,29 +56,12 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     name: plugin.name,
     priority: convertEnforceToPriority(plugin.enforce),
   }
-  // if (plugin.farm) {
-  //   const { config, configureDevServer, configResolved, configureCompiler, updateModules, renderResourcePot } = plugin.farm
-  //   if (config)
-  //     farmPlugin.config = config
-  //   if (configResolved)
-  //     farmPlugin.configResolved = configResolved
-  //   if (configureDevServer)
-  //     farmPlugin.configureDevServer = configureDevServer
-  //   if (updateModules)
-  //     farmPlugin.updateModules = updateModules
-  //   if (configureCompiler)
-  //     farmPlugin.configureCompiler = configureCompiler
-  //   if (renderResourcePot)
-  //     farmPlugin.renderResourcePot = renderResourcePot
-  // }
 
   if (plugin.farm) {
     Object.keys(plugin.farm).forEach((key) => {
-      // @ts-expect-error farm type error
-      if (plugin.farm[key]) {
-        // @ts-expect-error farm type error
-        Reflect.set(farmPlugin, key, plugin.farm[key])
-      }
+      const value = (plugin.farm as JsPluginExtended)[key]
+      if (value)
+        Reflect.set(farmPlugin, key, value)
     })
   }
 

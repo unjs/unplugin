@@ -16,6 +16,6 @@ module.exports = {
     },
   },
   plugins: [
-    farm({ msg: 'Farm' }),
+    farm(),
   ],
 }
