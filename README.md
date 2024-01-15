@@ -13,7 +13,7 @@ Currently supports:
 - [Webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/) (⚠️ experimental)
-- [Farm](https://farm-fe.github.io/) (⚠️ experimental)
+- [Farm](https://farm-fe.github.io/)
 
 ## Hooks
 
@@ -39,7 +39,7 @@ Currently supports:
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 
-> **Warning**: The support for [Rspack](https://www.rspack.dev/) and [Farm](https://farm-fe.github.io/) is currently in an experimental stage. Future changes to Rspack and Farm integrations might not follow semver, please pin `unplugin` in your dependency when using. It's not recommended to use in production.
+> **Warning**: The [Rspack](https://www.rspack.dev/) support is experimental. Future changes to Rspack integrations might not follow semver, please pin unplugin in your dependency when using. It's not recommended to use in production..
 
 ### Hook Context
 
@@ -192,9 +192,9 @@ module.exports = {
 // farm.config.ts
 import UnpluginFeature from './unplugin-feature'
 
-export default {
+module.exports = {
   plugins: [
-    UnpluginFeature.farm({ /* options */ }),
+    require('./unplugin-feature').farm({ /* options */ }),
   ],
 }
 ```
@@ -250,7 +250,7 @@ export const unplugin = createUnplugin((options: UserOptions, meta) => {
       config(config) {
         // Configure Farm config
       },
-      configDevServer(server) {
+      configureDevServer(server) {
         // Configure Farm dev server
       },
     }
