@@ -26,7 +26,6 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     get rspack() {
       return getRspackPlugin(factory)
     },
-    /** @experimental do not use it in production */
     get farm() {
       return getFarmPlugin(factory)
     },

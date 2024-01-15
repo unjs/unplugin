@@ -9,7 +9,9 @@ module.exports = {
     input: {
       index: './src/main.js',
     },
+    presetEnv: false,
     output: {
+      entryFilename: 'main.[ext]',
       path: './dist/farm',
       targetEnv: 'node',
       format: 'cjs',

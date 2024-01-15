@@ -1,4 +1,5 @@
-import path from 'path'
+import path from 'node:path'
+
 import type {
   PluginLoadHookParam,
   PluginLoadHookResult,
@@ -7,17 +8,15 @@ import type {
   PluginTransformHookResult,
 } from '@farmfe/core/binding'
 import type { CompilationContext, JsPlugin } from '@farmfe/core'
+import { toArray } from '../utils'
 import type {
   JsPluginExtended,
   TransformResult,
-  UnpluginContext,
   UnpluginContextMeta,
   UnpluginFactory,
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
-import { toArray } from '../utils'
-import type { WatchChangeEvents } from './utils'
 import {
   convertEnforceToPriority,
   convertWatchEventChange,
@@ -28,7 +27,9 @@ import {
   isString,
   transformQuery,
 } from './utils'
-import { createFarmContext } from './context'
+import { createFarmContext, unpluginContext } from './context'
+
+import type { WatchChangeEvents } from './utils'
 
 export function getFarmPlugin<
   UserOptions = Record<string, never>,
@@ -39,6 +40,7 @@ export function getFarmPlugin<
       framework: 'farm',
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
+
     const plugins = rawPlugins.map((rawPlugin) => {
       const plugin = toFarmPlugin(rawPlugin) as JsPlugin
       if (rawPlugin.farm)
@@ -83,15 +85,15 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           process.cwd(),
           params.importer ?? '',
         )
+
         let isEntry = false
         if (isObject(params.kind) && 'entry' in params.kind) {
           const kindWithEntry = params.kind as { entry: string }
           isEntry = kindWithEntry.entry === 'index'
         }
+        const farmContext = createFarmContext(context!, resolvedIdPath)
         const resolveIdResult = await _resolveId.call(
-          // TODO: type error in farm
-          // @ts-expect-error need context type
-          createFarmContext(context!),
+          Object.assign(unpluginContext(context), farmContext),
           params.source,
           resolvedIdPath ?? null,
           { isEntry },
@@ -136,17 +138,8 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
         const shouldLoadInclude
           = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
         const farmContext = createFarmContext(context!, id.resolvedPath)
-        const unpluginContext: UnpluginContext = {
-          error: error =>
-            context!.error(
-              typeof error === 'string' ? new Error(error) : error,
-            ),
-          warn: error =>
-            context!.warn(typeof error === 'string' ? new Error(error) : error),
-        }
-
         const content: TransformResult = await _load.call(
-          Object.assign(unpluginContext, farmContext),
+          Object.assign(unpluginContext(context!), farmContext),
           id.resolvedPath,
         )
         const loadFarmResult: PluginLoadHookResult = {
@@ -184,15 +177,8 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           = plugin.transformInclude
           && plugin.transformInclude(params.resolvedPath)
         const farmContext = createFarmContext(context, params.resolvedPath)
-        const unpluginContext: UnpluginContext = {
-          error: error =>
-            context.error(typeof error === 'string' ? new Error(error) : error),
-          warn: error =>
-            context.warn(typeof error === 'string' ? new Error(error) : error),
-        }
-
         const resource: TransformResult = await _transform.call(
-          Object.assign(unpluginContext, farmContext),
+          Object.assign(unpluginContext(context), farmContext),
           params.content,
           params.resolvedPath,
         )

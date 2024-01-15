@@ -5,6 +5,7 @@ const { farm } = require('./unplugin')
  */
 module.exports = {
   compilation: {
+    persistentCache: false,
     input: {
       index: './src/main.js',
     },
