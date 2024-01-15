@@ -17,6 +17,7 @@ import type {
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
+import { createFarmContext, unpluginContext } from './context'
 import {
   convertEnforceToPriority,
   convertWatchEventChange,
@@ -27,7 +28,6 @@ import {
   isString,
   transformQuery,
 } from './utils'
-import { createFarmContext, unpluginContext } from './context'
 
 import type { WatchChangeEvents } from './utils'
 
@@ -143,14 +143,13 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
           id.resolvedPath,
         )
         const loadFarmResult: PluginLoadHookResult = {
-          // TODO maybe sourcemap resolve
           content: getContentValue(content),
           moduleType: loader,
         }
         if (shouldLoadInclude)
           return loadFarmResult
 
-        return loadFarmResult
+        return null
       },
     } as JsPlugin['load']
   }
