@@ -88,7 +88,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
       filters = options?.filters ?? []
 
     farmPlugin.resolve = {
-      filters: { sources: ['!node_modules', ...filters], importers: ['!node_modules'] },
+      filters: { sources: ['.*', ...filters], importers: ['.*'] },
       async executor(params: PluginResolveHookParam, context: CompilationContext) {
         const resolvedIdPath = path.resolve(
           process.cwd(),
@@ -135,7 +135,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
     const _load = plugin.load
     farmPlugin.load = {
       filters: {
-        resolvedPaths: ['!node_modules'],
+        resolvedPaths: ['.*'],
       },
       async executor(
         id: PluginLoadHookParam,
@@ -166,7 +166,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
   if (plugin.transform) {
     const _transform = plugin.transform
     farmPlugin.transform = {
-      filters: { resolvedPaths: ['!node_modules'], moduleTypes: ['!node_modules'] },
+      filters: { resolvedPaths: ['.*'], moduleTypes: ['.*'] },
       async executor(
         params: PluginTransformHookParam,
         context: CompilationContext,
