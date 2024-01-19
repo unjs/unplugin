@@ -42,7 +42,7 @@ export function getFarmPlugin<
     const rawPlugins = toArray(factory(userOptions!, meta))
 
     const plugins = rawPlugins.map((rawPlugin) => {
-      const plugin = toFarmPlugin(rawPlugin) as JsPlugin
+      const plugin = toFarmPlugin(rawPlugin, userOptions as Record<string, any>) as JsPlugin
       if (rawPlugin.farm)
         Object.assign(plugin, rawPlugin.farm)
 
@@ -53,7 +53,12 @@ export function getFarmPlugin<
   }) as UnpluginInstance<UserOptions>['farm']
 }
 
-export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
+export const resolveIdFilters = {
+  sources: ['!node_modules'],
+  importers: ['!node_modules'],
+}
+
+export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, any> | undefined): JsPlugin {
   const farmPlugin: JsPlugin = {
     name: plugin.name,
     priority: convertEnforceToPriority(plugin.enforce),
@@ -78,8 +83,12 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
 
   if (plugin.resolveId) {
     const _resolveId = plugin.resolveId
+    let filters = []
+    if (options)
+      filters = options?.filters ?? []
+
     farmPlugin.resolve = {
-      filters: { sources: ['.*'], importers: ['.*'] },
+      filters: { sources: ['!node_modules', ...filters], importers: ['!node_modules'] },
       async executor(params: PluginResolveHookParam, context: CompilationContext) {
         const resolvedIdPath = path.resolve(
           process.cwd(),
@@ -126,7 +135,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
     const _load = plugin.load
     farmPlugin.load = {
       filters: {
-        resolvedPaths: ['.*'],
+        resolvedPaths: ['!node_modules'],
       },
       async executor(
         id: PluginLoadHookParam,
@@ -157,7 +166,7 @@ export function toFarmPlugin(plugin: UnpluginOptions): JsPlugin {
   if (plugin.transform) {
     const _transform = plugin.transform
     farmPlugin.transform = {
-      filters: { resolvedPaths: ['.*'], moduleTypes: ['.*'] },
+      filters: { resolvedPaths: ['!node_modules'], moduleTypes: ['!node_modules'] },
       async executor(
         params: PluginTransformHookParam,
         context: CompilationContext,
