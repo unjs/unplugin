@@ -24,7 +24,14 @@ export default async function transform(this: LoaderContext<{ unpluginName: stri
     warn: error => this.emitWarning(typeof error === 'string' ? new Error(error) : error),
   }
   const res = await plugin.transform.call(
-    { ...this._compilation && createContext(this._compilation) as any, ...context },
+    { ...createContext({
+      addWatchFile: (file) => {
+        this.addDependency(file)
+      },
+      getWatchFiles: () => {
+        return this.getDependencies()
+      },
+    }, this._compilation), ...context },
     source,
     this.resource,
   )
