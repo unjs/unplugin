@@ -21,7 +21,14 @@ export default async function load(this: LoaderContext<any>, source: string, map
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
   const res = await plugin.load.call(
-    { ...this._compilation && createContext(this._compilation) as any, ...context },
+    { ...createContext({
+      addWatchFile: (file) => {
+        this.addDependency(file)
+      },
+      getWatchFiles: () => {
+        return this.getDependencies()
+      },
+    }, this._compilation), ...context },
     normalizeAbsolutePath(id),
   )
 
