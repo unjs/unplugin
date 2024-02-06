@@ -4,9 +4,9 @@ import { Buffer } from 'buffer'
 import remapping from '@ampproject/remapping'
 import { Parser } from 'acorn'
 import type { DecodedSourceMap, EncodedSourceMap } from '@ampproject/remapping'
-import type { BuildOptions, Loader, PartialMessage } from 'esbuild'
+import type { BuildOptions, Loader, Location, Message, PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
-import type { UnpluginBuildContext, UnpluginContext } from '../types'
+import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
 export * from '../utils'
 
@@ -144,8 +144,30 @@ export function createPluginContext(context: UnpluginBuildContext) {
   const errors: PartialMessage[] = []
   const warnings: PartialMessage[] = []
   const pluginContext: UnpluginContext = {
-    error(message) { errors.push({ text: String(message) }) },
-    warn(message) { warnings.push({ text: String(message) }) },
+    error(message) { errors.push(normalizeMessage(message)) },
+    warn(message) { warnings.push(normalizeMessage(message)) },
+  }
+
+  function normalizeMessage(message: string | UnpluginMessage): Message {
+    if (typeof message === 'string')
+      message = { message }
+
+    return {
+      id: message.id!,
+      pluginName: message.plugin!,
+      text: message.message!,
+
+      location: message.loc
+        ? {
+            file: message.loc.file,
+            line: message.loc.line,
+            column: message.loc.column,
+          } as Location
+        : null,
+
+      detail: message.meta,
+      notes: [],
+    }
   }
 
   const mixedContext: UnpluginContext & UnpluginBuildContext = {

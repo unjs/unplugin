@@ -1,6 +1,5 @@
 import type { LoaderContext } from 'webpack'
-import type { UnpluginContext } from '../../types'
-import { createContext } from '../context'
+import { createBuildContext, createContext } from '../context'
 import { normalizeAbsolutePath } from '../../utils'
 
 export default async function load(this: LoaderContext<any>, source: string, map: any) {
@@ -12,16 +11,12 @@ export default async function load(this: LoaderContext<any>, source: string, map
   if (!plugin?.load || !id)
     return callback(null, source, map)
 
-  const context: UnpluginContext = {
-    error: error => this.emitError(typeof error === 'string' ? new Error(error) : error),
-    warn: error => this.emitWarning(typeof error === 'string' ? new Error(error) : error),
-  }
-
   if (id.startsWith(plugin.__virtualModulePrefix))
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
+  const context = createContext(this)
   const res = await plugin.load.call(
-    { ...createContext({
+    { ...createBuildContext({
       addWatchFile: (file) => {
         this.addDependency(file)
       },

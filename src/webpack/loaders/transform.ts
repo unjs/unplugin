@@ -1,6 +1,5 @@
 import type { LoaderContext } from 'webpack'
-import type { UnpluginContext } from '../../types'
-import { createContext } from '../context'
+import { createBuildContext, createContext } from '../context'
 
 export default async function transform(this: LoaderContext<{ unpluginName: string }>, source: string, map: any) {
   const callback = this.async()
@@ -19,12 +18,9 @@ export default async function transform(this: LoaderContext<{ unpluginName: stri
   if (!plugin?.transform)
     return callback(null, source, map)
 
-  const context: UnpluginContext = {
-    error: error => this.emitError(typeof error === 'string' ? new Error(error) : error),
-    warn: error => this.emitWarning(typeof error === 'string' ? new Error(error) : error),
-  }
+  const context = createContext(this)
   const res = await plugin.transform.call(
-    { ...createContext({
+    { ...createBuildContext({
       addWatchFile: (file) => {
         this.addDependency(file)
       },

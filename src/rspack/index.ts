@@ -7,7 +7,7 @@ import type {
   UnpluginFactory,
   UnpluginInstance,
 } from '../types'
-import { createRspackContext } from './context'
+import { createBuildContext } from './context'
 
 const TRANSFORM_LOADER = resolve(
   __dirname,
@@ -90,14 +90,14 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
           if (plugin.buildStart) {
             compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
-              const context = createRspackContext(compilation)
+              const context = createBuildContext(compilation)
               return plugin.buildStart!.call(context)
             })
           }
 
           if (plugin.buildEnd) {
             compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-              await plugin.buildEnd!.call(createRspackContext(compilation))
+              await plugin.buildEnd!.call(createBuildContext(compilation))
             })
           }
 

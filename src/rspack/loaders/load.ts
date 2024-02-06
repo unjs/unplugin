@@ -1,6 +1,5 @@
 import type { LoaderContext } from '@rspack/core'
-import type { UnpluginContext } from '../../types'
-import { createRspackContext } from '../context'
+import { createBuildContext, createContext } from '../context'
 import { normalizeAbsolutePath } from '../../utils'
 
 export default async function load(this: LoaderContext, source: string, map: any) {
@@ -15,14 +14,10 @@ export default async function load(this: LoaderContext, source: string, map: any
   if (plugin.loadInclude && !plugin.loadInclude(id))
     return callback(null, source, map)
 
-  const context: UnpluginContext = {
-    error: error => this.emitError(typeof error === 'string' ? new Error(error) : error),
-    warn: error => this.emitWarning(typeof error === 'string' ? new Error(error) : error),
-  }
-
+  const context = createContext(this)
   const res = await plugin.load.call(
     Object.assign(
-      this._compilation && createRspackContext(this._compilation),
+      this._compilation && createBuildContext(this._compilation),
       context,
     ),
     normalizeAbsolutePath(id),

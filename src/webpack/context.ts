@@ -2,9 +2,9 @@ import { resolve } from 'path'
 import { Buffer } from 'buffer'
 import process from 'process'
 import sources from 'webpack-sources'
-import type { Compilation } from 'webpack'
+import type { Compilation, LoaderContext } from 'webpack'
 import { Parser } from 'acorn'
-import type { UnpluginBuildContext } from '../types'
+import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
 interface ContextOptions {
   addWatchFile(file: string): void
@@ -22,7 +22,7 @@ export function contextOptionsFromCompilation(compilation: Compilation): Context
   }
 }
 
-export function createContext(options: ContextOptions, compilation?: Compilation): UnpluginBuildContext {
+export function createBuildContext(options: ContextOptions, compilation?: Compilation): UnpluginBuildContext {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -59,5 +59,17 @@ export function createContext(options: ContextOptions, compilation?: Compilation
     getWatchFiles() {
       return options.getWatchFiles()
     },
+  }
+}
+
+export function createContext(loader: LoaderContext<{ unpluginName: string }>): UnpluginContext {
+  function normalizeMessage(error: string | UnpluginMessage): Error {
+    return typeof error === 'string'
+      ? new Error(error)
+      : error as Error
+  }
+  return {
+    error: error => loader.emitError(normalizeMessage(error)),
+    warn: message => loader.emitWarning(normalizeMessage(message)),
   }
 }

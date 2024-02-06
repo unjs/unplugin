@@ -123,9 +123,25 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   }
 })
 
+export interface UnpluginMessage {
+  name?: string
+  id?: string
+  message: string
+  stack?: string
+  code?: string
+  plugin?: string
+  pluginCode?: unknown
+  loc?: {
+    column: number
+    file?: string
+    line: number
+  }
+  meta?: any
+}
+
 export interface UnpluginContext {
-  error(message: any): void
-  warn(message: any): void
+  error(message: string | UnpluginMessage): void
+  warn(message: string | UnpluginMessage): void
 }
 
 declare module 'webpack' {
