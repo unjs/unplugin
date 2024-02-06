@@ -1,6 +1,5 @@
 .DS_STORE
 .profile
-.vscode
 .idea
 *.log*
 coverage
