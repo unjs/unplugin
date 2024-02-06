@@ -1,3 +1,17 @@
+# [1.7.0](https://github.com/unjs/unplugin/compare/v1.6.0...v1.7.0) (2024-02-06)
+
+
+### Bug Fixes
+
+* use webpack loader context to implement addWatchFile ([#359](https://github.com/unjs/unplugin/issues/359)) ([a3bb13f](https://github.com/unjs/unplugin/commit/a3bb13fdf59794dc11e7615a28b6d8772a78b1d5))
+
+
+### Features
+
+* support emit object errors ([8f00f57](https://github.com/unjs/unplugin/commit/8f00f571f8d1314d7d87e016ac7019475af92584))
+
+
+
 # [1.6.0](https://github.com/unjs/unplugin/compare/v1.5.1...v1.6.0) (2023-12-26)
 
 
