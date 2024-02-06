@@ -63,13 +63,17 @@ export function createBuildContext(options: ContextOptions, compilation?: Compil
 }
 
 export function createContext(loader: LoaderContext<{ unpluginName: string }>): UnpluginContext {
-  function normalizeMessage(error: string | UnpluginMessage): Error {
-    return typeof error === 'string'
-      ? new Error(error)
-      : error as Error
-  }
   return {
     error: error => loader.emitError(normalizeMessage(error)),
     warn: message => loader.emitWarning(normalizeMessage(message)),
   }
+}
+
+export function normalizeMessage(error: string | UnpluginMessage): Error {
+  const err = new Error(typeof error === 'string' ? error : error.message)
+  if (typeof error === 'object') {
+    err.stack = error.stack
+    err.cause = error.meta
+  }
+  return err
 }

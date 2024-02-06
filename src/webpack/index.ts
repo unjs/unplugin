@@ -5,7 +5,7 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { ResolvePluginInstance, Resolver } from 'webpack'
 import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import { normalizeAbsolutePath, shouldLoad, toArray, transformUse } from '../utils'
-import { contextOptionsFromCompilation, createBuildContext } from './context'
+import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
 
 const TRANSFORM_LOADER = resolve(
   __dirname,
@@ -105,7 +105,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const pluginContext: UnpluginContext = {
                       error(msg) {
                         if (error == null)
-                          error = typeof msg === 'string' ? new Error(msg) : msg as Error
+                          error = normalizeMessage(msg)
                         else
                           console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
                       },
