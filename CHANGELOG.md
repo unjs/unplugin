@@ -1,3 +1,12 @@
+## [1.7.1](https://github.com/unjs/unplugin/compare/v1.7.0...v1.7.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* **webpack:** throw a standard error ([41978c0](https://github.com/unjs/unplugin/commit/41978c03c6370c0664816b518e26394099a8285a))
+
+
+
 # [1.7.0](https://github.com/unjs/unplugin/compare/v1.6.0...v1.7.0) (2024-02-06)
 
 
