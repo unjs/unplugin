@@ -140,8 +140,8 @@ export interface UnpluginMessage {
 }
 
 export interface UnpluginContext {
-  error(message: string | UnpluginMessage): void
-  warn(message: string | UnpluginMessage): void
+  error: (message: string | UnpluginMessage) => void
+  warn: (message: string | UnpluginMessage) => void
 }
 
 declare module 'webpack' {

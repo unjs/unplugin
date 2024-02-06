@@ -7,8 +7,8 @@ import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
 interface ContextOptions {
-  addWatchFile(file: string): void
-  getWatchFiles(): string[]
+  addWatchFile: (file: string) => void
+  getWatchFiles: () => string[]
 }
 
 export function contextOptionsFromCompilation(compilation: Compilation): ContextOptions {
