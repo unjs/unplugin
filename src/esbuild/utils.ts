@@ -126,13 +126,15 @@ export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildC
       throw new Error('unplugin/esbuild: addWatchFile outside supported hooks (resolveId, load, transform)')
     },
     emitFile(emittedFile) {
-      // Ensure output directory exists for this.emitFile
-      if (initialOptions.outdir && !fs.existsSync(initialOptions.outdir))
-        fs.mkdirSync(initialOptions.outdir, { recursive: true })
-
       const outFileName = emittedFile.fileName || emittedFile.name
-      if (initialOptions.outdir && emittedFile.source && outFileName)
-        fs.writeFileSync(path.resolve(initialOptions.outdir, outFileName), emittedFile.source)
+      if (initialOptions.outdir && emittedFile.source && outFileName) {
+        const outPath = path.resolve(initialOptions.outdir, outFileName)
+        // Ensure output directory exists for this.emitFile
+        const outDir = path.dirname(outPath)
+        if (!fs.existsSync(outDir))
+          fs.mkdirSync(outDir, { recursive: true })
+        fs.writeFileSync(outPath, emittedFile.source)
+      }
     },
     getWatchFiles() {
       return watchFiles
