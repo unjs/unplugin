@@ -29,8 +29,7 @@ describe('transform build', () => {
     expect(content).toContain('QUERY: [Injected Post Webpack]')
   })
 
-  // TODO: esbuild not yet support nested transform
-  it.fails('esbuild', async () => {
+  it('esbuild', async () => {
     const content = await fs.readFile(r('esbuild/main.js'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')

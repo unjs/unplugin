@@ -1,9 +1,10 @@
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
-import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
+import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
+import type { EsbuildPluginBuild } from './esbuild'
 
 export {
   EsbuildPlugin,
@@ -74,7 +75,7 @@ export interface UnpluginOptions {
     // using regexp in esbuild improves performance
     onResolveFilter?: RegExp
     onLoadFilter?: RegExp
-    setup?: EsbuildPlugin['setup']
+    setup?: (build: EsbuildPluginBuild) => void | Promise<void>
     loader?: Loader | ((code: string, id: string) => Loader)
     config?: (options: BuildOptions) => void
   }
@@ -113,7 +114,7 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   }
 } | {
   framework: 'esbuild'
-  build?: PluginBuild
+  build?: EsbuildPluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
 } | {
