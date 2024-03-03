@@ -29,9 +29,10 @@
     "dev": "tsup --watch src",
     "lint": "eslint --cache .",
     "lint:fix": "nr lint --fix",
+    "typecheck": "tsc --noEmit",
     "prepublishOnly": "nr build",
     "release": "bumpp --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
-    "test": "nr lint && nr test:build && vitest run --pool=forks",
+    "test": "nr test:build && vitest run --pool=forks",
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {

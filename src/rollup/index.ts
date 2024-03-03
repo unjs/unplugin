@@ -38,5 +38,5 @@ export function toRollupPlugin(plugin: UnpluginOptions, containRollupOptions = t
   if (plugin.rollup && containRollupOptions)
     Object.assign(plugin, plugin.rollup)
 
-  return plugin
+  return plugin as RollupPlugin
 }
