@@ -1,3 +1,17 @@
+# [1.8.0](https://github.com/unjs/unplugin/compare/v1.7.1...v1.8.0) (2024-03-03)
+
+
+### Bug Fixes
+
+* esbuild emitFile should mkdir subdirectories too ([#362](https://github.com/unjs/unplugin/issues/362)) ([b73e16a](https://github.com/unjs/unplugin/commit/b73e16a12e2b2799a99982cdbd44976164ae360d))
+
+
+### Features
+
+* **esbuild:** support transform hook for nested plugins ([3e1d521](https://github.com/unjs/unplugin/commit/3e1d52101e75892162ea01200df76e9f2b659746))
+
+
+
 ## [1.7.1](https://github.com/unjs/unplugin/compare/v1.7.0...v1.7.1) (2024-02-06)
 
 
