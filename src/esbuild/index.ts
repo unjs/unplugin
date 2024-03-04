@@ -68,7 +68,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             loader.onLoadCb = callback
           },
           onTransform(_options, callback) {
-            loader.options ||= _options
+            loader.options = loader.options || _options
             loader.onTransformCb = callback
           },
         } as EsbuildPluginBuild)
@@ -95,7 +95,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               break
           }
 
-          result ||= {}
+          result = result || {}
 
           for (const { options, onTransformCb } of loaders) {
             if (!checkFilter(options))
@@ -105,7 +105,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               // caution: 'utf8' assumes the input file is not in binary.
               // if you want your plugin handle binary files, make sure to
               // `plugin.load()` them first.
-              result.contents ||= await fs.promises.readFile(args.path, 'utf8')
+              result.contents = result.contents || await fs.promises.readFile(args.path, 'utf8')
 
               const _result = await onTransformCb({
                 ...result,
