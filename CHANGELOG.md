@@ -1,3 +1,12 @@
+## [1.8.1](https://github.com/unjs/unplugin/compare/v1.8.0...v1.8.1) (2024-03-05)
+
+
+### Bug Fixes
+
+* fix build syntax error in < node16 ([#365](https://github.com/unjs/unplugin/issues/365)) ([5b3c6e5](https://github.com/unjs/unplugin/commit/5b3c6e53b865868f86510cef310fd286431957e0))
+
+
+
 # [1.8.0](https://github.com/unjs/unplugin/compare/v1.7.1...v1.8.0) (2024-03-03)
 
 
