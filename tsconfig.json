@@ -21,6 +21,9 @@
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "docs/.vitepress/*.ts",
+    "docs/.vitepress/**/*.ts",
+    "docs/.vitepress/**/*.vue"
   ]
 }

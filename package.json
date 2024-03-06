@@ -32,7 +32,7 @@
     "typecheck": "tsc --noEmit",
     "docs:dev": "pnpm -C docs run docs:dev",
     "docs:build": "pnpm -C docs run docs:build",
-    "docs:gen-files": "pnpm -C docs run gen-files",
+    "docs:gen-files": "pnpm -C docs run docs:gen-files",
     "prepublishOnly": "nr build",
     "release": "bumpp --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
     "test": "nr test:build && vitest run --pool=forks",
