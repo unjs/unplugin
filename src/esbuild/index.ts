@@ -95,13 +95,12 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               break
           }
 
-          result = result || {}
-
           for (const { options, onTransformCb } of loaders) {
             if (!checkFilter(options))
               continue
 
             if (onTransformCb) {
+              result = result || {}
               // caution: 'utf8' assumes the input file is not in binary.
               // if you want your plugin handle binary files, make sure to
               // `plugin.load()` them first.
