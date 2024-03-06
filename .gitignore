@@ -15,3 +15,4 @@ docs/.vitepress/cache
 docs/.vitepress/components.d.ts
 docs/.env
 docs/.vitepress/data/repository.json
+.vercel

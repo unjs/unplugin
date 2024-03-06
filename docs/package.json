@@ -5,7 +5,7 @@
   "scripts": {
     "docs:gen-files": "tsx ./.vitepress/data/gen-files.ts",
     "docs:dev": "vitepress dev --open",
-    "docs:build": "pnpm gen-files && vitepress build",
+    "docs:build": "pnpm docs:gen-files && vitepress build",
     "lint": "eslint . && case-police '**/*.md'"
   },
   "devDependencies": {
