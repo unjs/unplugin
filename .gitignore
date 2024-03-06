@@ -11,3 +11,4 @@ docs/showcase/*.md
 !docs/showcase/index.md
 docs/.vitepress/cache
 docs/.vitepress/components.d.ts
+docs/.env
