@@ -131,7 +131,7 @@ export default defineNuxtConfig({
 
 ```js [Astro]
 // astro.config.mjs
-import { defineConfig } from 'astro/config';
+import { defineConfig } from 'astro/config'
 import Starter from 'unplugin-turbo-console/astro'
 
 // https://astro.build/config
@@ -139,7 +139,7 @@ export default defineConfig({
   integrations: [
     Starter()
   ]
-});
+})
 ```
 
 ## Supported Hooks
