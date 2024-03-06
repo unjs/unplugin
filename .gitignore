@@ -7,3 +7,7 @@ dist
 node_modules
 temp
 .eslintcache
+docs/showcase/*.md
+!docs/showcase/index.md
+docs/.vitepress/cache
+docs/.vitepress/components.d.ts

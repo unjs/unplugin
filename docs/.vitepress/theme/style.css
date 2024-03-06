@@ -1,0 +1,130 @@
+@import 'markdown-it-github-alerts/styles/github-colors-light.css';
+@import 'markdown-it-github-alerts/styles/github-colors-dark-media.css';
+@import 'markdown-it-github-alerts/styles/github-base.css';
+
+:root {
+    --vp-c-brand-1: #000;
+    --vp-c-brand-2: #383838;
+    --vp-c-brand-3: #09090b;
+    --vp-button-brand-bg: #171717;
+    --vp-c-text-2: #444;
+  }
+
+  .dark {
+    --vp-c-brand-1: #fff;
+    --vp-c-brand-2: #71717a;
+    --vp-c-brand-3: #52525b;
+    --vp-c-brand-soft: #09090b50;
+    --vp-c-text-2: #999;
+    --vp-button-brand-bg: #ededed;
+    --vp-button-brand-text: #0a0a0a;
+    --vp-button-brand-hover-bg:#dad9d9;
+    --vp-button-brand-hover-text: #383838;
+    --vp-button-brand-active-text: #09090b;
+    --vp-home-hero-name-background: -webkit-linear-gradient(
+      0deg,
+      #fff 30%,
+      #d1d5db 0%
+    )!important;
+  }
+
+ :root {
+  --vp-c-default-1: var(--vp-c-gray-1);
+  --vp-c-default-2: var(--vp-c-gray-2);
+  --vp-c-default-3: var(--vp-c-gray-3);
+  --vp-c-default-soft: var(--vp-c-gray-soft);
+
+  --vp-c-tip-1: var(--vp-c-brand-1);
+  --vp-c-tip-2: var(--vp-c-brand-2);
+  --vp-c-tip-3: var(--vp-c-brand-3);
+  --vp-c-tip-soft: var(--vp-c-brand-soft);
+
+  --vp-c-warning-1: var(--vp-c-yellow-1);
+  --vp-c-warning-2: var(--vp-c-yellow-2);
+  --vp-c-warning-3: var(--vp-c-yellow-3);
+  --vp-c-warning-soft: var(--vp-c-yellow-soft);
+
+  --vp-c-danger-1: var(--vp-c-red-1);
+  --vp-c-danger-2: var(--vp-c-red-2);
+  --vp-c-danger-3: var(--vp-c-red-3);
+  --vp-c-danger-soft: var(--vp-c-red-soft);
+}
+
+/**
+ * Component: Button
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-bg: var(--vp-c-brand-1);
+}
+
+/**
+ * Component: Home
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(
+    0deg,
+    #333 30%,
+    #888 1%
+  );
+}
+
+/**
+ * Component: Custom Block
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --vp-custom-block-tip-border: transparent;
+  --vp-custom-block-tip-text: var(--vp-c-text-1);
+  --vp-custom-block-tip-bg: var(--vp-c-brand-soft);
+  --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
+}
+
+/**
+ * Component: Algolia
+ * -------------------------------------------------------------------------- */
+
+.DocSearch {
+  --docsearch-primary-color: var(--vp-c-brand-1) !important;
+}
+
+a > img {
+  display: inline;
+}
+
+img[src*="features"] {
+  height: auto;
+  width: 48px;
+}
+
+img[src*="/features/rspack"] {
+  margin-bottom: 28px!important;
+}
+
+details > summary:hover {
+    cursor: pointer;
+    user-select: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
