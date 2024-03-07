@@ -32,6 +32,15 @@ npx degit unplugin/unplugin-starter unplugin-starter
 
 ## Plugin Installation
 
+### Pre-requisites
+
+- Node.js 14.0.0 or later
+
+::: warning
+We will discontinue support for Node.js v14 & v16 in the next major release.
+Please consider upgrading to Node.js v18 or higher.
+:::
+
 ### Install package
 
 ::: code-group
