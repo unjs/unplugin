@@ -20,4 +20,11 @@ module.exports = antfu(
       'unicorn/prefer-node-protocol': 'off',
     },
   },
+  {
+    files: ['**/src/**/*.ts'],
+    rules: {
+      'node/no-unsupported-features/node-builtins': 'error',
+      'node/no-unsupported-features/es-builtins': 'error',
+    },
+  },
 )

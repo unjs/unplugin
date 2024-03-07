@@ -1,3 +1,26 @@
+## [1.8.3](https://github.com/unjs/unplugin/compare/v1.8.2...v1.8.3) (2024-03-06)
+
+
+### Bug Fixes
+
+* **esbuild:** read fs contents on demand ([5ca5e6d](https://github.com/unjs/unplugin/commit/5ca5e6d625c7029d5b7a776a11e7a84e968424f0))
+
+
+### Features
+
+* support node 14 ([af3b0ec](https://github.com/unjs/unplugin/commit/af3b0ecc3dd4ae1f1c3ea1a1121248438b12468e))
+
+
+
+## [1.8.2](https://github.com/unjs/unplugin/compare/v1.8.1...v1.8.2) (2024-03-06)
+
+
+### Bug Fixes
+
+* **esbuild:** don't return empty result in onLoad ([ff2460b](https://github.com/unjs/unplugin/commit/ff2460bf934e30fc1e09631da8ac8ceb1d7d1027))
+
+
+
 ## [1.8.1](https://github.com/unjs/unplugin/compare/v1.8.0...v1.8.1) (2024-03-05)
 
 

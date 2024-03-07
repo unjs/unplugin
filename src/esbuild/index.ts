@@ -26,7 +26,7 @@ export interface OnTransformOptions {
 }
 
 export interface OnTransformArgs {
-  contents: string
+  getContents: () => Promise<string>
   path: string
   namespace: string
   suffix: string
@@ -68,7 +68,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             loader.onLoadCb = callback
           },
           onTransform(_options, callback) {
-            loader.options = loader.options || _options
+            loader.options ||= _options
             loader.onTransformCb = callback
           },
         } as EsbuildPluginBuild)
@@ -91,32 +91,42 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
             if (onLoadCb)
               result = await onLoadCb!(args)
-            if (result && result.contents)
+            if (result?.contents)
               break
           }
 
-          result = result || {}
+          let fsContentsCache: string | undefined
 
           for (const { options, onTransformCb } of loaders) {
             if (!checkFilter(options))
               continue
 
             if (onTransformCb) {
-              // caution: 'utf8' assumes the input file is not in binary.
-              // if you want your plugin handle binary files, make sure to
-              // `plugin.load()` them first.
-              result.contents = result.contents || await fs.promises.readFile(args.path, 'utf8')
-
-              const _result = await onTransformCb({
+              const newArgs: OnTransformArgs = {
                 ...result,
                 ...args,
-                contents: result.contents as string,
-              })
-              if (_result && _result.contents)
+                async getContents() {
+                  if (result?.contents)
+                    return result.contents as string
+
+                  if (fsContentsCache)
+                    return fsContentsCache
+
+                  // caution: 'utf8' assumes the input file is not in binary.
+                  // if you want your plugin handle binary files, make sure to
+                  // `plugin.load()` them first.
+                  return (fsContentsCache = await fs.promises.readFile(args.path, 'utf8'))
+                },
+              }
+
+              const _result = await onTransformCb(newArgs)
+              if (_result?.contents)
                 result = _result
             }
           }
-          return result
+
+          if (result?.contents)
+            return result
         })
       }
     }
@@ -257,7 +267,7 @@ function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
           const { mixedContext, errors, warnings } = createPluginContext(context)
           const resolveDir = path.dirname(args.path)
 
-          let code = args.contents
+          let code = await args.getContents()
           let map: SourceMap | null | undefined
           const result = await plugin.transform!.call(mixedContext, code, id)
           if (typeof result === 'string') {
