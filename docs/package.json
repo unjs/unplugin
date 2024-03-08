@@ -3,9 +3,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "docs:gen-files": "tsx ./.vitepress/data/gen-files.ts",
-    "docs:dev": "vitepress dev --open",
-    "docs:build": "pnpm docs:gen-files && vitepress build",
+    "gen-files": "tsx ./.vitepress/data/gen-files.ts",
+    "dev": "vitepress dev --open",
+    "build": "pnpm gen-files && vitepress build",
     "lint": "eslint . && case-police '**/*.md'"
   },
   "devDependencies": {
