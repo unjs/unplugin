@@ -9,6 +9,7 @@
     }
   ],
   "ignoreDeps": [
-    "webpack-cli"
+    "webpack-cli",
+    "node"
   ]
 }
