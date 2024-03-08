@@ -5,8 +5,6 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
   push:
     branches:
       - main
