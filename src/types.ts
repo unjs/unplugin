@@ -1,6 +1,7 @@
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
+import type { Plugin as RolldownPlugin } from '@rolldown/node'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
@@ -9,6 +10,7 @@ import type { EsbuildPluginBuild } from './esbuild'
 export {
   EsbuildPlugin,
   RollupPlugin,
+  RolldownPlugin,
   VitePlugin,
   WebpackPluginInstance,
   RspackPluginInstance,
@@ -71,6 +73,7 @@ export interface UnpluginOptions {
   webpack?: (compiler: WebpackCompiler) => void
   rspack?: (compiler: RspackCompiler) => void
   vite?: Partial<VitePlugin>
+  rolldown?: Partial<RolldownPlugin>
   esbuild?: {
     // using regexp in esbuild improves performance
     onResolveFilter?: RegExp
@@ -99,6 +102,7 @@ export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserO
 export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean> {
   rollup: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RollupPlugin> : RollupPlugin>
   vite: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<VitePlugin> : VitePlugin>
+  rolldown: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RolldownPlugin> : RolldownPlugin>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
@@ -106,7 +110,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
 }
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
-  framework: 'rollup' | 'vite'
+  framework: 'rollup' | 'vite' | 'rolldown'
 } | {
   framework: 'webpack'
   webpack: {
