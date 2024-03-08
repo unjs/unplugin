@@ -28,6 +28,9 @@ devDependencies:
   '@antfu/ni':
     specifier: ^0.21.12
     version: 0.21.12
+  '@rolldown/node':
+    specifier: ^0.0.5
+    version: 0.0.5
   '@rspack/cli':
     specifier: ^0.5.6
     version: 0.5.6(@rspack/core@0.5.6)(webpack-cli@4.10.0)(webpack@5.90.3)
@@ -886,6 +889,138 @@ packages:
 
   /@polka/url@1.0.0-next.24:
     resolution: {integrity: sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==}
+    dev: true
+
+  /@rolldown/node-binding-android-arm-eabi@0.0.5:
+    resolution: {integrity: sha512-cucXe7VPxPX/bCZfd6fvmTHB5TWTkO3+w7MF9jcHwIGmiv46prcaBSQsWCLOS7CsQCwMlcxEHvctHsaSQJ1iGA==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-android-arm64@0.0.5:
+    resolution: {integrity: sha512-wzngkRlDxkNDXXwDgxuueiOQHlqP4Bwum4gz0QdvfnK4V6Z1EsTDmfGFf2O4re2eLbeGwEmQehWqX8qwxYxm3g==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-darwin-arm64@0.0.5:
+    resolution: {integrity: sha512-oACvfvHaq73BLRTHAtvQudU5mZoqWe2w++uFsohC2/i/sef0J979HhB2yt2FQ6AUwsjduQ2qYyzRqKc5j8X4tQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-darwin-x64@0.0.5:
+    resolution: {integrity: sha512-ZjqyxfubPlnMjiLaRh44jfmyEcyfZgT4yu0sUOxmBsq2BFCuI9FHA8qA0DSNQPvXS2T7nyWzl0GH+CxqSi1qPw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-linux-arm-gnueabihf@0.0.5:
+    resolution: {integrity: sha512-Vgaab13foxfs/fdruEfGXweS9xqWULMOQPzdA2zJKRw9YaaA/CW5E1IG7qkVXelolCRqe25inqcxAdva965t0w==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-linux-arm64-gnu@0.0.5:
+    resolution: {integrity: sha512-x605Z2Nz1C1YVDTKhBOBWhDmq0+32aSGuyrslLMvsQYMU5ETZ7ScpyrZFvZRHoukbcPHrCHiPsCmip4EQBspqg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-linux-arm64-musl@0.0.5:
+    resolution: {integrity: sha512-biz9cAL1dTkIL1XzG95gliq+HzNQNKd5TdkONUJcyHn4hflPKvSbftk/bPiLvN3VpiFopuay6z6vzpDJ2ibyXw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-linux-x64-gnu@0.0.5:
+    resolution: {integrity: sha512-6tbXWsyvD0NrdVrIxP61obbdkNt2osb7ANqkTI07QD82zS1q2z5tM5ehFSO2Jz9cv0NZTkrIngUF77xtMD5tRA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-linux-x64-musl@0.0.5:
+    resolution: {integrity: sha512-XtO2ivmbFB+N+ZhrRD2LndipSbaMI00jZFtb/3clIe8+AG5axGPnRnoRlNYWSyowa0yx5FjkfQoA3sXfYxjthA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-win32-arm64-msvc@0.0.5:
+    resolution: {integrity: sha512-oncJYwGG1FeIHbw7SueBrpwTIePtkozyyVQCUIDQM6wBSNd0vUicqLmh/oEEeAca2YOWOVWd9B8mnsakCaEPaQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-win32-ia32-msvc@0.0.5:
+    resolution: {integrity: sha512-g7pVkwdQdzfw8V8Kbf+EThqjz3Co6ZTac91+nr60Kn/xLjXwZ4ymakyHMhHNxkM9NAK1+U1b/WI6L4PJNEgU8g==}
+    engines: {node: '>= 10'}
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding-win32-x64-msvc@0.0.5:
+    resolution: {integrity: sha512-PvMwPt1rti+BlsujYXT25Kpz+VkwYb7VfuHE5yIWx7mLaNUwstoN4v6ScQnTugRhHeiu9QP/Ab/SiiIHYUsiyw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/node-binding@0.0.5:
+    resolution: {integrity: sha512-khCsf4WEik/Ri3Buk2slxJV59EKwRwvXCXrmBpkiLMBK8VspVKq4I5pzMCn6ck+ulfSBwl7DEA+rAM5YoNtp+A==}
+    engines: {node: '>= 10'}
+    optionalDependencies:
+      '@rolldown/node-binding-android-arm-eabi': 0.0.5
+      '@rolldown/node-binding-android-arm64': 0.0.5
+      '@rolldown/node-binding-darwin-arm64': 0.0.5
+      '@rolldown/node-binding-darwin-x64': 0.0.5
+      '@rolldown/node-binding-linux-arm-gnueabihf': 0.0.5
+      '@rolldown/node-binding-linux-arm64-gnu': 0.0.5
+      '@rolldown/node-binding-linux-arm64-musl': 0.0.5
+      '@rolldown/node-binding-linux-x64-gnu': 0.0.5
+      '@rolldown/node-binding-linux-x64-musl': 0.0.5
+      '@rolldown/node-binding-win32-arm64-msvc': 0.0.5
+      '@rolldown/node-binding-win32-ia32-msvc': 0.0.5
+      '@rolldown/node-binding-win32-x64-msvc': 0.0.5
+    dev: true
+
+  /@rolldown/node@0.0.5:
+    resolution: {integrity: sha512-2/1nvX9yJtlqDw0y1aPGfvtmCCDEWCw0TpRquWWzGWdJAaRfYHyBYpKPdUYizLc1naSaT/O3k2WyU+qfGa4hkw==}
+    dependencies:
+      '@rolldown/node-binding': 0.0.5
     dev: true
 
   /@rollup/rollup-android-arm-eabi@4.12.1:
