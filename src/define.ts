@@ -19,6 +19,7 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     get vite() {
       return getVitePlugin(factory)
     },
+    /** @experimental do not use it in production */
     get rolldown() {
       return getRolldownPlugin(factory)
     },
@@ -53,6 +54,7 @@ export function createVitePlugin<UserOptions, Nested extends boolean = boolean>(
   return getVitePlugin(factory)
 }
 
+/** @experimental do not use it in production */
 export function createRolldownPlugin<UserOptions, Nested extends boolean = boolean>(
   factory: UnpluginFactory<UserOptions, Nested>,
 ) {
@@ -65,6 +67,7 @@ export function createWebpackPlugin<UserOptions, Nested extends boolean = boolea
   return getWebpackPlugin(factory)
 }
 
+/** @experimental do not use it in production */
 export function createRspackPlugin<UserOptions, Nested extends boolean = boolean>(
   factory: UnpluginFactory<UserOptions, Nested>,
 ) {
