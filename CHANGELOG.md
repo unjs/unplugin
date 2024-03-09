@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/unjs/unplugin/compare/v1.8.3...v1.9.0) (2024-03-08)
+
+
+### Features
+
+* add rolldown support ([#370](https://github.com/unjs/unplugin/issues/370)) ([6d06ae1](https://github.com/unjs/unplugin/commit/6d06ae1f21572267ff49ccc21ed0c0269565ff7e))
+
+
+
 ## [1.8.3](https://github.com/unjs/unplugin/compare/v1.8.2...v1.8.3) (2024-03-06)
 
 
