@@ -21,6 +21,7 @@
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "docs/.vitepress"
   ]
 }
