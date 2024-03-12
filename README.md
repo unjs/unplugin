@@ -14,6 +14,7 @@ Currently supports:
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/) (⚠️ experimental)
 - [Rolldown](https://rolldown.rs/) (⚠️ experimental)
+- [Farm](https://farm-fe.github.io/)
 - And every framework built on top of them.
 
 ## Documentations
