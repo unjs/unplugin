@@ -2,11 +2,27 @@ import { resolve } from 'path'
 import { Buffer } from 'buffer'
 import process from 'process'
 import sources from 'webpack-sources'
-import type { Compilation } from 'webpack'
+import type { Compilation, LoaderContext } from 'webpack'
 import { Parser } from 'acorn'
-import type { UnpluginBuildContext } from '../types'
+import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
-export function createContext(compilation?: Compilation): UnpluginBuildContext {
+interface ContextOptions {
+  addWatchFile: (file: string) => void
+  getWatchFiles: () => string[]
+}
+
+export function contextOptionsFromCompilation(compilation: Compilation): ContextOptions {
+  return {
+    addWatchFile(file) {
+      (compilation.fileDependencies ?? compilation.compilationDependencies).add(file)
+    },
+    getWatchFiles() {
+      return Array.from(compilation.fileDependencies ?? compilation.compilationDependencies)
+    },
+  }
+}
+
+export function createBuildContext(options: ContextOptions, compilation?: Compilation): UnpluginBuildContext {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -17,11 +33,7 @@ export function createContext(compilation?: Compilation): UnpluginBuildContext {
       })
     },
     addWatchFile(id) {
-      if (!compilation)
-        throw new Error('unplugin/webpack: addWatchFile outside supported hooks (buildStart, buildEnd, load, transform, watchChange)');
-      (compilation.fileDependencies ?? compilation.compilationDependencies).add(
-        resolve(process.cwd(), id),
-      )
+      options.addWatchFile(resolve(process.cwd(), id))
     },
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
@@ -45,11 +57,23 @@ export function createContext(compilation?: Compilation): UnpluginBuildContext {
       }
     },
     getWatchFiles() {
-      if (!compilation)
-        throw new Error('unplugin/webpack: getWatchFiles outside supported hooks (buildStart, buildEnd, load, transform, watchChange)')
-      return Array.from(
-        compilation.fileDependencies ?? compilation.compilationDependencies,
-      )
+      return options.getWatchFiles()
     },
   }
+}
+
+export function createContext(loader: LoaderContext<{ unpluginName: string }>): UnpluginContext {
+  return {
+    error: error => loader.emitError(normalizeMessage(error)),
+    warn: message => loader.emitWarning(normalizeMessage(message)),
+  }
+}
+
+export function normalizeMessage(error: string | UnpluginMessage): Error {
+  const err = new Error(typeof error === 'string' ? error : error.message)
+  if (typeof error === 'object') {
+    err.stack = error.stack
+    err.cause = error.meta
+  }
+  return err
 }

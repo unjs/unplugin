@@ -1,10 +1,10 @@
 import { Buffer } from 'buffer'
 import sources from 'webpack-sources'
-import type { Compilation } from '@rspack/core'
+import type { Compilation, LoaderContext } from '@rspack/core'
 import { Parser } from 'acorn'
-import type { UnpluginBuildContext } from '..'
+import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
-export function createRspackContext(compilation: Compilation): UnpluginBuildContext {
+export function createBuildContext(compilation: Compilation): UnpluginBuildContext {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -35,4 +35,20 @@ export function createRspackContext(compilation: Compilation): UnpluginBuildCont
       return []
     },
   }
+}
+
+export function createContext(loader: LoaderContext): UnpluginContext {
+  return {
+    error: error => loader.emitError(normalizeMessage(error)),
+    warn: message => loader.emitWarning(normalizeMessage(message)),
+  }
+}
+
+export function normalizeMessage(error: string | UnpluginMessage): Error {
+  const err = new Error(typeof error === 'string' ? error : error.message)
+  if (typeof error === 'object') {
+    err.stack = error.stack
+    err.cause = error.meta
+  }
+  return err
 }

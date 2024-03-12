@@ -1,3 +1,81 @@
+# [1.9.0](https://github.com/unjs/unplugin/compare/v1.8.3...v1.9.0) (2024-03-08)
+
+
+### Features
+
+* add rolldown support ([#370](https://github.com/unjs/unplugin/issues/370)) ([6d06ae1](https://github.com/unjs/unplugin/commit/6d06ae1f21572267ff49ccc21ed0c0269565ff7e))
+
+
+
+## [1.8.3](https://github.com/unjs/unplugin/compare/v1.8.2...v1.8.3) (2024-03-06)
+
+
+### Bug Fixes
+
+* **esbuild:** read fs contents on demand ([5ca5e6d](https://github.com/unjs/unplugin/commit/5ca5e6d625c7029d5b7a776a11e7a84e968424f0))
+
+
+### Features
+
+* support node 14 ([af3b0ec](https://github.com/unjs/unplugin/commit/af3b0ecc3dd4ae1f1c3ea1a1121248438b12468e))
+
+
+
+## [1.8.2](https://github.com/unjs/unplugin/compare/v1.8.1...v1.8.2) (2024-03-06)
+
+
+### Bug Fixes
+
+* **esbuild:** don't return empty result in onLoad ([ff2460b](https://github.com/unjs/unplugin/commit/ff2460bf934e30fc1e09631da8ac8ceb1d7d1027))
+
+
+
+## [1.8.1](https://github.com/unjs/unplugin/compare/v1.8.0...v1.8.1) (2024-03-05)
+
+
+### Bug Fixes
+
+* fix build syntax error in < node16 ([#365](https://github.com/unjs/unplugin/issues/365)) ([5b3c6e5](https://github.com/unjs/unplugin/commit/5b3c6e53b865868f86510cef310fd286431957e0))
+
+
+
+# [1.8.0](https://github.com/unjs/unplugin/compare/v1.7.1...v1.8.0) (2024-03-03)
+
+
+### Bug Fixes
+
+* esbuild emitFile should mkdir subdirectories too ([#362](https://github.com/unjs/unplugin/issues/362)) ([b73e16a](https://github.com/unjs/unplugin/commit/b73e16a12e2b2799a99982cdbd44976164ae360d))
+
+
+### Features
+
+* **esbuild:** support transform hook for nested plugins ([3e1d521](https://github.com/unjs/unplugin/commit/3e1d52101e75892162ea01200df76e9f2b659746))
+
+
+
+## [1.7.1](https://github.com/unjs/unplugin/compare/v1.7.0...v1.7.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* **webpack:** throw a standard error ([41978c0](https://github.com/unjs/unplugin/commit/41978c03c6370c0664816b518e26394099a8285a))
+
+
+
+# [1.7.0](https://github.com/unjs/unplugin/compare/v1.6.0...v1.7.0) (2024-02-06)
+
+
+### Bug Fixes
+
+* use webpack loader context to implement addWatchFile ([#359](https://github.com/unjs/unplugin/issues/359)) ([a3bb13f](https://github.com/unjs/unplugin/commit/a3bb13fdf59794dc11e7615a28b6d8772a78b1d5))
+
+
+### Features
+
+* support emit object errors ([8f00f57](https://github.com/unjs/unplugin/commit/8f00f571f8d1314d7d87e016ac7019475af92584))
+
+
+
 # [1.6.0](https://github.com/unjs/unplugin/compare/v1.5.1...v1.6.0) (2023-12-26)
 
 

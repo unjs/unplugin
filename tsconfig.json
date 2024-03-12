@@ -15,10 +15,13 @@
     ],
     "strict": true,
     "declaration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "docs/.vitepress"
   ]
 }

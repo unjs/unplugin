@@ -24,6 +24,15 @@ export const build: {
   webpack: webpackBuild,
   rspack: rspackBuild,
   rollup: rollupBuild,
-  vite: viteBuild,
+  vite(config) {
+    return viteBuild(vite.mergeConfig(config || {}, {
+      build: {
+        rollupOptions: {
+          logLevel: 'silent',
+        },
+      },
+      logLevel: 'silent',
+    }))
+  },
   esbuild: esbuildBuild,
 }

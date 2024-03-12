@@ -1,14 +1,17 @@
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
-import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
+import type { Plugin as RolldownPlugin } from '@rolldown/node'
+import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { JsPlugin as FarmPlugin } from '@farmfe/core'
+import type { EsbuildPluginBuild } from './esbuild'
 
 export {
   EsbuildPlugin,
   RollupPlugin,
+  RolldownPlugin,
   VitePlugin,
   WebpackPluginInstance,
   RspackPluginInstance,
@@ -75,11 +78,12 @@ export interface UnpluginOptions {
   webpack?: (compiler: WebpackCompiler) => void
   rspack?: (compiler: RspackCompiler) => void
   vite?: Partial<VitePlugin>
+  rolldown?: Partial<RolldownPlugin>
   esbuild?: {
     // using regexp in esbuild improves performance
     onResolveFilter?: RegExp
     onLoadFilter?: RegExp
-    setup?: EsbuildPlugin['setup']
+    setup?: (build: EsbuildPluginBuild) => void | Promise<void>
     loader?: Loader | ((code: string, id: string) => Loader)
     config?: (options: BuildOptions) => void
   }
@@ -104,6 +108,7 @@ export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserO
 export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean> {
   rollup: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RollupPlugin> : RollupPlugin>
   vite: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<VitePlugin> : VitePlugin>
+  rolldown: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RolldownPlugin> : RolldownPlugin>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
@@ -112,7 +117,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
 }
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
-  framework: 'rollup' | 'vite'
+  framework: 'rollup' | 'vite' | 'rolldown'
 } | {
   framework: 'webpack'
   webpack: {
@@ -120,7 +125,7 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   }
 } | {
   framework: 'esbuild'
-  build?: PluginBuild
+  build?: EsbuildPluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
 } | {
@@ -132,9 +137,25 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   framework: 'farm'
 })
 
+export interface UnpluginMessage {
+  name?: string
+  id?: string
+  message: string
+  stack?: string
+  code?: string
+  plugin?: string
+  pluginCode?: unknown
+  loc?: {
+    column: number
+    file?: string
+    line: number
+  }
+  meta?: any
+}
+
 export interface UnpluginContext {
-  error(message: any): void
-  warn(message: any): void
+  error: (message: string | UnpluginMessage) => void
+  warn: (message: string | UnpluginMessage) => void
 }
 
 declare module 'webpack' {

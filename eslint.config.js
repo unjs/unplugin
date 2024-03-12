@@ -6,6 +6,8 @@ module.exports = antfu(
     ignores: [
       'test-out/**',
       '**/output.js',
+      'docs/showcase/*.md',
+      'docs/.vitepress/data/repository.json',
     ],
   },
   {
@@ -18,6 +20,13 @@ module.exports = antfu(
     rules: {
       'node/prefer-global/process': 'off',
       'unicorn/prefer-node-protocol': 'off',
+    },
+  },
+  {
+    files: ['**/src/**/*.ts'],
+    rules: {
+      'node/no-unsupported-features/node-builtins': 'error',
+      'node/no-unsupported-features/es-builtins': 'error',
     },
   },
 )

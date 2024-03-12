@@ -1,6 +1,5 @@
 .DS_STORE
 .profile
-.vscode
 .idea
 *.log*
 coverage
@@ -8,3 +7,11 @@ dist
 node_modules
 temp
 .eslintcache
+
+# docs
+docs/showcase/*.md
+!docs/showcase/index.md
+docs/.vitepress/cache
+docs/.vitepress/components.d.ts
+docs/.env
+docs/.vitepress/data/repository.json

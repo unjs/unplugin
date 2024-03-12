@@ -5,7 +5,7 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { ResolvePluginInstance, Resolver } from 'webpack'
 import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import { normalizeAbsolutePath, shouldLoad, toArray, transformUse } from '../utils'
-import { createContext } from './context'
+import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
 
 const TRANSFORM_LOADER = resolve(
   __dirname,
@@ -89,12 +89,23 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const isEntry = requestContext.issuer === ''
 
                     // call hook
-                    const context = createContext()
+                    // resolveContext.fileDependencies is typed as a WriteOnlySet, so make our own copy here
+                    // so we can return it from getWatchFiles.
+                    const fileDependencies = new Set<string>()
+                    const context = createBuildContext({
+                      addWatchFile(file) {
+                        fileDependencies.add(file)
+                        resolveContext.fileDependencies?.add(file)
+                      },
+                      getWatchFiles() {
+                        return Array.from(fileDependencies)
+                      },
+                    })
                     let error: Error | undefined
                     const pluginContext: UnpluginContext = {
-                      error(msg: string | Error) {
+                      error(msg) {
                         if (error == null)
-                          error = typeof msg === 'string' ? new Error(msg) : msg
+                          error = normalizeMessage(msg)
                         else
                           console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
                       },
@@ -178,7 +189,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           if (plugin.watchChange || plugin.buildStart) {
             compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
-              const context = createContext(compilation)
+              const context = createBuildContext(contextOptionsFromCompilation(compilation), compilation)
               if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
                 const promises: Promise<void>[] = []
                 if (compiler.modifiedFiles) {
@@ -201,7 +212,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           if (plugin.buildEnd) {
             compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-              await plugin.buildEnd!.call(createContext(compilation))
+              await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compilation))
             })
           }
 

@@ -1,4 +1,3 @@
-// tsup.config.ts
 import type { Options } from 'tsup'
 
 export const tsup: Options = {
@@ -6,10 +5,10 @@ export const tsup: Options = {
   sourcemap: false,
   clean: true,
   format: ['cjs', 'esm'],
-  target: 'node16.14',
+  target: 'node14',
   dts: true,
   shims: true,
-  entryPoints: [
+  entry: [
     'src/index.ts',
     'src/webpack/loaders/*',
     'src/rspack/loaders/*',
