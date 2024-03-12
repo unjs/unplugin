@@ -1,3 +1,0 @@
-[build]
-command = "pnpm build && pnpm docs:build"
-publish = "docs/dist"

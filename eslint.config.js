@@ -6,6 +6,8 @@ module.exports = antfu(
     ignores: [
       'test-out/**',
       '**/output.js',
+      'docs/showcase/*.md',
+      'docs/.vitepress/data/repository.json',
     ],
   },
   {
