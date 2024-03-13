@@ -57,4 +57,16 @@ features:
     link: https://farm-fe.github.io/
     icon:
       src: /features/farm.png
+
+  - title: Rolldown
+    details: Fast Rust bundler for JavaScript with Rollup-compatible API
+    link: https://rolldown.rs/
+    icon:
+      src: /features/rolldown.svg
+
+  - title: More
+    details: More supported bundlers...
+    link: /guide/#supported-hooks
+    icon:
+      src: /features/more.svg
 ---
