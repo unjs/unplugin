@@ -1,4 +1,5 @@
 import { getEsbuildPlugin } from './esbuild'
+import { getFarmPlugin } from './farm'
 import { getRolldownPlugin } from './rolldown'
 import { getRollupPlugin } from './rollup'
 import { getRspackPlugin } from './rspack'
@@ -29,6 +30,9 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     /** @experimental do not use it in production */
     get rspack() {
       return getRspackPlugin(factory)
+    },
+    get farm() {
+      return getFarmPlugin(factory)
     },
     get raw() {
       return factory
@@ -72,4 +76,10 @@ export function createRspackPlugin<UserOptions, Nested extends boolean = boolean
   factory: UnpluginFactory<UserOptions, Nested>,
 ) {
   return getRspackPlugin(factory)
+}
+
+export function createFarmPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+) {
+  return getFarmPlugin(factory)
 }

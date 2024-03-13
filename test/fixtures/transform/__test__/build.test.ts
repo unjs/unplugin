@@ -44,4 +44,12 @@ describe('transform build', () => {
     expect(content).toContain('TARGET: [Injected Post Rspack]')
     expect(content).toContain('QUERY: [Injected Post Rspack]')
   })
+
+  it('farm', async () => {
+    const content = await fs.readFile(r('farm/main.js'), 'utf-8')
+
+    expect(content).toContain('NON-TARGET: __UNPLUGIN__')
+    expect(content).toContain('TARGET: [Injected Post Farm]')
+    expect(content).toContain('QUERY: [Injected Post Farm]')
+  })
 })

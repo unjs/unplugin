@@ -52,6 +52,18 @@ features:
     icon:
       src: /features/rspack.png
 
+  - title: Farm
+    details: Extremely fast web build tool written in Rust
+    link: https://farm-fe.github.io/
+    icon:
+      src: /features/farm.png
+
+  - title: Rolldown
+    details: Fast Rust bundler for JavaScript with Rollup-compatible API
+    link: https://rolldown.rs/
+    icon:
+      src: /features/rolldown.svg
+
   - title: More
     details: More supported bundlers...
     link: /guide/#supported-hooks

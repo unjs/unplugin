@@ -51,6 +51,8 @@
     "@ampproject/remapping": "^2.3.0",
     "@antfu/eslint-config": "^2.8.0",
     "@antfu/ni": "^0.21.12",
+    "@farmfe/cli": "^0.7.0",
+    "@farmfe/core": "^1.0.0-beta.0",
     "@rolldown/node": "^0.0.5",
     "@rspack/cli": "^0.5.6",
     "@rspack/core": "^0.5.6",

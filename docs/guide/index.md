@@ -17,6 +17,7 @@ lastUpdated: false
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/) <span style="color: #ca8a04"><strong>(⚠️ experimental)</strong></span>
 - [Rolldown](https://rolldown.rs/) <span style="color: #ca8a04"><strong>(⚠️ experimental)</strong></span>
+- [Farm](https://farm-fe.github.io/)
 
 ## Trying It Online
 
@@ -119,6 +120,19 @@ build({
 })
 ```
 
+```ts [Farm]
+// farm.config.ts
+import Starter from 'unplugin-starter/farm'
+
+export default defineConfig({
+  plugins: [
+    Starter({
+      /* options */
+    }),
+  ],
+})
+```
+
 ```js [Vue-CLI]
 // vue.config.js
 module.exports = {
@@ -154,18 +168,18 @@ export default defineConfig({
 
 ## Supported Hooks
 
-| Hook                                                                              |     Rollup      | Vite | webpack 4 | webpack 5 |     esbuild   | Rspack |
-| ----------------------------------------------------------------------------------| :-------------: | :--: | :-------: | :-------: | :-----------: | :----: |
-| [`enforce`](https://vitejs.dev/guide/api-plugin.html#plugin-ordering)             | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ✅   |
-| [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |
-| `loadInclude`<sup>2</sup>                                                         |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
-| `transformInclude`<sup>2</sup>                                                    |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |
-| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ❌        |   ❌   |
-| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
-| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |
+| Hook                                                                              |     Rollup      | Vite | webpack 4 | webpack 5 |     esbuild   | Rspack | Farm |
+| ----------------------------------------------------------------------------------| :-------------: | :--: | :-------: | :-------: | :-----------: | :----: | :---: |
+| [`enforce`](https://vitejs.dev/guide/api-plugin.html#plugin-ordering)             | ❌ <sup>1</sup> |  ✅  |    ✅     |    ✅     | ❌ <sup>1</sup> |   ✅   |  ✅  |
+| [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
+| [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ❌   |  ✅  |
+| `loadInclude`<sup>2</sup>                                                         |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
+| [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |  ✅  |
+| `transformInclude`<sup>2</sup>                                                    |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
+| [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |  ✅  |
+| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ❌        |   ❌   |  ✅  |
+| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
+| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
 
 ::: details Notice
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
@@ -207,18 +221,19 @@ export const rollupPlugin = unplugin.rollup
 export const webpackPlugin = unplugin.webpack
 export const rspackPlugin = unplugin.rspack
 export const esbuildPlugin = unplugin.esbuild
+export const farmPlugin = unplugin.farm
 ```
 
 ## Supported Context
 
-| Context                                                                       | Rollup | Vite | webpack 4 | webpack 5 | esbuild | Rspack |
-| -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :-----: | :----: |
-| [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |
-| [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>1</sup> |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |
-| [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
-| [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |
+| Context                                                                       | Rollup | Vite | webpack 4 | webpack 5 | esbuild | Rspack | Farm |
+| -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :-----: | :----: | :---: |
+| [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
+| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |  ✅  |
+| [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>1</sup> |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
+| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ❌   |  ✅  |
+| [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
+| [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
 
 ::: info Notice
 1. Currently, [`this.emitFile`](https://rollupjs.org/plugin-development/#thisemitfile) only supports the `EmittedAsset` variant.
@@ -230,9 +245,9 @@ Since `v0.10.0`, **Unplugin** supports constructing multiple nested plugins to b
 
 ### Bundler Supported
 
-|         Rollup         | Vite | webpack 4 | webpack 5 | Rspack |   esbuild    |
-| :--------------------: | :--: | :-------: | :-------: | :----: | :----------: |
-| ✅ `>=3.1`<sup>1</sup> |  ✅  |    ✅     |    ✅     |   ✅   | ✅ (v1.8.0+) |
+|         Rollup         | Vite | webpack 4 | webpack 5 | Rspack |   esbuild    | Farm |
+| :--------------------: | :--: | :-------: | :-------: | :----: | :----------: | :--: |
+| ✅ `>=3.1`<sup>1</sup> |  ✅  |    ✅     |    ✅     |   ✅   | ✅ (v1.8.0+) |  ✅  |
 
 ::: details Notice
 1. Rollup supports nested plugins since [v3.1.0](https://github.com/rollup/rollup/releases/tag/v3.1.0). Plugin author should ask users to have a Rollup version of `>=3.1.0` when using nested plugins. For single plugin format, **Unplugin** works for any version of Rollup.
@@ -319,6 +334,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options, m
       // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,
     },
+    farm: {
+      // Farm plugin
+    }
   }
 }
 
@@ -335,10 +353,11 @@ Each of the function takes the same generic factory argument as `createUnplugin`
 ```ts
 import {
   createEsbuildPlugin,
+  createFarmPlugin,
   createRollupPlugin,
   createRspackPlugin,
   createVitePlugin,
-  createWebpackPlugin
+  createWebpackPlugin,
 } from 'unplugin'
 
 const vitePlugin = createVitePlugin({ /* options */ })
@@ -346,4 +365,5 @@ const rollupPlugin = createRollupPlugin({ /* options */ })
 const esbuildPlugin = createEsbuildPlugin({ /* options */ })
 const webpackPlugin = createWebpackPlugin({ /* options */ })
 const rspackPlugin = createRspackPlugin({ /* options */ })
+const farmPlugin = createFarmPlugin({ /* options */ })
 ```

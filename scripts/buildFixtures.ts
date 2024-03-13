@@ -39,6 +39,10 @@ async function run() {
       execSync('npx @rspack/cli --version', { cwd: path, stdio: 'inherit' })
       execSync('npx @rspack/cli', { cwd: path, stdio: 'inherit' })
     }
+
+    console.log(c.magenta(c.inverse(c.bold('\n  Farm  '))), name, '\n')
+    execSync('npx farm --version', { cwd: path, stdio: 'inherit' })
+    execSync('npx farm build', { cwd: path, stdio: 'inherit' })
   }
 }
 

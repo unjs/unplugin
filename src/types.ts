@@ -5,6 +5,7 @@ import type { Plugin as RolldownPlugin } from '@rolldown/node'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
+import type { JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { EsbuildPluginBuild } from './esbuild'
 
 export {
@@ -29,6 +30,10 @@ export interface SourceMapCompact {
   // In magic-string v0.27.0, `sourcesContent` becomes nullable, while rollup haven't catch up yet
   sourcesContent?: (string | null)[]
   version: number
+}
+
+export interface JsPluginExtended extends FarmPlugin {
+  [key: string]: any
 }
 
 export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined
@@ -82,6 +87,7 @@ export interface UnpluginOptions {
     loader?: Loader | ((code: string, id: string) => Loader)
     config?: (options: BuildOptions) => void
   }
+  farm?: Partial<FarmPlugin>
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
@@ -106,6 +112,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
+  farm: UnpluginFactoryOutput<UserOptions, FarmPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
@@ -126,6 +133,8 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   rspack: {
     compiler: RspackCompiler
   }
+} | {
+  framework: 'farm'
 })
 
 export interface UnpluginMessage {
