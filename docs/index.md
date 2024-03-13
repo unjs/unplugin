@@ -52,9 +52,9 @@ features:
     icon:
       src: /features/rspack.png
 
-  - title: More
-    details: More supported bundlers...
-    link: /guide/#supported-hooks
+  - title: Farm
+    details: Extremely fast web build tool written in Rust
+    link: https://farm-fe.github.io/
     icon:
-      src: /features/more.svg
+      src: /features/farm.png
 ---

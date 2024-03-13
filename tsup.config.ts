@@ -18,6 +18,7 @@ export const tsup: Options = {
     'webpack',
     'rollup',
     'esbuild',
+    '@farmfe/core',
   ],
   define: {
     __DEV__: 'false',
