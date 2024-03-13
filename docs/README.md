@@ -10,7 +10,7 @@ Unified plugin system, Support Vite, Rollup, webpack, esbuild, and more
 </p>
 
 <p align="center">
-<a href="https://unplugin.vercel.app">Documentation</a>
+<a href="https://unplugin.unjs.io">Documentation</a>
 </p>
 
 ## Development

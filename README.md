@@ -18,7 +18,7 @@ Currently supports:
 
 ## Documentations
 
-Learn more on the [Documentation](https://unplugin.vercel.app/)
+Learn more on the [Documentation](https://unplugin.unjs.io/)
 
 ## License
 
