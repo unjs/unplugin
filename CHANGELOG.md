@@ -1,3 +1,12 @@
+# [1.10.0](https://github.com/unjs/unplugin/compare/v1.9.0...v1.10.0) (2024-03-13)
+
+
+### Features
+
+* support `farm` plugin ([#341](https://github.com/unjs/unplugin/issues/341)) ([731a596](https://github.com/unjs/unplugin/commit/731a596d3adee45f131643e7758b7ab8699fdf93))
+
+
+
 # [1.9.0](https://github.com/unjs/unplugin/compare/v1.8.3...v1.9.0) (2024-03-08)
 
 
