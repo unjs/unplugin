@@ -334,6 +334,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options, m
       // Or you can completely replace the setup logic
       // setup?: EsbuildPlugin.setup,
     },
+    farm: {
+      // Farm plugin
+    }
   }
 }
 
