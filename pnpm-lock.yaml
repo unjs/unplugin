@@ -31,8 +31,8 @@ importers:
         specifier: ^0.21.12
         version: 0.21.12
       '@farmfe/cli':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^1.0.0
+        version: 1.0.0
       '@farmfe/core':
         specifier: ^1.0.0-beta.0
         version: 1.0.0-beta.0
@@ -1265,8 +1265,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@farmfe/cli@0.7.0:
-    resolution: {integrity: sha512-bSslt5px+K8daNPVEM/J731ExCWB5hZmjUwzS+WJjtauMti+A+OemqYArsdgZQ6FntlVQmswRQDWDeeWGcvLhA==}
+  /@farmfe/cli@1.0.0:
+    resolution: {integrity: sha512-VUcivbc54mM4utRT92LF6ReTTZOwyGdGHqYLJJHHJC4izxueBaA1falx6Bmk3Php2OAMhGtp/vnZmTZrqn4fdA==}
     engines: {node: '>= 16'}
     hasBin: true
     dependencies:
