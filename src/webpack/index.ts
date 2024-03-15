@@ -16,17 +16,17 @@ const LOAD_LOADER = resolve(
   __dirname,
   __DEV__ ? '../../dist/webpack/loaders/load' : 'webpack/loaders/load',
 )
-
-// We need the prefix of virtual modules to be an absolute path so webpack let's us load them (even if it's made up)
-// In the loader we strip the made up prefix path again
-const VIRTUAL_MODULE_PREFIX = resolve(process.cwd(), '_virtual_')
-
 export function getWebpackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['webpack'] {
   return (userOptions?: UserOptions) => {
     return {
       apply(compiler: WebpackCompiler) {
+
+        // We need the prefix of virtual modules to be an absolute path so webpack let's us load them (even if it's made up)
+        // In the loader we strip the made up prefix path again
+        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), "_virtual_");
+
         const injected = compiler.$unpluginContext || {}
         compiler.$unpluginContext = injected
 
