@@ -19,14 +19,16 @@ const LOAD_LOADER = resolve(
   __DEV__ ? '../../dist/rspack/loaders/load.js' : 'rspack/loaders/load',
 )
 
-const VIRTUAL_MODULE_PREFIX = resolve(process.cwd(), '_virtual_')
-
 export function getRspackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['rspack'] {
   return (userOptions?: UserOptions): RspackPluginInstance => {
     return {
       apply(compiler) {
+        // We need the prefix of virtual modules to be an absolute path so webpack let's us load them (even if it's made up)
+        // In the loader we strip the made up prefix path again
+        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), '_virtual_')
+
         const injected = compiler.$unpluginContext || {}
         compiler.$unpluginContext = injected
 
