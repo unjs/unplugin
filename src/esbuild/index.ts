@@ -284,8 +284,13 @@ function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
               ]) as SourceMap
             }
             else {
-              // otherwise, we always keep the last one, even if it's empty
-              map = result.map as any
+              if (typeof result.map === 'string') {
+                map = JSON.parse(result.map)
+              }
+              else {
+                // otherwise, we always keep the last one, even if it's empty
+                map = result.map as SourceMap
+              }
             }
           }
 
