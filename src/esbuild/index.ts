@@ -279,13 +279,18 @@ function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
             // combine the two sourcemaps
             if (map && result.map) {
               map = combineSourcemaps(args.path, [
-                result.map as RawSourceMap,
+                result.map === 'string' ? JSON.parse(result.map) : result.map as RawSourceMap,
                 map as RawSourceMap,
               ]) as SourceMap
             }
             else {
-              // otherwise, we always keep the last one, even if it's empty
-              map = result.map as any
+              if (typeof result.map === 'string') {
+                map = JSON.parse(result.map)
+              }
+              else {
+                // otherwise, we always keep the last one, even if it's empty
+                map = result.map as SourceMap
+              }
             }
           }
 
