@@ -1,3 +1,13 @@
+## [1.10.1](https://github.com/unjs/unplugin/compare/v1.10.0...v1.10.1) (2024-03-29)
+
+
+### Bug Fixes
+
+* **esbuild:** sourcemaps in transform result can be a string ([#377](https://github.com/unjs/unplugin/issues/377)) ([4382fa2](https://github.com/unjs/unplugin/commit/4382fa23d3dcbe107f651725d68f9e1463f30f8b))
+* **webpack,rspack:** incorrect assumption about the current working directory in webpack and rspack ([#374](https://github.com/unjs/unplugin/issues/374)) ([b0ec0e0](https://github.com/unjs/unplugin/commit/b0ec0e02eff233deae77c68d2ca0e5d2b28fe403))
+
+
+
 # [1.10.0](https://github.com/unjs/unplugin/compare/v1.9.0...v1.10.0) (2024-03-13)
 
 
