@@ -17,6 +17,7 @@ export default async function load(this: LoaderContext, source: string, map: any
   const context = createContext(this)
   const res = await plugin.load.call(
     Object.assign(
+      {},
       this._compilation && createBuildContext(this._compilation),
       context,
     ),
