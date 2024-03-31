@@ -160,7 +160,7 @@ importers:
         specifier: ^0.26.0
         version: 0.26.0(rollup@4.13.2)(vue@3.4.21)
       vitepress:
-        specifier: 1.0.1
+        specifier: ^1.0.1
         version: 1.0.1(@algolia/client-search@4.23.2)(@types/node@20.11.30)(postcss@8.4.38)(search-insights@2.13.0)(typescript@5.4.3)
       vitepress-plugin-twoslash:
         specifier: ^0.10.2
