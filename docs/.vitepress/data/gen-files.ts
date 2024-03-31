@@ -91,7 +91,7 @@ outline: deep
 
 function main() {
   if (!GITHUB_TOKEN) {
-    consola.error('GITHUB_TOKEN is missing, please refer to https://github.com/unplugin/docs#development')
+    consola.error('GITHUB_TOKEN is missing, please refer to https://github.com/unjs/unplugin/blob/main/docs/README.md#development')
     return false
   }
 

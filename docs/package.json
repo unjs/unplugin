@@ -25,7 +25,7 @@
     "unplugin": "workspace:*",
     "unplugin-icons": "^0.18.5",
     "unplugin-vue-components": "^0.26.0",
-    "vitepress": "1.0.0-rc.40",
+    "vitepress": "^1.0.1",
     "vitepress-plugin-twoslash": "^0.10.2",
     "vue": "^3.4.21"
   }
