@@ -16,7 +16,7 @@
     "case-police": "^0.6.1",
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
-    "eslint": "^8.57.0",
+    "eslint": "^9.2.0",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^0.3.0",
     "ofetch": "^1.3.4",
