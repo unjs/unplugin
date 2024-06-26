@@ -54,7 +54,7 @@ features:
 
   - title: Farm
     details: Extremely fast web build tool written in Rust
-    link: https://farm-fe.github.io/
+    link: https://www.farmfe.org/
     icon:
       src: /features/farm.png
 

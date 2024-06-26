@@ -17,7 +17,7 @@ lastUpdated: false
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/) <span style="color: #ca8a04"><strong>(⚠️ experimental)</strong></span>
 - [Rolldown](https://rolldown.rs/) <span style="color: #ca8a04"><strong>(⚠️ experimental)</strong></span>
-- [Farm](https://farm-fe.github.io/)
+- [Farm](https://www.farmfe.org/)
 
 ## Trying It Online
 
