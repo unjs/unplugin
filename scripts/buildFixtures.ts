@@ -34,10 +34,10 @@ async function run() {
     execSync('npx esbuild --version', { cwd: path, stdio: 'inherit' })
     execSync('node esbuild.config.js', { cwd: path, stdio: 'inherit' })
 
-    if (!skipRspack && name !== 'virtual-module') {
+    if (!skipRspack) {
       console.log(c.cyan(c.inverse(c.bold('\n  Rspack  '))), name, '\n')
-      execSync('npx @rspack/cli --version', { cwd: path, stdio: 'inherit' })
-      execSync('npx @rspack/cli', { cwd: path, stdio: 'inherit' })
+      execSync('npx rspack --version', { cwd: path, stdio: 'inherit' })
+      execSync('npx rspack', { cwd: path, stdio: 'inherit' })
     }
 
     console.log(c.magenta(c.inverse(c.bold('\n  Farm  '))), name, '\n')

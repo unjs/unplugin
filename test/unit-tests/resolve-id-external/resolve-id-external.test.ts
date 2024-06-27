@@ -100,6 +100,27 @@ describe('load hook should not be called when resolveId hook returned `external:
     checkHookCalls()
   })
 
+  it('rspack', async () => {
+    const plugin = createMockedUnplugin().rspack
+
+    await new Promise<void>((resolve) => {
+      build.rspack(
+        {
+          entry: entryFilePath,
+          plugins: [plugin()],
+          externals,
+          mode: 'production',
+          target: 'node',
+        },
+        () => {
+          resolve()
+        },
+      )
+    })
+
+    checkHookCalls()
+  })
+
   it('esbuild', async () => {
     const plugin = createMockedUnplugin().esbuild
 

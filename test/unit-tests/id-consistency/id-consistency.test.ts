@@ -33,26 +33,22 @@ function checkHookCalls(
 ): void {
   const EXPECT_CALLED_TIMES = 4
   // Ensure that all bundlers call the hooks the same amount of times
-  if (name !== 'rspack')
-    expect(resolveIdCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
+  expect(resolveIdCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
   expect(transformIncludeCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
   expect(transformCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
   expect(loadCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
 
   // Ensure that each hook was called with unique ids
-  if (name !== 'rspack')
-    expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
   expect(new Set(transformIncludeCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
   expect(new Set(transformCallback.mock.calls.map(call => call[1]))).toHaveLength(EXPECT_CALLED_TIMES)
   expect(new Set(loadCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
 
-  if (name !== 'rspack') {
   // Ensure that the `resolveId` hook was called with expected values
-    expect(resolveIdCallback).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
-    expect(resolveIdCallback).toHaveBeenCalledWith('./proxy-export', expect.anything(), expect.anything())
-    expect(resolveIdCallback).toHaveBeenCalledWith('./sub-folder/named-export', expect.anything(), expect.anything())
-    expect(resolveIdCallback).toHaveBeenCalledWith('./default-export', expect.anything(), expect.anything())
-  }
+  expect(resolveIdCallback).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
+  expect(resolveIdCallback).toHaveBeenCalledWith('./proxy-export', expect.anything(), expect.anything())
+  expect(resolveIdCallback).toHaveBeenCalledWith('./sub-folder/named-export', expect.anything(), expect.anything())
+  expect(resolveIdCallback).toHaveBeenCalledWith('./default-export', expect.anything(), expect.anything())
 
   // Ensure that the `transformInclude`, `transform` and `load` hooks were called with the same (absolute) ids
   const ids = transformIncludeCallback.mock.calls.map(call => call[0])
@@ -172,8 +168,9 @@ describe('id parameter should be consistent across hooks and plugins', () => {
         {
           entry: entryFilePath,
           plugins: [plugin()],
-          externals: externals[0],
+          externals,
           mode: 'production',
+          target: 'node',
         },
         () => {
           resolve()

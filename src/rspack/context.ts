@@ -1,10 +1,27 @@
+import { resolve } from 'path'
 import { Buffer } from 'buffer'
 import sources from 'webpack-sources'
 import type { Compilation, LoaderContext } from '@rspack/core'
 import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
-export function createBuildContext(compilation: Compilation): UnpluginBuildContext {
+interface ContextOptions {
+  addWatchFile: (file: string) => void
+  getWatchFiles: () => string[]
+}
+
+export function contextOptionsFromCompilation(compilation: Compilation): ContextOptions {
+  return {
+    addWatchFile(file) {
+      compilation.fileDependencies.add(file)
+    },
+    getWatchFiles() {
+      return Array.from(compilation.fileDependencies)
+    },
+  }
+}
+
+export function createBuildContext(options: ContextOptions, compilation: Compilation): UnpluginBuildContext {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -14,9 +31,9 @@ export function createBuildContext(compilation: Compilation): UnpluginBuildConte
         ...opts,
       })
     },
-    addWatchFile() {
+    addWatchFile(id) {
+      options.addWatchFile(resolve(process.cwd(), id))
     },
-
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
       if (emittedFile.source && outFileName) {
@@ -32,7 +49,7 @@ export function createBuildContext(compilation: Compilation): UnpluginBuildConte
       }
     },
     getWatchFiles() {
-      return []
+      return options.getWatchFiles()
     },
   }
 }

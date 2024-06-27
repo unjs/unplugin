@@ -26,6 +26,13 @@ describe('virtual-module build', () => {
     expect(content).toContain('VIRTUAL:TWO')
   })
 
+  it('rspack', async () => {
+    const content = await fs.readFile(r('rspack/main.js'), 'utf-8')
+
+    expect(content).toContain('VIRTUAL:ONE')
+    expect(content).toContain('VIRTUAL:TWO')
+  })
+
   it('esbuild', async () => {
     const content = await fs.readFile(r('esbuild/main.js'), 'utf-8')
 
