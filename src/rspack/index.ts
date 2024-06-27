@@ -70,7 +70,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
               normalModuleFactory.hooks.factorize.tapPromise(plugin.name, async (resolveData) => {
                 const id = normalizeAbsolutePath(resolveData.request)
 
-                const requestContext = 'contextInfo' in resolveData ? resolveData.contextInfo as { issuer: string } : { issuer: '' }
+                const requestContext = resolveData.contextInfo
                 const importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
                 const isEntry = requestContext.issuer === ''
 
