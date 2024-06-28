@@ -36,7 +36,7 @@ export interface JsPluginExtended extends FarmPlugin {
   [key: string]: any
 }
 
-export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined
+export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined | void
 
 export interface ExternalIdResult { id: string, external?: boolean }
 
