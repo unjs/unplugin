@@ -316,10 +316,10 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options, m
     rollup: {
       // Rollup plugin
     },
-    webpack(complier) {
+    webpack(compiler) {
       // Configure webpack compiler
     },
-    rspack(complier) {
+    rspack(compiler) {
       // Configure webpack compiler
     },
     esbuild: {
