@@ -9,24 +9,24 @@
     "lint": "eslint . && case-police '**/*.md'"
   },
   "devDependencies": {
-    "@iconify-json/heroicons": "^1.1.20",
-    "@iconify-json/lucide": "^1.1.181",
+    "@iconify-json/heroicons": "^1.1.21",
+    "@iconify-json/lucide": "^1.1.196",
     "@iconify-json/radix-icons": "^1.1.14",
-    "@iconify-json/simple-icons": "^1.1.99",
+    "@iconify-json/simple-icons": "^1.1.107",
     "case-police": "^0.6.1",
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
-    "eslint": "^8.57.0",
+    "eslint": "^9.6.0",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^0.3.0",
     "ofetch": "^1.3.4",
-    "tsx": "^4.7.2",
-    "unocss": "^0.59.2",
+    "tsx": "^4.15.8",
+    "unocss": "^0.61.0",
     "unplugin": "workspace:*",
-    "unplugin-icons": "^0.18.5",
-    "unplugin-vue-components": "^0.26.0",
-    "vitepress": "^1.1.0",
+    "unplugin-icons": "^0.19.0",
+    "unplugin-vue-components": "^0.27.2",
+    "vitepress": "^1.2.3",
     "vitepress-plugin-twoslash": "^0.10.2",
-    "vue": "^3.4.21"
+    "vue": "^3.4.31"
   }
 }
