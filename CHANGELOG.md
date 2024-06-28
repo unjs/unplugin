@@ -1,3 +1,13 @@
+## [1.10.2](https://github.com/unjs/unplugin/compare/v1.10.1...v1.10.2) (2024-06-28)
+
+
+### Bug Fixes
+
+* allow void in TransformResult ([#392](https://github.com/unjs/unplugin/issues/392)) ([d92b88e](https://github.com/unjs/unplugin/commit/d92b88e13282db5e9b4af1eda8dec5c1bc47c010))
+* farmfe link ([#387](https://github.com/unjs/unplugin/issues/387)) ([1d7e13f](https://github.com/unjs/unplugin/commit/1d7e13f06a605ced44b671acc2c25b7536b13c0e))
+
+
+
 ## [1.10.1](https://github.com/unjs/unplugin/compare/v1.10.0...v1.10.1) (2024-03-29)
 
 
