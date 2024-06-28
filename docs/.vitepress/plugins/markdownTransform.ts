@@ -5,7 +5,7 @@ import { repositoryMeta } from '../data/meta'
 const repos = repositoryMeta.map(({ name }) => `${name}`)
 
 export function MarkdownTransform(): PluginOption {
-  const MARKDOWN_LINK_RE = /(?<link>\[.*?]\((?<url>.*?)\)|<img.*?src="(?<url2>.*?)".*?>)/g
+  const MARKDOWN_LINK_RE = /(?<link>\[.*?\]\((?<url>.*?)\)|<img.*?src="(?<url2>[^"]*)".*?>)/g
   const GH_RAW_URL = 'https://raw.githubusercontent.com'
   const GH_URL = 'https://github.com/unplugin'
   const images = ['png', 'jpg', 'jpeg', 'gif', 'svg'].map(ext => `.${ext}`)
