@@ -1,3 +1,12 @@
+# [1.11.0](https://github.com/unjs/unplugin/compare/v1.10.2...v1.11.0) (2024-06-30)
+
+
+### Bug Fixes
+
+* await writeBundle hook in webpack and rspack ([#390](https://github.com/unjs/unplugin/issues/390)) ([5ab1a7b](https://github.com/unjs/unplugin/commit/5ab1a7bddbe2660242bd069275473c16645411a4))
+
+
+
 ## [1.10.2](https://github.com/unjs/unplugin/compare/v1.10.1...v1.10.2) (2024-06-28)
 
 
