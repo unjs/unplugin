@@ -104,8 +104,8 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
           }
 
           if (plugin.writeBundle) {
-            compiler.hooks.afterEmit.tap(plugin.name, () => {
-              plugin.writeBundle!()
+            compiler.hooks.afterEmit.tapPromise(plugin.name, async () => {
+              await plugin.writeBundle!()
             })
           }
         }
