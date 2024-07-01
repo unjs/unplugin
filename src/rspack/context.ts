@@ -1,6 +1,5 @@
 import { resolve } from 'path'
 import { Buffer } from 'buffer'
-import sources from 'webpack-sources'
 import type { Compilation, LoaderContext } from '@rspack/core'
 import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
@@ -37,10 +36,10 @@ export function createBuildContext(options: ContextOptions, compilation: Compila
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
       if (emittedFile.source && outFileName) {
+        const { sources } = compilation.compiler.webpack;
         compilation.emitAsset(
           outFileName,
           new sources.RawSource(
-            // @ts-expect-error types mismatch
             typeof emittedFile.source === 'string'
               ? emittedFile.source
               : Buffer.from(emittedFile.source),

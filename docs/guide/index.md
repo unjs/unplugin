@@ -177,7 +177,7 @@ export default defineConfig({
 | [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |  ✅  |
 | `transformInclude`<sup>2</sup>                                                    |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
 | [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |    ✅     |    ✅     | ✅ <sup>3</sup> |   ✅   |  ✅  |
-| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ❌        | ✅ <sup>5</sup> |  ✅  |
+| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |    ✅     |    ✅     |       ❌        |   ✅   |  ✅  |
 | [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
 | [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |    ✅     |    ✅     |       ✅        |   ✅   |  ✅  |
 
@@ -186,7 +186,7 @@ export default defineConfig({
 2. webpack's id filter is outside of loader logic; an additional hook is needed for better perf on webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for the following usage examples.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
-5. Rspack supports `resolveId` and `watchChange` with a minimum required version of v1.0.0-alpha.0.
+5. Rspack supports `resolveId` with a minimum required version of v1.0.0-alpha.1.
 :::
 
 ### Usage
@@ -230,15 +230,14 @@ export const farmPlugin = unplugin.farm
 | Context                                                                       | Rollup | Vite | webpack 4 | webpack 5 | esbuild | Rspack | Farm |
 | -------------------------------------------------------------------------- | :----: | :--: | :-------: | :-------: | :-----: | :----: | :---: |
 | [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
-| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ✅ <sup>2</sup>  |  ✅  |
+| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ✅   |  ✅  |
 | [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>1</sup> |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
-| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ✅ <sup>2</sup>  |  ✅  |
+| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |    ✅     |    ✅     |   ❌    |   ✅   |  ✅  |
 | [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
 | [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |    ✅     |    ✅     |   ✅    |   ✅   |  ✅  |
 
 ::: info Notice
 1. Currently, [`this.emitFile`](https://rollupjs.org/plugin-development/#thisemitfile) only supports the `EmittedAsset` variant.
-2. Rspack supports `this.addWatchFile` and `this.getWatchFiles` with a minimum required version of v1.0.0-alpha.0.
 :::
 
 ##  Nested Plugins
@@ -321,8 +320,8 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options, m
     webpack(compiler) {
       // Configure webpack compiler
     },
-    rspack(compiler) {
-      // Configure webpack compiler
+    rspack(complier) {
+      // Configure Rspack compiler
     },
     esbuild: {
       // Change the filter of onResolve and onLoad

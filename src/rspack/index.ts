@@ -67,7 +67,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
           // resolveId hook
           if (plugin.resolveId) {
             compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {
-              normalModuleFactory.hooks.factorize.tapPromise(plugin.name, async (resolveData) => {
+              normalModuleFactory.hooks.resolve.tapPromise(plugin.name, async (resolveData) => {
                 const id = normalizeAbsolutePath(resolveData.request)
 
                 const requestContext = resolveData.contextInfo
