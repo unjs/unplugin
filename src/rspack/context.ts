@@ -36,7 +36,7 @@ export function createBuildContext(options: ContextOptions, compilation: Compila
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
       if (emittedFile.source && outFileName) {
-        const { sources } = compilation.compiler.webpack;
+        const { sources } = compilation.compiler.webpack
         compilation.emitAsset(
           outFileName,
           new sources.RawSource(
