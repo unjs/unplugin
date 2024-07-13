@@ -27,7 +27,7 @@ describe('load-called-before-transform', () => {
     expect(content).toContain('it is a msg -> through the load hook -> transform-[Injected Esbuild]')
   })
 
-  it.skipIf(process.env.SKIP_RSPACK === 'true')('rspack', async () => {
+  it('rspack', async () => {
     const content = await fs.readFile(r('rspack/main.js'), 'utf-8')
 
     expect(content).toContain('it is a msg -> through the load hook -> transform-[Injected Rspack]')

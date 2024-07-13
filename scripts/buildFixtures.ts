@@ -4,8 +4,6 @@ import process from 'process'
 import fs from 'fs-extra'
 import c from 'picocolors'
 
-const skipRspack = process.env.SKIP_RSPACK === 'true'
-
 async function run() {
   const dir = resolve(__dirname, '../test/fixtures')
   let fixtures = await fs.readdir(dir)
@@ -34,11 +32,9 @@ async function run() {
     execSync('npx esbuild --version', { cwd: path, stdio: 'inherit' })
     execSync('node esbuild.config.js', { cwd: path, stdio: 'inherit' })
 
-    if (!skipRspack) {
-      console.log(c.cyan(c.inverse(c.bold('\n  Rspack  '))), name, '\n')
-      execSync('npx rspack --version', { cwd: path, stdio: 'inherit' })
-      execSync('npx rspack', { cwd: path, stdio: 'inherit' })
-    }
+    console.log(c.cyan(c.inverse(c.bold('\n  Rspack  '))), name, '\n')
+    execSync('npx rspack --version', { cwd: path, stdio: 'inherit' })
+    execSync('npx rspack', { cwd: path, stdio: 'inherit' })
 
     console.log(c.magenta(c.inverse(c.bold('\n  Farm  '))), name, '\n')
     execSync('npx farm --version', { cwd: path, stdio: 'inherit' })
