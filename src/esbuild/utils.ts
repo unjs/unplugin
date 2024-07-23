@@ -81,8 +81,9 @@ export function combineSourcemaps(
   if (
     sourcemapList.length === 0
     || sourcemapList.every(m => m.sources.length === 0)
-  )
+  ) {
     return { ...nullSourceMap }
+  }
 
   // We don't declare type here so we can convert/fake/map as EncodedSourceMap
   let map // : SourceMap

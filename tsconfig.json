@@ -21,6 +21,6 @@
   "include": [
     "src",
     "test",
-    "docs/.vitepress"
+    "docs/.vitepress/**/*"
   ]
 }

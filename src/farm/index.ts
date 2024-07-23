@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from 'path'
 
 import type {
   PluginLoadHookParam,
@@ -177,8 +177,9 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         if (
           plugin.transformInclude
           && !plugin.transformInclude(params.resolvedPath)
-        )
+        ) {
           return null
+        }
 
         const loader = params.moduleType ?? guessIdLoader(params.resolvedPath)
         const shouldTransformInclude
