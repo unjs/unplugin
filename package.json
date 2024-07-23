@@ -69,7 +69,7 @@
     "lint-staged": "^15.2.7",
     "magic-string": "^0.30.10",
     "picocolors": "^1.0.1",
-    "rolldown": "^0.12.1",
+    "rolldown": "^0.12.2",
     "rollup": "^4.19.0",
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.2.2",

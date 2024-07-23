@@ -15,7 +15,6 @@ export default {
     return h(CustomLayout)
   },
   enhanceApp({ app }: EnhanceAppContext) {
-    // @ts-expect-error type bug
     app.use(TwoslashFloatingVue)
   },
 }

@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@iconify/json": "^2.2.230",
-    "@shikijs/vitepress-twoslash": "^1.11.0",
+    "@shikijs/vitepress-twoslash": "^1.11.1",
     "case-police": "^0.6.1",
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",

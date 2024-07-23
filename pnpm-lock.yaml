@@ -85,8 +85,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       rolldown:
-        specifier: ^0.12.1
-        version: 0.12.1
+        specifier: ^0.12.2
+        version: 0.12.2
       rollup:
         specifier: ^4.19.0
         version: 4.19.0
@@ -118,8 +118,8 @@ importers:
         specifier: ^2.2.230
         version: 2.2.230
       '@shikijs/vitepress-twoslash':
-        specifier: ^1.11.0
-        version: 1.11.0(typescript@5.5.4)
+        specifier: ^1.11.1
+        version: 1.11.1(typescript@5.5.4)
       case-police:
         specifier: ^0.6.1
         version: 0.6.1
@@ -1969,64 +1969,72 @@ packages:
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
     dev: true
 
-  /@rolldown/binding-darwin-arm64@0.12.1:
-    resolution: {integrity: sha512-NWtxYWEb7Nd40WQHW/Fp3OolqxkwmfL/OJ2GWPOSBEmE7c6/iEgLROy+enkGkBKXdF6epsc+UUQGN5Mp03vaFw==}
+  /@rolldown/binding-darwin-arm64@0.12.2:
+    resolution: {integrity: sha512-Y3Ajye63Z5KymGUwTLaK7Q6YMvycXqNiXtosecgVzjAwMITCmXdzgnWgzzx5UlWHMrDYL4m5zIeXGB5slLwoMA==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-darwin-x64@0.12.1:
-    resolution: {integrity: sha512-9MVhdXaCUHBpuTRZWGrB4ptUd2cYkg56KdcHL6fLL9LtMnCRmsJ5s2QNIOyzF3lgDNt3ic3iHcKoPex0TNRtpg==}
+  /@rolldown/binding-darwin-x64@0.12.2:
+    resolution: {integrity: sha512-ZcVuVFEFBXhp00TUNn+EDYs7SGGLQCznvCeuW1XkM8EC2/LfewU/o4WuJK7CBC4iCSktuFGpw7+zLe8D6iinzg==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-linux-arm-gnueabihf@0.12.1:
-    resolution: {integrity: sha512-IS8zyitSUquGjGFK7T5VQwhkyWIsJ/kVj9fKKBg5+ejZiMCkUFbBj03Cm6WDyIBakLeA2Wjgwuvy1hSzsrKPJw==}
+  /@rolldown/binding-freebsd-x64@0.12.2:
+    resolution: {integrity: sha512-4fjuQHpm3q/Ly4fcqb8Qn49OQc2EQR2scUbQaOzXr7mIn9Zy8NfdRrsVG4/wpYvihIlTEtVx+ku0IZwcUzzZGg==}
+    cpu: [x64]
+    os: [freebsd]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@rolldown/binding-linux-arm-gnueabihf@0.12.2:
+    resolution: {integrity: sha512-MGEDaYLzTQ1kpvt13PzOwnd6O668S1mPM/vgi4O9vCfqJNTXZX8SeAg8Z2dQZbMSUyFDBVKGkz23GRTHqkGIsQ==}
     cpu: [arm]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-linux-arm64-gnu@0.12.1:
-    resolution: {integrity: sha512-zbO53A0NXGvigsNXGBnxc1LtLynqGR31dLSqF8LT4/vdJHYJOK5nKr9bzKErELeYaseZfA/jV8+whImB0F/3ow==}
+  /@rolldown/binding-linux-arm64-gnu@0.12.2:
+    resolution: {integrity: sha512-8uiaMe39twyIAw0do1Gc3O2SpQmyL1A/BucFncEB8eU5jtb3BWIM/X+F+eKDU6c+XZ+S1T025dhR1cGg8y20Xw==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-linux-arm64-musl@0.12.1:
-    resolution: {integrity: sha512-1V7ms7bG8T5Ob0jrIl0AZOU6UQxC/QDvqo9+ZUTEI5vVBYZPvTEAzEpYXKAn/pVPKwmh80epsaRL5D3Rc3WNWQ==}
+  /@rolldown/binding-linux-arm64-musl@0.12.2:
+    resolution: {integrity: sha512-GOFSKaMJueaSSODcqI+0Hu79buHYtGV7h2tydIDkSDD20mQuvwOF7jIVd27yNdlXWS9wLObwEu3BNgHmIj1M6A==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-linux-x64-gnu@0.12.1:
-    resolution: {integrity: sha512-rTFRH8ezlStxFvB33F4DodoFAIsGgCv0wRbs9965duMqWSYMlMHg4yFLOW6GNf1t86V7reG59rGPNbWn2evyVA==}
+  /@rolldown/binding-linux-x64-gnu@0.12.2:
+    resolution: {integrity: sha512-+hlRURUSiVP0+PFtjoTxUsiy/2NQpbf3DyUyMyl8Nv5+1BxjB6452VY1iFI+RzG4iLNJslcVcI6d6lJQ5zZYfw==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-linux-x64-musl@0.12.1:
-    resolution: {integrity: sha512-fwIv3777FBj3Wztc59B7/7mVW/Fm38keslyr6Op8UVPQy604qHYaztzQYjBzZcbxCTeJKdXWoNz/3ddn53+zeA==}
+  /@rolldown/binding-linux-x64-musl@0.12.2:
+    resolution: {integrity: sha512-9WKIaQSZZ0i9F5msW4I5kEj6ov+TZLteuTqCzI7nYWDBDm7m/hYkOkdIBf41GC8iKFsgVIQO0kRVAT966U8RxQ==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-wasm32-wasi@0.12.1:
-    resolution: {integrity: sha512-AzbfEXik1+t+guVIFQJ92O/W5jyq/+BFsXSlb5rYL7ZzxOjLEXL0IRizY/rIqxF43KnsO7lf51qKH6g+E5VRNA==}
+  /@rolldown/binding-wasm32-wasi@0.12.2:
+    resolution: {integrity: sha512-KY7bNrR3Jk6O0ne8LAaAnq9yI6xuKwhr/L2d1lBwrraCCyLHk0UEv4g6PfJkyUx6GfN0gVYuSxFgo9OggycldA==}
     engines: {node: '>=14.21.3'}
     cpu: [wasm32]
     requiresBuild: true
@@ -2035,24 +2043,24 @@ packages:
     dev: true
     optional: true
 
-  /@rolldown/binding-win32-arm64-msvc@0.12.1:
-    resolution: {integrity: sha512-U//wRnkk4Bm8VjRD1hWkpxO36M4ZXekBxciNLZbW7wKGIs1zkMBc77nA93iOQZgbE6a1JvJQT4/aPoqNg0JfpA==}
+  /@rolldown/binding-win32-arm64-msvc@0.12.2:
+    resolution: {integrity: sha512-XYBXifPk5iNcPUTyV/yB4tlj5nI+fYoe/8CLHjyUG8GS0l8rCD+jKaAv3Jvz2T2erlkjEPqJXmzhUfBscOUo6g==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-win32-ia32-msvc@0.12.1:
-    resolution: {integrity: sha512-79oEmO35sQXl4nnd9WdZLbxcSCtCrUO9zMr75S49Ol+aiPOCgOx9ObyilLO8sWYFX56VFow3271JKTeY6b4eXQ==}
+  /@rolldown/binding-win32-ia32-msvc@0.12.2:
+    resolution: {integrity: sha512-SV9LqvEc0d4gCLbkezH+UJ2uj2pTw3mwSKhFJEm6ir1lb05W6y9++m67NRs17fhudkFAz8iKlyPxKtZBKzAKOw==}
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@rolldown/binding-win32-x64-msvc@0.12.1:
-    resolution: {integrity: sha512-zjGS/TgiwPNA3Wkadww9EMQ/1DHjj2J4KsPOmew5y8jYydtMM3iOYUlymbPFuVd5SL7FP6nlHSGWJL+d4na4bA==}
+  /@rolldown/binding-win32-x64-msvc@0.12.2:
+    resolution: {integrity: sha512-XnRqHx182tyk1M12OMXqLajIj9DZrOUEKSPYrQUSaMCmHHAhULYP6ki240CV16PBWZW4Q1pwQ7YVKYFevRtvKg==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
@@ -2368,31 +2376,37 @@ packages:
       '@types/hast': 3.0.4
     dev: true
 
+  /@shikijs/core@1.11.1:
+    resolution: {integrity: sha512-Qsn8h15SWgv5TDRoDmiHNzdQO2BxDe86Yq6vIHf5T0cCvmfmccJKIzHtep8bQO9HMBZYCtCBzaXdd1MnxZBPSg==}
+    dependencies:
+      '@types/hast': 3.0.4
+    dev: true
+
   /@shikijs/transformers@1.11.0:
     resolution: {integrity: sha512-RNEUyOxF1cPYVG2EvBv0CZeDU1Tp4fSxmsVD2Ofv+8h9hBqqgpq+l+7uyouyqV1JHNlqwRmUwAqrQU3GQQ3csQ==}
     dependencies:
       shiki: 1.11.0
     dev: true
 
-  /@shikijs/twoslash@1.11.0(typescript@5.5.4):
-    resolution: {integrity: sha512-fyqUlij+Qm1MigL2JvXmeIJYSzvfrvO+SRULJco1y9XjIOe7SawvgUQf2BXhjZJPmrTKVqi4mbqECpj1KYtmKA==}
+  /@shikijs/twoslash@1.11.1(typescript@5.5.4):
+    resolution: {integrity: sha512-eN4U2sEjAJIlgvPpjKNKfnGpY1K6ppwmNQ24wCMOH4WRFpmAHPrrcXxw4Uw1MeDv93hUaVCCJN+ANP6ZBWp/kQ==}
     dependencies:
-      '@shikijs/core': 1.11.0
+      '@shikijs/core': 1.11.1
       twoslash: 0.2.9(typescript@5.5.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /@shikijs/vitepress-twoslash@1.11.0(typescript@5.5.4):
-    resolution: {integrity: sha512-ntZKY0Io1P05eiZ75zwIl1IG/5DXqQjKchuSIhkX8cGjdKbGW4cp8EabTmVlW0cevJy5OJBDyGTHhW79GXLH2g==}
+  /@shikijs/vitepress-twoslash@1.11.1(typescript@5.5.4):
+    resolution: {integrity: sha512-oYkTWN7WA1aw9kv0vcYyBE5LXRYwRNpNFJjFxeMHWOKkhRAOO3B1w90y1+BvsWxqJpigAsN9rJ1aAwDGDAHiHA==}
     dependencies:
-      '@shikijs/twoslash': 1.11.0(typescript@5.5.4)
+      '@shikijs/twoslash': 1.11.1(typescript@5.5.4)
       floating-vue: 5.2.2(vue@3.4.33)
       mdast-util-from-markdown: 2.0.1
       mdast-util-gfm: 3.0.0
       mdast-util-to-hast: 13.2.0
-      shiki: 1.11.0
+      shiki: 1.11.1
       twoslash: 0.2.9(typescript@5.5.4)
       twoslash-vue: 0.2.9(typescript@5.5.4)
       vue: 3.4.33(typescript@5.5.4)
@@ -8307,23 +8321,24 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rolldown@0.12.1:
-    resolution: {integrity: sha512-KHcX/FPdkCmJX3j2C6VaSd2pRmleQ720rtOAL5IciP2oCQ8+DKS7G/UAezV+bOLExXwB4GR8M+hGjE2XxzFV0g==}
+  /rolldown@0.12.2:
+    resolution: {integrity: sha512-YJYKiYt2O9XytiQ3Na4Kk29avfIXhvK7udB3wAaVaF4kiSsFKE1167tElO/0eD6tjfJXCvwNxwsyYkBJRtsLmQ==}
     hasBin: true
     dependencies:
       zod: 3.23.8
     optionalDependencies:
-      '@rolldown/binding-darwin-arm64': 0.12.1
-      '@rolldown/binding-darwin-x64': 0.12.1
-      '@rolldown/binding-linux-arm-gnueabihf': 0.12.1
-      '@rolldown/binding-linux-arm64-gnu': 0.12.1
-      '@rolldown/binding-linux-arm64-musl': 0.12.1
-      '@rolldown/binding-linux-x64-gnu': 0.12.1
-      '@rolldown/binding-linux-x64-musl': 0.12.1
-      '@rolldown/binding-wasm32-wasi': 0.12.1
-      '@rolldown/binding-win32-arm64-msvc': 0.12.1
-      '@rolldown/binding-win32-ia32-msvc': 0.12.1
-      '@rolldown/binding-win32-x64-msvc': 0.12.1
+      '@rolldown/binding-darwin-arm64': 0.12.2
+      '@rolldown/binding-darwin-x64': 0.12.2
+      '@rolldown/binding-freebsd-x64': 0.12.2
+      '@rolldown/binding-linux-arm-gnueabihf': 0.12.2
+      '@rolldown/binding-linux-arm64-gnu': 0.12.2
+      '@rolldown/binding-linux-arm64-musl': 0.12.2
+      '@rolldown/binding-linux-x64-gnu': 0.12.2
+      '@rolldown/binding-linux-x64-musl': 0.12.2
+      '@rolldown/binding-wasm32-wasi': 0.12.2
+      '@rolldown/binding-win32-arm64-msvc': 0.12.2
+      '@rolldown/binding-win32-ia32-msvc': 0.12.2
+      '@rolldown/binding-win32-x64-msvc': 0.12.2
     dev: true
 
   /rollup@4.19.0:
@@ -8561,6 +8576,13 @@ packages:
     resolution: {integrity: sha512-NqH/O1zRHvnuk/WfSL6b7+DtI7/kkMMSQGlZhm9DyzSU+SoIHhaw/fBZMr+zp9R8KjdIzkk3JKSC6hORuGDyng==}
     dependencies:
       '@shikijs/core': 1.11.0
+      '@types/hast': 3.0.4
+    dev: true
+
+  /shiki@1.11.1:
+    resolution: {integrity: sha512-VHD3Q0EBXaaa245jqayBe5zQyMQUdXBFjmGr9MpDaDpAKRMYn7Ff00DM5MLk26UyKjnml3yQ0O2HNX7PtYVNFQ==}
+    dependencies:
+      '@shikijs/core': 1.11.1
       '@types/hast': 3.0.4
     dev: true
 
