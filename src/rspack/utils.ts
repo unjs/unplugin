@@ -1,4 +1,4 @@
-import type { ResolvedUnpluginOptions } from '../src/types'
+import type { ResolvedUnpluginOptions } from '../types'
 
 export function encodeVirtualModuleId(id: string, plugin: ResolvedUnpluginOptions): string {
   return plugin.__virtualModulePrefix + encodeURIComponent(id)
