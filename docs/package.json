@@ -2,6 +2,9 @@
   "name": "unplugin-docs",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=18.19.0"
+  },
   "scripts": {
     "gen-files": "tsx ./.vitepress/data/gen-files.ts",
     "dev": "vitepress dev --open",

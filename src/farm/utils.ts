@@ -1,5 +1,5 @@
-import path from 'node:path'
-import * as querystring from 'node:querystring'
+import path from 'path'
+import * as querystring from 'querystring'
 import type { TransformResult } from '../types'
 
 export * from '../utils'
