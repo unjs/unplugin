@@ -1,5 +1,4 @@
 import { resolve } from 'path'
-import process from 'process'
 import fs from 'fs-extra'
 import { describe, expect, it } from 'vitest'
 
@@ -37,7 +36,7 @@ describe('transform build', () => {
     expect(content).toContain('QUERY: [Injected Post Esbuild]')
   })
 
-  it.skipIf(process.env.SKIP_RSPACK === 'true')('rspack', async () => {
+  it('rspack', async () => {
     const content = await fs.readFile(r('rspack/main.js'), 'utf-8')
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')

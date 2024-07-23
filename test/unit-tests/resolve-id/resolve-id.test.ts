@@ -109,6 +109,23 @@ describe('resolveId hook', () => {
     checkResolveIdHook(mockResolveIdHook)
   })
 
+  it('rspack', async () => {
+    const mockResolveIdHook = createResolveIdHook()
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).rspack
+
+    await new Promise((resolve) => {
+      build.rspack(
+        {
+          entry: path.resolve(__dirname, 'test-src/entry.js'),
+          plugins: [plugin()],
+        },
+        resolve,
+      )
+    })
+
+    checkResolveIdHook(mockResolveIdHook)
+  })
+
   it('esbuild', async () => {
     const mockResolveIdHook = createResolveIdHook()
     const plugin = createUnpluginWithCallback(mockResolveIdHook).esbuild

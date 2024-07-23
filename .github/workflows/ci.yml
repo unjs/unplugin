@@ -64,4 +64,3 @@ jobs:
         if: ${{ matrix.node == 16 }}
         env:
           IS_WEBPACK_4: 'true'
-          SKIP_RSPACK: 'true'

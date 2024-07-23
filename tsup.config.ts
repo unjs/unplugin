@@ -1,4 +1,5 @@
 import type { Options } from 'tsup'
+import { copy } from 'esbuild-plugin-copy'
 
 export const tsup: Options = {
   splitting: false,
@@ -23,4 +24,14 @@ export const tsup: Options = {
   define: {
     __DEV__: 'false',
   },
+  esbuildPlugins: [
+    copy({
+      assets: [
+        {
+          from: ['./src/rspack/virtual.js'],
+          to: ['./rspack/virtual.js'],
+        },
+      ],
+    }),
+  ],
 }
