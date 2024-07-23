@@ -1,3 +1,12 @@
+# [1.12.0](https://github.com/unjs/unplugin/compare/v1.11.0...v1.12.0) (2024-07-23)
+
+
+### Features
+
+* support resolveId for rspack ([#388](https://github.com/unjs/unplugin/issues/388)) ([7e4cecb](https://github.com/unjs/unplugin/commit/7e4cecbfec4b352f2db7c7a1697897a4820d8d67))
+
+
+
 # [1.11.0](https://github.com/unjs/unplugin/compare/v1.10.2...v1.11.0) (2024-06-30)
 
 
