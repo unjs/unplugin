@@ -90,6 +90,17 @@ export default {
 }
 ```
 
+```js [Rolldown]
+// rolldown.config.js
+import Starter from 'unplugin-starter/rolldown'
+
+export default {
+  plugins: [
+    Starter({ /* options */ }),
+  ],
+}
+```
+
 ```js [webpack]
 // webpack.config.js
 module.exports = {
@@ -219,6 +230,7 @@ export default unplugin
 
 export const vitePlugin = unplugin.vite
 export const rollupPlugin = unplugin.rollup
+export const rolldownPlugin = unplugin.rolldown
 export const webpackPlugin = unplugin.webpack
 export const rspackPlugin = unplugin.rspack
 export const esbuildPlugin = unplugin.esbuild
@@ -290,7 +302,7 @@ While **Unplugin** provides compatible layers for some hooks, the functionality 
 
 ### Hooks
 
-```ts {9,18,24,27,30,33} twoslash
+```ts {9,18,24,27,30,33,36,48} twoslash
 import type { UnpluginFactory } from 'unplugin'
 import { createUnplugin } from 'unplugin'
 
@@ -299,7 +311,7 @@ export interface Options {
 }
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (options, meta) => {
-  console.log(meta.framework) // vite rollup webpack esbuild rspack
+  console.log(meta.framework) // vite rollup webpack esbuild rspack...
   return {
     name: 'unplugin-starter',
     transform(code) {
@@ -316,6 +328,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options, m
     },
     rollup: {
       // Rollup plugin
+    },
+    rolldown: {
+      // Rolldown plugin
     },
     webpack(compiler) {
       // Configure webpack compiler
@@ -355,16 +370,18 @@ Each of the function takes the same generic factory argument as `createUnplugin`
 import {
   createEsbuildPlugin,
   createFarmPlugin,
+  createRolldownPlugin,
   createRollupPlugin,
   createRspackPlugin,
   createVitePlugin,
-  createWebpackPlugin,
+  createWebpackPlugin
 } from 'unplugin'
 
-const vitePlugin = createVitePlugin({ /* options */ })
-const rollupPlugin = createRollupPlugin({ /* options */ })
-const esbuildPlugin = createEsbuildPlugin({ /* options */ })
-const webpackPlugin = createWebpackPlugin({ /* options */ })
-const rspackPlugin = createRspackPlugin({ /* options */ })
-const farmPlugin = createFarmPlugin({ /* options */ })
+const vitePlugin = createVitePlugin(/* factory */)
+const rollupPlugin = createRollupPlugin(/* factory */)
+const rolldownPlugin = createRolldownPlugin(/* factory */)
+const esbuildPlugin = createEsbuildPlugin(/* factory */)
+const webpackPlugin = createWebpackPlugin(/* factory */)
+const rspackPlugin = createRspackPlugin(/* factory */)
+const farmPlugin = createFarmPlugin(/* factory */)
 ```
