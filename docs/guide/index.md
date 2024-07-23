@@ -15,7 +15,7 @@ lastUpdated: false
 - [Rollup](https://rollupjs.org/)
 - [webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
-- [Rspack](https://www.rspack.dev/) <span style="color: #ca8a04"><strong>(⚠️ experimental)</strong></span>
+- [Rspack](https://www.rspack.dev/)
 - [Rolldown](https://rolldown.rs/) <span style="color: #ca8a04"><strong>(⚠️ experimental)</strong></span>
 - [Farm](https://www.farmfe.org/)
 
