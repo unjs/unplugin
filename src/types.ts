@@ -1,7 +1,7 @@
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
-import type { Plugin as RolldownPlugin } from '@rolldown/node'
+import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
 import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
