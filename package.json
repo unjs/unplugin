@@ -75,7 +75,7 @@
     "tsup": "^8.2.2",
     "typescript": "^5.5.4",
     "vite": "^5.3.4",
-    "vitest": "^1.6.0",
+    "vitest": "^2.0.4",
     "webpack": "^5.93.0",
     "webpack-cli": "4.10.0"
   },
