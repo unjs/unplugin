@@ -1,7 +1,7 @@
 import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
 import { defineConfig } from 'vitepress'
 
-import { transformerTwoslash } from 'vitepress-plugin-twoslash'
+import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { repositoryMeta } from './data/meta'
 import { description, ogImage, title } from './constance'
 
