@@ -320,7 +320,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options, m
     webpack(compiler) {
       // Configure webpack compiler
     },
-    rspack(complier) {
+    rspack(compiler) {
       // Configure Rspack compiler
     },
     esbuild: {
