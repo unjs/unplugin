@@ -63,7 +63,7 @@
     "conventional-changelog-cli": "^4.1.0",
     "esbuild": "^0.20.2",
     "esbuild-plugin-copy": "^2.1.1",
-    "eslint": "^8.57.0",
+    "eslint": "^9.7.0",
     "fast-glob": "^3.3.2",
     "fs-extra": "^11.2.0",
     "jiti": "^1.21.0",
