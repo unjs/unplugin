@@ -141,9 +141,6 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
 function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
   return (plugin: UnpluginOptions): EsbuildPlugin['setup'] => {
-    if (plugin.esbuild?.setup)
-      return plugin.esbuild.setup as EsbuildPlugin['setup']
-
     return (build) => {
       meta.build = build as EsbuildPluginBuild
       const { onStart, onEnd, onResolve, onLoad, onTransform, initialOptions }
@@ -308,6 +305,9 @@ function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
           }
         })
       }
+
+      if (plugin.esbuild?.setup)
+        return plugin.esbuild.setup(meta.build)
     }
   }
 }
