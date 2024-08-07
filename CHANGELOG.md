@@ -1,3 +1,12 @@
+## [1.12.1](https://github.com/unjs/unplugin/compare/v1.12.0...v1.12.1) (2024-08-07)
+
+
+### Bug Fixes
+
+* **esbuild:** execute both unplugin and esbuild-specific hooks ([3e2fa72](https://github.com/unjs/unplugin/commit/3e2fa72620958dc5c1ef0997f0b309849aedffe1))
+
+
+
 # [1.12.0](https://github.com/unjs/unplugin/compare/v1.11.0...v1.12.0) (2024-07-23)
 
 
