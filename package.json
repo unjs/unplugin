@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "version": "1.12.1",
-  "packageManager": "pnpm@8.15.9",
+  "packageManager": "pnpm@9.7.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "repository": "unjs/unplugin",
