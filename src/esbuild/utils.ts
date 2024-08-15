@@ -46,7 +46,7 @@ export function unwrapLoader(
 // `load` and `transform` may return a sourcemap without toString and toUrl,
 // but esbuild needs them, we fix the two methods
 export function fixSourceMap(map: EncodedSourceMap): SourceMap {
-  if (!('toString' in map)) {
+  if (!Object.hasOwn(map, 'toString')) {
     Object.defineProperty(map, 'toString', {
       enumerable: false,
       value: function toString() {
@@ -54,7 +54,7 @@ export function fixSourceMap(map: EncodedSourceMap): SourceMap {
       },
     })
   }
-  if (!('toUrl' in map)) {
+  if (!Object.hasOwn(map, 'toUrl')) {
     Object.defineProperty(map, 'toUrl', {
       enumerable: false,
       value: function toUrl() {
