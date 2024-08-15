@@ -1,3 +1,12 @@
+## [1.12.2](https://github.com/unjs/unplugin/compare/v1.12.1...v1.12.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* **esbuild:** object sourcemap by overriding Object.prototype.toString ([#399](https://github.com/unjs/unplugin/issues/399)) ([5d91695](https://github.com/unjs/unplugin/commit/5d91695e32fd0734cbdcc0b2206c36a4b043020c))
+
+
+
 ## [1.12.1](https://github.com/unjs/unplugin/compare/v1.12.0...v1.12.1) (2024-08-07)
 
 
