@@ -19,7 +19,12 @@ export default async function load(this: LoaderContext, source: string, map: any
   const res = await plugin.load.call(
     Object.assign(
       {},
-      this._compilation && createBuildContext(contextOptionsFromCompilation(this._compilation), this._compilation),
+      this._compilation && createBuildContext({
+        ...contextOptionsFromCompilation(this._compilation),
+        getNativeBuildContext: () => {
+          return this
+        },
+      }, this._compilation),
       context,
     ),
     normalizeAbsolutePath(id),

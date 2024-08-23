@@ -23,6 +23,9 @@ export default async function load(this: LoaderContext<any>, source: string, map
       getWatchFiles: () => {
         return this.getDependencies()
       },
+      getNativeBuildContext: () => {
+        return this
+      },
     }, this._compilation), ...context },
     normalizeAbsolutePath(id),
   )

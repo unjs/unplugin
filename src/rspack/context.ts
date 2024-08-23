@@ -7,6 +7,7 @@ import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../
 interface ContextOptions {
   addWatchFile: (file: string) => void
   getWatchFiles: () => string[]
+  getNativeBuildContext?: () => any
 }
 
 export function contextOptionsFromCompilation(compilation: Compilation): ContextOptions {

@@ -27,7 +27,12 @@ export default async function transform(
   const res = await plugin.transform.call(
     Object.assign(
       {},
-      this._compilation && createBuildContext(contextOptionsFromCompilation(this._compilation), this._compilation),
+      this._compilation && createBuildContext({
+        ...contextOptionsFromCompilation(this._compilation),
+        getNativeBuildContext: () => {
+          return this
+        },
+      }, this._compilation),
       context,
     ),
     source,
