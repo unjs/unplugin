@@ -2,6 +2,7 @@ import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
 import { defineConfig } from 'vitepress'
 
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
+import { groupIconMdPlugin } from 'vitepress-plugin-group-icons'
 import { repositoryMeta } from './data/meta'
 import { description, ogImage, title } from './constance'
 
@@ -78,6 +79,7 @@ export default defineConfig({
   markdown: {
     config: (md: any) => {
       md.use(MarkdownItGitHubAlerts)
+      md.use(groupIconMdPlugin)
     },
     codeTransformers: [
       transformerTwoslash(),
