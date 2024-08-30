@@ -8,6 +8,7 @@ import CustomLayout from './CustomLayout.vue'
 import '@shikijs/vitepress-twoslash/style.css'
 import 'uno.css'
 import './style.css'
+import 'virtual:group-icons.css'
 
 export default {
   extends: DefaultTheme,
