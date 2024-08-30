@@ -27,10 +27,12 @@ You can try **Unplugin** in your browser directly.
 
 ## Creating an Unplugin package
 
-```shell
-npx degit unplugin/unplugin-starter unplugin-starter
-```
-> Check the [unplugin-starter](https://github.com/unplugin/unplugin-starter) repository for more details.
+### Templates
+
+- [unplugin/unplugin-starter](https://github.com/unplugin/unplugin-starter)
+- [sxzz/unplugin-starter](https://github.com/sxzz/unplugin-starter)
+
+Check repositories above for more details.
 
 ## Plugin Installation
 
