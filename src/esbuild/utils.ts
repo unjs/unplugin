@@ -151,28 +151,6 @@ export function createPluginContext(context: UnpluginBuildContext) {
     warn(message) { warnings.push(normalizeMessage(message)) },
   }
 
-  function normalizeMessage(message: string | UnpluginMessage): Message {
-    if (typeof message === 'string')
-      message = { message }
-
-    return {
-      id: message.id!,
-      pluginName: message.plugin!,
-      text: message.message!,
-
-      location: message.loc
-        ? {
-            file: message.loc.file,
-            line: message.loc.line,
-            column: message.loc.column,
-          } as Location
-        : null,
-
-      detail: message.meta,
-      notes: [],
-    }
-  }
-
   const mixedContext: UnpluginContext & UnpluginBuildContext = {
     ...context,
     ...pluginContext,
@@ -185,6 +163,28 @@ export function createPluginContext(context: UnpluginBuildContext) {
     errors,
     warnings,
     mixedContext,
+  }
+}
+
+function normalizeMessage(message: string | UnpluginMessage): Message {
+  if (typeof message === 'string')
+    message = { message }
+
+  return {
+    id: message.id!,
+    pluginName: message.plugin!,
+    text: message.message!,
+
+    location: message.loc
+      ? {
+          file: message.loc.file,
+          line: message.loc.line,
+          column: message.loc.column,
+        } as Location
+      : null,
+
+    detail: message.meta,
+    notes: [],
   }
 }
 
