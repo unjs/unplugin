@@ -1,3 +1,12 @@
+## [1.12.3](https://github.com/unjs/unplugin/compare/v1.12.2...v1.12.3) (2024-08-31)
+
+
+### Bug Fixes
+
+* remove unused chokidar dependency ([#409](https://github.com/unjs/unplugin/issues/409)) ([cb49c60](https://github.com/unjs/unplugin/commit/cb49c60a13a6b6530925ca908459a5f289ad9851))
+
+
+
 ## [1.12.2](https://github.com/unjs/unplugin/compare/v1.12.1...v1.12.2) (2024-08-15)
 
 
