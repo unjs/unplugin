@@ -1,5 +1,6 @@
 import type { Options } from 'tsup'
 import { copy } from 'esbuild-plugin-copy'
+import Unused from 'unplugin-unused/esbuild'
 
 export const tsup: Options = {
   splitting: false,
@@ -33,5 +34,6 @@ export const tsup: Options = {
         },
       ],
     }),
+    Unused({ level: 'error' }),
   ],
 }

@@ -74,6 +74,7 @@
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
+    "unplugin-unused": "^0.1.1",
     "vite": "^5.4.1",
     "vitest": "^2.0.5",
     "webpack": "^5.93.0",
