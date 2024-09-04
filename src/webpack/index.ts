@@ -170,6 +170,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                   unpluginName: plugin.name,
                 },
               }],
+              type: 'javascript/auto',
             })
           }
 
