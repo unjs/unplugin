@@ -1,3 +1,12 @@
+# [1.13.0](https://github.com/unjs/unplugin/compare/v1.12.4...v1.13.0) (2024-09-04)
+
+
+### Performance Improvements
+
+* make `webpack-sources` as an optional peer dependencies, close [#410](https://github.com/unjs/unplugin/issues/410) ([e93c9c9](https://github.com/unjs/unplugin/commit/e93c9c93601dd7151e29817a3395d23ddabf542d))
+
+
+
 ## [1.12.4](https://github.com/unjs/unplugin/compare/v1.12.3...v1.12.4) (2024-09-04)
 
 
