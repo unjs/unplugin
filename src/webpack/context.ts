@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { Buffer } from 'buffer'
 import process from 'process'
-import sources from 'webpack-sources'
+import { createRequire } from 'module'
 import type { Compilation, LoaderContext } from 'webpack'
 import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
@@ -23,6 +23,9 @@ export function contextOptionsFromCompilation(compilation: Compilation): Context
 }
 
 export function createBuildContext(options: ContextOptions, compilation?: Compilation): UnpluginBuildContext {
+  const require = createRequire(import.meta.url)
+  const sources = require('webpack-sources') as typeof import('webpack-sources')
+
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
