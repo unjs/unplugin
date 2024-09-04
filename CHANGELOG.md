@@ -1,3 +1,12 @@
+## [1.13.1](https://github.com/unjs/unplugin/compare/v1.13.0...v1.13.1) (2024-09-04)
+
+
+### Bug Fixes
+
+* dynamically require `webpack-sources` ([6d4d2b1](https://github.com/unjs/unplugin/commit/6d4d2b13277e3904419d8b8227c6336930b9a2ad))
+
+
+
 # [1.13.0](https://github.com/unjs/unplugin/compare/v1.12.4...v1.13.0) (2024-09-04)
 
 
