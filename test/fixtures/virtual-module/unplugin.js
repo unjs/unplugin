@@ -1,4 +1,4 @@
-const { createUnplugin } = require('unplugin')
+const { createUnplugin } = require('../../../')
 
 module.exports = createUnplugin(() => {
   return {
