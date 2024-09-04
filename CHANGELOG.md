@@ -1,3 +1,12 @@
+## [1.12.4](https://github.com/unjs/unplugin/compare/v1.12.3...v1.12.4) (2024-09-04)
+
+
+### Bug Fixes
+
+* undetermistic module type for virtual module ([#411](https://github.com/unjs/unplugin/issues/411)) ([2cfe5c7](https://github.com/unjs/unplugin/commit/2cfe5c73499c45c7ea92d357f61e8603d4b515a4))
+
+
+
 ## [1.12.3](https://github.com/unjs/unplugin/compare/v1.12.2...v1.12.3) (2024-08-31)
 
 
