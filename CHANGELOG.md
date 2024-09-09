@@ -1,3 +1,12 @@
+# [1.14.0](https://github.com/unjs/unplugin/compare/v1.13.1...v1.14.0) (2024-09-09)
+
+
+### Features
+
+* expose native build context ([#404](https://github.com/unjs/unplugin/issues/404)) ([1d1e064](https://github.com/unjs/unplugin/commit/1d1e064e96fb877b0c21610c4760d0a86e0d33ae))
+
+
+
 ## [1.13.1](https://github.com/unjs/unplugin/compare/v1.13.0...v1.13.1) (2024-09-04)
 
 
