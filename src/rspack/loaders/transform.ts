@@ -1,5 +1,5 @@
 import type { LoaderContext } from '@rspack/core'
-import { contextOptionsFromCompilation, createBuildContext, createContext } from '../context'
+import { createBuildContext, createContext } from '../context'
 
 export default async function transform(
   this: LoaderContext,
@@ -27,12 +27,7 @@ export default async function transform(
   const res = await plugin.transform.call(
     Object.assign(
       {},
-      this._compilation && createBuildContext({
-        ...contextOptionsFromCompilation(this._compilation),
-        getNativeBuildContext: () => {
-          return this
-        },
-      }, this._compilation),
+      this._compilation && createBuildContext(this._compiler, this._compilation, this),
       context,
     ),
     source,

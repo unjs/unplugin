@@ -4,9 +4,10 @@ import { Buffer } from 'buffer'
 import remapping from '@ampproject/remapping'
 import { Parser } from 'acorn'
 import type { DecodedSourceMap, EncodedSourceMap } from '@ampproject/remapping'
-import type { BuildOptions, Loader, Location, Message, PartialMessage } from 'esbuild'
+import type { Loader, Location, Message, PartialMessage } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
+import type { EsbuildPluginBuild } from '.'
 
 export * from '../utils'
 
@@ -111,9 +112,9 @@ export function combineSourcemaps(
   return map as EncodedSourceMap
 }
 
-export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildContext {
+export function createBuildContext(build: EsbuildPluginBuild): UnpluginBuildContext {
   const watchFiles: string[] = []
-
+  const { initialOptions } = build
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -139,6 +140,9 @@ export function createBuildContext(initialOptions: BuildOptions): UnpluginBuildC
     },
     getWatchFiles() {
       return watchFiles
+    },
+    getNativeBuildContext() {
+      return { framework: 'esbuild', build }
     },
   }
 }

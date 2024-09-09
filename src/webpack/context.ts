@@ -2,14 +2,13 @@ import { resolve } from 'path'
 import { Buffer } from 'buffer'
 import process from 'process'
 import { createRequire } from 'module'
-import type { Compilation, LoaderContext } from 'webpack'
+import type { Compilation, Compiler, LoaderContext } from 'webpack'
 import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
 interface ContextOptions {
   addWatchFile: (file: string) => void
   getWatchFiles: () => string[]
-  getNativeBuildContext?: () => any
 }
 
 export function contextOptionsFromCompilation(compilation: Compilation): ContextOptions {
@@ -23,7 +22,7 @@ export function contextOptionsFromCompilation(compilation: Compilation): Context
   }
 }
 
-export function createBuildContext(options: ContextOptions, compilation?: Compilation): UnpluginBuildContext {
+export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>): UnpluginBuildContext {
   const require = createRequire(import.meta.url)
   const sources = require('webpack-sources') as typeof import('webpack-sources')
 
@@ -64,7 +63,7 @@ export function createBuildContext(options: ContextOptions, compilation?: Compil
       return options.getWatchFiles()
     },
     getNativeBuildContext() {
-      return options.getNativeBuildContext?.()
+      return { framework: 'webpack', compiler, compilation, loaderContext }
     },
   }
 }

@@ -63,3 +63,12 @@ export function transformUse(
   }
   return []
 }
+
+export function resolveQuery(query: string | { unpluginName: string }) {
+  if (typeof query === 'string') {
+    return new URLSearchParams(query).get('unpluginName')!
+  }
+  else {
+    return query.unpluginName
+  }
+}

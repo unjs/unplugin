@@ -35,6 +35,9 @@ export function createFarmContext(
     getWatchFiles() {
       return context.getWatchFiles()
     },
+    getNativeBuildContext() {
+      return { framework: 'farm', context }
+    },
   }
 }
 

@@ -141,16 +141,15 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
 function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
   return (plugin: UnpluginOptions): EsbuildPlugin['setup'] => {
-    return (build) => {
-      meta.build = build as EsbuildPluginBuild
-      const { onStart, onEnd, onResolve, onLoad, onTransform, initialOptions }
-        = build as EsbuildPluginBuild
+    return (_build) => {
+      const build = meta.build = _build as EsbuildPluginBuild
+      const context = createBuildContext(build)
+      const { onStart, onEnd, onResolve, onLoad, onTransform, initialOptions } = build
 
       const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/
       const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
 
       const loader = plugin.esbuild?.loader ?? guessLoader
-      const context = createBuildContext(initialOptions)
 
       if (plugin.esbuild?.config)
         plugin.esbuild.config.call(context, initialOptions)

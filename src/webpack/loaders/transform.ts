@@ -1,18 +1,11 @@
 import type { LoaderContext } from 'webpack'
 import { createBuildContext, createContext } from '../context'
+import { resolveQuery } from '../../utils'
 
 export default async function transform(this: LoaderContext<{ unpluginName: string }>, source: string, map: any) {
   const callback = this.async()
 
-  let unpluginName: string
-  if (typeof this.query === 'string') {
-    const query = new URLSearchParams(this.query)
-    unpluginName = query.get('unpluginName')!
-  }
-  else {
-    unpluginName = this.query.unpluginName
-  }
-
+  const unpluginName = resolveQuery(this.query)
   const plugin = this._compiler?.$unpluginContext[unpluginName]
 
   if (!plugin?.transform)
@@ -20,17 +13,14 @@ export default async function transform(this: LoaderContext<{ unpluginName: stri
 
   const context = createContext(this)
   const res = await plugin.transform.call(
-    { ...createBuildContext({
+    Object.assign({}, createBuildContext({
       addWatchFile: (file) => {
         this.addDependency(file)
       },
       getWatchFiles: () => {
         return this.getDependencies()
       },
-      getNativeBuildContext: () => {
-        return this
-      },
-    }, this._compilation), ...context },
+    }, this._compiler!, this._compilation, this), context),
     source,
     this.resource,
   )
