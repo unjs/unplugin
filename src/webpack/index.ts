@@ -99,7 +99,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                       getWatchFiles() {
                         return Array.from(fileDependencies)
                       },
-                    })
+                    }, compiler)
                     let error: Error | undefined
                     const pluginContext: UnpluginContext = {
                       error(msg) {
@@ -189,7 +189,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           if (plugin.watchChange || plugin.buildStart) {
             compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
-              const context = createBuildContext(contextOptionsFromCompilation(compilation), compilation)
+              const context = createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation)
               if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
                 const promises: Promise<void>[] = []
                 if (compiler.modifiedFiles) {
@@ -212,7 +212,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           if (plugin.buildEnd) {
             compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-              await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compilation))
+              await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation))
             })
           }
 

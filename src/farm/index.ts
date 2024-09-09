@@ -1,13 +1,13 @@
 import path from 'path'
-
 import type {
+  CompilationContext,
+  JsPlugin,
   PluginLoadHookParam,
   PluginLoadHookResult,
   PluginResolveHookParam,
   PluginTransformHookParam,
   PluginTransformHookResult,
-} from '@farmfe/core/binding'
-import type { CompilationContext, JsPlugin } from '@farmfe/core'
+} from '@farmfe/core'
 import { toArray } from '../utils'
 import type {
   JsPluginExtended,

@@ -1,5 +1,5 @@
 import type { LoaderContext } from '@rspack/core'
-import { contextOptionsFromCompilation, createBuildContext, createContext } from '../context'
+import { createBuildContext, createContext } from '../context'
 import { normalizeAbsolutePath } from '../../utils'
 import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
 
@@ -19,7 +19,7 @@ export default async function load(this: LoaderContext, source: string, map: any
   const res = await plugin.load.call(
     Object.assign(
       {},
-      this._compilation && createBuildContext(contextOptionsFromCompilation(this._compilation), this._compilation),
+      this._compilation && createBuildContext(this._compiler, this._compilation, this),
       context,
     ),
     normalizeAbsolutePath(id),

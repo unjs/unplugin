@@ -1,11 +1,11 @@
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
-import type { Compiler as WebpackCompiler, WebpackPluginInstance } from 'webpack'
+import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, LoaderContext as WebpackLoaderContext, WebpackPluginInstance } from 'webpack'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
-import type { Compiler as RspackCompiler, RspackPluginInstance } from '@rspack/core'
+import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { JsPlugin as FarmPlugin } from '@farmfe/core'
+import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { EsbuildPluginBuild } from './esbuild'
 
 export {
@@ -40,11 +40,18 @@ export type TransformResult = string | { code: string, map?: SourceMapInput | So
 
 export interface ExternalIdResult { id: string, external?: boolean }
 
+export type NativeBuildContext =
+  { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> } |
+  { framework: 'esbuild', build: EsbuildPluginBuild } |
+  { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext } |
+  { framework: 'farm', context: FarmCompilationContext }
+
 export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
   parse: (input: string, options?: any) => AstNode
+  getNativeBuildContext?: () => NativeBuildContext
 }
 
 export interface UnpluginOptions {
@@ -117,24 +124,19 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
 }
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
-  framework: 'rollup' | 'vite' | 'rolldown'
+  framework: 'rollup' | 'vite' | 'rolldown' | 'farm'
 } | {
   framework: 'webpack'
-  webpack: {
-    compiler: WebpackCompiler
-  }
+  webpack: { compiler: WebpackCompiler }
 } | {
   framework: 'esbuild'
+  /** @deprecated {getNativeBuildContext} */
   build?: EsbuildPluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
 } | {
   framework: 'rspack'
-  rspack: {
-    compiler: RspackCompiler
-  }
-} | {
-  framework: 'farm'
+  rspack: { compiler: RspackCompiler }
 })
 
 export interface UnpluginMessage {

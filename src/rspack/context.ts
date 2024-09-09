@@ -1,27 +1,25 @@
 import { resolve } from 'path'
 import { Buffer } from 'buffer'
-import type { Compilation, LoaderContext } from '@rspack/core'
+import type { Compilation, Compiler, LoaderContext } from '@rspack/core'
 import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 
-interface ContextOptions {
-  addWatchFile: (file: string) => void
-  getWatchFiles: () => string[]
-}
-
-export function contextOptionsFromCompilation(compilation: Compilation): ContextOptions {
+export function createBuildContext(compiler: Compiler, compilation: Compilation, loaderContext?: LoaderContext): UnpluginBuildContext {
   return {
+    getNativeBuildContext() {
+      return {
+        framework: 'rspack',
+        compiler,
+        compilation,
+        loaderContext,
+      }
+    },
     addWatchFile(file) {
-      compilation.fileDependencies.add(file)
+      compilation.fileDependencies.add(resolve(process.cwd(), file))
     },
     getWatchFiles() {
       return Array.from(compilation.fileDependencies)
     },
-  }
-}
-
-export function createBuildContext(options: ContextOptions, compilation: Compilation): UnpluginBuildContext {
-  return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
         sourceType: 'module',
@@ -29,9 +27,6 @@ export function createBuildContext(options: ContextOptions, compilation: Compila
         locations: true,
         ...opts,
       })
-    },
-    addWatchFile(id) {
-      options.addWatchFile(resolve(process.cwd(), id))
     },
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
@@ -46,9 +41,6 @@ export function createBuildContext(options: ContextOptions, compilation: Compila
           ),
         )
       }
-    },
-    getWatchFiles() {
-      return options.getWatchFiles()
     },
   }
 }

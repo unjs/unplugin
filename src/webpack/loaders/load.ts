@@ -1,10 +1,11 @@
 import type { LoaderContext } from 'webpack'
 import { createBuildContext, createContext } from '../context'
-import { normalizeAbsolutePath } from '../../utils'
+import { normalizeAbsolutePath, resolveQuery } from '../../utils'
 
-export default async function load(this: LoaderContext<any>, source: string, map: any) {
+export default async function load(this: LoaderContext<{ unpluginName: string }>, source: string, map: any) {
   const callback = this.async()
-  const { unpluginName } = this.query
+
+  const unpluginName = resolveQuery(this.query)
   const plugin = this._compiler?.$unpluginContext[unpluginName]
   let id = this.resource
 
@@ -16,14 +17,14 @@ export default async function load(this: LoaderContext<any>, source: string, map
 
   const context = createContext(this)
   const res = await plugin.load.call(
-    { ...createBuildContext({
+    Object.assign({}, createBuildContext({
       addWatchFile: (file) => {
         this.addDependency(file)
       },
       getWatchFiles: () => {
         return this.getDependencies()
       },
-    }, this._compilation), ...context },
+    }, this._compiler!, this._compilation, this), context),
     normalizeAbsolutePath(id),
   )
 

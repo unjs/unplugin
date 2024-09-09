@@ -9,7 +9,7 @@ import type {
   UnpluginFactory,
   UnpluginInstance,
 } from '../types'
-import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
+import { createBuildContext, normalizeMessage } from './context'
 import { decodeVirtualModuleId, encodeVirtualModuleId } from './utils'
 
 const TRANSFORM_LOADER = resolve(
@@ -74,7 +74,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
                 const importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
                 const isEntry = requestContext.issuer === ''
 
-                const context = createBuildContext(contextOptionsFromCompilation(compilation), compilation)
+                const context = createBuildContext(compiler, compilation)
                 let error: Error | undefined
                 const pluginContext: UnpluginContext = {
                   error(msg) {
@@ -165,7 +165,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
           if (plugin.watchChange || plugin.buildStart) {
             compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
-              const context = createBuildContext(contextOptionsFromCompilation(compilation), compilation)
+              const context = createBuildContext(compiler, compilation)
               if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
                 const promises: Promise<void>[] = []
                 if (compiler.modifiedFiles) {
@@ -188,7 +188,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
           if (plugin.buildEnd) {
             compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-              await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compilation))
+              await plugin.buildEnd!.call(createBuildContext(compiler, compilation))
             })
           }
 
