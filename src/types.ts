@@ -41,7 +41,6 @@ export type TransformResult = string | { code: string, map?: SourceMapInput | So
 export interface ExternalIdResult { id: string, external?: boolean }
 
 export type NativeBuildContext =
-  { framework: 'rollup' | 'vite' | 'rolldown' } |
   { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> } |
   { framework: 'esbuild', build: EsbuildPluginBuild } |
   { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext } |
@@ -52,7 +51,7 @@ export interface UnpluginBuildContext {
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
   parse: (input: string, options?: any) => AstNode
-  getNativeBuildContext: () => NativeBuildContext
+  getNativeBuildContext?: () => NativeBuildContext
 }
 
 export interface UnpluginOptions {
