@@ -10,7 +10,7 @@ import type {
   UnpluginInstance,
 } from '../types'
 import { createBuildContext, normalizeMessage } from './context'
-import { FakeVirtualModules, decodeVirtualModuleId, encodeVirtualModuleId, isVirtualModuleId } from './utils'
+import { FakeVirtualModulesPlugin, decodeVirtualModuleId, encodeVirtualModuleId, isVirtualModuleId } from './utils'
 
 const TRANSFORM_LOADER = resolve(
   __dirname,
@@ -30,7 +30,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
       apply(compiler) {
         // We need the prefix of virtual modules to be an absolute path so rspack let's us load them (even if it's made up)
         // In the loader we strip the made up prefix path again
-        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), '.virtual')
+        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual')
 
         const injected = compiler.$unpluginContext || {}
         compiler.$unpluginContext = injected
@@ -66,7 +66,8 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
           // resolveId hook
           if (plugin.resolveId) {
-            const vfs = new FakeVirtualModules(plugin)
+            const vfs = new FakeVirtualModulesPlugin(plugin)
+            vfs.apply(compiler)
             plugin.__vfsModules = new Set()
 
             compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {

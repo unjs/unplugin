@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { basename, dirname, resolve } from 'path'
+import { Compiler } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../types'
 
 export function encodeVirtualModuleId(id: string, plugin: ResolvedUnpluginOptions): string {
@@ -14,14 +15,19 @@ export function isVirtualModuleId(encoded: string, plugin: ResolvedUnpluginOptio
   return dirname(encoded) === plugin.__virtualModulePrefix
 }
 
-export class FakeVirtualModules {
-  constructor(private plugin: ResolvedUnpluginOptions) {
+export class FakeVirtualModulesPlugin {
+  name = 'FakeVirtualModulesPlugin'
+  constructor(private plugin: ResolvedUnpluginOptions) {}
+
+  apply(compiler: Compiler) {
     const dir = this.plugin.__virtualModulePrefix
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir)
+      fs.mkdirSync(dir, { recursive: true })
     }
-    process.on('exit', async () => {
-      fs.rmdirSync(dir, { recursive: true })
+    compiler.hooks.shutdown.tap(this.name, () => {
+      if (fs.existsSync(dir)) {
+        fs.rmdirSync(dir, { recursive: true })
+      }
     })
   }
 
