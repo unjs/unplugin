@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { basename, dirname, resolve } from 'path'
-import { Compiler } from '@rspack/core'
+import type { Compiler } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../types'
 
 export function encodeVirtualModuleId(id: string, plugin: ResolvedUnpluginOptions): string {
