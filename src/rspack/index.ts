@@ -10,7 +10,7 @@ import type {
   UnpluginInstance,
 } from '../types'
 import { createBuildContext, normalizeMessage } from './context'
-import { decodeVirtualModuleId, encodeVirtualModuleId } from './utils'
+import { FakeVirtualModules, decodeVirtualModuleId, encodeVirtualModuleId, isVirtualModuleId } from './utils'
 
 const TRANSFORM_LOADER = resolve(
   __dirname,
@@ -22,16 +22,16 @@ const LOAD_LOADER = resolve(
   __DEV__ ? '../../dist/rspack/loaders/load.js' : 'rspack/loaders/load',
 )
 
-const VIRTUAL_MODULE_PATH = resolve(__dirname, __DEV__ ? '../../dist/rspack/virtual.js' : 'rspack/virtual.js')
-const VIRTUAL_MODULE_QUERY_PREFIX = '?unplugin_rspack_virtual='
-const VIRTUAL_MODULE_PREFIX = VIRTUAL_MODULE_PATH + VIRTUAL_MODULE_QUERY_PREFIX
-
 export function getRspackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['rspack'] {
   return (userOptions?: UserOptions): RspackPluginInstance => {
     return {
       apply(compiler) {
+        // We need the prefix of virtual modules to be an absolute path so rspack let's us load them (even if it's made up)
+        // In the loader we strip the made up prefix path again
+        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), '.virtual')
+
         const injected = compiler.$unpluginContext || {}
         compiler.$unpluginContext = injected
 
@@ -66,6 +66,9 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
           // resolveId hook
           if (plugin.resolveId) {
+            const vfs = new FakeVirtualModules(plugin)
+            plugin.__vfsModules = new Set()
+
             compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {
               normalModuleFactory.hooks.resolve.tapPromise(plugin.name, async (resolveData) => {
                 const id = normalizeAbsolutePath(resolveData.request)
@@ -102,8 +105,13 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
                 // If the resolved module does not exist,
                 // we treat it as a virtual module
-                if (!fs.existsSync(resolved))
+                if (!fs.existsSync(resolved)) {
+                  if (!plugin.__vfsModules!.has(resolved)) {
+                    plugin.__vfsModules!.add(resolved)
+                    await vfs.writeModule(resolved)
+                  }
                   resolved = encodeVirtualModuleId(resolved, plugin)
+                }
 
                 resolveData.request = resolved
               })
@@ -115,23 +123,8 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
               include(id) {
-                // always return true for virtual module, filter it in resourceQuery
-                if (id === VIRTUAL_MODULE_PATH)
-                  return true
-
-                // load include filter
-                if (plugin.loadInclude && !plugin.loadInclude(id))
-                  return false
-
-                // Don't run load hook for external modules
-                return !externalModules.has(id)
-              },
-              resourceQuery(query) {
-                if (!query.startsWith(VIRTUAL_MODULE_QUERY_PREFIX))
-                  return true
-
-                // filter the decoded virtual module id
-                const id = decodeVirtualModuleId(VIRTUAL_MODULE_PATH + query, plugin)
+                if (isVirtualModuleId(id, plugin))
+                  id = decodeVirtualModuleId(id, plugin)
 
                 // load include filter
                 if (plugin.loadInclude && !plugin.loadInclude(id))

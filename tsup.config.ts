@@ -1,5 +1,4 @@
 import type { Options } from 'tsup'
-import { copy } from 'esbuild-plugin-copy'
 import Unused from 'unplugin-unused/esbuild'
 
 export const tsup: Options = {
@@ -26,14 +25,6 @@ export const tsup: Options = {
     __DEV__: 'false',
   },
   esbuildPlugins: [
-    copy({
-      assets: [
-        {
-          from: ['./src/rspack/virtual.js'],
-          to: ['./rspack/virtual.js'],
-        },
-      ],
-    }),
     Unused({ level: 'error' }),
   ],
 }
