@@ -1,3 +1,12 @@
+## [1.14.1](https://github.com/unjs/unplugin/compare/v1.14.0...v1.14.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* **rspack:** match resource for virtual module ([#416](https://github.com/unjs/unplugin/issues/416)) ([636de4a](https://github.com/unjs/unplugin/commit/636de4a629aaed4b19626f7b11019595eba4d682))
+
+
+
 # [1.14.0](https://github.com/unjs/unplugin/compare/v1.13.1...v1.14.0) (2024-09-09)
 
 
