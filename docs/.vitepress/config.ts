@@ -57,7 +57,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/unplugin' },
+      { icon: 'github', link: 'https://github.com/unjs/unplugin' },
     ],
 
     footer: {
