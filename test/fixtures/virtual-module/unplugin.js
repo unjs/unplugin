@@ -4,16 +4,16 @@ module.exports = createUnplugin(() => {
   return {
     name: 'virtual-module-fixture',
     resolveId(id) {
-      return id.startsWith('virtual/') ? `/__${id}` : null
+      return id.startsWith('virtual/') ? id : null
     },
     loadInclude(id) {
-      return id.startsWith('/__virtual/')
+      return id.startsWith('virtual/')
     },
     load(id) {
-      if (id === '/__virtual/1')
+      if (id === 'virtual/1')
         return 'export default "VIRTUAL:ONE"'
 
-      else if (id === '/__virtual/2')
+      else if (id === 'virtual/2')
         return 'export default "VIRTUAL:TWO"'
 
       else
