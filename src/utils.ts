@@ -1,5 +1,5 @@
-import { isAbsolute, normalize } from 'path'
 import type { ResolvedUnpluginOptions } from './types'
+import { isAbsolute, normalize } from 'path'
 
 /**
  * Normalizes a given path when it's absolute. Normalizing means returning a new path by converting

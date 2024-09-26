@@ -1,6 +1,6 @@
 import type { LoaderContext } from '@rspack/core'
-import { createBuildContext, createContext } from '../context'
 import { normalizeAbsolutePath } from '../../utils'
+import { createBuildContext, createContext } from '../context'
 import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
 
 export default async function load(this: LoaderContext, source: string, map: any) {

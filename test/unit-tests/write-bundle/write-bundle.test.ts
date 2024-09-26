@@ -1,10 +1,10 @@
-import * as path from 'path'
-import * as fs from 'fs'
-import type { Mock } from 'vitest'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import type { UnpluginOptions, VitePlugin } from 'unplugin'
-import { createUnplugin } from 'unplugin'
 import type { RspackOptions } from '@rspack/core'
+import type { UnpluginOptions, VitePlugin } from 'unplugin'
+import type { Mock } from 'vitest'
+import * as fs from 'fs'
+import * as path from 'path'
+import { createUnplugin } from 'unplugin'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { build, toArray, webpackVersion } from '../utils'
 
 function createUnpluginWithCallback(writeBundleCallback: UnpluginOptions['writeBundle']) {

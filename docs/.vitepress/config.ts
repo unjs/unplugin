@@ -1,10 +1,10 @@
-import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
-import { defineConfig } from 'vitepress'
-
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
+import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
+
+import { defineConfig } from 'vitepress'
 import { groupIconMdPlugin } from 'vitepress-plugin-group-icons'
-import { repositoryMeta } from './data/meta'
 import { description, ogImage, title } from './constance'
+import { repositoryMeta } from './data/meta'
 
 import vite from './vite.config'
 

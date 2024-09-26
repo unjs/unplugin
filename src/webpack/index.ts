@@ -1,9 +1,9 @@
+import type { ResolvePluginInstance, Resolver } from 'webpack'
+import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import fs from 'fs'
 import { resolve } from 'path'
 import process from 'process'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { ResolvePluginInstance, Resolver } from 'webpack'
-import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import { normalizeAbsolutePath, shouldLoad, toArray, transformUse } from '../utils'
 import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
 

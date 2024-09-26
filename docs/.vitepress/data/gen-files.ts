@@ -1,12 +1,12 @@
-import 'dotenv/config'
+import type { Repository } from './repository.data'
 import { writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { env } from 'node:process'
-import { $fetch } from 'ofetch'
+import { fileURLToPath } from 'node:url'
 import { consola } from 'consola'
-import type { Repository } from './repository.data'
+import { $fetch } from 'ofetch'
 import { repositoryMeta } from './meta'
+import 'dotenv/config'
 
 const GITHUB_TOKEN = env.GITHUB_TOKEN
 

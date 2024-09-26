@@ -1,9 +1,9 @@
+import type { UnpluginFactory, UnpluginInstance } from './types'
 import { getEsbuildPlugin } from './esbuild'
 import { getFarmPlugin } from './farm'
 import { getRolldownPlugin } from './rolldown'
 import { getRollupPlugin } from './rollup'
 import { getRspackPlugin } from './rspack'
-import type { UnpluginFactory, UnpluginInstance } from './types'
 import { getVitePlugin } from './vite'
 import { getWebpackPlugin } from './webpack'
 

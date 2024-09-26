@@ -1,8 +1,8 @@
+import type { CompilationContext } from '@farmfe/core'
+import type { UnpluginBuildContext, UnpluginContext } from '../types'
 import { Buffer } from 'buffer'
 import { extname } from 'path'
 import { Parser } from 'acorn'
-import type { CompilationContext } from '@farmfe/core'
-import type { UnpluginBuildContext, UnpluginContext } from '../types'
 
 export function createFarmContext(
   context: CompilationContext,

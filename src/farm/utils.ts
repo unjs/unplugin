@@ -1,6 +1,6 @@
+import type { TransformResult } from '../types'
 import path from 'path'
 import * as querystring from 'querystring'
-import type { TransformResult } from '../types'
 
 export * from '../utils'
 

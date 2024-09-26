@@ -1,8 +1,8 @@
-import * as path from 'path'
-import type { Mock } from 'vitest'
-import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginOptions, VitePlugin } from 'unplugin'
+import type { Mock } from 'vitest'
+import * as path from 'path'
 import { createUnplugin } from 'unplugin'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { build, toArray } from '../utils'
 
 function createUnpluginWithCallback(resolveIdCallback: UnpluginOptions['resolveId']) {

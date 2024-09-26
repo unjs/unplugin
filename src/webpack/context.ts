@@ -1,10 +1,10 @@
-import { resolve } from 'path'
-import { Buffer } from 'buffer'
-import process from 'process'
-import { createRequire } from 'module'
 import type { Compilation, Compiler, LoaderContext } from 'webpack'
-import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
+import { Buffer } from 'buffer'
+import { createRequire } from 'module'
+import { resolve } from 'path'
+import process from 'process'
+import { Parser } from 'acorn'
 
 interface ContextOptions {
   addWatchFile: (file: string) => void

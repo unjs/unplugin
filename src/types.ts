@@ -1,22 +1,22 @@
-import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
-import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, LoaderContext as WebpackLoaderContext, WebpackPluginInstance } from 'webpack'
-import type { Plugin as VitePlugin } from 'vite'
-import type { Plugin as RolldownPlugin } from 'rolldown'
-import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
-import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
-import type VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
+import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
+import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
+import type { Plugin as RolldownPlugin } from 'rolldown'
+import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
+import type { Plugin as VitePlugin } from 'vite'
+import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, LoaderContext as WebpackLoaderContext, WebpackPluginInstance } from 'webpack'
+import type VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { EsbuildPluginBuild } from './esbuild'
 
 export {
   EsbuildPlugin,
-  RollupPlugin,
   RolldownPlugin,
-  VitePlugin,
-  WebpackPluginInstance,
-  RspackPluginInstance,
+  RollupPlugin,
   RspackCompiler,
+  RspackPluginInstance,
+  VitePlugin,
   WebpackCompiler,
+  WebpackPluginInstance,
 }
 
 export type Thenable<T> = T | Promise<T>

@@ -1,5 +1,5 @@
-import { join, resolve } from 'path'
 import { execSync } from 'child_process'
+import { join, resolve } from 'path'
 import process from 'process'
 import fs from 'fs-extra'
 import c from 'picocolors'

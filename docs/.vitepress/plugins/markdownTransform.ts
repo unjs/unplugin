@@ -1,5 +1,5 @@
-import { basename } from 'node:path'
 import type { PluginOption } from 'vite'
+import { basename } from 'node:path'
 import { repositoryMeta } from '../data/meta'
 
 const repos = repositoryMeta.map(({ name }) => `${name}`)

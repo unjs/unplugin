@@ -1,6 +1,6 @@
 import type { LoaderContext } from 'webpack'
-import { createBuildContext, createContext } from '../context'
 import { resolveQuery } from '../../utils'
+import { createBuildContext, createContext } from '../context'
 
 export default async function transform(this: LoaderContext<{ unpluginName: string }>, source: string, map: any) {
   const callback = this.async()

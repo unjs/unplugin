@@ -1,8 +1,8 @@
-import { resolve } from 'path'
-import { Buffer } from 'buffer'
 import type { Compilation, Compiler, LoaderContext } from '@rspack/core'
-import { Parser } from 'acorn'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
+import { Buffer } from 'buffer'
+import { resolve } from 'path'
+import { Parser } from 'acorn'
 
 export function createBuildContext(compiler: Compiler, compilation: Compilation, loaderContext?: LoaderContext): UnpluginBuildContext {
   return {

@@ -1,5 +1,5 @@
-import { toRollupPlugin } from '../rollup'
 import type { RolldownPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
+import { toRollupPlugin } from '../rollup'
 import { toArray } from '../utils'
 
 export function getRolldownPlugin<UserOptions = Record<string, never>, Nested extends boolean = boolean>(

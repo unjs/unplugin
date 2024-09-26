@@ -1,7 +1,4 @@
-import fs from 'fs'
-import { resolve } from 'path'
 import type { RspackPluginInstance } from '@rspack/core'
-import { normalizeAbsolutePath, toArray, transformUse } from '../utils'
 import type {
   ResolvedUnpluginOptions,
   UnpluginContext,
@@ -9,8 +6,11 @@ import type {
   UnpluginFactory,
   UnpluginInstance,
 } from '../types'
+import fs from 'fs'
+import { resolve } from 'path'
+import { normalizeAbsolutePath, toArray, transformUse } from '../utils'
 import { createBuildContext, normalizeMessage } from './context'
-import { FakeVirtualModulesPlugin, decodeVirtualModuleId, encodeVirtualModuleId, isVirtualModuleId } from './utils'
+import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin, isVirtualModuleId } from './utils'
 
 const TRANSFORM_LOADER = resolve(
   __dirname,

@@ -1,5 +1,5 @@
-import { toRollupPlugin } from '../rollup'
 import type { UnpluginContextMeta, UnpluginFactory, UnpluginInstance, VitePlugin } from '../types'
+import { toRollupPlugin } from '../rollup'
 import { toArray } from '../utils'
 
 export function getVitePlugin<UserOptions = Record<string, never>, Nested extends boolean = boolean>(

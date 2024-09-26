@@ -1,4 +1,3 @@
-import path from 'path'
 import type {
   CompilationContext,
   JsPlugin,
@@ -8,7 +7,6 @@ import type {
   PluginTransformHookParam,
   PluginTransformHookResult,
 } from '@farmfe/core'
-import { toArray } from '../utils'
 import type {
   JsPluginExtended,
   TransformResult,
@@ -17,7 +15,11 @@ import type {
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
+import type { WatchChangeEvents } from './utils'
+import path from 'path'
+import { toArray } from '../utils'
 import { createFarmContext, unpluginContext } from './context'
+
 import {
   convertEnforceToPriority,
   convertWatchEventChange,
@@ -28,8 +30,6 @@ import {
   isString,
   transformQuery,
 } from './utils'
-
-import type { WatchChangeEvents } from './utils'
 
 export function getFarmPlugin<
   UserOptions = Record<string, never>,

@@ -1,8 +1,6 @@
-import fs from 'fs'
-import path from 'path'
-import type { SourceMap } from 'rollup'
 import type { RawSourceMap } from '@ampproject/remapping'
 import type { OnLoadOptions, OnLoadResult, PluginBuild } from 'esbuild'
+import type { SourceMap } from 'rollup'
 import type {
   EsbuildPlugin,
   UnpluginContextMeta,
@@ -10,6 +8,8 @@ import type {
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
+import fs from 'fs'
+import path from 'path'
 import {
   combineSourcemaps,
   createBuildContext,
@@ -133,7 +133,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
     return {
       name: (plugins.length === 1 ? plugins[0].name : meta.esbuildHostName)
-      ?? `unplugin-host:${plugins.map(p => p.name).join(':')}`,
+        ?? `unplugin-host:${plugins.map(p => p.name).join(':')}`,
       setup: setupPlugins,
     }
   }
