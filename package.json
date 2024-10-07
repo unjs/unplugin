@@ -5,7 +5,10 @@
   "packageManager": "pnpm@8.15.9",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
-  "repository": "unjs/unplugin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unjs/unplugin.git"
+  },
   "sideEffects": false,
   "exports": {
     ".": {
