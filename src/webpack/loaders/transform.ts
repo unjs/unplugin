@@ -13,14 +13,20 @@ export default async function transform(this: LoaderContext<{ unpluginName: stri
 
   const context = createContext(this)
   const res = await plugin.transform.call(
-    Object.assign({}, createBuildContext({
-      addWatchFile: (file) => {
-        this.addDependency(file)
+    Object.assign(
+      {
+        getCombinedSourcemap: () => map,
       },
-      getWatchFiles: () => {
-        return this.getDependencies()
-      },
-    }, this._compiler!, this._compilation, this), context),
+      createBuildContext({
+        addWatchFile: (file) => {
+          this.addDependency(file)
+        },
+        getWatchFiles: () => {
+          return this.getDependencies()
+        },
+      }, this._compiler!, this._compilation, this),
+      context,
+    ),
     source,
     this.resource,
   )

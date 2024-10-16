@@ -26,7 +26,9 @@ export default async function transform(
   const context = createContext(this)
   const res = await plugin.transform.call(
     Object.assign(
-      {},
+      {
+        getCombinedSourcemap: () => map,
+      },
       this._compilation && createBuildContext(this._compiler, this._compilation, this),
       context,
     ),
