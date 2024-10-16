@@ -17,7 +17,7 @@ import type {
 } from '../types'
 import type { WatchChangeEvents } from './utils'
 import path from 'path'
-import { toArray } from '../utils'
+import { getCombinedSourcemap, toArray } from '../utils'
 import { createFarmContext, unpluginContext } from './context'
 
 import {
@@ -187,7 +187,9 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           && plugin.transformInclude(params.resolvedPath)
         const farmContext = createFarmContext(context, params.resolvedPath)
         const resource: TransformResult = await _transform.call(
-          Object.assign(unpluginContext(context), farmContext),
+          Object.assign({
+            getCombinedSourcemap: () => getCombinedSourcemap(params.sourceMapChain, params.resolvedPath, params.content),
+          }, unpluginContext(context), farmContext),
           params.content,
           params.resolvedPath,
         )
