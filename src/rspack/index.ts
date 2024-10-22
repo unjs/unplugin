@@ -28,7 +28,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
   return (userOptions?: UserOptions): RspackPluginInstance => {
     return {
       apply(compiler) {
-        // We need the prefix of virtual modules to be an absolute path so rspack let's us load them (even if it's made up)
+        // We need the prefix of virtual modules to be an absolute path so rspack lets us load them (even if it's made up)
         // In the loader we strip the made up prefix path again
         const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual')
 
