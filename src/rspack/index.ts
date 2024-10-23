@@ -75,8 +75,11 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
                 const id = normalizeAbsolutePath(resolveData.request)
 
                 const requestContext = resolveData.contextInfo
-                const importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
+                let importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
                 const isEntry = requestContext.issuer === ''
+
+                if (importer?.startsWith(plugin.__virtualModulePrefix))
+                  importer = decodeURIComponent(importer.slice(plugin.__virtualModulePrefix.length))
 
                 const context = createBuildContext(compiler, compilation)
                 let error: Error | undefined

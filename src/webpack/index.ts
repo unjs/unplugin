@@ -84,8 +84,11 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const id = normalizeAbsolutePath(request.request)
 
                     const requestContext = (request as unknown as { context: { issuer: string } }).context
-                    const importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
+                    let importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
                     const isEntry = requestContext.issuer === ''
+
+                    if (importer?.startsWith(plugin.__virtualModulePrefix))
+                      importer = decodeURIComponent(importer.slice(plugin.__virtualModulePrefix.length))
 
                     // call hook
                     // resolveContext.fileDependencies is typed as a WriteOnlySet, so make our own copy here
