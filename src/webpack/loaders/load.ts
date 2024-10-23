@@ -16,6 +16,11 @@ export default async function load(this: LoaderContext<{ unpluginName: string }>
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
   const context = createContext(this)
+
+  id = normalizeAbsolutePath(id)
+  if (id.startsWith('\\'))
+    id = id.replace(/\\/g, '/')
+
   const res = await plugin.load.call(
     Object.assign({}, createBuildContext({
       addWatchFile: (file) => {
@@ -25,7 +30,7 @@ export default async function load(this: LoaderContext<{ unpluginName: string }>
         return this.getDependencies()
       },
     }, this._compiler!, this._compilation, this), context),
-    normalizeAbsolutePath(id),
+    id,
   )
 
   if (res == null)
