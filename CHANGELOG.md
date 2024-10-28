@@ -1,3 +1,12 @@
+# [1.15.0](https://github.com/unjs/unplugin/compare/v1.14.1...v1.15.0) (2024-10-28)
+
+
+### Bug Fixes
+
+* Unvirtualize `importer` paths in webpack and rspack ([#430](https://github.com/unjs/unplugin/issues/430)) ([52f0b79](https://github.com/unjs/unplugin/commit/52f0b79df3ddcd753a176e9d021f3eb271890bcd))
+
+
+
 ## [1.14.1](https://github.com/unjs/unplugin/compare/v1.14.0...v1.14.1) (2024-09-11)
 
 
