@@ -24,7 +24,7 @@ export function contextOptionsFromCompilation(compilation: Compilation): Context
 
 export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>): UnpluginBuildContext {
   const require = createRequire(import.meta.url)
-  const sources = require('webpack-sources') as typeof import('webpack-sources')
+  const { sources } = require('webpack') as typeof import('webpack')
 
   return {
     parse(code: string, opts: any = {}) {
@@ -47,7 +47,6 @@ export function createBuildContext(options: ContextOptions, compiler: Compiler, 
           outFileName,
           sources
             ? new sources.RawSource(
-              // @ts-expect-error types mismatch
               typeof emittedFile.source === 'string'
                 ? emittedFile.source
                 : Buffer.from(emittedFile.source),
