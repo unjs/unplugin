@@ -46,7 +46,7 @@
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "peerDependencies": {
-    "webpack": ">= 4.x <= 5.x"
+    "webpack": "^4.0.0 || ^5.0.0"
   },
   "peerDependenciesMeta": {
     "webpack": {
