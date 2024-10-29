@@ -13,19 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-
-      - name: Setup
-        run: npm i -g @antfu/ni
-
-      - name: Install
-        run: nci
-
-      - name: Lint
-        run: nr lint
+      - run: corepack enable
+      - run: npm i -g @antfu/ni
+      - run: nci
+      - run: nr lint
 
   ci:
     runs-on: ${{ matrix.os }}

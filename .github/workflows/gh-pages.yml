@@ -18,12 +18,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-
-      - name: Setup
-        run: npm i -g @antfu/ni
-
-      - name: Install
-        run: nci
+      - run: corepack enable
+      - run: npm i -g @antfu/ni
+      - run: nci
 
       - name: Build unplugin
         run: nr build
