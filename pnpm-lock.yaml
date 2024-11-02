@@ -42,6 +42,9 @@ importers:
       '@types/node':
         specifier: ^22.8.1
         version: 22.8.1
+      '@types/webpack-sources':
+        specifier: ^3.2.3
+        version: 3.2.3
       bumpp:
         specifier: ^9.7.1
         version: 9.7.1
@@ -95,7 +98,7 @@ importers:
         version: 'link:'
       unplugin-unused:
         specifier: ^0.2.3
-        version: 0.2.3(rollup@4.24.2)(webpack-sources@3.2.3)
+        version: 0.2.3(rollup@4.24.2)
       vite:
         specifier: ^5.4.10
         version: 5.4.10(@types/node@22.8.1)
@@ -149,10 +152,10 @@ importers:
         version: link:..
       unplugin-icons:
         specifier: ^0.19.3
-        version: 0.19.3(@vue/compiler-sfc@3.5.12)(webpack-sources@3.2.3)
+        version: 0.19.3(@vue/compiler-sfc@3.5.12)
       unplugin-vue-components:
         specifier: ^0.27.4
-        version: 0.27.4(rollup@4.24.2)(vue@3.5.12)(webpack-sources@3.2.3)
+        version: 0.27.4(rollup@4.24.2)(vue@3.5.12)
       vitepress:
         specifier: ^1.4.1
         version: 1.4.1(@algolia/client-search@5.6.1)(@types/node@22.8.1)(postcss@8.4.47)(search-insights@2.17.2)(typescript@5.6.3)
@@ -2783,6 +2786,10 @@ packages:
       '@types/node': 22.8.1
     dev: true
 
+  /@types/source-list-map@0.1.6:
+    resolution: {integrity: sha512-5JcVt1u5HDmlXkwOD2nslZVllBBc7HDuOICfiZah2Z0is8M8g+ddAEawbmd3VjedfDHBzxCaXLs07QEmb7y54g==}
+    dev: true
+
   /@types/ua-parser-js@0.7.39:
     resolution: {integrity: sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg==}
     dev: true
@@ -2793,6 +2800,14 @@ packages:
 
   /@types/web-bluetooth@0.0.20:
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
+    dev: true
+
+  /@types/webpack-sources@3.2.3:
+    resolution: {integrity: sha512-4nZOdMwSPHZ4pTEZzSp0AsTM4K7Qmu40UKW4tJDiOVs20UzYF9l+qUe4s0ftfN0pin06n+5cWWDJXH+sbhAiDw==}
+    dependencies:
+      '@types/node': 22.8.1
+      '@types/source-list-map': 0.1.6
+      source-map: 0.7.4
     dev: true
 
   /@types/ws@8.5.12:
@@ -3164,8 +3179,8 @@ packages:
   /@vitest/eslint-plugin@1.1.7(@typescript-eslint/utils@8.11.0)(eslint@9.13.0)(typescript@5.6.3)(vitest@2.1.4):
     resolution: {integrity: sha512-pTWGW3y6lH2ukCuuffpan6kFxG6nIuoesbhMiQxskyQMRcCN5t9SXsKrNHvEw3p8wcCsgJoRqFZVkOTn6TjclA==}
     peerDependencies:
-      '@typescript-eslint/utils': ^8.9.0
-      eslint: ^9.12.0
+      '@typescript-eslint/utils': '>= 8.0'
+      eslint: '>= 8.57.0'
       typescript: '>= 5.0.0'
       vitest: '*'
     peerDependenciesMeta:
@@ -8789,6 +8804,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /source-map@0.7.4:
+    resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
+    engines: {node: '>= 8'}
+    dev: true
+
   /source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
@@ -9343,7 +9363,7 @@ packages:
   /twoslash@0.2.12(typescript@5.6.3):
     resolution: {integrity: sha512-tEHPASMqi7kqwfJbkk7hc/4EhlrKCSLcur+TcvYki3vhIfaRMXnXjaYFgXpoZRbT6GdprD4tGuVBEmTpUgLBsw==}
     peerDependencies:
-      typescript: ^5.6.2
+      typescript: '*'
     dependencies:
       '@typescript/vfs': 1.6.0(typescript@5.6.3)
       twoslash-protocol: 0.2.12
@@ -9528,7 +9548,7 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /unplugin-icons@0.19.3(@vue/compiler-sfc@3.5.12)(webpack-sources@3.2.3):
+  /unplugin-icons@0.19.3(@vue/compiler-sfc@3.5.12):
     resolution: {integrity: sha512-EUegRmsAI6+rrYr0vXjFlIP+lg4fSC4zb62zAZKx8FGXlWAGgEGBCa3JDe27aRAXhistObLPbBPhwa/0jYLFkQ==}
     peerDependencies:
       '@svgr/core': '>=7.0.0'
@@ -9555,13 +9575,13 @@ packages:
       debug: 4.3.7
       kolorist: 1.8.0
       local-pkg: 0.5.0
-      unplugin: 1.14.1(webpack-sources@3.2.3)
+      unplugin: 1.14.1
     transitivePeerDependencies:
       - supports-color
       - webpack-sources
     dev: true
 
-  /unplugin-unused@0.2.3(rollup@4.24.2)(webpack-sources@3.2.3):
+  /unplugin-unused@0.2.3(rollup@4.24.2):
     resolution: {integrity: sha512-qX708+nM4zi51RPMPgvOSqRs/73kUFKUO49oaBngg2t/VW5MhdbTkSQG/S1HEGsIvZcB/t32KzbISCF0n+UPSw==}
     engines: {node: '>=18.12.0'}
     dependencies:
@@ -9569,13 +9589,13 @@ packages:
       js-tokens: 9.0.0
       picocolors: 1.1.1
       pkg-types: 1.2.1
-      unplugin: 1.14.1(webpack-sources@3.2.3)
+      unplugin: 1.14.1
     transitivePeerDependencies:
       - rollup
       - webpack-sources
     dev: true
 
-  /unplugin-vue-components@0.27.4(rollup@4.24.2)(vue@3.5.12)(webpack-sources@3.2.3):
+  /unplugin-vue-components@0.27.4(rollup@4.24.2)(vue@3.5.12):
     resolution: {integrity: sha512-1XVl5iXG7P1UrOMnaj2ogYa5YTq8aoh5jwDPQhemwO/OrXW+lPQKDXd1hMz15qxQPxgb/XXlbgo3HQ2rLEbmXQ==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -9597,7 +9617,7 @@ packages:
       magic-string: 0.30.12
       minimatch: 9.0.5
       mlly: 1.7.2
-      unplugin: 1.14.1(webpack-sources@3.2.3)
+      unplugin: 1.14.1
       vue: 3.5.12(typescript@5.6.3)
     transitivePeerDependencies:
       - rollup
@@ -9605,7 +9625,7 @@ packages:
       - webpack-sources
     dev: true
 
-  /unplugin@1.14.1(webpack-sources@3.2.3):
+  /unplugin@1.14.1:
     resolution: {integrity: sha512-lBlHbfSFPToDYp9pjXlUEFVxYLaue9f9T1HC+4OHlmj+HnMDdz9oZY+erXfoCe/5V/7gKUSY2jpXPb9S7f0f/w==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -9615,7 +9635,6 @@ packages:
         optional: true
     dependencies:
       acorn: 8.14.0
-      webpack-sources: 3.2.3
       webpack-virtual-modules: 0.6.2
     dev: true
 
