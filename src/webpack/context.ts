@@ -23,7 +23,7 @@ export function contextOptionsFromCompilation(compilation: Compilation): Context
 }
 
 export function getSource(fileSource: string | Uint8Array) {
-  // Bypass yarn's pnp dependency verification
+  // Create a require function to load webpack-sources as webpack in order to maintain compatibility.
   const webpackRequire = createRequire(require.resolve('webpack'))
   const RawSource = (webpackRequire('webpack-sources') as typeof import('webpack-sources')).RawSource
 
