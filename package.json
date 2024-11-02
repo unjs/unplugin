@@ -45,14 +45,6 @@
     "test": "nr test:build && vitest run --pool=forks",
     "test:build": "jiti scripts/buildFixtures.ts"
   },
-  "peerDependencies": {
-    "webpack": "^4.0.0 || ^5.0.0"
-  },
-  "peerDependenciesMeta": {
-    "webpack": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "acorn": "^8.14.0",
     "webpack-virtual-modules": "^0.6.2"
