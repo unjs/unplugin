@@ -1,4 +1,5 @@
 import type { LoaderContext } from 'webpack'
+import MagicString from 'magic-string'
 import { resolveQuery } from '../../utils'
 import { createBuildContext, createContext } from '../context'
 
@@ -15,7 +16,13 @@ export default async function transform(this: LoaderContext<{ unpluginName: stri
   const res = await plugin.transform.call(
     Object.assign(
       {
-        getCombinedSourcemap: () => map,
+        getCombinedSourcemap: () => {
+          if (!map) {
+            const magicString = new MagicString(source)
+            return magicString.generateMap({ hires: true, includeContent: true, source: this.resource })
+          }
+          return map
+        },
       },
       createBuildContext({
         addWatchFile: (file) => {

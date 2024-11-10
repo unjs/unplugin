@@ -1,4 +1,5 @@
 import type { LoaderContext } from '@rspack/core'
+import MagicString from 'magic-string'
 import { createBuildContext, createContext } from '../context'
 
 export default async function transform(
@@ -27,7 +28,13 @@ export default async function transform(
   const res = await plugin.transform.call(
     Object.assign(
       {
-        getCombinedSourcemap: () => map,
+        getCombinedSourcemap: () => {
+          if (!map) {
+            const magicString = new MagicString(source)
+            return magicString.generateMap({ hires: true, includeContent: true, source: id })
+          }
+          return map
+        },
       },
       this._compilation && createBuildContext(this._compiler, this._compilation, this),
       context,

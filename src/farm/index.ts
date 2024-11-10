@@ -17,9 +17,10 @@ import type {
 } from '../types'
 import type { WatchChangeEvents } from './utils'
 import path from 'path'
+import MagicString from 'magic-string'
 import { getCombinedSourcemap, toArray } from '../utils'
-import { createFarmContext, unpluginContext } from './context'
 
+import { createFarmContext, unpluginContext } from './context'
 import {
   convertEnforceToPriority,
   convertWatchEventChange,
@@ -188,7 +189,14 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         const farmContext = createFarmContext(context, params.resolvedPath)
         const resource: TransformResult = await _transform.call(
           Object.assign({
-            getCombinedSourcemap: () => getCombinedSourcemap(params.sourceMapChain, params.resolvedPath, params.content),
+            getCombinedSourcemap: () => {
+              const combinedMap = getCombinedSourcemap(params.sourceMapChain, params.resolvedPath, params.content)
+              if (!combinedMap) {
+                const magicString = new MagicString(params.content)
+                return magicString.generateMap({ hires: true, includeContent: true, source: params.resolvedPath })
+              }
+              return combinedMap
+            },
           }, unpluginContext(context), farmContext),
           params.content,
           params.resolvedPath,
