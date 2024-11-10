@@ -1,36 +1,25 @@
 {
-  extends: [
-    'github>unjs/renovate-config',
+  "extends": ["github>unjs/renovate-config"],
+  "packageRules": [
+    {
+      "matchDepTypes": ["peerDependencies"],
+      "enabled": false
+    },
+    {
+      "groupName": "farm",
+      "matchPackageNames": ["@farmfe{/,}**"]
+    },
+    {
+      "groupName": "rspack",
+      "matchPackageNames": ["@rspack{/,}**"]
+    },
+    {
+      "groupName": "webpack",
+      "matchPackageNames": ["webpack", "webpack-cli"]
+    }
   ],
-  packageRules: [
-    {
-      matchDepTypes: [
-        'peerDependencies',
-      ],
-      enabled: false,
-    },
-    {
-      groupName: 'farm',
-      matchPackageNames: [
-        '@farmfe{/,}**',
-      ],
-    },
-    {
-      groupName: 'rspack',
-      matchPackageNames: [
-        '@rspack{/,}**',
-      ],
-    },
-    {
-      groupName: 'webpack',
-      matchPackageNames: [
-        'webpack',
-        'webpack-cli',
-      ],
-    },
-  ],
-  ignoreDeps: [
-    'webpack-cli',
-    'node',
-  ],
+  "ignoreDeps": [
+    "webpack-cli",
+    "node"
+  ]
 }
