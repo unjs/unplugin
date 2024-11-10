@@ -22,10 +22,20 @@ export function contextOptionsFromCompilation(compilation: Compilation): Context
   }
 }
 
-export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>): UnpluginBuildContext {
-  const require = createRequire(import.meta.url)
-  const sources = require('webpack-sources') as typeof import('webpack-sources')
+export function getSource(fileSource: string | Uint8Array) {
+  // Create a require function to load webpack-sources as webpack in order to maintain compatibility.
+  const webpackRequire = createRequire(require.resolve('webpack'))
+  const RawSource = (webpackRequire('webpack-sources') as typeof import('webpack-sources')).RawSource
 
+  return new RawSource(
+    typeof fileSource === 'string'
+      ? fileSource
+      // Converting to string to support Webpack 4's RawSource.
+      : Buffer.from(fileSource.buffer).toString('utf-8'),
+  )
+}
+
+export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>): UnpluginBuildContext {
   return {
     parse(code: string, opts: any = {}) {
       return Parser.parse(code, {
@@ -45,17 +55,7 @@ export function createBuildContext(options: ContextOptions, compiler: Compiler, 
           throw new Error('unplugin/webpack: emitFile outside supported hooks  (buildStart, buildEnd, load, transform, watchChange)')
         compilation.emitAsset(
           outFileName,
-          sources
-            ? new sources.RawSource(
-              // @ts-expect-error types mismatch
-              typeof emittedFile.source === 'string'
-                ? emittedFile.source
-                : Buffer.from(emittedFile.source),
-            ) as any
-            : {
-                source: () => emittedFile.source,
-                size: () => emittedFile.source!.length,
-              },
+          getSource(emittedFile.source) as import('webpack').sources.Source,
         )
       }
     },
