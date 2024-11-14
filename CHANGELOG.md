@@ -1,3 +1,7 @@
+# [1.16.0](https://github.com/unjs/unplugin/compare/v1.15.0...v1.16.0) (2024-11-14)
+
+
+
 # [1.15.0](https://github.com/unjs/unplugin/compare/v1.14.1...v1.15.0) (2024-10-28)
 
 
