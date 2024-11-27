@@ -16,18 +16,24 @@ import type {
   UnpluginOptions,
 } from '../types'
 import type { WatchChangeEvents } from './utils'
+import { existsSync } from 'fs'
 import path from 'path'
 import { toArray } from '../utils'
-import { createFarmContext, unpluginContext } from './context'
 
+import { createFarmContext, unpluginContext } from './context'
 import {
+  appendQuery,
   convertEnforceToPriority,
   convertWatchEventChange,
   customParseQueryString,
+  decodeStr,
+  encodeStr,
   getContentValue,
   guessIdLoader,
   isObject,
+  isStartsWithSlash,
   isString,
+  removeQuery,
   transformQuery,
 } from './utils'
 
@@ -103,29 +109,47 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         const farmContext = createFarmContext(context!, resolvedIdPath)
         const resolveIdResult = await _resolveId.call(
           Object.assign(unpluginContext(context), farmContext),
-          params.source,
+          decodeStr(params.source),
           resolvedIdPath ?? null,
           { isEntry },
         )
 
         if (isString(resolveIdResult)) {
           return {
-            resolvedPath: resolveIdResult,
+            resolvedPath: removeQuery(encodeStr(resolveIdResult)),
             query: customParseQueryString(resolveIdResult),
-            sideEffects: false,
+            sideEffects: true,
             external: false,
             meta: {},
           }
         }
         else if (isObject(resolveIdResult)) {
           return {
-            resolvedPath: resolveIdResult?.id,
+            resolvedPath: removeQuery(encodeStr(resolveIdResult?.id)),
             query: customParseQueryString(resolveIdResult!.id),
             sideEffects: false,
-            external: resolveIdResult?.external,
+            external: Boolean(resolveIdResult?.external),
             meta: {},
           }
         }
+
+        const rootAbsolutePath = path.resolve(
+          params.source,
+        )
+
+        if (
+          isStartsWithSlash(params.source)
+          && existsSync(rootAbsolutePath)
+        ) {
+          return {
+            resolvedPath: removeQuery(encodeStr(rootAbsolutePath)),
+            query: customParseQueryString(rootAbsolutePath),
+            sideEffects: false,
+            external: false,
+            meta: {},
+          }
+        }
+
         return null
       },
     } as unknown as JsPlugin['resolve']
@@ -138,18 +162,21 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         resolvedPaths: ['.*'],
       },
       async executor(
-        id: PluginLoadHookParam,
+        params: PluginLoadHookParam,
         context,
       ): Promise<PluginLoadHookResult | null> {
-        if (plugin.loadInclude && !plugin.loadInclude(id.resolvedPath))
+        if (plugin.loadInclude && !plugin.loadInclude(params.resolvedPath))
           return null
-        const loader = guessIdLoader(id.resolvedPath)
+        const loader = guessIdLoader(params.resolvedPath)
         const shouldLoadInclude
-          = plugin.loadInclude && plugin.loadInclude(id.resolvedPath)
-        const farmContext = createFarmContext(context!, id.resolvedPath)
+          = plugin.loadInclude && plugin.loadInclude(params.resolvedPath)
+        const farmContext = createFarmContext(context!, params.resolvedPath)
+        const resolvedPath = decodeStr(params.resolvedPath)
+        const id = appendQuery(resolvedPath, params.query)
+
         const content: TransformResult = await _load.call(
           Object.assign(unpluginContext(context!), farmContext),
-          id.resolvedPath,
+          id,
         )
         const loadFarmResult: PluginLoadHookResult = {
           content: getContentValue(content),
@@ -186,10 +213,12 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           = plugin.transformInclude
           && plugin.transformInclude(params.resolvedPath)
         const farmContext = createFarmContext(context, params.resolvedPath)
+        const resolvedPath = decodeStr(params.resolvedPath)
+        const id = appendQuery(resolvedPath, params.query)
         const resource: TransformResult = await _transform.call(
           Object.assign(unpluginContext(context), farmContext),
           params.content,
-          params.resolvedPath,
+          id,
         )
 
         if (resource && typeof resource !== 'string') {
@@ -198,6 +227,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
             moduleType: loader,
             sourceMap: JSON.stringify(resource.map),
           }
+
           if (shouldTransformInclude)
             return transformFarmResult
 
