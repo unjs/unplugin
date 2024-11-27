@@ -33,6 +33,7 @@ import {
   isObject,
   isStartsWithSlash,
   isString,
+  normalizeAdapterVirtualModule,
   removeQuery,
   transformQuery,
 } from './utils'
@@ -107,7 +108,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           isEntry = kindWithEntry.entry === 'index'
         }
         const farmContext = createFarmContext(context!, resolvedIdPath)
-        const resolveIdResult = await _resolveId.call(
+        let resolveIdResult = await _resolveId.call(
           Object.assign(unpluginContext(context), farmContext),
           decodeStr(params.source),
           resolvedIdPath ?? null,
@@ -115,6 +116,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         )
 
         if (isString(resolveIdResult)) {
+          resolveIdResult = normalizeAdapterVirtualModule(resolveIdResult)
           return {
             resolvedPath: removeQuery(encodeStr(resolveIdResult)),
             query: customParseQueryString(resolveIdResult),
@@ -123,10 +125,13 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
             meta: {},
           }
         }
-        else if (isObject(resolveIdResult)) {
+        if (isObject(resolveIdResult)) {
+          const resolveId = normalizeAdapterVirtualModule(
+            resolveIdResult?.id,
+          )
           return {
-            resolvedPath: removeQuery(encodeStr(resolveIdResult?.id)),
-            query: customParseQueryString(resolveIdResult!.id),
+            resolvedPath: removeQuery(encodeStr(resolveId)),
+            query: customParseQueryString(resolveId),
             sideEffects: false,
             external: Boolean(resolveIdResult?.external),
             meta: {},

@@ -1,3 +1,4 @@
+import { existsSync } from 'fs'
 import path, { normalize } from 'path'
 import * as querystring from 'querystring'
 
@@ -208,4 +209,19 @@ export function stringifyQuery(query: [string, string][]) {
   }
 
   return `${queryStr.slice(0, -1)}`
+}
+
+export function normalizeAdapterVirtualModule(id: string) {
+  const path = removeQuery(id)
+  // If resolveIdResult is a path starting with / and the file at that path does not exist
+  // then it is considered an internal virtual module
+  if (isStartsWithSlash(path) && !existsSync(path))
+    return addAdapterVirtualModuleFlag(id)
+  return id
+}
+
+export const VITE_ADAPTER_VIRTUAL_MODULE: string = 'vite-adapter-virtual:'
+
+export function addAdapterVirtualModuleFlag(id: string) {
+  return VITE_ADAPTER_VIRTUAL_MODULE + id
 }
