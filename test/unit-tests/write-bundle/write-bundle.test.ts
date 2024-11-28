@@ -58,7 +58,7 @@ describe('writeBundle hook', () => {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
           name: 'TestLib',
           fileName: 'output',
-          formats: ['cjs'],
+          formats: ['es'],
         },
         outDir: path.resolve(__dirname, 'test-out/vite'),
         sourcemap: true,

@@ -1,6 +1,6 @@
 {
   "name": "unplugin",
-  "type": "commonjs",
+  "type": "module",
   "version": "1.16.0",
   "packageManager": "pnpm@9.14.2",
   "description": "Unified plugin system for build tools",
@@ -12,18 +12,14 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": {
-        "import": "./dist/index.d.mts",
-        "require": "./dist/index.d.ts"
-      },
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./dist/webpack/loaders/*": "./dist/webpack/loaders/*.js",
-    "./dist/rspack/loaders/*": "./dist/rspack/loaders/*.js"
+    "./dist/webpack/loaders/*": "./dist/webpack/loaders/*.cjs",
+    "./dist/rspack/loaders/*": "./dist/rspack/loaders/*.cjs"
   },
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
