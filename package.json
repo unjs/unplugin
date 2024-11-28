@@ -78,7 +78,7 @@
     "typescript": "^5.6.3",
     "unplugin": "workspace:*",
     "unplugin-unused": "^0.2.3",
-    "vite": "^5.4.11",
+    "vite": "^6.0.1",
     "vitest": "^2.1.5",
     "webpack": "^5.95.0",
     "webpack-cli": "4.10.0"
