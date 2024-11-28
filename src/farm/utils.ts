@@ -28,12 +28,19 @@ export function guessIdLoader(id: string): string {
 }
 
 export function transformQuery(context: any) {
-  const queryParamsObject: Record<string, string | boolean> = {}
-  context.query.forEach(([param, value]: string[]) => {
-    queryParamsObject[param] = value
-  })
-  const transformQuery = querystring.stringify(queryParamsObject)
-  context.resolvedPath = `${context.resolvedPath}?${transformQuery}`
+  let hasValidParams = false
+  const searchParams = new URLSearchParams()
+
+  for (const [param, value] of context.query) {
+    if (value) {
+      hasValidParams = true
+      searchParams.append(param, value)
+    }
+  }
+
+  if (hasValidParams) {
+    context.resolvedPath = `${context.resolvedPath}?${searchParams.toString()}`
+  }
 }
 
 export function convertEnforceToPriority(value: 'pre' | 'post' | undefined) {

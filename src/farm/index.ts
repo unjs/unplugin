@@ -170,13 +170,15 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         params: PluginLoadHookParam,
         context,
       ): Promise<PluginLoadHookResult | null> {
-        if (plugin.loadInclude && !plugin.loadInclude(params.resolvedPath))
+        const resolvedPath = decodeStr(params.resolvedPath)
+        if (plugin.loadInclude && !plugin.loadInclude(resolvedPath)) {
           return null
+        }
         const loader = guessIdLoader(params.resolvedPath)
         const shouldLoadInclude
-          = plugin.loadInclude && plugin.loadInclude(params.resolvedPath)
-        const farmContext = createFarmContext(context!, params.resolvedPath)
-        const resolvedPath = decodeStr(params.resolvedPath)
+          = plugin.loadInclude?.(resolvedPath)
+
+        const farmContext = createFarmContext(context!, resolvedPath)
         const id = appendQuery(resolvedPath, params.query)
 
         const content: TransformResult = await _load.call(
@@ -218,12 +220,13 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           = plugin.transformInclude
           && plugin.transformInclude(params.resolvedPath)
         const farmContext = createFarmContext(context, params.resolvedPath)
+
         const resolvedPath = decodeStr(params.resolvedPath)
-        const id = appendQuery(resolvedPath, params.query)
+
         const resource: TransformResult = await _transform.call(
           Object.assign(unpluginContext(context), farmContext),
           params.content,
-          id,
+          resolvedPath,
         )
 
         if (resource && typeof resource !== 'string') {
