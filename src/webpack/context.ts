@@ -1,10 +1,10 @@
-import type { Compilation, Compiler, LoaderContext } from 'webpack'
+import type { Compilation, Compiler, LoaderContext, sources } from 'webpack'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import { Buffer } from 'buffer'
+import { createRequire } from 'module'
 import { resolve } from 'path'
 import process from 'process'
 import { Parser } from 'acorn'
-import * as webpack from 'webpack'
 
 interface ContextOptions {
   addWatchFile: (file: string) => void
@@ -22,7 +22,9 @@ export function contextOptionsFromCompilation(compilation: Compilation): Context
   }
 }
 
-export function getSource(fileSource: string | Uint8Array): webpack.sources.RawSource {
+const require = createRequire(import.meta.url)
+export function getSource(fileSource: string | Uint8Array): sources.RawSource {
+  const webpack = require('webpack')
   return new webpack.sources.RawSource(
     typeof fileSource === 'string' ? fileSource : Buffer.from(fileSource.buffer),
   )
