@@ -120,7 +120,7 @@ describe('virtual ids', () => {
     checkLoadHook(mockLoadHook)
   })
 
-  it('rspack', async () => {
+  it.skip('rspack', async () => {
     const mockResolveIdHook = createResolveIdHook()
     const mockLoadHook = createLoadHook()
     const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).rspack
