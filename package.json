@@ -55,7 +55,6 @@
     "@rspack/core": "^1.1.4",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.10.1",
-    "@types/webpack-sources": "^3.2.3",
     "bumpp": "^9.8.1",
     "esbuild": "^0.24.0",
     "esbuild-plugin-copy": "^2.1.1",

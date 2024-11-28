@@ -48,17 +48,10 @@ export function transformUse(
   const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
   if (!plugin.transformInclude || plugin.transformInclude(id)) {
     return [{
-      loader: `${transformLoader}?unpluginName=${encodeURIComponent(plugin.name)}`,
+      loader: transformLoader,
+      options: { plugin },
+      ident: plugin.name,
     }]
   }
   return []
-}
-
-export function resolveQuery(query: string | { unpluginName: string }) {
-  if (typeof query === 'string') {
-    return new URLSearchParams(query).get('unpluginName')!
-  }
-  else {
-    return query.unpluginName
-  }
 }
