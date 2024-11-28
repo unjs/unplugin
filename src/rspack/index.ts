@@ -69,7 +69,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
             const vfs = new FakeVirtualModulesPlugin(plugin)
             vfs.apply(compiler)
             plugin.__vfsModules = new Set()
-            plugin.__vfs = vfs
+            plugin.__vfs = vfs as any
 
             compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {
               normalModuleFactory.hooks.resolve.tapPromise(plugin.name, async (resolveData) => {

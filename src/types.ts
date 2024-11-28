@@ -8,7 +8,7 @@ import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, Lo
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 import type { EsbuildPluginBuild } from './esbuild'
 
-export {
+export type {
   EsbuildPlugin,
   RolldownPlugin,
   RollupPlugin,
