@@ -5,10 +5,9 @@ import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
 
 export default async function load(this: LoaderContext, source: string, map: any) {
   const callback = this.async()
-  const { unpluginName } = this.query as { unpluginName: string }
-  const plugin = this._compiler?.$unpluginContext[unpluginName]
-  let id = this.resource
+  const { plugin } = this.query as any
 
+  let id = this.resource
   if (!plugin?.load || !id)
     return callback(null, source, map)
 

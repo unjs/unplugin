@@ -159,15 +159,3 @@ export interface UnpluginContext {
   error: (message: string | UnpluginMessage) => void
   warn: (message: string | UnpluginMessage) => void
 }
-
-declare module 'webpack' {
-  interface Compiler {
-    $unpluginContext: Record<string, ResolvedUnpluginOptions>
-  }
-}
-
-declare module '@rspack/core' {
-  interface Compiler {
-    $unpluginContext: Record<string, ResolvedUnpluginOptions>
-  }
-}

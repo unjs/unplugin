@@ -1,12 +1,10 @@
 import type { LoaderContext } from 'webpack'
-import { normalizeAbsolutePath, resolveQuery } from '../../utils'
+import { normalizeAbsolutePath } from '../../utils'
 import { createBuildContext, createContext } from '../context'
 
-export default async function load(this: LoaderContext<{ unpluginName: string }>, source: string, map: any) {
+export default async function load(this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
-
-  const unpluginName = resolveQuery(this.query)
-  const plugin = this._compiler?.$unpluginContext[unpluginName]
+  const { plugin } = this.query
   let id = this.resource
 
   if (!plugin?.load || !id)
