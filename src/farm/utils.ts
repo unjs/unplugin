@@ -1,3 +1,4 @@
+import type { JsPlugin } from '@farmfe/core'
 import type { TransformResult } from '../types'
 import path from 'path'
 import * as querystring from 'querystring'
@@ -85,4 +86,8 @@ export function customParseQueryString(url: string | null) {
     paramsArray.push([key, parsedParams[key]])
 
   return paramsArray
+}
+
+export interface JsPluginExtended extends JsPlugin {
+  [key: string]: any
 }

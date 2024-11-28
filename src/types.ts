@@ -21,6 +21,16 @@ export type {
 
 export type Thenable<T> = T | Promise<T>
 
+/**
+ * Null or whatever
+ */
+export type Nullable<T> = T | null | undefined
+
+/**
+ * Array, or not yet
+ */
+export type Arrayable<T> = T | Array<T>
+
 export interface SourceMapCompact {
   file?: string
   mappings: string
@@ -30,10 +40,6 @@ export interface SourceMapCompact {
   // In magic-string v0.27.0, `sourcesContent` becomes nullable, while rollup haven't catch up yet
   sourcesContent?: (string | null)[]
   version: number
-}
-
-export interface JsPluginExtended extends FarmPlugin {
-  [key: string]: any
 }
 
 export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined | void

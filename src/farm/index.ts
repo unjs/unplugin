@@ -8,14 +8,13 @@ import type {
   PluginTransformHookResult,
 } from '@farmfe/core'
 import type {
-  JsPluginExtended,
   TransformResult,
   UnpluginContextMeta,
   UnpluginFactory,
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
-import type { WatchChangeEvents } from './utils'
+import type { JsPluginExtended, WatchChangeEvents } from './utils'
 import path from 'path'
 import { toArray } from '../utils'
 import { createFarmContext, unpluginContext } from './context'
