@@ -1,11 +1,12 @@
 import type { LoaderContext } from '@rspack/core'
+import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeAbsolutePath } from '../../utils'
 import { createBuildContext, createContext } from '../context'
 import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
 
 export default async function load(this: LoaderContext, source: string, map: any) {
   const callback = this.async()
-  const { plugin } = this.query as any
+  const { plugin } = this.query as { plugin: ResolvedUnpluginOptions }
 
   let id = this.resource
   if (!plugin?.load || !id)

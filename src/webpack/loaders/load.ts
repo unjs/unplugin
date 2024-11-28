@@ -1,10 +1,11 @@
 import type { LoaderContext } from 'webpack'
+import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeAbsolutePath } from '../../utils'
 import { createBuildContext, createContext } from '../context'
 
 export default async function load(this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
-  const { plugin } = this.query
+  const { plugin } = this.query as { plugin: ResolvedUnpluginOptions }
   let id = this.resource
 
   if (!plugin?.load || !id)

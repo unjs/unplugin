@@ -1,4 +1,5 @@
 import type { LoaderContext } from '@rspack/core'
+import type { ResolvedUnpluginOptions } from '../../types'
 import { createBuildContext, createContext } from '../context'
 
 export default async function transform(
@@ -7,7 +8,7 @@ export default async function transform(
   map: any,
 ) {
   const callback = this.async()
-  const { plugin } = this.query as any
+  const { plugin } = this.query as { plugin: ResolvedUnpluginOptions }
   if (!plugin?.transform)
     return callback(null, source, map)
 

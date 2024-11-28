@@ -1,10 +1,11 @@
 import type { LoaderContext } from 'webpack'
+import type { ResolvedUnpluginOptions } from '../../types'
 import { createBuildContext, createContext } from '../context'
 
 export default async function transform(this: LoaderContext<any>, source: string, map: any) {
   const callback = this.async()
 
-  const { plugin } = this.query
+  const { plugin } = this.query as { plugin: ResolvedUnpluginOptions }
   if (!plugin?.transform)
     return callback(null, source, map)
 
