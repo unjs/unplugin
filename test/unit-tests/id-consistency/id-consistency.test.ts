@@ -55,7 +55,11 @@ function checkHookCalls(
   ids.forEach((id) => {
     expect(path.isAbsolute(id)).toBe(true)
     expect(transformCallback).toHaveBeenCalledWith(expect.anything(), id)
-    expect(loadCallback).toHaveBeenCalledWith(id)
+    const isVite = expect.getState().currentTestName?.includes('vite')
+    expect(loadCallback).toHaveBeenCalledWith(
+      id,
+      ...(isVite ? [expect.anything()] : []),
+    )
   })
 }
 
