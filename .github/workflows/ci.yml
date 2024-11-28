@@ -13,10 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: corepack enable
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - run: corepack enable
+          cache: pnpm
       - run: npm i -g @antfu/ni
       - run: nci
       - run: nr lint
@@ -56,15 +57,3 @@ jobs:
 
       - name: Test
         run: pnpm run test
-
-      - name: Install Webpack 4
-        run: pnpm i webpack@4
-        if: ${{ matrix.node == 16 }}
-        env:
-          IS_WEBPACK_4: 'true'
-
-      - name: Test with Webpack 4
-        run: pnpm run test
-        if: ${{ matrix.node == 16 }}
-        env:
-          IS_WEBPACK_4: 'true'

@@ -6,7 +6,7 @@ export const tsup: Options = {
   sourcemap: false,
   clean: true,
   format: ['cjs', 'esm'],
-  target: 'node14',
+  target: 'node18.12',
   dts: true,
   shims: true,
   entry: [
