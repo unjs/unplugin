@@ -12,15 +12,20 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup node
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: pnpm
-      - run: npm i -g @antfu/ni
-      - run: nci
-      - run: nr lint
+
+      - run: pnpm install
+      - run: pnpm run lint
 
   ci:
     runs-on: ${{ matrix.os }}
@@ -50,7 +55,7 @@ jobs:
           cache: pnpm
 
       - name: Install
-        run: pnpm i
+        run: pnpm install
 
       - name: Build
         run: pnpm run build
