@@ -32,11 +32,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          standalone: ${{ matrix.node == 16 }}
+
       - name: Set node version to ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: corepack enable
 
       - name: Install
         run: pnpm i
