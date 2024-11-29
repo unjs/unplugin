@@ -35,7 +35,6 @@ import {
   isString,
   normalizeAdapterVirtualModule,
   removeQuery,
-  transformQuery,
 } from './utils'
 
 export function getFarmPlugin<
@@ -159,34 +158,36 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
     const _load = plugin.load
     farmPlugin.load = {
       filters: {
-        resolvedPaths: ['.*'],
+        resolvedPaths: ['!node_modules'],
       },
       async executor(
         params: PluginLoadHookParam,
         context,
       ): Promise<PluginLoadHookResult | null> {
         const resolvedPath = decodeStr(params.resolvedPath)
-        if (plugin.loadInclude && !plugin.loadInclude(resolvedPath)) {
-          return null
-        }
-        const loader = guessIdLoader(params.resolvedPath)
-        const shouldLoadInclude
-          = plugin.loadInclude?.(resolvedPath)
 
-        const farmContext = createFarmContext(context!, resolvedPath)
         const id = appendQuery(resolvedPath, params.query)
 
-        const content: TransformResult = await _load.call(
-          Object.assign(unpluginContext(context!), farmContext),
-          id,
-        )
-        const loadFarmResult: PluginLoadHookResult = {
-          content: getContentValue(content),
-          moduleType: loader,
-        }
-        if (shouldLoadInclude)
-          return loadFarmResult
+        const loader = guessIdLoader(resolvedPath)
 
+        const shouldLoadInclude
+          = plugin.loadInclude?.(id)
+
+        if (shouldLoadInclude) {
+          const farmContext = createFarmContext(context!, id)
+
+          const content: TransformResult = await _load.call(
+            Object.assign(unpluginContext(context!), farmContext),
+            id,
+          )
+
+          const loadFarmResult: PluginLoadHookResult = {
+            content: getContentValue(content),
+            moduleType: loader,
+          }
+
+          return loadFarmResult
+        }
         return null
       },
     } as JsPlugin['load']
@@ -200,42 +201,34 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         params: PluginTransformHookParam,
         context: CompilationContext,
       ) {
-        if (params.query.length)
-          transformQuery(params)
-
-        if (
-          plugin.transformInclude
-          && !plugin.transformInclude(params.resolvedPath)
-        ) {
-          return null
-        }
-
-        const loader = params.moduleType ?? guessIdLoader(params.resolvedPath)
-        const shouldTransformInclude
-          = plugin.transformInclude
-          && plugin.transformInclude(params.resolvedPath)
-        const farmContext = createFarmContext(context, params.resolvedPath)
-
         const resolvedPath = decodeStr(params.resolvedPath)
 
-        const resource: TransformResult = await _transform.call(
-          Object.assign(unpluginContext(context), farmContext),
-          params.content,
-          resolvedPath,
-        )
+        const id = appendQuery(resolvedPath, params.query)
 
-        if (resource && typeof resource !== 'string') {
-          const transformFarmResult: PluginTransformHookResult = {
-            content: getContentValue(resource),
-            moduleType: loader,
-            sourceMap: JSON.stringify(resource.map),
-          }
+        const loader = params.moduleType ?? guessIdLoader(params.resolvedPath)
 
-          if (shouldTransformInclude)
+        const shouldTransformInclude
+          = plugin.transformInclude?.(id)
+        const farmContext = createFarmContext(context, id)
+
+        if (shouldTransformInclude) {
+          const resource: TransformResult = await _transform.call(
+            Object.assign(unpluginContext(context), farmContext),
+            params.content,
+            id,
+          )
+          if (resource && typeof resource !== 'string') {
+            const transformFarmResult: PluginTransformHookResult = {
+              content: getContentValue(resource),
+              moduleType: loader,
+              sourceMap: JSON.stringify(resource.map),
+            }
+
             return transformFarmResult
-
-          return transformFarmResult
+          }
         }
+
+        return null
       },
     } as JsPlugin['transform']
   }
