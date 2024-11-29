@@ -1,8 +1,8 @@
 {
   "name": "unplugin",
-  "type": "commonjs",
-  "version": "1.16.0",
-  "packageManager": "pnpm@8.15.9",
+  "type": "module",
+  "version": "2.0.0-beta.1",
+  "packageManager": "pnpm@9.14.2",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "repository": {
@@ -12,24 +12,20 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": {
-        "import": "./dist/index.d.mts",
-        "require": "./dist/index.d.ts"
-      },
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./dist/webpack/loaders/*": "./dist/webpack/loaders/*.js",
-    "./dist/rspack/loaders/*": "./dist/rspack/loaders/*.js"
+    "./dist/webpack/loaders/*": "./dist/webpack/loaders/*.cjs",
+    "./dist/rspack/loaders/*": "./dist/rspack/loaders/*.cjs"
   },
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.12.0"
   },
   "scripts": {
     "build": "tsup",
@@ -41,7 +37,7 @@
     "docs:build": "pnpm -C docs run build",
     "docs:gen-files": "pnpm -C docs run gen-files",
     "prepublishOnly": "nr build",
-    "release": "bumpp --all -x 'npx conventional-changelog -p angular -i CHANGELOG.md -s' && npm publish",
+    "release": "bumpp --all && npm publish",
     "test": "nr test:build && vitest run --pool=forks",
     "test:build": "jiti scripts/buildFixtures.ts"
   },
@@ -51,37 +47,35 @@
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
-    "@antfu/eslint-config": "^3.9.1",
-    "@antfu/ni": "^0.23.0",
+    "@antfu/eslint-config": "^3.11.2",
+    "@antfu/ni": "^0.23.1",
     "@farmfe/cli": "^1.0.4",
     "@farmfe/core": "^1.4.5",
-    "@rspack/cli": "^1.0.14",
-    "@rspack/core": "^1.0.14",
+    "@rspack/cli": "^1.1.4",
+    "@rspack/core": "^1.1.4",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.9.0",
-    "@types/webpack-sources": "^3.2.3",
+    "@types/node": "^22.10.1",
     "bumpp": "^9.8.1",
-    "conventional-changelog-cli": "^5.0.0",
     "esbuild": "^0.24.0",
     "esbuild-plugin-copy": "^2.1.1",
-    "eslint": "^9.14.0",
+    "eslint": "^9.15.0",
     "fast-glob": "^3.3.2",
     "fs-extra": "^11.2.0",
     "jiti": "^2.4.0",
     "lint-staged": "^15.2.10",
-    "magic-string": "^0.30.12",
+    "magic-string": "^0.30.14",
     "picocolors": "^1.1.1",
     "rolldown": "^0.14.0",
-    "rollup": "^4.27.0",
+    "rollup": "^4.27.4",
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.3.5",
-    "typescript": "^5.6.3",
+    "typescript": "~5.6.3",
     "unplugin": "workspace:*",
     "unplugin-unused": "^0.2.3",
-    "vite": "^5.4.11",
-    "vitest": "^2.1.5",
-    "webpack": "^5.95.0",
-    "webpack-cli": "4.10.0"
+    "vite": "^6.0.1",
+    "vitest": "^2.1.6",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"

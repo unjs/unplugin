@@ -1,3 +1,8 @@
+# Latest Changelog
+
+The changelog for unplugin v2 and later is available on [GitHub Releases](https://github.com/unjs/unplugin/releases).
+
+
 # [1.16.0](https://github.com/unjs/unplugin/compare/v1.15.0...v1.16.0) (2024-11-14)
 
 

@@ -32,9 +32,6 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
         // In the loader we strip the made up prefix path again
         const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual')
 
-        const injected = compiler.$unpluginContext || {}
-        compiler.$unpluginContext = injected
-
         const meta: UnpluginContextMeta = {
           framework: 'rspack',
           rspack: {
@@ -51,17 +48,6 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
             },
           ) as ResolvedUnpluginOptions
 
-          // inject context object to share with loaders
-          injected[plugin.name] = plugin
-
-          compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
-            if (typeof compilation.hooks.childCompiler === 'undefined')
-              throw new Error('`compilation.hooks.childCompiler` only support by @rspack/core>=0.4.1')
-            compilation.hooks.childCompiler.tap(plugin.name, (childCompiler) => {
-              childCompiler.$unpluginContext = injected
-            })
-          })
-
           const externalModules = new Set<string>()
 
           // resolveId hook
@@ -69,6 +55,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
             const vfs = new FakeVirtualModulesPlugin(plugin)
             vfs.apply(compiler)
             plugin.__vfsModules = new Set()
+            plugin.__vfs = vfs as any
 
             compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {
               normalModuleFactory.hooks.resolve.tapPromise(plugin.name, async (resolveData) => {
@@ -140,7 +127,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
               use: [{
                 loader: LOAD_LOADER,
                 options: {
-                  unpluginName: plugin.name,
+                  plugin,
                 },
               }],
               type: 'javascript/auto',

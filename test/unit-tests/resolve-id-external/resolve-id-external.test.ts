@@ -35,9 +35,16 @@ describe('load hook should not be called when resolveId hook returned `external:
     expect(mockResolveIdHook).toHaveBeenCalledWith('./internal-module.js', expect.anything(), expect.anything())
     expect(mockResolveIdHook).toHaveBeenCalledWith('external-module', expect.anything(), expect.anything())
 
+    const isVite = expect.getState().currentTestName?.includes('vite')
     expect(mockLoadHook).toHaveBeenCalledTimes(2)
-    expect(mockLoadHook).toHaveBeenCalledWith(expect.stringMatching(/(?:\/|\\)entry\.js$/))
-    expect(mockLoadHook).toHaveBeenCalledWith(expect.stringMatching(/(?:\/|\\)internal-module\.js$/))
+    expect(mockLoadHook).toHaveBeenCalledWith(
+      expect.stringMatching(/(?:\/|\\)entry\.js$/),
+      ...(isVite ? [expect.anything()] : []),
+    )
+    expect(mockLoadHook).toHaveBeenCalledWith(
+      expect.stringMatching(/(?:\/|\\)internal-module\.js$/),
+      ...(isVite ? [expect.anything()] : []),
+    )
   }
 
   afterEach(() => {

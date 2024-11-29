@@ -1,4 +1,4 @@
-import type { ResolvedUnpluginOptions } from './types'
+import type { Arrayable, Nullable, ResolvedUnpluginOptions } from './types'
 import { isAbsolute, normalize } from 'path'
 
 /**
@@ -17,16 +17,6 @@ export function normalizeAbsolutePath(path: string) {
   else
     return path
 }
-
-/**
- * Null or whatever
- */
-export type Nullable<T> = T | null | undefined
-
-/**
- * Array, or not yet
- */
-export type Arrayable<T> = T | Array<T>
 
 export function toArray<T>(array?: Nullable<Arrayable<T>>): Array<T> {
   array = array || []
@@ -58,17 +48,10 @@ export function transformUse(
   const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
   if (!plugin.transformInclude || plugin.transformInclude(id)) {
     return [{
-      loader: `${transformLoader}?unpluginName=${encodeURIComponent(plugin.name)}`,
+      loader: transformLoader,
+      options: { plugin },
+      ident: plugin.name,
     }]
   }
   return []
-}
-
-export function resolveQuery(query: string | { unpluginName: string }) {
-  if (typeof query === 'string') {
-    return new URLSearchParams(query).get('unpluginName')!
-  }
-  else {
-    return query.unpluginName
-  }
 }

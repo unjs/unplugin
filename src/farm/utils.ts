@@ -1,6 +1,8 @@
-import { existsSync } from 'fs'
-import path, { normalize } from 'path'
-import * as querystring from 'querystring'
+import type { JsPlugin } from '@farmfe/core'
+
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+import * as querystring from 'node:querystring'
 
 export * from '../utils'
 
@@ -189,7 +191,7 @@ export function removeQuery(path: string) {
   if (queryIndex !== -1) {
     return path.slice(0, queryIndex)
   }
-  return normalize(path.concat(''))
+  return path.normalize(path.concat(''))
 }
 
 export function isStartsWithSlash(str: string) {
@@ -231,4 +233,7 @@ export const VITE_ADAPTER_VIRTUAL_MODULE: string = 'vite-adapter-virtual:'
 
 export function addAdapterVirtualModuleFlag(id: string) {
   return VITE_ADAPTER_VIRTUAL_MODULE + id
+}
+export interface JsPluginExtended extends JsPlugin {
+  [key: string]: any
 }

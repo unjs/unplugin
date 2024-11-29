@@ -26,9 +26,6 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
         // In the loader we strip the made up prefix path again
         const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), '_virtual_')
 
-        const injected = compiler.$unpluginContext || {}
-        compiler.$unpluginContext = injected
-
         const meta: UnpluginContextMeta = {
           framework: 'webpack',
           webpack: {
@@ -45,15 +42,6 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
               __virtualModulePrefix: VIRTUAL_MODULE_PREFIX,
             },
           ) as ResolvedUnpluginOptions
-
-          // inject context object to share with loaders
-          injected[plugin.name] = plugin
-
-          compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
-            compilation.hooks.childCompiler.tap(plugin.name, (childCompiler) => {
-              childCompiler.$unpluginContext = injected
-            })
-          })
 
           const externalModules = new Set<string>()
 
@@ -170,7 +158,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
               use: [{
                 loader: LOAD_LOADER,
                 options: {
-                  unpluginName: plugin.name,
+                  plugin,
                 },
               }],
               type: 'javascript/auto',

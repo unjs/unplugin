@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "target": "esnext",
+    "lib": ["es2023"],
+    "moduleDetection": "force",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "paths": {
       "unplugin": [
         "./src/index.ts"
@@ -14,13 +16,14 @@
     ],
     "strict": true,
     "declaration": true,
+    "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
   "include": [
     "src",
-    "test",
-    "docs/.vitepress/**/*"
+    "test"
   ]
 }
