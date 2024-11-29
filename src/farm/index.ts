@@ -158,7 +158,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
     const _load = plugin.load
     farmPlugin.load = {
       filters: {
-        resolvedPaths: ['!node_modules'],
+        resolvedPaths: ['.*'],
       },
       async executor(
         params: PluginLoadHookParam,
