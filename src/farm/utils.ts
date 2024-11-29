@@ -1,6 +1,5 @@
 import type { JsPlugin } from '@farmfe/core'
 
-import { existsSync } from 'node:fs'
 import path from 'node:path'
 import * as querystring from 'node:querystring'
 
@@ -186,12 +185,12 @@ function countBackslashZeros(str: string, startIndex: number): number {
   return count
 }
 
-export function removeQuery(path: string) {
-  const queryIndex = path.indexOf('?')
+export function removeQuery(pathe: string) {
+  const queryIndex = pathe.indexOf('?')
   if (queryIndex !== -1) {
-    return path.slice(0, queryIndex)
+    return pathe.slice(0, queryIndex)
   }
-  return path.normalize(path.concat(''))
+  return path.normalize(pathe)
 }
 
 export function isStartsWithSlash(str: string) {
@@ -220,20 +219,6 @@ export function stringifyQuery(query: [string, string][]) {
   return `${queryStr.slice(0, -1)}`
 }
 
-export function normalizeAdapterVirtualModule(id: string) {
-  const path = removeQuery(id)
-  // If resolveIdResult is a path starting with / and the file at that path does not exist
-  // then it is considered an internal virtual module
-  if (isStartsWithSlash(path) && !existsSync(path))
-    return addAdapterVirtualModuleFlag(id)
-  return id
-}
-
-export const VITE_ADAPTER_VIRTUAL_MODULE: string = 'vite-adapter-virtual:'
-
-export function addAdapterVirtualModuleFlag(id: string) {
-  return VITE_ADAPTER_VIRTUAL_MODULE + id
-}
 export interface JsPluginExtended extends JsPlugin {
   [key: string]: any
 }
