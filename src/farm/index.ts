@@ -16,7 +16,7 @@ import type {
 } from '../types'
 import type { JsPluginExtended, WatchChangeEvents } from './utils'
 import path from 'path'
-import { toArray } from '../utils'
+import { toArray } from '../utils/general'
 import { createFarmContext, unpluginContext } from './context'
 
 import {

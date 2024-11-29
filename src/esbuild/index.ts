@@ -10,13 +10,13 @@ import type {
 } from '../types'
 import fs from 'fs'
 import path from 'path'
+import { toArray } from '../utils/general'
 import {
   combineSourcemaps,
   createBuildContext,
   createPluginContext,
   guessLoader,
   processCodeWithSourceMap,
-  toArray,
   unwrapLoader,
 } from './utils'
 

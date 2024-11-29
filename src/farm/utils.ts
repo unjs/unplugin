@@ -3,8 +3,6 @@ import type { TransformResult } from '../types'
 import path from 'path'
 import * as querystring from 'querystring'
 
-export * from '../utils'
-
 export type WatchChangeEvents = 'create' | 'update' | 'delete'
 
 const ExtToLoader: Record<string, string> = {

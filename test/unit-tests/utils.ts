@@ -4,7 +4,7 @@ import * as rollup from 'rollup'
 import * as vite from 'vite'
 import * as webpack from 'webpack'
 
-export * from '../../src/utils'
+export * from '../../src/utils/general'
 
 export const viteBuild = vite.build
 export const rollupBuild = rollup.rollup

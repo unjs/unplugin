@@ -4,7 +4,7 @@ import { Buffer } from 'buffer'
 import { createRequire } from 'module'
 import { resolve } from 'path'
 import process from 'process'
-import { Parser } from 'acorn'
+import { parse } from '../utils/context'
 
 interface ContextOptions {
   addWatchFile: (file: string) => void
@@ -32,14 +32,7 @@ export function getSource(fileSource: string | Uint8Array): sources.RawSource {
 
 export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>): UnpluginBuildContext {
   return {
-    parse(code: string, opts: any = {}) {
-      return Parser.parse(code, {
-        sourceType: 'module',
-        ecmaVersion: 'latest',
-        locations: true,
-        ...opts,
-      })
-    },
+    parse,
     addWatchFile(id) {
       options.addWatchFile(resolve(process.cwd(), id))
     },
