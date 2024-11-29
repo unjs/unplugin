@@ -3,5 +3,5 @@
   "compilerOptions": {
     "lib": ["DOM", "ESNext"]
   },
-  "include": [".vitepress/**/*", "../src/globals.d.ts"]
+  "include": ["**/*", ".**/*", "../src/globals.d.ts"]
 }

@@ -1,10 +1,9 @@
-import { fileURLToPath } from 'node:url'
 import Unocss from 'unocss/vite'
 import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import { groupIconVitePlugin, localIconLoader } from 'vitepress-plugin-group-icons'
-import { MarkdownTransform } from './plugins/markdownTransform'
+import { MarkdownTransform } from './.vitepress/plugins/markdownTransform'
 
 export default defineConfig({
   plugins: [
@@ -15,13 +14,13 @@ export default defineConfig({
       dts: '.vitepress/components.d.ts',
     }),
     // @ts-expect-error mismatch vite version
-    Unocss(fileURLToPath(new URL('./uno.config.ts', import.meta.url))),
+    Unocss(),
     Icons(),
     groupIconVitePlugin({
       customIcon: {
-        farm: localIconLoader(import.meta.url, './assets/farm.svg'),
-        rolldown: localIconLoader(import.meta.url, './assets/rolldown.svg'),
-        rspack: localIconLoader(import.meta.url, './assets/rspack.svg'),
+        farm: localIconLoader(import.meta.url, '.vitepress/assets/farm.svg'),
+        rolldown: localIconLoader(import.meta.url, '.vitepress/assets/rolldown.svg'),
+        rspack: localIconLoader(import.meta.url, '.vitepress/assets/rspack.svg'),
       },
     }),
   ],
