@@ -14,6 +14,7 @@ export default defineConfig({
       dirs: '.vitepress/components',
       dts: '.vitepress/components.d.ts',
     }),
+    // @ts-expect-error mismatch vite version
     Unocss(fileURLToPath(new URL('./uno.config.ts', import.meta.url))),
     Icons(),
     groupIconVitePlugin({
