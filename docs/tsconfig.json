@@ -1,7 +1,8 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "lib": ["DOM", "ESNext"]
+    "lib": ["DOM", "ESNext"],
+    "isolatedDeclarations": false
   },
   "include": ["**/*", ".**/*", "../src/globals.d.ts"]
 }
