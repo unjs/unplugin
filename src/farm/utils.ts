@@ -116,7 +116,7 @@ export function encodeStr(str: string): string {
     }
   }
 
-  return result.join('')
+  return path.normalize(result.join(''))
 }
 
 export function decodeStr(str: string): string {
@@ -146,7 +146,7 @@ export function decodeStr(str: string): string {
     }
   }
 
-  return result.join('')
+  return path.normalize(result.join(''))
 }
 
 export function getContentValue(content: any): string {
