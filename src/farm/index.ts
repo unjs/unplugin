@@ -19,7 +19,7 @@ import type { JsPluginExtended, WatchChangeEvents } from './utils'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 
-import { toArray } from '../utils'
+import { toArray } from '../utils/general'
 import { createFarmContext, unpluginContext } from './context'
 import {
   appendQuery,
