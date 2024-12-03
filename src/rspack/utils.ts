@@ -19,7 +19,7 @@ export class FakeVirtualModulesPlugin {
   name = 'FakeVirtualModulesPlugin'
   constructor(private plugin: ResolvedUnpluginOptions) {}
 
-  apply(compiler: Compiler) {
+  apply(compiler: Compiler): void {
     const dir = this.plugin.__virtualModulePrefix
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
@@ -29,7 +29,7 @@ export class FakeVirtualModulesPlugin {
     })
   }
 
-  async writeModule(file: string) {
+  async writeModule(file: string): Promise<string> {
     const path = encodeVirtualModuleId(file, this.plugin)
     await fs.promises.writeFile(path, '')
     return path

@@ -3,7 +3,7 @@ import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeAbsolutePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
-export default async function load(this: LoaderContext<any>, source: string, map: any) {
+export default async function load(this: LoaderContext<any>, source: string, map: any): Promise<void> {
   const callback = this.async()
   const { plugin } = this.query as { plugin: ResolvedUnpluginOptions }
   let id = this.resource
