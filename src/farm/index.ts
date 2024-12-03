@@ -126,14 +126,14 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
             meta: {},
           }
         }
+        if (!isStartsWithSlash(params.source))
+          return null
 
         const rootAbsolutePath = path.resolve(
           params.source,
         )
-
         if (
-          isStartsWithSlash(params.source)
-          && existsSync(rootAbsolutePath)
+          existsSync(rootAbsolutePath)
         ) {
           return {
             resolvedPath: removeQuery(encodeStr(rootAbsolutePath)),
@@ -143,8 +143,6 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
             meta: {},
           }
         }
-
-        return null
       },
     } as unknown as JsPlugin['resolve']
   }
@@ -168,22 +166,22 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         const shouldLoadInclude
           = plugin.loadInclude?.(id)
 
-        if (shouldLoadInclude) {
-          const farmContext = createFarmContext(context!, id)
+        if (!shouldLoadInclude)
+          return null
 
-          const content: TransformResult = await _load.call(
-            Object.assign(unpluginContext(context!), farmContext),
-            id,
-          )
+        const farmContext = createFarmContext(context!, id)
 
-          const loadFarmResult: PluginLoadHookResult = {
-            content: getContentValue(content),
-            moduleType: loader,
-          }
+        const content: TransformResult = await _load.call(
+          Object.assign(unpluginContext(context!), farmContext),
+          id,
+        )
 
-          return loadFarmResult
+        const loadFarmResult: PluginLoadHookResult = {
+          content: getContentValue(content),
+          moduleType: loader,
         }
-        return null
+
+        return loadFarmResult
       },
     } as JsPlugin['load']
   }
@@ -206,24 +204,23 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           = plugin.transformInclude?.(id)
         const farmContext = createFarmContext(context, id)
 
-        if (shouldTransformInclude) {
-          const resource: TransformResult = await _transform.call(
-            Object.assign(unpluginContext(context), farmContext),
-            params.content,
-            id,
-          )
-          if (resource && typeof resource !== 'string') {
-            const transformFarmResult: PluginTransformHookResult = {
-              content: getContentValue(resource),
-              moduleType: loader,
-              sourceMap: JSON.stringify(resource.map),
-            }
+        if (!shouldTransformInclude)
+          return null
 
-            return transformFarmResult
+        const resource: TransformResult = await _transform.call(
+          Object.assign(unpluginContext(context), farmContext),
+          params.content,
+          id,
+        )
+        if (resource && typeof resource !== 'string') {
+          const transformFarmResult: PluginTransformHookResult = {
+            content: getContentValue(resource),
+            moduleType: loader,
+            sourceMap: JSON.stringify(resource.map),
           }
-        }
 
-        return null
+          return transformFarmResult
+        }
       },
     } as JsPlugin['transform']
   }
