@@ -26,14 +26,12 @@ defineProps<{
     <a target="_blank" :href="`https://github.com/${owner}/${name}`">
       <div class="flex text-gray-400" hover="text-gray-900" dark:hover="text-gray-200">
         <i class="i-radix-icons-github-logo" />
-        <i class="i-heroicons-arrow-up-right-20-solid h-3 w-3" />
       </div>
     </a>
 
     <a target="_blank" :href="`https://www.npmjs.com/package/${name}`">
-      <div class="flex text-gray-400" hover="text-#C12127">
+      <div class="flex text-gray-400" hover="text-#cc3534">
         <i class="i-simple-icons-npm " />
-        <i class="i-heroicons-arrow-up-right-20-solid h-3 w-3" />
       </div>
     </a>
   </div>

@@ -1,5 +1,5 @@
 import type { RollupPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
-import { toArray } from '../utils'
+import { toArray } from '../utils/general'
 
 export function getRollupPlugin<UserOptions = Record<string, never>, Nested extends boolean = boolean>(
   factory: UnpluginFactory<UserOptions, Nested>,

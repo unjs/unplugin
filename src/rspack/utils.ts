@@ -25,9 +25,7 @@ export class FakeVirtualModulesPlugin {
       fs.mkdirSync(dir, { recursive: true })
     }
     compiler.hooks.shutdown.tap(this.name, () => {
-      if (fs.existsSync(dir)) {
-        fs.rmdirSync(dir, { recursive: true })
-      }
+      fs.rmSync(dir, { recursive: true, force: true })
     })
   }
 

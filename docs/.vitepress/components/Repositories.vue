@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { data as repositoryData } from '../data/repository.data'
+
+const repos = [...repositoryData].sort((a, b) => {
+  return b.stargazers.totalCount - a.stargazers.totalCount
+})
 </script>
 
 <template>
   <div flex="~ wrap" gap-3 items-center>
     <a
-      v-for="(item, index) in repositoryData" :key="index"
+      v-for="(item, index) in repos" :key="index"
       w-20rem h-42 px-4 py-3 cursor-pointer
       border="1 solid $vp-c-divider" rounded-md
       important-transition-all duration-400

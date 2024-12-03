@@ -96,8 +96,8 @@ export interface UnpluginOptions {
     // using regexp in esbuild improves performance
     onResolveFilter?: RegExp
     onLoadFilter?: RegExp
-    setup?: (build: EsbuildPluginBuild) => void | Promise<void>
     loader?: Loader | ((code: string, id: string) => Loader)
+    setup?: (build: EsbuildPluginBuild) => void | Promise<void>
     config?: (options: BuildOptions) => void
   }
   farm?: Partial<FarmPlugin>
@@ -136,8 +136,6 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   webpack: { compiler: WebpackCompiler }
 } | {
   framework: 'esbuild'
-  /** @deprecated {getNativeBuildContext} */
-  build?: EsbuildPluginBuild
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string
 } | {

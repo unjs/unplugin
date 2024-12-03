@@ -13,12 +13,12 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.277",
+    "@iconify/json": "^2.2.278",
     "@shikijs/vitepress-twoslash": "^1.24.0",
     "case-police": "^0.7.2",
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^0.3.0",
     "ofetch": "^1.4.1",

@@ -2,21 +2,14 @@ import type { CompilationContext } from '@farmfe/core'
 import type { UnpluginBuildContext, UnpluginContext } from '../types'
 import { Buffer } from 'buffer'
 import { extname } from 'path'
-import { Parser } from 'acorn'
+import { parse } from '../utils/context'
 
 export function createFarmContext(
   context: CompilationContext,
   currentResolveId?: string,
 ): UnpluginBuildContext {
   return {
-    parse(code: string, opts: any = {}) {
-      return Parser.parse(code, {
-        sourceType: 'module',
-        ecmaVersion: 'latest',
-        locations: true,
-        ...opts,
-      })
-    },
+    parse,
 
     addWatchFile(id: string) {
       context.addWatchFile(currentResolveId || id, id)

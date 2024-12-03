@@ -2,7 +2,7 @@ import type { Compilation, Compiler, LoaderContext } from '@rspack/core'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import { Buffer } from 'buffer'
 import { resolve } from 'path'
-import { Parser } from 'acorn'
+import { parse } from '../utils/context'
 
 export function createBuildContext(compiler: Compiler, compilation: Compilation, loaderContext?: LoaderContext): UnpluginBuildContext {
   return {
@@ -20,14 +20,7 @@ export function createBuildContext(compiler: Compiler, compilation: Compilation,
     getWatchFiles() {
       return Array.from(compilation.fileDependencies)
     },
-    parse(code: string, opts: any = {}) {
-      return Parser.parse(code, {
-        sourceType: 'module',
-        ecmaVersion: 'latest',
-        locations: true,
-        ...opts,
-      })
-    },
+    parse,
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
       if (emittedFile.source && outFileName) {

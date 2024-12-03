@@ -8,7 +8,8 @@ import type {
 } from '../types'
 import fs from 'fs'
 import { resolve } from 'path'
-import { normalizeAbsolutePath, toArray, transformUse } from '../utils'
+import { toArray } from '../utils/general'
+import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { createBuildContext, normalizeMessage } from './context'
 import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin, isVirtualModuleId } from './utils'
 

@@ -19,12 +19,11 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
   const clipPath = [
     `circle(0px at ${x}px ${y}px)`,
     `circle(${Math.hypot(
-        Math.max(x, innerWidth - x),
-        Math.max(y, innerHeight - y),
+      Math.max(x, innerWidth - x),
+      Math.max(y, innerHeight - y),
     )}px at ${x}px ${y}px)`,
   ]
 
-  // @ts-expect-error any
   await document.startViewTransition(async () => {
     isDark.value = !isDark.value
     await nextTick()

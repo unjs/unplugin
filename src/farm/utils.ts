@@ -3,8 +3,6 @@ import type { JsPlugin } from '@farmfe/core'
 import path from 'node:path'
 import * as querystring from 'node:querystring'
 
-export * from '../utils'
-
 export type WatchChangeEvents = 'create' | 'update' | 'delete'
 
 const ExtToLoader: Record<string, string> = {

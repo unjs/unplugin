@@ -2,7 +2,7 @@
   "name": "unplugin",
   "type": "module",
   "version": "2.0.0-beta.1",
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@9.14.4",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "repository": {
@@ -58,24 +58,29 @@
     "bumpp": "^9.8.1",
     "esbuild": "^0.24.0",
     "esbuild-plugin-copy": "^2.1.1",
-    "eslint": "^9.15.0",
+    "eslint": "^9.16.0",
     "fast-glob": "^3.3.2",
     "fs-extra": "^11.2.0",
-    "jiti": "^2.4.0",
+    "jiti": "^2.4.1",
     "lint-staged": "^15.2.10",
     "magic-string": "^0.30.14",
     "picocolors": "^1.1.1",
     "rolldown": "^0.14.0",
-    "rollup": "^4.27.4",
+    "rollup": "^4.28.0",
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.3.5",
-    "typescript": "~5.6.3",
+    "typescript": "~5.7.2",
     "unplugin": "workspace:*",
     "unplugin-unused": "^0.2.3",
     "vite": "^6.0.1",
     "vitest": "^2.1.6",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript@*": "~5.6.3"
+    }
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
