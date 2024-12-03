@@ -14,7 +14,6 @@ export const repositoryMeta: {
   { owner: 'unplugin', name: 'unplugin-vue-cssvars', defaultBranch: 'master' },
   { owner: 'unplugin', name: 'unplugin-vue' },
   { owner: 'unplugin', name: 'unplugin-macros' },
-  { owner: 'unplugin', name: 'unplugin-vue-ce', defaultBranch: 'master' },
   { owner: 'unplugin', name: 'unplugin-isolated-decl' },
   { owner: 'unplugin', name: 'unplugin-unused' },
   { owner: 'unplugin', name: 'unplugin-ast' },
