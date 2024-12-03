@@ -138,7 +138,11 @@ export function createBuildContext(build: EsbuildPluginBuild): UnpluginBuildCont
   }
 }
 
-export function createPluginContext(context: UnpluginBuildContext) {
+export function createPluginContext(context: UnpluginBuildContext): {
+  errors: PartialMessage[]
+  warnings: PartialMessage[]
+  mixedContext: UnpluginContext & UnpluginBuildContext
+} {
   const errors: PartialMessage[] = []
   const warnings: PartialMessage[] = []
   const pluginContext: UnpluginContext = {
@@ -183,7 +187,7 @@ function normalizeMessage(message: string | UnpluginMessage): Message {
   }
 }
 
-export function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string) {
+export function processCodeWithSourceMap(map: SourceMap | null | undefined, code: string): string {
   if (map) {
     if (!map.sourcesContent || map.sourcesContent.length === 0)
       map.sourcesContent = [code]

@@ -6,13 +6,13 @@ import * as webpack from 'webpack'
 
 export * from '../../src/utils/general'
 
-export const viteBuild = vite.build
-export const rollupBuild = rollup.rollup
-export const esbuildBuild = esbuild.build
+export const viteBuild: typeof vite.build = vite.build
+export const rollupBuild: typeof rollup.rollup = rollup.rollup
+export const esbuildBuild: typeof esbuild.build = esbuild.build
 export const webpackBuild: typeof webpack.webpack = webpack.webpack || (webpack as any).default || webpack
 export const rspackBuild: typeof rspack.rspack = rspack.rspack
 
-export const webpackVersion = ((webpack as any).default || webpack).version
+export const webpackVersion: string = ((webpack as any).default || webpack).version
 
 export const build: {
   webpack: typeof webpack.webpack

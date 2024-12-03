@@ -6,7 +6,7 @@ export default async function transform(
   this: LoaderContext,
   source: string,
   map: any,
-) {
+): Promise<void> {
   const callback = this.async()
   const { plugin } = this.query as { plugin: ResolvedUnpluginOptions }
   if (!plugin?.transform)

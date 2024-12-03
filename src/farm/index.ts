@@ -52,11 +52,6 @@ export function getFarmPlugin<
   }) as UnpluginInstance<UserOptions>['farm']
 }
 
-export const resolveIdFilters = {
-  sources: ['!node_modules'],
-  importers: ['!node_modules'],
-}
-
 export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, any> | undefined): JsPlugin {
   const farmPlugin: JsPlugin = {
     name: plugin.name,

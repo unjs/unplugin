@@ -1,3 +1,4 @@
+import type { RuleSetUseItem } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../types'
 import { isAbsolute, normalize } from 'path'
 
@@ -5,7 +6,7 @@ export function transformUse(
   data: { resource?: string, resourceQuery?: string },
   plugin: ResolvedUnpluginOptions,
   transformLoader: string,
-) {
+): RuleSetUseItem[] {
   if (data.resource == null)
     return []
 
@@ -32,7 +33,7 @@ export function transformUse(
  * @param path - Path to normalize.
  * @returns a new normalized path.
  */
-export function normalizeAbsolutePath(path: string) {
+export function normalizeAbsolutePath(path: string): string {
   if (isAbsolute(path))
     return normalize(path)
   else

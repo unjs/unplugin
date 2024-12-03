@@ -26,7 +26,7 @@ export function guessIdLoader(id: string): string {
   return ExtToLoader[path.extname(id).toLowerCase()] || 'js'
 }
 
-export function transformQuery(context: any) {
+export function transformQuery(context: any): void {
   const queryParamsObject: Record<string, string | boolean> = {}
   context.query.forEach(([param, value]: string[]) => {
     queryParamsObject[param] = value
@@ -35,7 +35,7 @@ export function transformQuery(context: any) {
   context.resolvedPath = `${context.resolvedPath}?${transformQuery}`
 }
 
-export function convertEnforceToPriority(value: 'pre' | 'post' | undefined) {
+export function convertEnforceToPriority(value: 'pre' | 'post' | undefined): number {
   const defaultPriority = 100
   const enforceToPriority = {
     pre: 101,
@@ -71,17 +71,17 @@ export function isObject(variable: unknown): variable is object {
   return typeof variable === 'object' && variable !== null
 }
 
-export function customParseQueryString(url: string | null) {
+export function customParseQueryString(url: string | null): [string, string][] {
   if (!url)
     return []
 
   const queryString = url.split('?')[1]
 
   const parsedParams = querystring.parse(queryString)
-  const paramsArray = []
+  const paramsArray: [string, string][] = []
 
   for (const key in parsedParams)
-    paramsArray.push([key, parsedParams[key]])
+    paramsArray.push([key, parsedParams[key] as string])
 
   return paramsArray
 }
