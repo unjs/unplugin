@@ -176,7 +176,7 @@ function countBackslashZeros(str: string, startIndex: number): number {
   return count
 }
 
-export function removeQuery(pathe: string) {
+export function removeQuery(pathe: string): string {
   const queryIndex = pathe.indexOf('?')
   if (queryIndex !== -1) {
     return pathe.slice(0, queryIndex)
@@ -184,7 +184,7 @@ export function removeQuery(pathe: string) {
   return path.normalize(pathe)
 }
 
-export function isStartsWithSlash(str: string) {
+export function isStartsWithSlash(str: string): boolean {
   return str?.startsWith('/')
 }
 
@@ -196,7 +196,7 @@ export function appendQuery(id: string, query: [string, string][]): string {
   return `${id}?${stringifyQuery(query)}`
 }
 
-export function stringifyQuery(query: [string, string][]) {
+export function stringifyQuery(query: [string, string][]): string {
   if (!query.length) {
     return ''
   }
