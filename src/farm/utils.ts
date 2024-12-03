@@ -83,6 +83,7 @@ export function customParseQueryString(url: string | null): [string, string][] {
 }
 
 export function encodeStr(str: string): string {
+  str = path.normalize(str)
   const len = str.length
   if (len === 0)
     return str
@@ -113,6 +114,7 @@ export function encodeStr(str: string): string {
 }
 
 export function decodeStr(str: string): string {
+  str = path.normalize(str)
   const len = str.length
   if (len === 0)
     return str
@@ -179,7 +181,7 @@ function countBackslashZeros(str: string, startIndex: number): number {
 export function removeQuery(pathe: string): string {
   const queryIndex = pathe.indexOf('?')
   if (queryIndex !== -1) {
-    return pathe.slice(0, queryIndex)
+    return path.normalize(pathe.slice(0, queryIndex))
   }
   return path.normalize(pathe)
 }
