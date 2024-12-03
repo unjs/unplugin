@@ -1,6 +1,6 @@
 import type { RuleSetUseItem } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../types'
-import { isAbsolute, normalize } from 'path'
+import { isAbsolute, normalize } from 'node:path'
 
 export function transformUse(
   data: { resource?: string, resourceQuery?: string },

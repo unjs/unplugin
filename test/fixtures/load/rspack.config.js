@@ -1,4 +1,4 @@
-const { resolve } = require('path')
+const { resolve } = require('node:path')
 const { rspack } = require('./unplugin')
 
 /** @type {import('@rspack/core').Configuration} */

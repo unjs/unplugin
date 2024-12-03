@@ -6,8 +6,8 @@ import type {
   UnpluginFactory,
   UnpluginInstance,
 } from '../types'
-import fs from 'fs'
-import { resolve } from 'path'
+import fs from 'node:fs'
+import { resolve } from 'node:path'
 import { toArray } from '../utils/general'
 import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { createBuildContext, normalizeMessage } from './context'

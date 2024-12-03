@@ -1,6 +1,6 @@
-import { execSync } from 'child_process'
-import { join, resolve } from 'path'
-import process from 'process'
+import { execSync } from 'node:child_process'
+import { join, resolve } from 'node:path'
+import process from 'node:process'
 import fs from 'fs-extra'
 import c from 'picocolors'
 

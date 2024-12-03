@@ -1,7 +1,7 @@
 import type { Compilation, Compiler, LoaderContext } from '@rspack/core'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
-import { Buffer } from 'buffer'
-import { resolve } from 'path'
+import { Buffer } from 'node:buffer'
+import { resolve } from 'node:path'
 import { parse } from '../utils/context'
 
 export function createBuildContext(compiler: Compiler, compilation: Compilation, loaderContext?: LoaderContext): UnpluginBuildContext {

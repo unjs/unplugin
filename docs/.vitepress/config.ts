@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
 import { defineConfig } from 'vitepress'

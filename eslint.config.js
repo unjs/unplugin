@@ -20,7 +20,6 @@ export default antfu(
   {
     rules: {
       'node/prefer-global/process': 'off',
-      'unicorn/prefer-node-protocol': 'off',
     },
   },
   {

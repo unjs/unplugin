@@ -1,9 +1,9 @@
 import type { Compilation, Compiler, LoaderContext, sources } from 'webpack'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
-import { Buffer } from 'buffer'
-import { createRequire } from 'module'
-import { resolve } from 'path'
-import process from 'process'
+import { Buffer } from 'node:buffer'
+import { createRequire } from 'node:module'
+import { resolve } from 'node:path'
+import process from 'node:process'
 import { parse } from '../utils/context'
 
 interface ContextOptions {

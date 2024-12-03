@@ -1,11 +1,11 @@
 import type { VitePlugin } from 'unplugin'
-import * as path from 'path'
+import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { build, toArray } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
-const externals = ['path']
+const externals = ['node:path']
 
 describe('load hook should not be called when resolveId hook returned `external: true`', () => {
   const mockResolveIdHook = vi.fn((id: string) => {

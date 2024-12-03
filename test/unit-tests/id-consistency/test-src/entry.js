@@ -1,4 +1,4 @@
-import * as path from 'path'
+import * as path from 'node:path'
 
 // test external modules
 import { named, proxiedDefault } from './proxy-export'

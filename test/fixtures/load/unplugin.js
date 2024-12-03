@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('node:fs')
 const MagicString = require('magic-string')
 const { createUnplugin } = require('unplugin')
 

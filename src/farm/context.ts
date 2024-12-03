@@ -1,7 +1,7 @@
 import type { CompilationContext } from '@farmfe/core'
 import type { UnpluginBuildContext, UnpluginContext } from '../types'
-import { Buffer } from 'buffer'
-import { extname } from 'path'
+import { Buffer } from 'node:buffer'
+import { extname } from 'node:path'
 import { parse } from '../utils/context'
 
 export function createFarmContext(
