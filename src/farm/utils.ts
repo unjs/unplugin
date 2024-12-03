@@ -83,7 +83,6 @@ export function customParseQueryString(url: string | null): [string, string][] {
 }
 
 export function encodeStr(str: string): string {
-  str = path.normalize(str)
   const len = str.length
   if (len === 0)
     return str
@@ -110,11 +109,10 @@ export function encodeStr(str: string): string {
     }
   }
 
-  return path.normalize(result.join(''))
+  return path.posix.normalize(result.join(''))
 }
 
 export function decodeStr(str: string): string {
-  str = path.normalize(str)
   const len = str.length
   if (len === 0)
     return str
@@ -141,7 +139,7 @@ export function decodeStr(str: string): string {
     }
   }
 
-  return path.normalize(result.join(''))
+  return path.posix.normalize(result.join(''))
 }
 
 export function getContentValue(content: any): string {
@@ -181,9 +179,9 @@ function countBackslashZeros(str: string, startIndex: number): number {
 export function removeQuery(pathe: string): string {
   const queryIndex = pathe.indexOf('?')
   if (queryIndex !== -1) {
-    return path.normalize(pathe.slice(0, queryIndex))
+    return path.posix.normalize(pathe.slice(0, queryIndex))
   }
-  return path.normalize(pathe)
+  return path.posix.normalize(pathe)
 }
 
 export function isStartsWithSlash(str: string): boolean {
