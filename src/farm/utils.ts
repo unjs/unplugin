@@ -1,7 +1,7 @@
 import type { JsPlugin } from '@farmfe/core'
-import type { TransformResult } from '../types'
-import path from 'path'
-import * as querystring from 'querystring'
+
+import path from 'node:path'
+import * as querystring from 'node:querystring'
 
 export type WatchChangeEvents = 'create' | 'update' | 'delete'
 
@@ -59,10 +59,6 @@ export function convertWatchEventChange(
   return watchEventChange[value]
 }
 
-export function getContentValue(content: TransformResult): string {
-  return typeof content === 'string' ? content : content!.code
-}
-
 export function isString(variable: unknown): variable is string {
   return typeof variable === 'string'
 }
@@ -84,6 +80,134 @@ export function customParseQueryString(url: string | null): [string, string][] {
     paramsArray.push([key, parsedParams[key] as string])
 
   return paramsArray
+}
+
+export function encodeStr(str: string): string {
+  const len = str.length
+  if (len === 0)
+    return str
+
+  const firstNullIndex = str.indexOf('\0')
+  if (firstNullIndex === -1)
+    return str
+
+  const result = Array.from({ length: len + countNulls(str, firstNullIndex) })
+
+  let pos = 0
+  for (let i = 0; i < firstNullIndex; i++) {
+    result[pos++] = str[i]
+  }
+
+  for (let i = firstNullIndex; i < len; i++) {
+    const char = str[i]
+    if (char === '\0') {
+      result[pos++] = '\\'
+      result[pos++] = '0'
+    }
+    else {
+      result[pos++] = char
+    }
+  }
+
+  return path.posix.normalize(result.join(''))
+}
+
+export function decodeStr(str: string): string {
+  const len = str.length
+  if (len === 0)
+    return str
+
+  const firstIndex = str.indexOf('\\0')
+  if (firstIndex === -1)
+    return str
+
+  const result = Array.from({ length: len - countBackslashZeros(str, firstIndex) })
+
+  let pos = 0
+  for (let i = 0; i < firstIndex; i++) {
+    result[pos++] = str[i]
+  }
+
+  let i = firstIndex
+  while (i < len) {
+    if (str[i] === '\\' && str[i + 1] === '0') {
+      result[pos++] = '\0'
+      i += 2
+    }
+    else {
+      result[pos++] = str[i++]
+    }
+  }
+
+  return path.posix.normalize(result.join(''))
+}
+
+export function getContentValue(content: any): string {
+  if (content === null || content === undefined) {
+    throw new Error('Content cannot be null or undefined')
+  }
+
+  const strContent = typeof content === 'string'
+    ? content
+    : (content.code || '')
+
+  return encodeStr(strContent)
+}
+
+function countNulls(str: string, startIndex: number): number {
+  let count = 0
+  const len = str.length
+  for (let i = startIndex; i < len; i++) {
+    if (str[i] === '\0')
+      count++
+  }
+  return count
+}
+
+function countBackslashZeros(str: string, startIndex: number): number {
+  let count = 0
+  const len = str.length
+  for (let i = startIndex; i < len - 1; i++) {
+    if (str[i] === '\\' && str[i + 1] === '0') {
+      count++
+      i++
+    }
+  }
+  return count
+}
+
+export function removeQuery(pathe: string): string {
+  const queryIndex = pathe.indexOf('?')
+  if (queryIndex !== -1) {
+    return path.posix.normalize(pathe.slice(0, queryIndex))
+  }
+  return path.posix.normalize(pathe)
+}
+
+export function isStartsWithSlash(str: string): boolean {
+  return str?.startsWith('/')
+}
+
+export function appendQuery(id: string, query: [string, string][]): string {
+  if (!query.length) {
+    return id
+  }
+
+  return `${id}?${stringifyQuery(query)}`
+}
+
+export function stringifyQuery(query: [string, string][]): string {
+  if (!query.length) {
+    return ''
+  }
+
+  let queryStr = ''
+
+  for (const [key, value] of query) {
+    queryStr += `${key}${value ? `=${value}` : ''}&`
+  }
+
+  return `${queryStr.slice(0, -1)}`
 }
 
 export interface JsPluginExtended extends JsPlugin {
