@@ -213,7 +213,7 @@ function buildSetup() {
 
       if (plugin.load) {
         onLoad({ filter: onLoadFilter }, async (args) => {
-          const id = args.path + args.suffix
+          const id = args.path + (args.suffix || '') // compat for #427
 
           const { errors, warnings, mixedContext }
             = createPluginContext(context)
@@ -254,7 +254,7 @@ function buildSetup() {
 
       if (plugin.transform) {
         onTransform({ filter: onLoadFilter }, async (args) => {
-          const id = args.path + args.suffix
+          const id = args.path + (args.suffix || '')
 
           if (plugin.transformInclude && !plugin.transformInclude(id))
             return
