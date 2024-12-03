@@ -10,13 +10,13 @@ import type {
 } from '../types'
 import fs from 'fs'
 import path from 'path'
+import { toArray } from '../utils/general'
 import {
   combineSourcemaps,
   createBuildContext,
   createPluginContext,
   guessLoader,
   processCodeWithSourceMap,
-  toArray,
   unwrapLoader,
 } from './utils'
 
@@ -41,6 +41,12 @@ export interface EsbuildPluginBuild extends PluginBuild {
   onTransform: (options: OnTransformOptions, callback: OnTransformCallback) => void
 }
 
+interface Loader {
+  options?: OnLoadOptions
+  onLoadCb?: Parameters<PluginBuild['onLoad']>[1]
+  onTransformCb?: OnTransformCallback
+}
+
 export function getEsbuildPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['esbuild'] {
@@ -51,12 +57,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
     const plugins = toArray(factory(userOptions!, meta))
 
     const setupPlugins: EsbuildPlugin['setup'] = async (build) => {
-      const setup = buildSetup(meta)
-      interface Loader {
-        options?: OnLoadOptions
-        onLoadCb?: Parameters<PluginBuild['onLoad']>[1]
-        onTransformCb?: OnTransformCallback
-      }
+      const setup = buildSetup()
       const loaders: Loader[] = []
 
       for (const plugin of plugins) {
@@ -139,20 +140,18 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
   }
 }
 
-function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
+function buildSetup() {
   return (plugin: UnpluginOptions): EsbuildPlugin['setup'] => {
     return (_build) => {
-      const build = meta.build = _build as EsbuildPluginBuild
+      const build = _build as EsbuildPluginBuild
       const context = createBuildContext(build)
       const { onStart, onEnd, onResolve, onLoad, onTransform, initialOptions } = build
 
       const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/
       const onLoadFilter = plugin.esbuild?.onLoadFilter ?? /.*/
-
       const loader = plugin.esbuild?.loader ?? guessLoader
 
-      if (plugin.esbuild?.config)
-        plugin.esbuild.config.call(context, initialOptions)
+      plugin.esbuild?.config?.call(context, initialOptions)
 
       if (plugin.buildStart)
         onStart(() => plugin.buildStart!.call(context))
@@ -306,7 +305,7 @@ function buildSetup(meta: UnpluginContextMeta & { framework: 'esbuild' }) {
       }
 
       if (plugin.esbuild?.setup)
-        return plugin.esbuild.setup(meta.build)
+        return plugin.esbuild.setup(build)
     }
   }
 }

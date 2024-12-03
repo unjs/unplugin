@@ -1,4 +1,7 @@
 {
   "extends": "../tsconfig.json",
-  "include": [".vitepress/**/*"]
+  "compilerOptions": {
+    "lib": ["DOM", "ESNext"]
+  },
+  "include": ["**/*", ".**/*", "../src/globals.d.ts"]
 }

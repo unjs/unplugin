@@ -7,9 +7,7 @@ import { Buffer } from 'buffer'
 import fs from 'fs'
 import path from 'path'
 import remapping from '@ampproject/remapping'
-import { Parser } from 'acorn'
-
-export * from '../utils'
+import { parse } from '../utils/context'
 
 const ExtToLoader: Record<string, Loader> = {
   '.js': 'js',
@@ -116,14 +114,7 @@ export function createBuildContext(build: EsbuildPluginBuild): UnpluginBuildCont
   const watchFiles: string[] = []
   const { initialOptions } = build
   return {
-    parse(code: string, opts: any = {}) {
-      return Parser.parse(code, {
-        sourceType: 'module',
-        ecmaVersion: 'latest',
-        locations: true,
-        ...opts,
-      })
-    },
+    parse,
     addWatchFile() {
       throw new Error('unplugin/esbuild: addWatchFile outside supported hooks (resolveId, load, transform)')
     },

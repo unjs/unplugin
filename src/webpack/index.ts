@@ -4,7 +4,8 @@ import fs from 'fs'
 import { resolve } from 'path'
 import process from 'process'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import { normalizeAbsolutePath, shouldLoad, toArray, transformUse } from '../utils'
+import { toArray } from '../utils/general'
+import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
 
 const TRANSFORM_LOADER = resolve(
@@ -216,4 +217,16 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
       },
     }
   }
+}
+
+export function shouldLoad(id: string, plugin: ResolvedUnpluginOptions, externalModules: Set<string>): boolean {
+  if (id.startsWith(plugin.__virtualModulePrefix))
+    id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
+
+  // load include filter
+  if (plugin.loadInclude && !plugin.loadInclude(id))
+    return false
+
+  // Don't run load hook for external modules
+  return !externalModules.has(id)
 }

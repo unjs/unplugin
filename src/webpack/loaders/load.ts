@@ -1,6 +1,6 @@
 import type { LoaderContext } from 'webpack'
 import type { ResolvedUnpluginOptions } from '../../types'
-import { normalizeAbsolutePath } from '../../utils'
+import { normalizeAbsolutePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
 export default async function load(this: LoaderContext<any>, source: string, map: any) {

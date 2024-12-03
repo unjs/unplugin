@@ -1,12 +1,10 @@
+import path from 'path'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
-
 import { defineConfig } from 'vitepress'
 import { groupIconMdPlugin } from 'vitepress-plugin-group-icons'
-import { description, ogImage, title } from './constance'
+import { description, ogImage, title } from './constant'
 import { repositoryMeta } from './data/meta'
-
-import vite from './vite.config'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -77,14 +75,19 @@ export default defineConfig({
     ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
   ],
   markdown: {
-    config: (md: any) => {
+    config: (md) => {
       md.use(MarkdownItGitHubAlerts)
       md.use(groupIconMdPlugin)
     },
     codeTransformers: [
-      transformerTwoslash(),
+      transformerTwoslash({
+        twoslashOptions: {
+          compilerOptions: { paths: {
+            unplugin: [path.resolve(import.meta.dirname, '../../src/index.ts')],
+          } },
+        },
+      }),
     ],
   },
   ignoreDeadLinks: true,
-  vite: vite as any,
 })

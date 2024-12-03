@@ -1,6 +1,6 @@
 import type { LoaderContext } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../../types'
-import { normalizeAbsolutePath } from '../../utils'
+import { normalizeAbsolutePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
 
