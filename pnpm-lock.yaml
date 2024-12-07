@@ -85,8 +85,8 @@ importers:
         specifier: ^2.11.1
         version: 2.11.1
       tsdown:
-        specifier: file:/Users/kevin/Developer/open-source/tsdown
-        version: file:../tsdown(@babel/runtime@7.26.0)(rollup@4.28.0)(typescript@5.6.3)
+        specifier: ^0.4.4
+        version: 0.4.4(@babel/runtime@7.26.0)(rollup@4.28.0)(typescript@5.6.3)
       typescript:
         specifier: ~5.6.3
         version: 5.6.3
@@ -4831,8 +4831,8 @@ packages:
     peerDependencies:
       typescript: ~5.6.3
 
-  tsdown@file:../tsdown:
-    resolution: {directory: ../tsdown, type: directory}
+  tsdown@0.4.4:
+    resolution: {integrity: sha512-Pg/oK7Fku09cAEYuAy4Cr7QKmJ1XCeyQYO/GswGDZqRwrAQDtK5TZuN4MmuvTNKkqbZuBKdnXfhVDmdujjIQ4A==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -10530,7 +10530,7 @@ snapshots:
     dependencies:
       typescript: 5.6.3
 
-  tsdown@file:../tsdown(@babel/runtime@7.26.0)(rollup@4.28.0)(typescript@5.6.3):
+  tsdown@0.4.4(@babel/runtime@7.26.0)(rollup@4.28.0)(typescript@5.6.3):
     dependencies:
       cac: 6.7.14
       chokidar: 4.0.1
