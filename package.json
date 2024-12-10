@@ -28,8 +28,8 @@
     "node": ">=18.12.0"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch src",
+    "build": "tsdown",
+    "dev": "tsdown --watch src",
     "lint": "eslint --cache .",
     "lint:fix": "nr lint --fix",
     "typecheck": "tsc --noEmit",
@@ -68,10 +68,9 @@
     "rolldown": "^0.15.0",
     "rollup": "^4.28.0",
     "simple-git-hooks": "^2.11.1",
-    "tsup": "^8.3.5",
+    "tsdown": "^0.5.0",
     "typescript": "~5.7.2",
     "unplugin": "workspace:*",
-    "unplugin-unused": "^0.2.3",
     "vite": "^6.0.3",
     "vitest": "^2.1.8",
     "webpack": "^5.96.1",
