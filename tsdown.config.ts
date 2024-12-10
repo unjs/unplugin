@@ -5,7 +5,7 @@ export default defineConfig({
   format: ['cjs', 'esm'],
   clean: true,
   target: 'node18.12',
-  dts: { autoAddExts: true },
+  dts: true,
   sourcemap: false,
   define: {
     __DEV__: 'false',
