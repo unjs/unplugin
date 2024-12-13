@@ -13,7 +13,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.282",
+    "@iconify-json/ri": "^1.2.3",
     "@shikijs/vitepress-twoslash": "^1.24.2",
     "case-police": "^0.7.2",
     "consola": "^3.2.3",
