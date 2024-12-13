@@ -19,7 +19,7 @@
     }
   ],
   "ignoreDeps": [
-    "webpack-cli",
-    "node"
+    "node",
+    "typescript"
   ]
 }
