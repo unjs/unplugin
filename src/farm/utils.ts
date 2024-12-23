@@ -213,3 +213,60 @@ export function stringifyQuery(query: [string, string][]): string {
 export interface JsPluginExtended extends JsPlugin {
   [key: string]: any
 }
+
+export const CSS_LANGS_RES: [RegExp, string][] = [
+  [/\.(less)(?:$|\?)/, 'less'],
+  [/\.(scss|sass)(?:$|\?)/, 'sass'],
+  [/\.(styl|stylus)(?:$|\?)/, 'stylus'],
+  [/\.(css)(?:$|\?)/, 'css'],
+]
+
+export const JS_LANGS_RES: [RegExp, string][] = [
+  [/\.(js|mjs|cjs|)(?:$|\?)/, 'js'],
+  // jsx
+  [/\.(jsx)(?:$|\?)/, 'jsx'],
+  // ts
+  [/\.(ts|cts|mts)(?:$|\?)/, 'ts'],
+  // tsx
+  [/\.(tsx)(?:$|\?)/, 'tsx'],
+]
+
+export function getCssModuleType(id: string): string | null {
+  for (const [reg, lang] of CSS_LANGS_RES) {
+    if (reg.test(id)) {
+      return lang
+    }
+  }
+
+  return null
+}
+
+export function getJsModuleType(id: string): string | null {
+  for (const [reg, lang] of JS_LANGS_RES) {
+    if (reg.test(id)) {
+      return lang
+    }
+  }
+
+  return null
+}
+
+export function formatLoadModuleType(id: string): string {
+  const cssModuleType = getCssModuleType(id)
+
+  if (cssModuleType) {
+    return cssModuleType
+  }
+
+  const jsModuleType = getJsModuleType(id)
+
+  if (jsModuleType) {
+    return jsModuleType
+  }
+
+  return 'js'
+}
+
+export function formatTransformModuleType(id: string): string {
+  return formatLoadModuleType(id)
+}

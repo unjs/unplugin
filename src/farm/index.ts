@@ -28,8 +28,8 @@ import {
   customParseQueryString,
   decodeStr,
   encodeStr,
+  formatTransformModuleType,
   getContentValue,
-  guessIdLoader,
   isObject,
   isStartsWithSlash,
   isString,
@@ -161,7 +161,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
 
         const id = appendQuery(resolvedPath, params.query)
 
-        const loader = guessIdLoader(resolvedPath)
+        const loader = formatTransformModuleType(id)
 
         const shouldLoadInclude
           = plugin.loadInclude?.(id)
@@ -198,7 +198,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
 
         const id = appendQuery(resolvedPath, params.query)
 
-        const loader = params.moduleType ?? guessIdLoader(params.resolvedPath)
+        const loader = formatTransformModuleType(id)
 
         const shouldTransformInclude
           = plugin.transformInclude?.(id)
@@ -216,7 +216,9 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           const transformFarmResult: PluginTransformHookResult = {
             content: getContentValue(resource),
             moduleType: loader,
-            sourceMap: JSON.stringify(resource.map),
+            sourceMap: typeof resource.map === 'object' && resource.map !== null
+              ? JSON.stringify(resource.map)
+              : undefined,
           }
 
           return transformFarmResult
