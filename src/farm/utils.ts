@@ -222,7 +222,7 @@ export const CSS_LANGS_RES: [RegExp, string][] = [
 ]
 
 export const JS_LANGS_RES: [RegExp, string][] = [
-  [/\.(js|mjs|cjs|)(?:$|\?)/, 'js'],
+  [/\.(js|mjs|cjs)(?:$|\?)/, 'js'],
   // jsx
   [/\.(jsx)(?:$|\?)/, 'jsx'],
   // ts
