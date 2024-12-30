@@ -1,6 +1,6 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
-import type { BuildOptions, Plugin as EsbuildPlugin, Loader } from 'esbuild'
+import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Plugin as VitePlugin } from 'vite'
@@ -97,7 +97,7 @@ export interface UnpluginOptions {
     onResolveFilter?: RegExp
     onLoadFilter?: RegExp
     loader?: Loader | ((code: string, id: string) => Loader)
-    setup?: (build: EsbuildPluginBuild) => void | Promise<void>
+    setup?: (build: PluginBuild) => void | Promise<void>
     config?: (options: BuildOptions) => void
   }
   farm?: Partial<FarmPlugin>

@@ -142,8 +142,8 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
 function buildSetup() {
   return (plugin: UnpluginOptions): EsbuildPlugin['setup'] => {
-    return (_build) => {
-      const build = _build as EsbuildPluginBuild
+    return (rawBuild) => {
+      const build = rawBuild as EsbuildPluginBuild
       const context = createBuildContext(build)
       const { onStart, onEnd, onResolve, onLoad, onTransform, initialOptions } = build
 
@@ -305,7 +305,7 @@ function buildSetup() {
       }
 
       if (plugin.esbuild?.setup)
-        return plugin.esbuild.setup(build)
+        return plugin.esbuild.setup(rawBuild)
     }
   }
 }
