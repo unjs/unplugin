@@ -16,7 +16,7 @@
     "@iconify-json/ri": "^1.2.5",
     "@shikijs/vitepress-twoslash": "^1.24.4",
     "case-police": "^0.7.2",
-    "consola": "^3.3.1",
+    "consola": "^3.3.3",
     "dotenv": "^16.4.7",
     "eslint": "^9.17.0",
     "markdown-it": "^14.1.0",
