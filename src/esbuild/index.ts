@@ -72,7 +72,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             loader.options ||= _options
             loader.onTransformCb = callback
           },
-        } as EsbuildPluginBuild)
+        } as EsbuildPluginBuild, build)
 
         // skip if no load & transform hooks
         if (loader.onLoadCb || loader.onTransformCb)
@@ -141,9 +141,8 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 }
 
 function buildSetup() {
-  return (plugin: UnpluginOptions): EsbuildPlugin['setup'] => {
-    return (_build) => {
-      const build = _build as EsbuildPluginBuild
+  return (plugin: UnpluginOptions) => {
+    return (build: EsbuildPluginBuild, rawBuild: PluginBuild) => {
       const context = createBuildContext(build)
       const { onStart, onEnd, onResolve, onLoad, onTransform, initialOptions } = build
 
@@ -305,7 +304,7 @@ function buildSetup() {
       }
 
       if (plugin.esbuild?.setup)
-        return plugin.esbuild.setup(build)
+        return plugin.esbuild.setup(rawBuild)
     }
   }
 }
