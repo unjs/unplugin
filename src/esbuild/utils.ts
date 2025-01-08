@@ -1,7 +1,6 @@
 import type { DecodedSourceMap, EncodedSourceMap } from '@ampproject/remapping'
-import type { Loader, Location, Message, PartialMessage } from 'esbuild'
+import type { Loader, Location, Message, PartialMessage, PluginBuild } from 'esbuild'
 import type { SourceMap } from 'rollup'
-import type { EsbuildPluginBuild } from '.'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import { Buffer } from 'node:buffer'
 import fs from 'node:fs'
@@ -110,7 +109,7 @@ export function combineSourcemaps(
   return map as EncodedSourceMap
 }
 
-export function createBuildContext(build: EsbuildPluginBuild): UnpluginBuildContext {
+export function createBuildContext(build: PluginBuild): UnpluginBuildContext {
   const watchFiles: string[] = []
   const { initialOptions } = build
   return {
