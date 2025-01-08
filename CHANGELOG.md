@@ -1,3 +1,12 @@
+## [1.16.1](https://github.com/unjs/unplugin/compare/v1.16.0...v1.16.1) (2025-01-08)
+
+
+### Bug Fixes
+
+* **esbuild:** pass original build for custom esbuild setup ([24a7188](https://github.com/unjs/unplugin/commit/24a7188665d1bb420993e0601c9ef135599a140c))
+
+
+
 # [1.16.0](https://github.com/unjs/unplugin/compare/v1.15.0...v1.16.0) (2024-11-14)
 
 
