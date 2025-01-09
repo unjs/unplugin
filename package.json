@@ -50,7 +50,7 @@
     "@antfu/eslint-config": "^3.12.1",
     "@antfu/ni": "^0.23.2",
     "@farmfe/cli": "^1.0.4",
-    "@farmfe/core": "^1.5.0",
+    "@farmfe/core": "^1.6.4",
     "@rspack/cli": "^1.1.8",
     "@rspack/core": "^1.1.8",
     "@types/fs-extra": "^11.0.4",
