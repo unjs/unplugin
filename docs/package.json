@@ -26,7 +26,7 @@
     "unocss": "^0.65.3",
     "unplugin": "workspace:*",
     "unplugin-icons": "^22.0.0",
-    "unplugin-vue-components": "^0.28.0",
+    "unplugin-vue-components": "^28.0.0",
     "vitepress": "^1.5.0",
     "vitepress-plugin-group-icons": "^1.3.3",
     "vue": "^3.5.13",
