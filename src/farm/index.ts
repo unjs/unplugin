@@ -16,7 +16,6 @@ import type {
 } from '../types'
 import type { JsPluginExtended, WatchChangeEvents } from './utils'
 
-import { existsSync } from 'node:fs'
 import path from 'node:path'
 
 import { toArray } from '../utils/general'
@@ -31,7 +30,6 @@ import {
   formatTransformModuleType,
   getContentValue,
   isObject,
-  isStartsWithSlash,
   isString,
   removeQuery,
 } from './utils'
@@ -88,13 +86,11 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
       filters = options?.filters ?? []
 
     farmPlugin.resolve = {
-      filters: { sources: ['.*', ...filters], importers: ['.*'] },
+      filters: { sources: filters.length ? filters : ['.*'], importers: ['.*'] },
       async executor(params: PluginResolveHookParam, context: CompilationContext) {
         const resolvedIdPath = path.resolve(
-          process.cwd(),
           params.importer ?? '',
         )
-
         let isEntry = false
         if (isObject(params.kind) && 'entry' in params.kind) {
           const kindWithEntry = params.kind as { entry: string }
@@ -123,23 +119,6 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
             query: customParseQueryString(resolveIdResult?.id),
             sideEffects: false,
             external: Boolean(resolveIdResult?.external),
-            meta: {},
-          }
-        }
-        if (!isStartsWithSlash(params.source))
-          return null
-
-        const rootAbsolutePath = path.resolve(
-          params.source,
-        )
-        if (
-          existsSync(rootAbsolutePath)
-        ) {
-          return {
-            resolvedPath: removeQuery(encodeStr(rootAbsolutePath)),
-            query: customParseQueryString(rootAbsolutePath),
-            sideEffects: false,
-            external: false,
             meta: {},
           }
         }

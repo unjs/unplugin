@@ -22,6 +22,8 @@ const ExtToLoader: Record<string, string> = {
   '.node': 'napi',
 }
 
+export const DEFAULT_PATTERN = '.*'
+
 export function guessIdLoader(id: string): string {
   return ExtToLoader[path.extname(id).toLowerCase()] || 'js'
 }
