@@ -25,7 +25,7 @@ function createUnpluginWithCallback(
 
 // We extract this check because all bundlers should behave the same
 function checkHookCalls(
-  name: 'webpack' | 'rollup' | 'vite' | 'rspack' | 'esbuild',
+  _name: 'webpack' | 'rollup' | 'vite' | 'rspack' | 'esbuild',
   resolveIdCallback: Mock,
   transformIncludeCallback: Mock,
   transformCallback: Mock,
