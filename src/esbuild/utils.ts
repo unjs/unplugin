@@ -26,7 +26,7 @@ const ExtToLoader: Record<string, Loader> = {
   '.txt': 'text',
 }
 
-export function guessLoader(_code: string, id: string): Loader {
+export function guessLoader(code: string, id: string): Loader {
   return ExtToLoader[path.extname(id).toLowerCase()] || 'js'
 }
 
