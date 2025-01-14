@@ -15,6 +15,7 @@
       "node"
     ],
     "strict": true,
+    "noUnusedLocals": true,
     "declaration": true,
     "noEmit": true,
     "esModuleInterop": true,
