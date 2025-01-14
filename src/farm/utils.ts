@@ -40,8 +40,8 @@ export function transformQuery(context: any): void {
 export function convertEnforceToPriority(value: 'pre' | 'post' | undefined): number {
   const defaultPriority = 100
   const enforceToPriority = {
-    pre: 101,
-    post: 99,
+    pre: 102,
+    post: 98,
   }
 
   return enforceToPriority[value!] !== undefined

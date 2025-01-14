@@ -30,6 +30,7 @@ import {
   formatTransformModuleType,
   getContentValue,
   isObject,
+  isStartsWithSlash,
   isString,
   removeQuery,
 } from './utils'
@@ -122,6 +123,9 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
             meta: {},
           }
         }
+
+        if (!isStartsWithSlash(params.source))
+          return null
       },
     } as unknown as JsPlugin['resolve']
   }
