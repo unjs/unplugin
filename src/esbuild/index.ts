@@ -69,7 +69,9 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
             loader.onLoadCb = callback
           },
           onTransform(_options, callback) {
-            loader.options ||= _options
+            if (!loader.options) {
+              loader.options = _options
+            }
             loader.onTransformCb = callback
           },
         } as EsbuildPluginBuild, build)
