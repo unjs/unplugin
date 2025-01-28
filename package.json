@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
-    "@antfu/eslint-config": "^3.16.0",
+    "@antfu/eslint-config": "^4.1.0",
     "@antfu/ni": "^23.3.0",
     "@farmfe/cli": "^1.0.4",
     "@farmfe/core": "^1.6.6",
