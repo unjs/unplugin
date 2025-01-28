@@ -1,4 +1,5 @@
-import { Parser, type Program } from 'acorn'
+import type { Program } from 'acorn'
+import { Parser } from 'acorn'
 
 export function parse(code: string, opts: any = {}): Program {
   return Parser.parse(code, {
