@@ -55,7 +55,7 @@
     "@rspack/core": "^1.1.8",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.10.7",
-    "bumpp": "^9.10.1",
+    "bumpp": "^10.0.1",
     "esbuild": "^0.24.2",
     "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^9.18.0",
