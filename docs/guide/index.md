@@ -13,7 +13,7 @@ lastUpdated: false
 
 - [Vite](https://vitejs.dev/)
 - [Rollup](https://rollupjs.org/)
-- [Webpack](https://webpack.js.org/)
+- [webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/)
 - [Rolldown](https://rolldown.rs/) <span style="color: #ca8a04"><strong>(⚠️ experimental)</strong></span>
@@ -39,7 +39,7 @@ Check repositories above for more details.
 ### Pre-requisites
 
 - Node.js 18.12.0 or later.
-- Webpack 5 or later, if you are using Webpack.
+- webpack 5 or later, if you are using webpack.
 
 ### Install package
 
@@ -193,7 +193,7 @@ export default defineConfig({
 
 ## Supported Hooks
 
-| Hook                                                                              |     Rollup      | Vite | Webpack |     esbuild     |     Rspack      | Farm | Rolldown |
+| Hook                                                                              |     Rollup      | Vite | webpack |     esbuild     |     Rspack      | Farm | Rolldown |
 | --------------------------------------------------------------------------------- | :-------------: | :--: | :-----: | :-------------: | :-------------: | :--: | :------: |
 | [`enforce`](https://vitejs.dev/guide/api-plugin.html#plugin-ordering)             | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |  ✅  |    ✅    |
 | [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
@@ -254,7 +254,7 @@ export const farmPlugin = unplugin.farm
 
 ## Supported Context
 
-| Context                                                                               | Rollup | Vite | Webpack | esbuild | Rspack | Farm | Rolldown |
+| Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Farm | Rolldown |
 | ------------------------------------------------------------------------------------- | :----: | :--: | :-----: | :-----: | :----: | :--: | :------: |
 | [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    |
 | [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    |
@@ -274,7 +274,7 @@ export const farmPlugin = unplugin.farm
 
 ### Bundler Supported
 
-|         Rollup         | Vite | Webpack | Rspack | esbuild | Farm | Rolldown |
+|         Rollup         | Vite | webpack | Rspack | esbuild | Farm | Rolldown |
 | :--------------------: | :--: | :-----: | :----: | :-----: | :--: | :------: |
 | ✅ `>=3.1`<sup>1</sup> |  ✅  |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    |
 

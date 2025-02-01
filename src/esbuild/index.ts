@@ -143,7 +143,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 function buildSetup() {
   return (plugin: UnpluginOptions) => {
     return (build: EsbuildPluginBuild, rawBuild: PluginBuild) => {
-      const context = createBuildContext(build)
+      const context = createBuildContext(rawBuild)
       const { onStart, onEnd, onResolve, onLoad, onTransform, initialOptions } = build
 
       const onResolveFilter = plugin.esbuild?.onResolveFilter ?? /.*/

@@ -6,7 +6,6 @@ import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plu
 import type { Plugin as VitePlugin } from 'vite'
 import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, LoaderContext as WebpackLoaderContext, WebpackPluginInstance } from 'webpack'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
-import type { EsbuildPluginBuild } from './esbuild'
 
 export type {
   EsbuildPlugin,
@@ -48,7 +47,7 @@ export interface ExternalIdResult { id: string, external?: boolean }
 
 export type NativeBuildContext =
   { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> } |
-  { framework: 'esbuild', build: EsbuildPluginBuild } |
+  { framework: 'esbuild', build: PluginBuild } |
   { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext } |
   { framework: 'farm', context: FarmCompilationContext }
 
