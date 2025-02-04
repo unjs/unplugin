@@ -7,7 +7,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - run: corepack enable
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
