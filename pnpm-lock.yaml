@@ -87,6 +87,9 @@ importers:
       typescript:
         specifier: ~5.7.3
         version: 5.7.3
+      unloader:
+        specifier: ^0.2.2
+        version: 0.2.2
       unplugin:
         specifier: workspace:*
         version: 'link:'
@@ -1993,6 +1996,9 @@ packages:
 
   birpc@0.2.19:
     resolution: {integrity: sha512-5WeXXAvTmitV1RqJFppT5QtUiz2p1mRSYU000Jkft5ZUCLJIk4uQriYNO50HknxKwM6jd8utNc66K1qGIwwWBQ==}
+
+  birpc@2.2.0:
+    resolution: {integrity: sha512-1/22obknhoj56PcE+pZPp6AbWDdY55M81/ofpPW3Ltlp9Eh4zoFFLswvZmNpRTb790CY5tsNfgbYeNOqIARJfQ==}
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -4792,6 +4798,9 @@ packages:
   unconfig@0.6.1:
     resolution: {integrity: sha512-cVU+/sPloZqOyJEAfNwnQSFCzFrZm85vcVkryH7lnlB/PiTycUkAjt5Ds79cfIshGOZ+M5v3PBDnKgpmlE5DtA==}
 
+  unconfig@7.0.0:
+    resolution: {integrity: sha512-G5CJSoG6ZTxgzCJblEfgpdRK2tos9+UdD2WtecDUVfImzQ0hFjwpH5RVvGMhP4pRpC9ML7NrC4qBsBl0Ttj35A==}
+
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
@@ -4817,6 +4826,10 @@ packages:
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
+
+  unloader@0.2.2:
+    resolution: {integrity: sha512-kCpDq9Dr+yyOBrV4l+nnbhAsT1C10yWokhbzJjqRNowSt8LQTE+O3h+jIB7C50TC3ZYGqfYqETxB0RnpuCsdQA==}
+    engines: {node: ^18.19.0 || >=20.6.0}
 
   unocss@65.4.3:
     resolution: {integrity: sha512-mwSVi0ovPxaDv58yFB7Vm5v1x/q/pUc7aTh7SJbeYoRrpbUGdKiVf20YSQfMqmBNXV9CFDr4o6tabP/58as6RQ==}
@@ -7255,6 +7268,8 @@ snapshots:
   binary-extensions@2.3.0: {}
 
   birpc@0.2.19: {}
+
+  birpc@2.2.0: {}
 
   bl@4.1.0:
     dependencies:
@@ -10435,6 +10450,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  unconfig@7.0.0:
+    dependencies:
+      '@antfu/utils': 8.1.0
+      defu: 6.1.4
+      jiti: 2.4.2
+
   undici-types@6.20.0: {}
 
   unist-util-is@6.0.0:
@@ -10463,6 +10484,15 @@ snapshots:
   universalify@0.1.2: {}
 
   universalify@2.0.1: {}
+
+  unloader@0.2.2:
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      birpc: 2.2.0
+      debug: 4.4.0
+      unconfig: 7.0.0
+    transitivePeerDependencies:
+      - supports-color
 
   unocss@65.4.3(postcss@8.5.1)(rollup@4.34.2)(vite@6.0.11(@types/node@22.13.1)(jiti@2.4.2)(terser@5.37.0)(tsx@4.19.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3)):
     dependencies:

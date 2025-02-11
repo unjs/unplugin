@@ -4,6 +4,7 @@ import { getFarmPlugin } from './farm'
 import { getRolldownPlugin } from './rolldown'
 import { getRollupPlugin } from './rollup'
 import { getRspackPlugin } from './rspack'
+import { getUnloaderPlugin } from './unloader'
 import { getVitePlugin } from './vite'
 import { getWebpackPlugin } from './webpack'
 
@@ -32,6 +33,9 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     },
     get farm() {
       return getFarmPlugin(factory)
+    },
+    get unloader() {
+      return getUnloaderPlugin(factory)
     },
     get raw() {
       return factory
@@ -80,4 +84,10 @@ export function createFarmPlugin<UserOptions, Nested extends boolean = boolean>(
   factory: UnpluginFactory<UserOptions, Nested>,
 ): UnpluginInstance<UserOptions>['farm'] {
   return getFarmPlugin(factory)
+}
+
+export function createUnloaderPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+): UnpluginInstance<UserOptions>['unloader'] {
+  return getUnloaderPlugin(factory)
 }
