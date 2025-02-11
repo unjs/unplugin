@@ -77,6 +77,9 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
   },
+  "resolutions": {
+    "esbuild": "^0.25.0"
+  },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },
