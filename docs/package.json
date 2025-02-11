@@ -14,11 +14,10 @@
   },
   "devDependencies": {
     "@iconify-json/ri": "^1.2.5",
-    "@shikijs/vitepress-twoslash": "^2.3.0",
+    "@shikijs/vitepress-twoslash": "^2.3.2",
     "case-police": "^0.7.2",
     "consola": "^3.4.0",
     "dotenv": "^16.4.7",
-    "eslint": "^9.19.0",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^0.3.0",
     "ofetch": "^1.4.1",
