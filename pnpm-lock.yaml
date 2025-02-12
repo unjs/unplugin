@@ -118,8 +118,8 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2(typescript@5.7.3)
       case-police:
-        specifier: ^0.7.2
-        version: 0.7.2
+        specifier: ^1.0.0
+        version: 1.0.0
       consola:
         specifier: ^3.4.0
         version: 3.4.0
@@ -1960,8 +1960,8 @@ packages:
   caniuse-lite@1.0.30001699:
     resolution: {integrity: sha512-b+uH5BakXZ9Do9iK+CkDmctUSEqZl+SP056vc5usa0PL+ev5OHw003rZXcnjNDv3L8P5j6rwT6C0BPKSikW08w==}
 
-  case-police@0.7.2:
-    resolution: {integrity: sha512-qxIuluIS2DdugnuveaTXrN+++BcjRZkoNXIc+2yIFDZlAl72YekXhr/M1xzfOGU445nZKi4ruIZbp0qz1YBEFQ==}
+  case-police@1.0.0:
+    resolution: {integrity: sha512-THHWd3TZmtB5sSrd8bt5t0shPQ/MVBXWChIULc9Fome4NN4SagoxNlc/V+lpl5uA4pNcCsBv5Z3wMmCqlYilxw==}
     hasBin: true
 
   ccount@2.0.1:
@@ -7196,7 +7196,7 @@ snapshots:
 
   caniuse-lite@1.0.30001699: {}
 
-  case-police@0.7.2: {}
+  case-police@1.0.0: {}
 
   ccount@2.0.1: {}
 
