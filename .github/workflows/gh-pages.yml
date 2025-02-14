@@ -14,19 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.1.0
+
       - name: Set node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - run: corepack enable
-      - run: npm i -g @antfu/ni
-      - run: nci
+          cache: pnpm
+
+      - run: pnpm i
 
       - name: Build unplugin
-        run: nr build
+        run: pnpm run build
 
       - name: Build docs
-        run: nr docs:build
+        run: pnpm run docs:build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
