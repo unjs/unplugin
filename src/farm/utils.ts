@@ -22,6 +22,8 @@ const ExtToLoader: Record<string, string> = {
   '.node': 'napi',
 }
 
+export const DEFAULT_PATTERN = '.*'
+
 export function guessIdLoader(id: string): string {
   return ExtToLoader[path.extname(id).toLowerCase()] || 'js'
 }
@@ -38,8 +40,8 @@ export function transformQuery(context: any): void {
 export function convertEnforceToPriority(value: 'pre' | 'post' | undefined): number {
   const defaultPriority = 100
   const enforceToPriority = {
-    pre: 101,
-    post: 99,
+    pre: 102,
+    post: 98,
   }
 
   return enforceToPriority[value!] !== undefined
@@ -212,4 +214,61 @@ export function stringifyQuery(query: [string, string][]): string {
 
 export interface JsPluginExtended extends JsPlugin {
   [key: string]: any
+}
+
+export const CSS_LANGS_RES: [RegExp, string][] = [
+  [/\.(less)(?:$|\?)/, 'less'],
+  [/\.(scss|sass)(?:$|\?)/, 'sass'],
+  [/\.(styl|stylus)(?:$|\?)/, 'stylus'],
+  [/\.(css)(?:$|\?)/, 'css'],
+]
+
+export const JS_LANGS_RES: [RegExp, string][] = [
+  [/\.(js|mjs|cjs)(?:$|\?)/, 'js'],
+  // jsx
+  [/\.(jsx)(?:$|\?)/, 'jsx'],
+  // ts
+  [/\.(ts|cts|mts)(?:$|\?)/, 'ts'],
+  // tsx
+  [/\.(tsx)(?:$|\?)/, 'tsx'],
+]
+
+export function getCssModuleType(id: string): string | null {
+  for (const [reg, lang] of CSS_LANGS_RES) {
+    if (reg.test(id)) {
+      return lang
+    }
+  }
+
+  return null
+}
+
+export function getJsModuleType(id: string): string | null {
+  for (const [reg, lang] of JS_LANGS_RES) {
+    if (reg.test(id)) {
+      return lang
+    }
+  }
+
+  return null
+}
+
+export function formatLoadModuleType(id: string): string {
+  const cssModuleType = getCssModuleType(id)
+
+  if (cssModuleType) {
+    return cssModuleType
+  }
+
+  const jsModuleType = getJsModuleType(id)
+
+  if (jsModuleType) {
+    return jsModuleType
+  }
+
+  return 'js'
+}
+
+export function formatTransformModuleType(id: string): string {
+  return formatLoadModuleType(id)
 }

@@ -16,7 +16,6 @@ import type {
 } from '../types'
 import type { JsPluginExtended, WatchChangeEvents } from './utils'
 
-import { existsSync } from 'node:fs'
 import path from 'node:path'
 
 import { toArray } from '../utils/general'
@@ -28,8 +27,8 @@ import {
   customParseQueryString,
   decodeStr,
   encodeStr,
+  formatTransformModuleType,
   getContentValue,
-  guessIdLoader,
   isObject,
   isStartsWithSlash,
   isString,
@@ -88,13 +87,11 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
       filters = options?.filters ?? []
 
     farmPlugin.resolve = {
-      filters: { sources: ['.*', ...filters], importers: ['.*'] },
+      filters: { sources: filters.length ? filters : ['.*'], importers: ['.*'] },
       async executor(params: PluginResolveHookParam, context: CompilationContext) {
         const resolvedIdPath = path.resolve(
-          process.cwd(),
           params.importer ?? '',
         )
-
         let isEntry = false
         if (isObject(params.kind) && 'entry' in params.kind) {
           const kindWithEntry = params.kind as { entry: string }
@@ -126,23 +123,9 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
             meta: {},
           }
         }
+
         if (!isStartsWithSlash(params.source))
           return null
-
-        const rootAbsolutePath = path.resolve(
-          params.source,
-        )
-        if (
-          existsSync(rootAbsolutePath)
-        ) {
-          return {
-            resolvedPath: removeQuery(encodeStr(rootAbsolutePath)),
-            query: customParseQueryString(rootAbsolutePath),
-            sideEffects: false,
-            external: false,
-            meta: {},
-          }
-        }
       },
     } as unknown as JsPlugin['resolve']
   }
@@ -161,7 +144,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
 
         const id = appendQuery(resolvedPath, params.query)
 
-        const loader = guessIdLoader(resolvedPath)
+        const loader = formatTransformModuleType(id)
 
         const shouldLoadInclude
           = plugin.loadInclude?.(id)
@@ -198,7 +181,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
 
         const id = appendQuery(resolvedPath, params.query)
 
-        const loader = params.moduleType ?? guessIdLoader(params.resolvedPath)
+        const loader = formatTransformModuleType(id)
 
         const shouldTransformInclude
           = plugin.transformInclude?.(id)
@@ -216,7 +199,9 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           const transformFarmResult: PluginTransformHookResult = {
             content: getContentValue(resource),
             moduleType: loader,
-            sourceMap: JSON.stringify(resource.map),
+            sourceMap: typeof resource.map === 'object' && resource.map !== null
+              ? JSON.stringify(resource.map)
+              : undefined,
           }
 
           return transformFarmResult

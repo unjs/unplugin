@@ -8334,6 +8334,7 @@ snapshots:
 
   http-proxy-middleware@2.0.7(@types/express@4.17.21):
     dependencies:
+
       '@types/http-proxy': 1.17.16
       http-proxy: 1.18.1(debug@4.4.0)
       is-glob: 4.0.3
@@ -8654,7 +8655,7 @@ snapshots:
       escape-html: 1.0.3
       fresh: 0.5.2
       http-assert: 1.5.0
-      http-errors: 1.8.1
+      http-errors: 1.6.3
       is-generator-function: 1.1.0
       koa-compose: 4.1.0
       koa-convert: 2.0.0
