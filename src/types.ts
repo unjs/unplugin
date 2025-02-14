@@ -3,6 +3,7 @@ import type { Compilation as RspackCompilation, Compiler as RspackCompiler, Load
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
+import type { Plugin as UnloaderPlugin } from 'unloader'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, LoaderContext as WebpackLoaderContext, WebpackPluginInstance } from 'webpack'
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
@@ -13,6 +14,7 @@ export type {
   RollupPlugin,
   RspackCompiler,
   RspackPluginInstance,
+  UnloaderPlugin,
   VitePlugin,
   WebpackCompiler,
   WebpackPluginInstance,
@@ -90,6 +92,7 @@ export interface UnpluginOptions {
   webpack?: (compiler: WebpackCompiler) => void
   rspack?: (compiler: RspackCompiler) => void
   vite?: Partial<VitePlugin>
+  unloader?: Partial<UnloaderPlugin>
   rolldown?: Partial<RolldownPlugin>
   esbuild?: {
     // using regexp in esbuild improves performance
@@ -124,12 +127,13 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
+  unloader: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<UnloaderPlugin> : UnloaderPlugin>
   farm: UnpluginFactoryOutput<UserOptions, FarmPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
-  framework: 'rollup' | 'vite' | 'rolldown' | 'farm'
+  framework: 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader'
 } | {
   framework: 'webpack'
   webpack: { compiler: WebpackCompiler }

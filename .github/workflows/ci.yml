@@ -17,8 +17,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.1.0
 
       - name: Setup node
         uses: actions/setup-node@v4
@@ -43,13 +43,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set node version to ${{ matrix.node }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.1.0
 
       - name: Set node version to ${{ matrix.node }}
         uses: actions/setup-node@v4
