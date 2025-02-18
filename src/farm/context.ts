@@ -12,7 +12,7 @@ export function createFarmContext(
     parse,
 
     addWatchFile(id: string) {
-      context.addWatchFile(currentResolveId || id, id)
+      context.addWatchFile(id, currentResolveId || id)
     },
     emitFile(emittedFile) {
       const outFileName = emittedFile.fileName || emittedFile.name
