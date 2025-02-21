@@ -16,13 +16,18 @@ export default async function load(this: LoaderContext, source: string, map: any
     id = decodeVirtualModuleId(id, plugin)
 
   const context = createContext(this)
+
+  id = normalizeAbsolutePath(id)
+  if (id.startsWith('\\'))
+    id = id.replace(/\\/g, '/')
+
   const res = await plugin.load.call(
     Object.assign(
       {},
       this._compilation && createBuildContext(this._compiler, this._compilation, this),
       context,
     ),
-    normalizeAbsolutePath(id),
+    id,
   )
 
   if (res == null)
