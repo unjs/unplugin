@@ -12,10 +12,7 @@ export function getRolldownPlugin<UserOptions = Record<string, never>, Nested ex
     const rawPlugins = toArray(factory(userOptions!, meta))
 
     const plugins = rawPlugins.map((rawPlugin) => {
-      const plugin = toRollupPlugin(rawPlugin, false) as RolldownPlugin
-      if (rawPlugin.rolldown)
-        Object.assign(plugin, rawPlugin.rolldown)
-
+      const plugin = toRollupPlugin(rawPlugin, 'rolldown') as RolldownPlugin
       return plugin
     })
 

@@ -12,10 +12,7 @@ export function getVitePlugin<UserOptions = Record<string, never>, Nested extend
     const rawPlugins = toArray(factory(userOptions!, meta))
 
     const plugins = rawPlugins.map((rawPlugin) => {
-      const plugin = toRollupPlugin(rawPlugin, false) as VitePlugin
-      if (rawPlugin.vite)
-        Object.assign(plugin, rawPlugin.vite)
-
+      const plugin = toRollupPlugin(rawPlugin, 'vite') as VitePlugin
       return plugin
     })
 
