@@ -33,6 +33,11 @@ export default async function transform(this: LoaderContext<any>, source: string
       callback(null, res, map)
   }
   catch (error) {
-    callback(error as Error)
+    if (error instanceof Error) {
+      callback(error)
+    }
+    else {
+      callback(new Error(String(error)))
+    }
   }
 }
