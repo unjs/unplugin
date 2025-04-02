@@ -22,7 +22,7 @@
     "markdown-it-github-alerts": "^1.0.0",
     "ofetch": "^1.4.1",
     "tsx": "^4.19.3",
-    "unocss": "^66.1.0-beta.6",
+    "unocss": "^66.1.0-beta.8",
     "unplugin": "workspace:*",
     "unplugin-icons": "^22.1.0",
     "unplugin-vue-components": "^28.4.1",
