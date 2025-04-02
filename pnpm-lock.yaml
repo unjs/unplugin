@@ -130,8 +130,8 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0
       markdown-it-github-alerts:
-        specifier: ^0.3.1
-        version: 0.3.1(markdown-it@14.1.0)
+        specifier: ^1.0.0
+        version: 1.0.0(markdown-it@14.1.0)
       ofetch:
         specifier: ^1.4.1
         version: 1.4.1
@@ -3698,8 +3698,8 @@ packages:
   mark.js@8.11.1:
     resolution: {integrity: sha512-1I+1qpDt4idfgLQG+BNWmrqku+7/2bi5nLf4YwF8y8zXvmfiTBY3PV3ZibfrjBueCByROpuBjLLFCajqkgYoLQ==}
 
-  markdown-it-github-alerts@0.3.1:
-    resolution: {integrity: sha512-WUzfxjr8E4Fh9LTVOIneYT8qQHydkV8cRLXX5/HPpKhRzRQFUuYmNEt7KNBA12V9ZepIIRqQ2lj3haKms2/9Pw==}
+  markdown-it-github-alerts@1.0.0:
+    resolution: {integrity: sha512-RU3cbB/ewujrDpYNdyabvp4CscZ5J/3D71NWbJW+JSA0nplfutIXDMCwtGWlMLwzgBDAYkFMvYGkigq8nWOVdA==}
     peerDependencies:
       markdown-it: '>= 13.0.0'
 
@@ -9255,7 +9255,7 @@ snapshots:
 
   mark.js@8.11.1: {}
 
-  markdown-it-github-alerts@0.3.1(markdown-it@14.1.0):
+  markdown-it-github-alerts@1.0.0(markdown-it@14.1.0):
     dependencies:
       markdown-it: 14.1.0
 
