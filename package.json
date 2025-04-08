@@ -81,7 +81,7 @@
     "esbuild": "^0.25.2"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
