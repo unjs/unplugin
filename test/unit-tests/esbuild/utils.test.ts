@@ -18,7 +18,7 @@ describe('utils', () => {
   })
 
   describe('unwrapLoader', () => {
-    it('when loader is Loader,  should return expected', () => {
+    it('when loader is Loader, should return expected', () => {
       const actual = unwrapLoader('base64', 'code', 'id')
       expect(actual).toEqual('base64')
     })
