@@ -62,9 +62,10 @@ export interface UnpluginBuildContext {
 }
 
 export type StringOrRegExp = string | RegExp
+export type FilterPattern = Arrayable<StringOrRegExp>
 export type StringFilter =
-  | Arrayable<StringOrRegExp>
-  | { include?: Arrayable<StringOrRegExp>, exclude?: Arrayable<StringOrRegExp> }
+  | FilterPattern
+  | { include?: FilterPattern, exclude?: FilterPattern }
 export interface HookFilter {
   id?: StringFilter
   code?: StringFilter
