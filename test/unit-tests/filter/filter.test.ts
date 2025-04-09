@@ -51,12 +51,13 @@ function check(resolveIdHandler: Mock, loadHandler: Mock, transformHandler: Mock
   expect(transformHandler).toBeCalledTimes(1)
 
   const testName = expect.getState().currentTestName
-  if (testName?.includes('vite') || testName?.includes('rolldown')) {
-    expect(transformHandler).lastCalledWith('export default 42\n', expect.stringMatching(/\bmod\.js$/), expect.anything())
-  }
-  else {
-    expect(transformHandler).lastCalledWith('export default 42\n', expect.stringMatching(/\bmod\.js$/))
-  }
+  const hasExtraOptions = testName?.includes('vite') || testName?.includes('rolldown')
+
+  expect(transformHandler).lastCalledWith(
+    expect.stringMatching('export default 42'),
+    expect.stringMatching(/\bmod\.js$/),
+    ...hasExtraOptions ? [expect.anything()] : [],
+  )
 }
 
 describe('filter', () => {
