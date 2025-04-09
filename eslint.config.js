@@ -2,7 +2,12 @@
 import antfu from '@antfu/eslint-config'
 
 export default antfu(
-  { vue: true },
+  {
+    vue: true,
+    formatters: {
+      markdown: 'dprint',
+    },
+  },
   {
     ignores: [
       'test-out/**',
