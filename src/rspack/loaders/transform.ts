@@ -1,5 +1,6 @@
 import type { LoaderContext } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../../types'
+import { normalizeObjectHook } from '../../utils/filter'
 import { createBuildContext, createContext } from '../context'
 
 export default async function transform(
@@ -14,9 +15,12 @@ export default async function transform(
 
   const id = this.resource
   const context = createContext(this)
+  const { handler, filter } = normalizeObjectHook('transform', plugin.transform)
+  if (!filter(this.resource, source))
+    return callback(null, source, map)
 
   try {
-    const res = await plugin.transform.call(
+    const res = await handler.call(
       Object.assign(
         {},
         this._compilation && createBuildContext(this._compiler, this._compilation, this),

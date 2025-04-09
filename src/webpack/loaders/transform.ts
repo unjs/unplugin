@@ -1,5 +1,6 @@
 import type { LoaderContext } from 'webpack'
 import type { ResolvedUnpluginOptions } from '../../types'
+import { normalizeObjectHook } from '../../utils/filter'
 import { createBuildContext, createContext } from '../context'
 
 export default async function transform(this: LoaderContext<any>, source: string, map: any): Promise<void> {
@@ -10,9 +11,12 @@ export default async function transform(this: LoaderContext<any>, source: string
     return callback(null, source, map)
 
   const context = createContext(this)
+  const { handler, filter } = normalizeObjectHook('transform', plugin.transform)
+  if (!filter(this.resource, source))
+    return callback(null, source, map)
 
   try {
-    const res = await plugin.transform.call(
+    const res = await handler.call(
       Object.assign({}, createBuildContext({
         addWatchFile: (file) => {
           this.addDependency(file)

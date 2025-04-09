@@ -61,29 +61,67 @@ export interface UnpluginBuildContext {
   getNativeBuildContext?: () => NativeBuildContext
 }
 
+export type StringOrRegExp = string | RegExp
+export type StringFilter =
+  | Arrayable<StringOrRegExp>
+  | { include?: Arrayable<StringOrRegExp>, exclude?: Arrayable<StringOrRegExp> }
+export interface HookFilter {
+  id?: StringFilter
+  code?: StringFilter
+}
+
+export interface ObjectHook<T extends HookFnMap[keyof HookFnMap], F extends keyof HookFilter> {
+  filter?: Pick<HookFilter, F>
+  handler: T
+}
+export type Hook<
+  T extends HookFnMap[keyof HookFnMap],
+  F extends keyof HookFilter,
+> = T | ObjectHook<T, F>
+
+export interface HookFnMap {
+  // Build Hooks
+  buildStart: (this: UnpluginBuildContext) => Thenable<void>
+  buildEnd: (this: UnpluginBuildContext) => Thenable<void>
+
+  transform: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
+  load: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
+  resolveId: (
+    this: UnpluginBuildContext & UnpluginContext,
+    id: string,
+    importer: string | undefined,
+    options: { isEntry: boolean }
+  ) => Thenable<string | ExternalIdResult | null | undefined>
+
+  // Output Generation Hooks
+  writeBundle: (this: void) => Thenable<void>
+}
+
 export interface UnpluginOptions {
   name: string
   enforce?: 'post' | 'pre' | undefined
 
-  // Build Hooks
-  buildStart?: (this: UnpluginBuildContext) => Promise<void> | void
-  buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void
-  transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
-  load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (this: UnpluginBuildContext & UnpluginContext, id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
-  watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
+  buildStart?: HookFnMap['buildStart']
+  buildEnd?: HookFnMap['buildEnd']
+  transform?: Hook<HookFnMap['transform'], 'code' | 'id'>
+  load?: Hook<HookFnMap['load'], 'id'>
+  resolveId?: Hook<HookFnMap['resolveId'], 'id'>
+  writeBundle?: HookFnMap['writeBundle']
 
-  // Output Generation Hooks
-  writeBundle?: (this: void) => Promise<void> | void
+  watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
 
   /**
    * Custom predicate function to filter modules to be loaded.
    * When omitted, all modules will be included (might have potential perf impact on Webpack).
+   *
+   * @deprecated Use `load.filter` instead.
    */
   loadInclude?: (id: string) => boolean | null | undefined
   /**
    * Custom predicate function to filter modules to be transformed.
    * When omitted, all modules will be included (might have potential perf impact on Webpack).
+   *
+   * @deprecated Use `transform.filter` instead.
    */
   transformInclude?: (id: string) => boolean | null | undefined
 

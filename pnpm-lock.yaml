@@ -14,6 +14,9 @@ importers:
       acorn:
         specifier: ^8.14.1
         version: 8.14.1
+      picomatch:
+        specifier: ^4.0.2
+        version: 4.0.2
       webpack-virtual-modules:
         specifier: ^0.6.2
         version: 0.6.2
@@ -45,6 +48,9 @@ importers:
       '@types/node':
         specifier: ^22.14.0
         version: 22.14.0
+      '@types/picomatch':
+        specifier: ^3.0.2
+        version: 3.0.2
       ansis:
         specifier: ^3.17.0
         version: 3.17.0
@@ -1474,6 +1480,9 @@ packages:
 
   '@types/object-path@0.11.4':
     resolution: {integrity: sha512-4tgJ1Z3elF/tOMpA8JLVuR9spt9Ynsf7+JjqsQ2IqtiPJtcLoHoXcT6qU4E10cPFqyXX5HDm9QwIzZhBSkLxsw==}
+
+  '@types/picomatch@3.0.2':
+    resolution: {integrity: sha512-n0i8TD3UDB7paoMMxA3Y65vUncFJXjcUf7lQY7YyKGl6031FNjfsLs6pdLFCy2GNFxItPJG8GvvpbZc2skH7WA==}
 
   '@types/qs@6.9.18':
     resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
@@ -6671,6 +6680,8 @@ snapshots:
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/object-path@0.11.4': {}
+
+  '@types/picomatch@3.0.2': {}
 
   '@types/qs@6.9.18': {}
 

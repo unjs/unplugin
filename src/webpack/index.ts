@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
+import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
@@ -104,7 +105,12 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                         console.warn(`unplugin/webpack: warning from resolveId hook: ${msg}`)
                       },
                     }
-                    const resolveIdResult = await plugin.resolveId!.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
+
+                    const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
+                    if (!filter(id))
+                      return callback()
+
+                    const resolveIdResult = await handler.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
 
                     if (error != null)
                       return callback(error)
@@ -225,6 +231,10 @@ export function shouldLoad(id: string, plugin: ResolvedUnpluginOptions, external
 
   // load include filter
   if (plugin.loadInclude && !plugin.loadInclude(id))
+    return false
+
+  const { filter } = normalizeObjectHook('load', plugin.load!)
+  if (!filter(id))
     return false
 
   // Don't run load hook for external modules

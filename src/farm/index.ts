@@ -18,6 +18,7 @@ import type { JsPluginExtended, WatchChangeEvents } from './utils'
 
 import path from 'node:path'
 
+import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { createFarmContext, unpluginContext } from './context'
 import {
@@ -92,15 +93,21 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         const resolvedIdPath = path.resolve(
           params.importer ?? '',
         )
+        const id = decodeStr(params.source)
+
+        const { handler, filter } = normalizeObjectHook('resolveId', _resolveId)
+        if (!filter(id))
+          return null
+
         let isEntry = false
         if (isObject(params.kind) && 'entry' in params.kind) {
           const kindWithEntry = params.kind as { entry: string }
           isEntry = kindWithEntry.entry === 'index'
         }
         const farmContext = createFarmContext(context!, resolvedIdPath)
-        const resolveIdResult = await _resolveId.call(
+        const resolveIdResult = await handler.call(
           Object.assign(unpluginContext(context), farmContext),
-          decodeStr(params.source),
+          id,
           resolvedIdPath ?? null,
           { isEntry },
         )
@@ -141,20 +148,17 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         context,
       ): Promise<PluginLoadHookResult | null> {
         const resolvedPath = decodeStr(params.resolvedPath)
-
         const id = appendQuery(resolvedPath, params.query)
-
         const loader = formatTransformModuleType(id)
 
-        const shouldLoadInclude
-          = plugin.loadInclude?.(id)
-
-        if (!shouldLoadInclude)
+        if (plugin.loadInclude && !plugin.loadInclude?.(id))
+          return null
+        const { handler, filter } = normalizeObjectHook('load', _load)
+        if (!filter(id))
           return null
 
         const farmContext = createFarmContext(context!, id)
-
-        const content: TransformResult = await _load.call(
+        const content: TransformResult = await handler.call(
           Object.assign(unpluginContext(context!), farmContext),
           id,
         )
@@ -178,19 +182,18 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         context: CompilationContext,
       ) {
         const resolvedPath = decodeStr(params.resolvedPath)
-
         const id = appendQuery(resolvedPath, params.query)
-
         const loader = formatTransformModuleType(id)
 
-        const shouldTransformInclude
-          = plugin.transformInclude?.(id)
-        const farmContext = createFarmContext(context, id)
-
-        if (!shouldTransformInclude)
+        if (plugin.transformInclude && !plugin.transformInclude(id))
           return null
 
-        const resource: TransformResult = await _transform.call(
+        const { handler, filter } = normalizeObjectHook('transform', _transform)
+        if (!filter(id, params.content))
+          return null
+
+        const farmContext = createFarmContext(context, id)
+        const resource: TransformResult = await handler.call(
           Object.assign(unpluginContext(context), farmContext),
           params.content,
           id,

@@ -10,6 +10,7 @@ import type {
 } from '../types'
 import fs from 'node:fs'
 import path from 'node:path'
+import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import {
   combineSourcemaps,
@@ -167,20 +168,24 @@ function buildSetup() {
 
       if (plugin.resolveId) {
         onResolve({ filter: onResolveFilter }, async (args) => {
-          if (initialOptions.external?.includes(args.path)) {
+          const id = args.path
+          if (initialOptions.external?.includes(id)) {
             // We don't want to call the `resolveId` hook for external modules,
             // since rollup doesn't do that and we want to
             // have consistent behaviour across bundlers
-            return undefined
+            return
           }
 
-          const { errors, warnings, mixedContext }
-            = createPluginContext(context)
+          const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
+          if (!filter(id))
+            return
+
+          const { errors, warnings, mixedContext } = createPluginContext(context)
 
           const isEntry = args.kind === 'entry-point'
-          const result = await plugin.resolveId!.call(
+          const result = await handler.call(
             mixedContext,
-            args.path,
+            id,
             // We explicitly have this if statement here for consistency with
             // the integration of other bundlers.
             // Here, `args.importer` is just an empty string on entry files
@@ -212,26 +217,26 @@ function buildSetup() {
 
       if (plugin.load) {
         onLoad({ filter: onLoadFilter }, async (args) => {
+          const { handler, filter } = normalizeObjectHook('load', plugin.load!)
           const id = args.path + (args.suffix || '') // compat for #427
 
-          const { errors, warnings, mixedContext }
-            = createPluginContext(context)
+          if (plugin.loadInclude && !plugin.loadInclude(id))
+            return
+          if (!filter(id))
+            return
 
-          // because we use `namespace` to simulate virtual modules，
-          // it is required to forward `resolveDir` for esbuild to find dependencies.
-          const resolveDir = path.dirname(args.path)
+          const { errors, warnings, mixedContext } = createPluginContext(context)
 
-          let code: string | undefined, map: SourceMap | null | undefined
+          let code: string | undefined
+          let map: SourceMap | null | undefined
 
-          if (plugin.load && (!plugin.loadInclude || plugin.loadInclude(id))) {
-            const result = await plugin.load.call(mixedContext, id)
-            if (typeof result === 'string') {
-              code = result
-            }
-            else if (typeof result === 'object' && result !== null) {
-              code = result.code
-              map = result.map as any
-            }
+          const result = await handler.call(mixedContext, id)
+          if (typeof result === 'string') {
+            code = result
+          }
+          else if (typeof result === 'object' && result !== null) {
+            code = result.code
+            map = result.map as any
           }
 
           if (code === undefined)
@@ -239,6 +244,10 @@ function buildSetup() {
 
           if (map)
             code = processCodeWithSourceMap(map, code)
+
+          // because we use `namespace` to simulate virtual modules，
+          // it is required to forward `resolveDir` for esbuild to find dependencies.
+          const resolveDir = path.dirname(args.path)
 
           return {
             contents: code,
@@ -253,17 +262,20 @@ function buildSetup() {
 
       if (plugin.transform) {
         onTransform({ filter: onLoadFilter }, async (args) => {
-          const id = args.path + (args.suffix || '')
+          const { handler, filter } = normalizeObjectHook('transform', plugin.transform!)
 
+          const id = args.path + (args.suffix || '')
           if (plugin.transformInclude && !plugin.transformInclude(id))
+            return
+          let code = await args.getContents()
+          if (!filter(id, code))
             return
 
           const { mixedContext, errors, warnings } = createPluginContext(context)
           const resolveDir = path.dirname(args.path)
 
-          let code = await args.getContents()
           let map: SourceMap | null | undefined
-          const result = await plugin.transform!.call(mixedContext, code, id)
+          const result = await handler.call(mixedContext, code, id)
           if (typeof result === 'string') {
             code = result
           }
