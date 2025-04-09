@@ -25,12 +25,13 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
     const resolveIdHook = plugin.resolveId
     const { handler, filter } = normalizeObjectHook('load', resolveIdHook)
 
-    replaceHookHandler('resolveId', resolveIdHook, function (id, ...args) {
-      const supportFilter = supportNativeFilter((this as any).meta)
+    replaceHookHandler('resolveId', resolveIdHook, function (...args) {
+      const [id] = args
+      const supportFilter = supportNativeFilter(this)
       if (!supportFilter && !filter(id))
         return
 
-      return handler.call(this, id, ...args)
+      return handler.apply(this, args)
     })
   }
 
@@ -41,15 +42,16 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
     const loadHook = plugin.load
     const { handler, filter } = normalizeObjectHook('load', loadHook)
 
-    replaceHookHandler('load', loadHook, function (id, ...args) {
+    replaceHookHandler('load', loadHook, function (...args) {
+      const [id] = args
       if (plugin.loadInclude && !plugin.loadInclude(id))
         return
 
-      const supportFilter = supportNativeFilter((this as any).meta)
+      const supportFilter = supportNativeFilter(this)
       if (!supportFilter && !filter(id))
         return
 
-      return handler.call(this, id, ...args)
+      return handler.apply(this, args)
     })
   }
 
@@ -60,15 +62,16 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
     const transformHook = plugin.transform
     const { handler, filter } = normalizeObjectHook('transform', transformHook)
 
-    replaceHookHandler('transform', transformHook, function (code, id, ...args) {
+    replaceHookHandler('transform', transformHook, function (...args) {
+      const [code, id] = args
       if (plugin.transformInclude && !plugin.transformInclude(id))
         return
 
-      const supportFilter = supportNativeFilter((this as any).meta)
+      const supportFilter = supportNativeFilter(this)
       if (!supportFilter && !filter(id, code))
         return
 
-      return handler.call(this, code, id, ...args)
+      return handler.apply(this, args)
     })
   }
 
@@ -93,8 +96,8 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
   }
 }
 
-function supportNativeFilter(meta: any) {
-  const rollupVersion: string | undefined = meta?.rollupVersion
+function supportNativeFilter(context: any) {
+  const rollupVersion: string | undefined = context?.meta?.rollupVersion
   if (!rollupVersion)
     return false
 
