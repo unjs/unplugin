@@ -255,6 +255,38 @@ export const esbuildPlugin = unplugin.esbuild
 export const farmPlugin = unplugin.farm
 ```
 
+### Filters
+
+To optimize performance in native bundlers, leverage the `filter` option in `resolveId`, `transform`, and `load`
+hooks to exclude files that don’t require processing.
+
+```ts twoslash
+import { createUnplugin } from 'unplugin'
+
+type FilterPattern = string | RegExp | Array<string | RegExp>
+
+const plugin = createUnplugin(() => ({
+  name: 'unplugin-starter',
+  transform: {
+    filter: {
+      id: {
+        include: [/\.js$/, '**/*.ts'],
+        exclude: /node_modules/,
+      },
+      code: {
+        include: 'foo',
+        exclude: 'bar',
+      },
+    },
+    handler(code) {
+      // ...
+    },
+  }
+}))
+```
+
+More details can be found in the [Rolldown's documentation](https://rolldown.rs/guide/plugin-development#plugin-hook-filters).
+
 ## Supported Context
 
 | Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Farm | Rolldown |
