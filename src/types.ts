@@ -61,6 +61,21 @@ export interface UnpluginBuildContext {
   getNativeBuildContext?: () => NativeBuildContext
 }
 
+export type StringOrRegExp = string | RegExp
+export type StringFilter =
+  | Arrayable<StringOrRegExp>
+  | { include?: Arrayable<StringOrRegExp>, exclude?: Arrayable<StringOrRegExp> }
+export interface HookFilter {
+  id?: StringFilter
+  code?: StringFilter
+}
+
+export interface ObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter> {
+  filter?: Pick<HookFilter, F>
+  handler: T
+}
+export type Hook<T extends (...args: any[]) => any, F extends keyof HookFilter> = T | ObjectHook<T, F>
+
 export interface UnpluginOptions {
   name: string
   enforce?: 'post' | 'pre' | undefined
@@ -68,9 +83,13 @@ export interface UnpluginOptions {
   // Build Hooks
   buildStart?: (this: UnpluginBuildContext) => Promise<void> | void
   buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void
-  transform?: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
-  load?: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
-  resolveId?: (this: UnpluginBuildContext & UnpluginContext, id: string, importer: string | undefined, options: { isEntry: boolean }) => Thenable<string | ExternalIdResult | null | undefined>
+
+  transform?: Hook<(this: UnpluginBuildContext & UnpluginContext, code: string, id: string) =>
+  Thenable<TransformResult>, 'code' | 'id'>
+  load?: Hook<(this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>, 'id'>
+  resolveId?: Hook<(this: UnpluginBuildContext & UnpluginContext, id: string, importer: string | undefined, options: {
+    isEntry: boolean
+  }) => Thenable<string | ExternalIdResult | null | undefined>, 'id'>
   watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
 
   // Output Generation Hooks
@@ -79,11 +98,15 @@ export interface UnpluginOptions {
   /**
    * Custom predicate function to filter modules to be loaded.
    * When omitted, all modules will be included (might have potential perf impact on Webpack).
+   *
+   * @deprecated Use `load.filter` instead.
    */
   loadInclude?: (id: string) => boolean | null | undefined
   /**
    * Custom predicate function to filter modules to be transformed.
    * When omitted, all modules will be included (might have potential perf impact on Webpack).
+   *
+   * @deprecated Use `transform.filter` instead.
    */
   transformInclude?: (id: string) => boolean | null | undefined
 

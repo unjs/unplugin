@@ -198,9 +198,9 @@ export default defineConfig({
 | [`enforce`](https://vite.dev/guide/api-plugin.html#plugin-ordering)               | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |  ✅  |    ✅    |
 | [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
 | [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |   ✅    |       ✅        | ✅ <sup>5</sup> |  ✅  |    ✅    |
-| `loadInclude`<sup>2</sup>                                                         |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
+| ~~`loadInclude`~~<sup>2</sup>                                                         |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
 | [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |  ✅  |    ✅    |
-| `transformInclude`<sup>2</sup>                                                    |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
+| ~~`transformInclude`~~<sup>2</sup>                                                    |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
 | [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |  ✅  |    ✅    |
 | [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |   ✅    |       ❌        |       ✅        |  ✅  |    ✅    |
 | [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
@@ -209,7 +209,8 @@ export default defineConfig({
 ::: details Notice
 
 1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
-2. webpack's id filter is outside of loader logic; an additional hook is needed for better perf on webpack. In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for the following usage examples.
+2. webpack's id filter is outside of loader logic; an additional hook is needed for better perf on webpack and Rolldown.
+In Rollup and Vite, this hook has been polyfilled to match the behaviors. See for the following usage examples.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 5. Rspack supports `resolveId` with a minimum required version of v1.0.0-alpha.1.
@@ -227,14 +228,14 @@ export interface Options {
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = options => ({
   name: 'unplugin-starter',
-  // webpack's id filter is outside of loader logic,
-  // an additional hook is needed for better perf on webpack
-  transformInclude(id) {
-    return id.endsWith('main.ts')
-  },
-  // just like rollup transform
-  transform(code) {
-    return code.replace(/<template>/, '<template><div>Injected</div>')
+  transform: {
+    // an additional hook is needed for better perf on webpack and rolldown
+    filter: {
+      id: /main\.ts$/
+    },
+    handler(code) {
+      return code.replace(/<template>/, '<template><div>Injected</div>')
+    },
   },
   // more hooks coming
 })
@@ -334,11 +335,14 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   console.log(meta.framework) // vite rollup webpack esbuild rspack...
   return {
     name: 'unplugin-starter',
-    transform(code) {
-      return code.replace(/<template>/, '<template><div>Injected</div>')
-    },
-    transformInclude(id) {
-      return id.endsWith('main.ts')
+    transform: {
+    // an additional hook is needed for better perf on webpack and rolldown
+      filter: {
+        id: /main\.ts$/
+      },
+      handler(code) {
+        return code.replace(/<template>/, '<template><div>Injected</div>')
+      },
     },
     vite: {
       // Vite plugin
