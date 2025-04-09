@@ -8,7 +8,7 @@ Unified plugin system for build tools.
 
 Currently supports:
 
-- [Vite](https://vitejs.dev/)
+- [Vite](https://vite.dev/)
 - [Rollup](https://rollupjs.org/)
 - [Webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)

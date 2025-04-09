@@ -24,7 +24,7 @@ hero:
 features:
   - title: Vite
     details: Next Generation Frontend Tooling.
-    link: https://vitejs.dev/
+    link: https://vite.dev/
     icon:
       src: /features/vitejs.svg
 

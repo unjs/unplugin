@@ -11,7 +11,7 @@ lastUpdated: false
 
 **Unplugin** current supports:
 
-- [Vite](https://vitejs.dev/)
+- [Vite](https://vite.dev/)
 - [Rollup](https://rollupjs.org/)
 - [webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
@@ -195,7 +195,7 @@ export default defineConfig({
 
 | Hook                                                                              |     Rollup      | Vite | webpack |     esbuild     |     Rspack      | Farm | Rolldown |
 | --------------------------------------------------------------------------------- | :-------------: | :--: | :-----: | :-------------: | :-------------: | :--: | :------: |
-| [`enforce`](https://vitejs.dev/guide/api-plugin.html#plugin-ordering)             | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |  ✅  |    ✅    |
+| [`enforce`](https://vite.dev/guide/api-plugin.html#plugin-ordering)               | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |  ✅  |    ✅    |
 | [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
 | [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |   ✅    |       ✅        | ✅ <sup>5</sup> |  ✅  |    ✅    |
 | `loadInclude`<sup>2</sup>                                                         |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |
