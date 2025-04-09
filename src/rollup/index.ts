@@ -80,12 +80,10 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
 
   return plugin as RollupPlugin
 
-  function replaceHookHandler<
-    T extends 'resolveId' | 'load' | 'transform',
-  >(
-    name: T,
-    hook: Hook<HookFnMap[T], any>,
-    handler: HookFnMap[T],
+  function replaceHookHandler<K extends keyof HookFnMap>(
+    name: K,
+    hook: Hook<HookFnMap[K], any>,
+    handler: HookFnMap[K],
   ) {
     if (typeof hook === 'function') {
       plugin[name] = handler as any
