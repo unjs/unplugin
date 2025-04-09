@@ -36,7 +36,7 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
 
   if (plugin.load && (
     plugin.loadInclude
-    || (!nativeFilter && typeof plugin.transform === 'object' && plugin.transform.filter))
+    || (!nativeFilter && typeof plugin.load === 'object' && plugin.load.filter))
   ) {
     const loadHook = plugin.load
     const { handler, filter } = normalizeObjectHook('load', loadHook)
