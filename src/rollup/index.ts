@@ -23,9 +23,9 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
     && (!nativeFilter && typeof plugin.resolveId === 'object' && plugin.resolveId.filter)
   ) {
     const resolveIdHook = plugin.resolveId
-    replaceHookHandler('resolveId', resolveIdHook, function (id, ...args) {
-      const { handler, filter } = normalizeObjectHook('load', resolveIdHook)
+    const { handler, filter } = normalizeObjectHook('load', resolveIdHook)
 
+    replaceHookHandler('resolveId', resolveIdHook, function (id, ...args) {
       const supportFilter = supportNativeFilter((this as any).meta)
       if (!supportFilter && !filter(id))
         return
@@ -39,11 +39,11 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
     || (!nativeFilter && typeof plugin.transform === 'object' && plugin.transform.filter))
   ) {
     const loadHook = plugin.load
+    const { handler, filter } = normalizeObjectHook('load', loadHook)
+
     replaceHookHandler('load', loadHook, function (id, ...args) {
       if (plugin.loadInclude && !plugin.loadInclude(id))
         return
-
-      const { handler, filter } = normalizeObjectHook('load', loadHook)
 
       const supportFilter = supportNativeFilter((this as any).meta)
       if (!supportFilter && !filter(id))
@@ -58,11 +58,11 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
     || (!nativeFilter && typeof plugin.transform === 'object' && plugin.transform.filter))
   ) {
     const transformHook = plugin.transform
+    const { handler, filter } = normalizeObjectHook('transform', transformHook)
+
     replaceHookHandler('transform', transformHook, function (code, id, ...args) {
       if (plugin.transformInclude && !plugin.transformInclude(id))
         return
-
-      const { handler, filter } = normalizeObjectHook('transform', transformHook)
 
       const supportFilter = supportNativeFilter((this as any).meta)
       if (!supportFilter && !filter(id, code))
