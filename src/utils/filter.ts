@@ -1,4 +1,4 @@
-import type { StringFilter, StringOrRegExp } from '../types'
+import type { Hook, HookFilter, StringFilter, StringOrRegExp } from '../types'
 import { resolve } from 'node:path'
 import picomatch from 'picomatch'
 import { toArray } from './general'
@@ -118,12 +118,12 @@ function createCodeFilter(filter: StringFilter | undefined): PluginFilterWithFal
   return createFilter(excludeFilter, includeFilter)
 }
 
-export function createFilterForId(filter: StringFilter | undefined): PluginFilter | undefined {
+function createFilterForId(filter: StringFilter | undefined): PluginFilter | undefined {
   const filterFunction = createIdFilter(filter)
   return filterFunction ? id => !!filterFunction(id) : undefined
 }
 
-export function createFilterForTransform(
+function createFilterForTransform(
   idFilter: StringFilter | undefined,
   codeFilter: StringFilter | undefined,
 ): TransformHookFilter | undefined {
@@ -148,5 +148,43 @@ export function createFilterForTransform(
       fallback &&= !!codeResult
     }
     return fallback
+  }
+}
+
+export function normalizeObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter>(
+  name: 'resolveId' | 'load',
+  hook: Hook<T, F>,
+): { handler: T, filter: PluginFilter }
+export function normalizeObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter>(
+  name: 'transform',
+  hook: Hook<T, F>,
+): { handler: T, filter: TransformHookFilter }
+export function normalizeObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter>(
+  name: 'resolveId' | 'load' | 'transform',
+  hook: Hook<T, F>,
+): {
+    handler: T
+    filter: PluginFilter | TransformHookFilter
+  } {
+  let handler: T
+  let filter: PluginFilter | TransformHookFilter | undefined
+
+  if (typeof hook === 'function') {
+    handler = hook
+  }
+  else {
+    handler = hook.handler
+    const hookFilter = hook.filter as HookFilter | undefined
+    if (name === 'resolveId' || name === 'load') {
+      filter = createFilterForId(hookFilter?.id)
+    }
+    else {
+      filter = createFilterForTransform(hookFilter?.id, hookFilter?.code)
+    }
+  }
+
+  return {
+    handler,
+    filter: filter || (() => true),
   }
 }

@@ -8,6 +8,7 @@ import type {
 } from '../types'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
+import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { createBuildContext, normalizeMessage } from './context'
@@ -82,7 +83,12 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
                     console.warn(`unplugin/rspack: warning from resolveId hook: ${msg}`)
                   },
                 }
-                const resolveIdResult = await plugin.resolveId!.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
+
+                const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
+                if (!filter(id))
+                  return
+
+                const resolveIdResult = await handler.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
 
                 if (error != null)
                   throw error
@@ -120,6 +126,10 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
                 // load include filter
                 if (plugin.loadInclude && !plugin.loadInclude(id))
+                  return false
+
+                const { filter } = normalizeObjectHook('load', plugin.load!)
+                if (!filter(id))
                   return false
 
                 // Don't run load hook for external modules

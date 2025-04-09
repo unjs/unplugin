@@ -1,4 +1,5 @@
-import type { RollupPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
+import type { Hook, HookFnMap, RollupPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
+import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 
 export function getRollupPlugin<UserOptions = Record<string, never>, Nested extends boolean = boolean>(
@@ -15,28 +16,88 @@ export function getRollupPlugin<UserOptions = Record<string, never>, Nested exte
 }
 
 export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldown' | 'vite' | 'unloader'): RollupPlugin {
-  if (plugin.transform && plugin.transformInclude) {
-    const _transform = plugin.transform
-    plugin.transform = function (code, id, ...args) {
-      if (plugin.transformInclude && !plugin.transformInclude(id))
-        return null
+  const nativeFilter = key === 'rolldown'
 
-      return _transform.call(this, code, id, ...args)
-    }
+  if (
+    plugin.resolveId
+    && (!nativeFilter && typeof plugin.resolveId === 'object' && plugin.resolveId.filter)
+  ) {
+    const resolveIdHook = plugin.resolveId
+    replaceHookHandler('resolveId', resolveIdHook, function (id, ...args) {
+      const { handler, filter } = normalizeObjectHook('load', resolveIdHook)
+
+      const supportFilter = supportNativeFilter((this as any).meta)
+      if (!supportFilter && !filter(id))
+        return
+
+      return handler.call(this, id, ...args)
+    })
   }
 
-  if (plugin.load && plugin.loadInclude) {
-    const _load = plugin.load
-    plugin.load = function (id, ...args) {
+  if (plugin.load && (
+    plugin.loadInclude
+    || (!nativeFilter && typeof plugin.transform === 'object' && plugin.transform.filter))
+  ) {
+    const loadHook = plugin.load
+    replaceHookHandler('load', loadHook, function (id, ...args) {
       if (plugin.loadInclude && !plugin.loadInclude(id))
-        return null
+        return
 
-      return _load.call(this, id, ...args)
-    }
+      const { handler, filter } = normalizeObjectHook('load', loadHook)
+
+      const supportFilter = supportNativeFilter((this as any).meta)
+      if (!supportFilter && !filter(id))
+        return
+
+      return handler.call(this, id, ...args)
+    })
+  }
+
+  if (plugin.transform && (
+    plugin.transformInclude
+    || (!nativeFilter && typeof plugin.transform === 'object' && plugin.transform.filter))
+  ) {
+    const transformHook = plugin.transform
+    replaceHookHandler('transform', transformHook, function (code, id, ...args) {
+      if (plugin.transformInclude && !plugin.transformInclude(id))
+        return
+
+      const { handler, filter } = normalizeObjectHook('transform', transformHook)
+
+      const supportFilter = supportNativeFilter((this as any).meta)
+      if (!supportFilter && !filter(id, code))
+        return
+
+      return handler.call(this, code, id, ...args)
+    })
   }
 
   if (plugin[key])
     Object.assign(plugin, plugin[key])
 
   return plugin as RollupPlugin
+
+  function replaceHookHandler<
+    T extends 'resolveId' | 'load' | 'transform',
+  >(
+    name: T,
+    hook: Hook<HookFnMap[T], any>,
+    handler: HookFnMap[T],
+  ) {
+    if (typeof hook === 'function') {
+      plugin[name] = handler as any
+    }
+    else {
+      hook.handler = handler
+    }
+  }
+}
+
+function supportNativeFilter(meta: any) {
+  const rollupVersion: string | undefined = meta?.rollupVersion
+  if (!rollupVersion)
+    return false
+
+  const [major, minor] = rollupVersion.split('.')
+  return (Number(major) > 4 || (Number(major) === 4 && Number(minor) >= 38))
 }

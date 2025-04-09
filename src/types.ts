@@ -70,30 +70,45 @@ export interface HookFilter {
   code?: StringFilter
 }
 
-export interface ObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter> {
+export interface ObjectHook<T extends HookFnMap[keyof HookFnMap], F extends keyof HookFilter> {
   filter?: Pick<HookFilter, F>
   handler: T
 }
-export type Hook<T extends (...args: any[]) => any, F extends keyof HookFilter> = T | ObjectHook<T, F>
+export type Hook<
+  T extends HookFnMap[keyof HookFnMap],
+  F extends keyof HookFilter,
+> = T | ObjectHook<T, F>
+
+export interface HookFnMap {
+  // Build Hooks
+  buildStart: (this: UnpluginBuildContext) => Thenable<void>
+  buildEnd: (this: UnpluginBuildContext) => Thenable<void>
+
+  transform: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
+  load: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
+  resolveId: (
+    this: UnpluginBuildContext & UnpluginContext,
+    id: string,
+    importer: string | undefined,
+    options: { isEntry: boolean }
+  ) => Thenable<string | ExternalIdResult | null | undefined>
+
+  // Output Generation Hooks
+  writeBundle: (this: void) => Thenable<void>
+}
 
 export interface UnpluginOptions {
   name: string
   enforce?: 'post' | 'pre' | undefined
 
-  // Build Hooks
-  buildStart?: (this: UnpluginBuildContext) => Promise<void> | void
-  buildEnd?: (this: UnpluginBuildContext) => Promise<void> | void
+  buildStart?: HookFnMap['buildStart']
+  buildEnd?: HookFnMap['buildEnd']
+  transform?: Hook<HookFnMap['transform'], 'code' | 'id'>
+  load?: Hook<HookFnMap['load'], 'id'>
+  resolveId?: Hook<HookFnMap['resolveId'], 'id'>
+  writeBundle?: HookFnMap['writeBundle']
 
-  transform?: Hook<(this: UnpluginBuildContext & UnpluginContext, code: string, id: string) =>
-  Thenable<TransformResult>, 'code' | 'id'>
-  load?: Hook<(this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>, 'id'>
-  resolveId?: Hook<(this: UnpluginBuildContext & UnpluginContext, id: string, importer: string | undefined, options: {
-    isEntry: boolean
-  }) => Thenable<string | ExternalIdResult | null | undefined>, 'id'>
   watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
-
-  // Output Generation Hooks
-  writeBundle?: (this: void) => Promise<void> | void
 
   /**
    * Custom predicate function to filter modules to be loaded.

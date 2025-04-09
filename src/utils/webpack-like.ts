@@ -1,6 +1,7 @@
 import type { RuleSetUseItem } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../types'
 import { isAbsolute, normalize } from 'node:path'
+import { normalizeObjectHook } from './filter'
 
 export function transformUse(
   data: { resource?: string, resourceQuery?: string },
@@ -11,16 +12,25 @@ export function transformUse(
     return []
 
   const id = normalizeAbsolutePath(data.resource + (data.resourceQuery || ''))
-  if (!plugin.transformInclude || plugin.transformInclude(id)) {
-    return [
-      {
-        loader: transformLoader,
-        options: { plugin },
-        ident: plugin.name,
-      },
-    ]
-  }
-  return []
+  if (plugin.transformInclude && !plugin.transformInclude(id))
+    return []
+
+  const { filter } = normalizeObjectHook(
+    // WARN: treat `transform` as `load` here, since cannot get `code` outside of `transform`
+    // `code` should be checked in the loader
+    'load',
+    plugin.transform!,
+  )
+  if (!filter(id))
+    return []
+
+  return [
+    {
+      loader: transformLoader,
+      options: { plugin },
+      ident: plugin.name,
+    },
+  ]
 }
 
 /**
