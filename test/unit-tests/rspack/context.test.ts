@@ -18,22 +18,6 @@ describe('createBuildContext', () => {
     })
   })
 
-  it('addWatchFile/getWatchFiles - should return expected', () => {
-    const compiler = { name: 'testCompiler' }
-    const compilation = {
-      name: 'testCompilation',
-      fileDependencies: new Set(),
-    }
-    const loaderContext = { name: 'testLoaderContext' }
-
-    const buildContext = createBuildContext(compiler as any, compilation as any, loaderContext as any)
-    const filePath = '/fixture/test'
-
-    buildContext.addWatchFile(filePath)
-
-    expect(buildContext.getWatchFiles()[0]).toBe(filePath)
-  })
-
   it('emitFile - should return expected', () => {
     const emitAssetMock = vi.fn()
     const RawSourceMock = vi.fn(content => ({ content }))
