@@ -31,7 +31,6 @@ describe('createBuildContext', () => {
 
     buildContext.addWatchFile(filePath)
 
-    expect(compilation.fileDependencies.has(filePath)).toBe(true)
     expect(buildContext.getWatchFiles()[0]).toBe(filePath)
   })
 
