@@ -33,24 +33,24 @@ export type Nullable<T> = T | null | undefined
 export type Arrayable<T> = T | Array<T>
 
 export interface SourceMapCompact {
-  file?: string
+  file?: undefined | string
   mappings: string
   names: string[]
-  sourceRoot?: string
+  sourceRoot?: undefined | string
   sources: string[]
   // In magic-string v0.27.0, `sourcesContent` becomes nullable, while rollup haven't catch up yet
-  sourcesContent?: (string | null)[]
+  sourcesContent?: undefined | (string | null)[]
   version: number
 }
 
-export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null } | null | undefined | void
+export type TransformResult = string | { code: string, map?: undefined | SourceMapInput | SourceMapCompact | null } | null | undefined | void
 
-export interface ExternalIdResult { id: string, external?: boolean }
+export interface ExternalIdResult { id: string, external?: undefined | boolean }
 
 export type NativeBuildContext =
-  { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> } |
+  { framework: 'webpack', compiler: WebpackCompiler, compilation?: undefined | WebpackCompilation, loaderContext?: undefined | WebpackLoaderContext<{ unpluginName: string }> } |
   { framework: 'esbuild', build: PluginBuild } |
-  { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext } |
+  { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: undefined | RspackLoaderContext } |
   { framework: 'farm', context: FarmCompilationContext }
 
 export interface UnpluginBuildContext {
@@ -58,21 +58,21 @@ export interface UnpluginBuildContext {
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
   parse: (input: string, options?: any) => AstNode
-  getNativeBuildContext?: () => NativeBuildContext
+  getNativeBuildContext?: undefined | (() => NativeBuildContext)
 }
 
 export type StringOrRegExp = string | RegExp
 export type FilterPattern = Arrayable<StringOrRegExp>
 export type StringFilter =
   | FilterPattern
-  | { include?: FilterPattern, exclude?: FilterPattern }
+  | { include?: undefined | FilterPattern, exclude?: undefined | FilterPattern }
 export interface HookFilter {
-  id?: StringFilter
-  code?: StringFilter
+  id?: undefined | StringFilter
+  code?: undefined | StringFilter
 }
 
 export interface ObjectHook<T extends HookFnMap[keyof HookFnMap], F extends keyof HookFilter> {
-  filter?: Pick<HookFilter, F>
+  filter?: undefined | Pick<HookFilter, F>
   handler: T
 }
 export type Hook<
@@ -100,16 +100,16 @@ export interface HookFnMap {
 
 export interface UnpluginOptions {
   name: string
-  enforce?: 'post' | 'pre' | undefined
+  enforce?: undefined | 'post' | 'pre'
 
-  buildStart?: HookFnMap['buildStart']
-  buildEnd?: HookFnMap['buildEnd']
-  transform?: Hook<HookFnMap['transform'], 'code' | 'id'>
-  load?: Hook<HookFnMap['load'], 'id'>
-  resolveId?: Hook<HookFnMap['resolveId'], 'id'>
-  writeBundle?: HookFnMap['writeBundle']
+  buildStart?: undefined | HookFnMap['buildStart']
+  buildEnd?: undefined | HookFnMap['buildEnd']
+  transform?: undefined | Hook<HookFnMap['transform'], 'code' | 'id'>
+  load?: undefined | Hook<HookFnMap['load'], 'id'>
+  resolveId?: undefined | Hook<HookFnMap['resolveId'], 'id'>
+  writeBundle?: undefined | HookFnMap['writeBundle']
 
-  watchChange?: (this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void
+  watchChange?: undefined | ((this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void)
 
   /**
    * Custom predicate function to filter modules to be loaded.
@@ -117,37 +117,37 @@ export interface UnpluginOptions {
    *
    * @deprecated Use `load.filter` instead.
    */
-  loadInclude?: (id: string) => boolean | null | undefined
+  loadInclude?: undefined | ((id: string) => boolean | null | undefined)
   /**
    * Custom predicate function to filter modules to be transformed.
    * When omitted, all modules will be included (might have potential perf impact on Webpack).
    *
    * @deprecated Use `transform.filter` instead.
    */
-  transformInclude?: (id: string) => boolean | null | undefined
+  transformInclude?: undefined | ((id: string) => boolean | null | undefined)
 
   // framework specify extends
-  rollup?: Partial<RollupPlugin>
-  webpack?: (compiler: WebpackCompiler) => void
-  rspack?: (compiler: RspackCompiler) => void
-  vite?: Partial<VitePlugin>
-  unloader?: Partial<UnloaderPlugin>
-  rolldown?: Partial<RolldownPlugin>
-  esbuild?: {
+  rollup?: undefined | Partial<RollupPlugin>
+  webpack?: undefined | ((compiler: WebpackCompiler) => void)
+  rspack?: undefined | ((compiler: RspackCompiler) => void)
+  vite?: undefined | Partial<VitePlugin>
+  unloader?: undefined | Partial<UnloaderPlugin>
+  rolldown?: undefined | Partial<RolldownPlugin>
+  esbuild?: undefined | {
     // using regexp in esbuild improves performance
-    onResolveFilter?: RegExp
-    onLoadFilter?: RegExp
-    loader?: Loader | ((code: string, id: string) => Loader)
-    setup?: (build: PluginBuild) => void | Promise<void>
-    config?: (options: BuildOptions) => void
+    onResolveFilter?: undefined | RegExp
+    onLoadFilter?: undefined | RegExp
+    loader?: undefined | Loader | ((code: string, id: string) => Loader)
+    setup?: undefined | ((build: PluginBuild) => void | Promise<void>)
+    config?: undefined | ((options: BuildOptions) => void)
   }
-  farm?: Partial<FarmPlugin>
+  farm?: undefined | Partial<FarmPlugin>
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
   // injected internal objects
-  __vfs?: VirtualModulesPlugin
-  __vfsModules?: Set<string>
+  __vfs?: undefined | VirtualModulesPlugin
+  __vfsModules?: undefined | Set<string>
   __virtualModulePrefix: string
 }
 
@@ -156,7 +156,7 @@ Nested extends true
   ? Array<UnpluginOptions>
   : UnpluginOptions
 export type UnpluginFactoryOutput<UserOptions, Return> = undefined extends UserOptions
-  ? (options?: UserOptions) => Return
+  ? (options?: undefined | UserOptions) => Return
   : (options: UserOptions) => Return
 
 export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean> {
@@ -179,23 +179,23 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
 } | {
   framework: 'esbuild'
   /** Set the host plugin name of esbuild when returning multiple plugins */
-  esbuildHostName?: string
+  esbuildHostName?: undefined | string
 } | {
   framework: 'rspack'
   rspack: { compiler: RspackCompiler }
 })
 
 export interface UnpluginMessage {
-  name?: string
-  id?: string
+  name?: undefined | string
+  id?: undefined | string
   message: string
-  stack?: string
-  code?: string
-  plugin?: string
-  pluginCode?: unknown
-  loc?: {
+  stack?: undefined | string
+  code?: undefined | string
+  plugin?: undefined | string
+  pluginCode?: undefined | unknown
+  loc?: undefined | {
     column: number
-    file?: string
+    file?: undefined | string
     line: number
   }
   meta?: any
