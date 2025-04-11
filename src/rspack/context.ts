@@ -15,7 +15,8 @@ export function createBuildContext(compiler: Compiler, compilation: Compilation,
       }
     },
     addWatchFile(file) {
-      compilation.fileDependencies.add(resolve(process.cwd(), file))
+      const cwd = process.cwd()
+      compilation.fileDependencies.add(resolve(cwd, file))
     },
     getWatchFiles() {
       return Array.from(compilation.fileDependencies)
