@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@ampproject/remapping": "^2.3.0",
-    "@antfu/eslint-config": "^4.11.0",
+    "@antfu/eslint-config": "^4.12.0",
     "@antfu/ni": "^24.3.0",
     "@farmfe/cli": "^1.0.4",
     "@farmfe/core": "^1.7.2",
@@ -66,7 +66,7 @@
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",
     "jiti": "^2.4.2",
-    "lint-staged": "^15.5.0",
+    "lint-staged": "^15.5.1",
     "magic-string": "^0.30.17",
     "rolldown": "^1.0.0-beta.7",
     "rollup": "^4.39.0",
@@ -75,7 +75,7 @@
     "typescript": "~5.8.3",
     "unloader": "^0.4.3",
     "unplugin": "workspace:*",
-    "vite": "^6.2.5",
+    "vite": "^6.2.6",
     "vitest": "^3.1.1",
     "webpack": "^5.99.5",
     "webpack-cli": "^6.0.1"
