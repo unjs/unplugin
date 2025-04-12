@@ -100,5 +100,6 @@ function supportNativeFilter(context: any) {
     return false
 
   const [major, minor] = rollupVersion.split('.')
-  return (Number(major) > 4 || (Number(major) === 4 && Number(minor) >= 38))
+  // https://github.com/rollup/rollup/pull/5909#issuecomment-2798739729
+  return (Number(major) > 4 || (Number(major) === 4 && Number(minor) >= 40))
 }
