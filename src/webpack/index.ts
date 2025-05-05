@@ -54,7 +54,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
               vfs = new VirtualModulesPlugin()
               compiler.options.plugins.push(vfs)
             }
-            plugin.__vfsModules = new Set()
+            plugin.__vfsModules = new Map()
             plugin.__vfs = vfs
 
             const resolverPlugin: ResolvePluginInstance = {
@@ -135,7 +135,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                       // https://github.com/unjs/unplugin/pull/155
                       if (!plugin.__vfsModules!.has(resolved)) {
                         plugin.__vfs!.writeModule(resolved, '')
-                        plugin.__vfsModules!.add(resolved)
+                        plugin.__vfsModules!.set(resolved, Promise.resolve(''))
                       }
                     }
 
