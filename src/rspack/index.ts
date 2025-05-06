@@ -56,7 +56,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
           if (plugin.resolveId) {
             const vfs = new FakeVirtualModulesPlugin(plugin)
             vfs.apply(compiler)
-            plugin.__vfsModules = new Set()
+            plugin.__vfsModules = new Map()
             plugin.__vfs = vfs as any
 
             compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {
@@ -105,8 +105,14 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
                 // we treat it as a virtual module
                 if (!fs.existsSync(resolved)) {
                   if (!plugin.__vfsModules!.has(resolved)) {
-                    plugin.__vfsModules!.add(resolved)
-                    await vfs.writeModule(resolved)
+                    const fsPromise = vfs.writeModule(resolved)
+                    plugin.__vfsModules!.set(resolved, fsPromise)
+                    await fsPromise
+                  }
+                  else {
+                    // Ensure that the module is written to the virtual file system
+                    // before we use it.
+                    await plugin.__vfsModules!.get(resolved)
                   }
                   resolved = encodeVirtualModuleId(resolved, plugin)
                 }
