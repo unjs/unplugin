@@ -58,7 +58,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.14.1",
     "@types/picomatch": "^4.0.0",
-    "ansis": "^3.17.0",
+    "ansis": "^4.0.0",
     "bumpp": "^10.1.0",
     "esbuild": "^0.25.2",
     "esbuild-plugin-copy": "^2.1.1",
