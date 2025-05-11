@@ -67,7 +67,7 @@
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",
     "jiti": "^2.4.2",
-    "lint-staged": "^15.5.1",
+    "lint-staged": "^16.0.0",
     "magic-string": "^0.30.17",
     "rolldown": "^1.0.0-beta.7",
     "rollup": "^4.40.0",
