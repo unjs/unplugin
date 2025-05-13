@@ -54,7 +54,8 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
               vfs = new VirtualModulesPlugin()
               compiler.options.plugins.push(vfs)
             }
-            plugin.__vfsModules = new Map()
+            const vfsModules = new Set<string>()
+            plugin.__vfsModules = vfsModules
             plugin.__vfs = vfs
 
             const resolverPlugin: ResolvePluginInstance = {
@@ -133,9 +134,9 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
                       // webpack virtual module should pass in the correct path
                       // https://github.com/unjs/unplugin/pull/155
-                      if (!plugin.__vfsModules!.has(resolved)) {
+                      if (!vfsModules.has(resolved)) {
                         plugin.__vfs!.writeModule(resolved, '')
-                        plugin.__vfsModules!.set(resolved, Promise.resolve(''))
+                        vfsModules.add(resolved)
                       }
                     }
 
