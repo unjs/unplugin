@@ -17,15 +17,19 @@ export function isVirtualModuleId(encoded: string, plugin: ResolvedUnpluginOptio
 
 export class FakeVirtualModulesPlugin {
   name = 'FakeVirtualModulesPlugin'
+  static counter = 0
   constructor(private plugin: ResolvedUnpluginOptions) {}
 
   apply(compiler: Compiler): void {
+    FakeVirtualModulesPlugin.counter++
     const dir = this.plugin.__virtualModulePrefix
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
     compiler.hooks.shutdown.tap(this.name, () => {
-      fs.rmSync(dir, { recursive: true, force: true })
+      if (--FakeVirtualModulesPlugin.counter === 0) {
+        fs.rmSync(dir, { recursive: true, force: true })
+      }
     })
   }
 
