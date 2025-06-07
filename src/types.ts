@@ -47,11 +47,11 @@ export type TransformResult = string | { code: string, map?: SourceMapInput | So
 
 export interface ExternalIdResult { id: string, external?: boolean }
 
-export type NativeBuildContext =
-  { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> } |
-  { framework: 'esbuild', build: PluginBuild } |
-  { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext } |
-  { framework: 'farm', context: FarmCompilationContext }
+export type NativeBuildContext
+  = { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> }
+    | { framework: 'esbuild', build: PluginBuild }
+    | { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext }
+    | { framework: 'farm', context: FarmCompilationContext }
 
 export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void
@@ -63,9 +63,9 @@ export interface UnpluginBuildContext {
 
 export type StringOrRegExp = string | RegExp
 export type FilterPattern = Arrayable<StringOrRegExp>
-export type StringFilter =
-  | FilterPattern
-  | { include?: FilterPattern, exclude?: FilterPattern }
+export type StringFilter
+  = | FilterPattern
+    | { include?: FilterPattern, exclude?: FilterPattern }
 export interface HookFilter {
   id?: StringFilter
   code?: StringFilter
