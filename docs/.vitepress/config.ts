@@ -82,12 +82,15 @@ export default defineConfig({
     codeTransformers: [
       transformerTwoslash({
         twoslashOptions: {
-          compilerOptions: { paths: {
-            unplugin: [path.resolve(import.meta.dirname, '../../src/index.ts')],
-          } },
+          compilerOptions: {
+            paths: {
+              unplugin: [path.resolve(import.meta.dirname, '../../src/index.ts')],
+            },
+          },
         },
       }),
     ],
+    languages: ['js', 'jsx', 'ts', 'tsx'],
   },
   ignoreDeadLinks: true,
 })
