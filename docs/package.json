@@ -13,22 +13,22 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "devDependencies": {
-    "@iconify-json/ri": "^1.2.5",
-    "@shikijs/vitepress-twoslash": "^3.7.0",
-    "case-police": "^2.0.0",
-    "consola": "^3.4.2",
-    "dotenv": "^17.0.1",
-    "markdown-it": "^14.1.0",
-    "markdown-it-github-alerts": "^1.0.0",
-    "ofetch": "^1.4.1",
-    "tsx": "^4.20.3",
-    "unocss": "^66.3.2",
+    "@iconify-json/ri": "catalog:docs",
+    "@shikijs/vitepress-twoslash": "catalog:docs",
+    "case-police": "catalog:docs",
+    "consola": "catalog:docs",
+    "dotenv": "catalog:docs",
+    "markdown-it": "catalog:docs",
+    "markdown-it-github-alerts": "catalog:docs",
+    "ofetch": "catalog:docs",
+    "tsx": "catalog:docs",
+    "unocss": "catalog:docs",
     "unplugin": "workspace:*",
-    "unplugin-icons": "^22.1.0",
-    "unplugin-vue-components": "^28.8.0",
-    "vitepress": "2.0.0-alpha.7",
-    "vitepress-plugin-group-icons": "^1.6.1",
-    "vue": "^3.5.17",
-    "vue-tsc": "^3.0.0"
+    "unplugin-icons": "catalog:docs",
+    "unplugin-vue-components": "catalog:docs",
+    "vitepress": "catalog:docs",
+    "vitepress-plugin-group-icons": "catalog:docs",
+    "vue": "catalog:docs",
+    "vue-tsc": "catalog:docs"
   }
 }

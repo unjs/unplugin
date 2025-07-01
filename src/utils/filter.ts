@@ -154,9 +154,9 @@ export function normalizeObjectHook<T extends (...args: any[]) => any, F extends
   name: 'resolveId' | 'load' | 'transform',
   hook: Hook<T, F>,
 ): {
-    handler: T
-    filter: PluginFilter | TransformHookFilter
-  } {
+  handler: T
+  filter: PluginFilter | TransformHookFilter
+} {
   let handler: T
   let filter: PluginFilter | TransformHookFilter | undefined
 

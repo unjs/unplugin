@@ -1,2 +1,60 @@
 packages:
   - docs
+
+catalog:
+  '@ampproject/remapping': ^2.3.0
+  '@antfu/eslint-config': ^4.16.1
+  '@antfu/ni': ^25.0.0
+  '@farmfe/cli': ^1.0.5
+  '@farmfe/core': ^1.7.8
+  '@rspack/cli': ^1.4.2
+  '@rspack/core': ^1.4.2
+  '@types/fs-extra': ^11.0.4
+  '@types/node': ^24.0.9
+  '@types/picomatch': ^4.0.0
+  ansis: ^4.1.0
+  bumpp: ^10.2.0
+  esbuild: ^0.25.5
+  esbuild-plugin-copy: ^2.1.1
+  eslint: ^9.30.0
+  eslint-plugin-format: ^1.0.1
+  fast-glob: ^3.3.3
+  fs-extra: ^11.3.0
+  jiti: ^2.4.2
+  lint-staged: ^16.1.2
+  magic-string: ^0.30.17
+  rolldown: ^1.0.0-beta.23
+  rollup: ^4.44.1
+  simple-git-hooks: ^2.13.0
+  tsdown: ^0.12.9
+  typescript: ~5.8.3
+  unloader: ^0.4.5
+  unplugin-unused: ^0.5.1
+  vite: ^7.0.0
+  vitest: ^3.2.4
+  webpack: ^5.99.9
+  webpack-cli: ^6.0.1
+
+catalogs:
+  docs:
+    '@iconify-json/ri': ^1.2.5
+    '@shikijs/vitepress-twoslash': ^3.7.0
+    case-police: ^2.0.0
+    consola: ^3.4.2
+    dotenv: ^17.0.1
+    markdown-it: ^14.1.0
+    markdown-it-github-alerts: ^1.0.0
+    ofetch: ^1.4.1
+    tsx: ^4.20.3
+    unocss: ^66.3.2
+    unplugin-icons: ^22.1.0
+    unplugin-vue-components: ^28.8.0
+    vitepress: 2.0.0-alpha.7
+    vitepress-plugin-group-icons: ^1.6.1
+    vue: ^3.5.17
+    vue-tsc: ^3.0.0
+
+  prod:
+    acorn: ^8.15.0
+    picomatch: ^4.0.2
+    webpack-virtual-modules: ^0.6.2

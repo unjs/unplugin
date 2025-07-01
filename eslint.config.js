@@ -7,6 +7,7 @@ export default antfu(
     formatters: {
       markdown: 'dprint',
     },
+    pnpm: true,
   },
   {
     ignores: [

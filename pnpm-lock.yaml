@@ -4,6 +4,161 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@ampproject/remapping':
+      specifier: ^2.3.0
+      version: 2.3.0
+    '@antfu/eslint-config':
+      specifier: ^4.16.1
+      version: 4.16.1
+    '@antfu/ni':
+      specifier: ^25.0.0
+      version: 25.0.0
+    '@farmfe/cli':
+      specifier: ^1.0.5
+      version: 1.0.5
+    '@farmfe/core':
+      specifier: ^1.7.8
+      version: 1.7.8
+    '@rspack/cli':
+      specifier: ^1.4.2
+      version: 1.4.2
+    '@rspack/core':
+      specifier: ^1.4.2
+      version: 1.4.2
+    '@types/fs-extra':
+      specifier: ^11.0.4
+      version: 11.0.4
+    '@types/node':
+      specifier: ^24.0.9
+      version: 24.0.9
+    '@types/picomatch':
+      specifier: ^4.0.0
+      version: 4.0.0
+    ansis:
+      specifier: ^4.1.0
+      version: 4.1.0
+    bumpp:
+      specifier: ^10.2.0
+      version: 10.2.0
+    esbuild-plugin-copy:
+      specifier: ^2.1.1
+      version: 2.1.1
+    eslint:
+      specifier: ^9.30.0
+      version: 9.30.0
+    eslint-plugin-format:
+      specifier: ^1.0.1
+      version: 1.0.1
+    fast-glob:
+      specifier: ^3.3.3
+      version: 3.3.3
+    fs-extra:
+      specifier: ^11.3.0
+      version: 11.3.0
+    jiti:
+      specifier: ^2.4.2
+      version: 2.4.2
+    lint-staged:
+      specifier: ^16.1.2
+      version: 16.1.2
+    magic-string:
+      specifier: ^0.30.17
+      version: 0.30.17
+    rolldown:
+      specifier: ^1.0.0-beta.23
+      version: 1.0.0-beta.23
+    rollup:
+      specifier: ^4.44.1
+      version: 4.44.1
+    simple-git-hooks:
+      specifier: ^2.13.0
+      version: 2.13.0
+    tsdown:
+      specifier: ^0.12.9
+      version: 0.12.9
+    typescript:
+      specifier: ~5.8.3
+      version: 5.8.3
+    unloader:
+      specifier: ^0.4.5
+      version: 0.4.5
+    unplugin-unused:
+      specifier: ^0.5.1
+      version: 0.5.1
+    vite:
+      specifier: ^7.0.0
+      version: 7.0.0
+    vitest:
+      specifier: ^3.2.4
+      version: 3.2.4
+    webpack:
+      specifier: ^5.99.9
+      version: 5.99.9
+    webpack-cli:
+      specifier: ^6.0.1
+      version: 6.0.1
+  docs:
+    '@iconify-json/ri':
+      specifier: ^1.2.5
+      version: 1.2.5
+    '@shikijs/vitepress-twoslash':
+      specifier: ^3.7.0
+      version: 3.7.0
+    case-police:
+      specifier: ^2.0.0
+      version: 2.0.0
+    consola:
+      specifier: ^3.4.2
+      version: 3.4.2
+    dotenv:
+      specifier: ^17.0.1
+      version: 17.0.1
+    markdown-it:
+      specifier: ^14.1.0
+      version: 14.1.0
+    markdown-it-github-alerts:
+      specifier: ^1.0.0
+      version: 1.0.0
+    ofetch:
+      specifier: ^1.4.1
+      version: 1.4.1
+    tsx:
+      specifier: ^4.20.3
+      version: 4.20.3
+    unocss:
+      specifier: ^66.3.2
+      version: 66.3.2
+    unplugin-icons:
+      specifier: ^22.1.0
+      version: 22.1.0
+    unplugin-vue-components:
+      specifier: ^28.8.0
+      version: 28.8.0
+    vitepress:
+      specifier: 2.0.0-alpha.7
+      version: 2.0.0-alpha.7
+    vitepress-plugin-group-icons:
+      specifier: ^1.6.1
+      version: 1.6.1
+    vue:
+      specifier: ^3.5.17
+      version: 3.5.17
+    vue-tsc:
+      specifier: ^3.0.0
+      version: 3.0.0
+  prod:
+    acorn:
+      specifier: ^8.15.0
+      version: 8.15.0
+    picomatch:
+      specifier: ^4.0.2
+      version: 4.0.2
+    webpack-virtual-modules:
+      specifier: ^0.6.2
+      version: 0.6.2
+
 overrides:
   esbuild: ^0.25.5
 
@@ -12,167 +167,167 @@ importers:
   .:
     dependencies:
       acorn:
-        specifier: ^8.15.0
+        specifier: catalog:prod
         version: 8.15.0
       picomatch:
-        specifier: ^4.0.2
+        specifier: catalog:prod
         version: 4.0.2
       webpack-virtual-modules:
-        specifier: ^0.6.2
+        specifier: catalog:prod
         version: 0.6.2
     devDependencies:
       '@ampproject/remapping':
-        specifier: ^2.3.0
+        specifier: 'catalog:'
         version: 2.3.0
       '@antfu/eslint-config':
-        specifier: ^4.16.1
+        specifier: 'catalog:'
         version: 4.16.1(@vue/compiler-sfc@3.5.17)(eslint-plugin-format@1.0.1(eslint@9.30.0(jiti@2.4.2)))(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.0.9)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
       '@antfu/ni':
-        specifier: ^25.0.0
+        specifier: 'catalog:'
         version: 25.0.0
       '@farmfe/cli':
-        specifier: ^1.0.5
+        specifier: 'catalog:'
         version: 1.0.5
       '@farmfe/core':
-        specifier: ^1.7.8
+        specifier: 'catalog:'
         version: 1.7.8
       '@rspack/cli':
-        specifier: ^1.4.2
+        specifier: 'catalog:'
         version: 1.4.2(@rspack/core@1.4.2(@swc/helpers@0.5.17))(@types/express@4.17.23)(webpack-cli@6.0.1)(webpack@5.99.9)
       '@rspack/core':
-        specifier: ^1.4.2
+        specifier: 'catalog:'
         version: 1.4.2(@swc/helpers@0.5.17)
       '@types/fs-extra':
-        specifier: ^11.0.4
+        specifier: 'catalog:'
         version: 11.0.4
       '@types/node':
-        specifier: ^24.0.9
+        specifier: 'catalog:'
         version: 24.0.9
       '@types/picomatch':
-        specifier: ^4.0.0
+        specifier: 'catalog:'
         version: 4.0.0
       ansis:
-        specifier: ^4.1.0
+        specifier: 'catalog:'
         version: 4.1.0
       bumpp:
-        specifier: ^10.2.0
+        specifier: 'catalog:'
         version: 10.2.0
       esbuild:
         specifier: ^0.25.5
         version: 0.25.5
       esbuild-plugin-copy:
-        specifier: ^2.1.1
+        specifier: 'catalog:'
         version: 2.1.1(esbuild@0.25.5)
       eslint:
-        specifier: ^9.30.0
+        specifier: 'catalog:'
         version: 9.30.0(jiti@2.4.2)
       eslint-plugin-format:
-        specifier: ^1.0.1
+        specifier: 'catalog:'
         version: 1.0.1(eslint@9.30.0(jiti@2.4.2))
       fast-glob:
-        specifier: ^3.3.3
+        specifier: 'catalog:'
         version: 3.3.3
       fs-extra:
-        specifier: ^11.3.0
+        specifier: 'catalog:'
         version: 11.3.0
       jiti:
-        specifier: ^2.4.2
+        specifier: 'catalog:'
         version: 2.4.2
       lint-staged:
-        specifier: ^16.1.2
+        specifier: 'catalog:'
         version: 16.1.2
       magic-string:
-        specifier: ^0.30.17
+        specifier: 'catalog:'
         version: 0.30.17
       rolldown:
-        specifier: ^1.0.0-beta.23
+        specifier: 'catalog:'
         version: 1.0.0-beta.23
       rollup:
-        specifier: ^4.44.1
+        specifier: 'catalog:'
         version: 4.44.1
       simple-git-hooks:
-        specifier: ^2.13.0
+        specifier: 'catalog:'
         version: 2.13.0
       tsdown:
-        specifier: ^0.12.9
+        specifier: 'catalog:'
         version: 0.12.9(publint@0.3.5)(typescript@5.8.3)(unplugin-unused@0.5.1)(vue-tsc@2.2.10(typescript@5.8.3))
       typescript:
-        specifier: ~5.8.3
+        specifier: 'catalog:'
         version: 5.8.3
       unloader:
-        specifier: ^0.4.5
+        specifier: 'catalog:'
         version: 0.4.5
       unplugin:
         specifier: workspace:*
         version: 'link:'
       unplugin-unused:
-        specifier: ^0.5.1
+        specifier: 'catalog:'
         version: 0.5.1
       vite:
-        specifier: ^7.0.0
+        specifier: 'catalog:'
         version: 7.0.0(@types/node@24.0.9)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
       vitest:
-        specifier: ^3.2.4
+        specifier: 'catalog:'
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.9)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
       webpack:
-        specifier: ^5.99.9
+        specifier: 'catalog:'
         version: 5.99.9(esbuild@0.25.5)(webpack-cli@6.0.1)
       webpack-cli:
-        specifier: ^6.0.1
+        specifier: 'catalog:'
         version: 6.0.1(webpack@5.99.9)
 
   docs:
     devDependencies:
       '@iconify-json/ri':
-        specifier: ^1.2.5
+        specifier: catalog:docs
         version: 1.2.5
       '@shikijs/vitepress-twoslash':
-        specifier: ^3.7.0
+        specifier: catalog:docs
         version: 3.7.0(typescript@5.8.3)
       case-police:
-        specifier: ^2.0.0
+        specifier: catalog:docs
         version: 2.0.0
       consola:
-        specifier: ^3.4.2
+        specifier: catalog:docs
         version: 3.4.2
       dotenv:
-        specifier: ^17.0.1
+        specifier: catalog:docs
         version: 17.0.1
       markdown-it:
-        specifier: ^14.1.0
+        specifier: catalog:docs
         version: 14.1.0
       markdown-it-github-alerts:
-        specifier: ^1.0.0
+        specifier: catalog:docs
         version: 1.0.0(markdown-it@14.1.0)
       ofetch:
-        specifier: ^1.4.1
+        specifier: catalog:docs
         version: 1.4.1
       tsx:
-        specifier: ^4.20.3
+        specifier: catalog:docs
         version: 4.20.3
       unocss:
-        specifier: ^66.3.2
+        specifier: catalog:docs
         version: 66.3.2(postcss@8.5.6)(vite@7.0.0(@types/node@24.0.9)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.17(typescript@5.8.3))
       unplugin:
         specifier: workspace:*
         version: link:..
       unplugin-icons:
-        specifier: ^22.1.0
+        specifier: catalog:docs
         version: 22.1.0(@vue/compiler-sfc@3.5.17)
       unplugin-vue-components:
-        specifier: ^28.8.0
+        specifier: catalog:docs
         version: 28.8.0(@babel/parser@7.27.7)(vue@3.5.17(typescript@5.8.3))
       vitepress:
-        specifier: 2.0.0-alpha.7
+        specifier: catalog:docs
         version: 2.0.0-alpha.7(@algolia/client-search@5.30.0)(@types/node@24.0.9)(jiti@2.4.2)(postcss@8.5.6)(search-insights@2.17.3)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.8.0)
       vitepress-plugin-group-icons:
-        specifier: ^1.6.1
+        specifier: catalog:docs
         version: 1.6.1(markdown-it@14.1.0)(vite@7.0.0(@types/node@24.0.9)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
       vue:
-        specifier: ^3.5.17
+        specifier: catalog:docs
         version: 3.5.17(typescript@5.8.3)
       vue-tsc:
-        specifier: ^3.0.0
+        specifier: catalog:docs
         version: 3.0.0(typescript@5.8.3)
 
 packages:
