@@ -7,9 +7,9 @@ lastUpdated: false
 
 ## Overview
 
-**Unplugin** is a library that offers an unified plugin system for various build tools. It extends the excellent [Rollup plugin API](https://rollupjs.org/plugin-development/#plugins-overview) to serve as the standard plugin interface, and provides a compatibility layer based on the build tools employed.
+**Unplugin** is a library that offers a unified plugin system for various build tools. It extends the excellent [Rollup plugin API](https://rollupjs.org/plugin-development/#plugins-overview) to serve as the standard plugin interface, and provides a compatibility layer based on the build tools employed.
 
-**Unplugin** current supports:
+**Unplugin** currently supports:
 
 - [Vite](https://vite.dev/)
 - [Rollup](https://rollupjs.org/)
