@@ -19,8 +19,8 @@ catalogs:
       specifier: ^1.0.5
       version: 1.0.5
     '@farmfe/core':
-      specifier: ^1.7.8
-      version: 1.7.8
+      specifier: ^1.7.10
+      version: 1.7.10
     '@rspack/cli':
       specifier: ^1.4.2
       version: 1.4.2
@@ -190,7 +190,7 @@ importers:
         version: 1.0.5
       '@farmfe/core':
         specifier: 'catalog:'
-        version: 1.7.8
+        version: 1.7.10
       '@rspack/cli':
         specifier: 'catalog:'
         version: 1.4.2(@rspack/core@1.4.2(@swc/helpers@0.5.17))(@types/express@4.17.23)(webpack-cli@6.0.1)(webpack@5.99.9)
@@ -833,62 +833,62 @@ packages:
     engines: {node: '>= 16'}
     hasBin: true
 
-  '@farmfe/core-darwin-arm64@1.7.8':
-    resolution: {integrity: sha512-T2jx6RJDawZWfSsSHGP1DhqARkolpXwrHm6M7okUWcMgSX/x2izm1C0pbLKwTTzGRXHRm8i4bVemvq+uXIxRFA==}
+  '@farmfe/core-darwin-arm64@1.7.10':
+    resolution: {integrity: sha512-yfd4DgXNgubextHYiWYuFU/CUZnJku+Hwqe4/g0XcM1iXy51bDck1GvqK8FetPyaNWCLTCpErgPy+qfHaujIYw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@farmfe/core-darwin-x64@1.7.8':
-    resolution: {integrity: sha512-62kQYn/52JVgT8b9qwu2jaRgryhKTF4KSx8aC6mGOGrWFPuqQEtaWS2vMKpm5SFfvnTVt5YifVDnBf77ttWNZQ==}
+  '@farmfe/core-darwin-x64@1.7.10':
+    resolution: {integrity: sha512-zRO/th5TsIngLc+jpe8/cTuVLVJPZb3VzOxRWZRAkeUKGNp5BUeGVZtUaz1IzlhFVfuBtndIyHwTom9KG5Mirw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@farmfe/core-linux-arm64-gnu@1.7.8':
-    resolution: {integrity: sha512-oLfBGy3p+WG2FpsVxJf/eNXoFjRgik5/hobeRpb1TsvCvxamgG2p7TvBSP6BPO5OXU/iJWDQw1wh34a7/dQkyA==}
+  '@farmfe/core-linux-arm64-gnu@1.7.10':
+    resolution: {integrity: sha512-SlIBu3xD9or9kaS6hOvlCk6xpy2DnvIL4iLuG3JwxgSJRnietJzHgXXX/mbogOJkyOuxw6EsjqH/iSYSf2WpDA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@farmfe/core-linux-arm64-musl@1.7.8':
-    resolution: {integrity: sha512-s4EuLZQalHAYbCIliVvgJYqJxFsPMEJFvvimLkqHVeGYc3yWDls9vlfNWo32BmNSk07FAgZZIRRnYevjgnRGUA==}
+  '@farmfe/core-linux-arm64-musl@1.7.10':
+    resolution: {integrity: sha512-+ZRQ9A2ASms2M30kD5pAn3B7IbMW3Dnn0Ol3U+ZBg2HE76zaVPsBHMr4PtlrmlIz6ZR/8/VM27k5KuWVLK+NGg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@farmfe/core-linux-x64-gnu@1.7.8':
-    resolution: {integrity: sha512-zGG7S0E6m/S3eTSEQuUj/Orbj7/YB5iSjvmWZ3EQfrTl572wqb0OunQ/m+P9x5BAH8J2Jw+ZVpwTR84fyQ39LA==}
+  '@farmfe/core-linux-x64-gnu@1.7.10':
+    resolution: {integrity: sha512-yjKez6NFXl5vJ144OUGRLswikyEMDEoCRGSZqzyjvlb7B0MlPWbpe/6cSdhOFw4ENVMpATXyig7D33BdOAneJg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@farmfe/core-linux-x64-musl@1.7.8':
-    resolution: {integrity: sha512-+pROD9jQjt0gkun5ZP28Vu1ndpa8NZFr8pDbmcBi0OTpYAA5tRhHwLow5LhoVI1XllJJRpmtK0jp4/KLAYHpFQ==}
+  '@farmfe/core-linux-x64-musl@1.7.10':
+    resolution: {integrity: sha512-dhcoUklHlZwxVLUkS2LEm1QQlKRURDOZS7IohgUpc8DC0vYN3oYrOWA05+ozprmExkf7PVAS/Gw/e3vGUG2uGQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@farmfe/core-win32-arm64-msvc@1.7.8':
-    resolution: {integrity: sha512-sGcUPR+SW8G+iroAqh4RxGMwmAEm0FPTESM0sM3lp3JGBM/sfdAOIsrA71/kRGaH4wlfla/qntbzxFM4rEAZiQ==}
+  '@farmfe/core-win32-arm64-msvc@1.7.10':
+    resolution: {integrity: sha512-UVoUDYN1RYtK4jxCUXMetknp19cVNm/iQqQ8kLXAI1/4nkvInsWwGFCy+CYBq5PevWgYeKBgEc/IvhxjCvtOPA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@farmfe/core-win32-ia32-msvc@1.7.8':
-    resolution: {integrity: sha512-1hmv14j2dFaiqphQ3AFAip+Hy8Rbs6G3HVBJwfKgpYnMKIOvYgbz4pweOvnQtjH9nh3t2ttEJABafGNIViHAyw==}
+  '@farmfe/core-win32-ia32-msvc@1.7.10':
+    resolution: {integrity: sha512-OShfiRN+M8pV342GWqylg/nc56NSRBNgUiCNy0wiGyRJ1gdmmWxutNKaTe/wWD0cUYyt11/xxba3wmB+nq27mg==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
 
-  '@farmfe/core-win32-x64-msvc@1.7.8':
-    resolution: {integrity: sha512-PsjZPW0J2MTyFtEB46Q5OJIe29j/RQCKgy7ZIgk72/IEtq282t9XdSVnpJdpGWjYQK7ZZKrmDoLMzfTPZ0KXtg==}
+  '@farmfe/core-win32-x64-msvc@1.7.10':
+    resolution: {integrity: sha512-CktB49aA8L9Zzwx8ol5fep7T2/wOF31wgQPfqgm3EfnS6mRZOO3IOYKoPao0p34tXP0fbcKEMM0vFUbSUAOCbQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
 
-  '@farmfe/core@1.7.8':
-    resolution: {integrity: sha512-FVaxAqvSZW5njQ7qHD8tWhkrXB9PNTt8/gKy/rq6qV9hNfw5r1+4pqip98wcDOZZKTrUPdN+4hK5denBIhOhOw==}
+  '@farmfe/core@1.7.10':
+    resolution: {integrity: sha512-09KlL1fIUMjOw1ECiVbVnGrgAF5ILROFdwX/JzvR92BprbFdgLfXtdAT4A8/NxDW3RTVtN/jwCPNTlhf1MCaLw==}
     engines: {node: '>=16.15.1'}
 
   '@farmfe/runtime-plugin-hmr@3.5.10':
@@ -5813,34 +5813,34 @@ snapshots:
       inquirer: 9.2.12
       walkdir: 0.4.1
 
-  '@farmfe/core-darwin-arm64@1.7.8':
+  '@farmfe/core-darwin-arm64@1.7.10':
     optional: true
 
-  '@farmfe/core-darwin-x64@1.7.8':
+  '@farmfe/core-darwin-x64@1.7.10':
     optional: true
 
-  '@farmfe/core-linux-arm64-gnu@1.7.8':
+  '@farmfe/core-linux-arm64-gnu@1.7.10':
     optional: true
 
-  '@farmfe/core-linux-arm64-musl@1.7.8':
+  '@farmfe/core-linux-arm64-musl@1.7.10':
     optional: true
 
-  '@farmfe/core-linux-x64-gnu@1.7.8':
+  '@farmfe/core-linux-x64-gnu@1.7.10':
     optional: true
 
-  '@farmfe/core-linux-x64-musl@1.7.8':
+  '@farmfe/core-linux-x64-musl@1.7.10':
     optional: true
 
-  '@farmfe/core-win32-arm64-msvc@1.7.8':
+  '@farmfe/core-win32-arm64-msvc@1.7.10':
     optional: true
 
-  '@farmfe/core-win32-ia32-msvc@1.7.8':
+  '@farmfe/core-win32-ia32-msvc@1.7.10':
     optional: true
 
-  '@farmfe/core-win32-x64-msvc@1.7.8':
+  '@farmfe/core-win32-x64-msvc@1.7.10':
     optional: true
 
-  '@farmfe/core@1.7.8':
+  '@farmfe/core@1.7.10':
     dependencies:
       '@farmfe/runtime': 0.12.10
       '@farmfe/runtime-plugin-hmr': 3.5.10
@@ -5870,15 +5870,15 @@ snapshots:
       zod: 3.25.67
       zod-validation-error: 1.5.0(zod@3.25.67)
     optionalDependencies:
-      '@farmfe/core-darwin-arm64': 1.7.8
-      '@farmfe/core-darwin-x64': 1.7.8
-      '@farmfe/core-linux-arm64-gnu': 1.7.8
-      '@farmfe/core-linux-arm64-musl': 1.7.8
-      '@farmfe/core-linux-x64-gnu': 1.7.8
-      '@farmfe/core-linux-x64-musl': 1.7.8
-      '@farmfe/core-win32-arm64-msvc': 1.7.8
-      '@farmfe/core-win32-ia32-msvc': 1.7.8
-      '@farmfe/core-win32-x64-msvc': 1.7.8
+      '@farmfe/core-darwin-arm64': 1.7.10
+      '@farmfe/core-darwin-x64': 1.7.10
+      '@farmfe/core-linux-arm64-gnu': 1.7.10
+      '@farmfe/core-linux-arm64-musl': 1.7.10
+      '@farmfe/core-linux-x64-gnu': 1.7.10
+      '@farmfe/core-linux-x64-musl': 1.7.10
+      '@farmfe/core-win32-arm64-msvc': 1.7.10
+      '@farmfe/core-win32-ia32-msvc': 1.7.10
+      '@farmfe/core-win32-x64-msvc': 1.7.10
     transitivePeerDependencies:
       - bufferutil
       - supports-color
