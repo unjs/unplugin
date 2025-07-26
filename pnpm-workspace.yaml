@@ -6,7 +6,7 @@ catalog:
   '@antfu/eslint-config': ^5.0.0
   '@antfu/ni': ^25.0.0
   '@farmfe/cli': ^1.0.5
-  '@farmfe/core': ^1.7.8
+  '@farmfe/core': ^1.7.10
   '@rspack/cli': ^1.4.2
   '@rspack/core': ^1.4.2
   '@types/fs-extra': ^11.0.4
