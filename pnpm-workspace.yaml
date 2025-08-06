@@ -48,7 +48,7 @@ catalogs:
     tsx: ^4.20.3
     unocss: ^66.3.2
     unplugin-icons: ^22.1.0
-    unplugin-vue-components: ^28.8.0
+    unplugin-vue-components: ^29.0.0
     vitepress: 2.0.0-alpha.7
     vitepress-plugin-group-icons: ^1.6.1
     vue: ^3.5.17
