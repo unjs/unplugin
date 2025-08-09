@@ -7,8 +7,8 @@ catalog:
   '@antfu/ni': ^25.0.0
   '@farmfe/cli': ^1.0.5
   '@farmfe/core': ^1.7.11
-  '@rspack/cli': ^1.4.2
-  '@rspack/core': ^1.4.2
+  '@rspack/cli': ^1.4.11
+  '@rspack/core': ^1.4.11
   '@types/fs-extra': ^11.0.4
   '@types/node': ^24.0.9
   '@types/picomatch': ^4.0.0
