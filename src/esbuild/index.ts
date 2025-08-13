@@ -1,4 +1,4 @@
-import type { RawSourceMap } from '@ampproject/remapping'
+import type { RawSourceMap } from '@jridgewell/remapping'
 import type { OnLoadOptions, OnLoadResult, PluginBuild } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type {

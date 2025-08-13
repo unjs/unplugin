@@ -48,11 +48,11 @@
     "webpack-virtual-modules": "catalog:prod"
   },
   "devDependencies": {
-    "@ampproject/remapping": "catalog:",
     "@antfu/eslint-config": "catalog:",
     "@antfu/ni": "catalog:",
     "@farmfe/cli": "catalog:",
     "@farmfe/core": "catalog:",
+    "@jridgewell/remapping": "catalog:",
     "@rspack/cli": "catalog:",
     "@rspack/core": "catalog:",
     "@types/fs-extra": "catalog:",
