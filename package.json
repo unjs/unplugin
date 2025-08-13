@@ -43,6 +43,7 @@
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
+    "@jridgewell/remapping": "catalog:prod",
     "acorn": "catalog:prod",
     "picomatch": "catalog:prod",
     "webpack-virtual-modules": "catalog:prod"
@@ -52,7 +53,6 @@
     "@antfu/ni": "catalog:",
     "@farmfe/cli": "catalog:",
     "@farmfe/core": "catalog:",
-    "@jridgewell/remapping": "catalog:",
     "@rspack/cli": "catalog:",
     "@rspack/core": "catalog:",
     "@types/fs-extra": "catalog:",

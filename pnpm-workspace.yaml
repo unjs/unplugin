@@ -6,7 +6,6 @@ catalog:
   '@antfu/ni': ^25.0.0
   '@farmfe/cli': ^1.0.5
   '@farmfe/core': ^1.7.11
-  '@jridgewell/remapping': ^2.3.5
   '@rspack/cli': ^1.4.11
   '@rspack/core': ^1.4.11
   '@types/fs-extra': ^11.0.4
@@ -55,6 +54,7 @@ catalogs:
     vue-tsc: ^3.0.5
 
   prod:
+    '@jridgewell/remapping': ^2.3.5
     acorn: ^8.15.0
     picomatch: ^4.0.3
     webpack-virtual-modules: ^0.6.2
