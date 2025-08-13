@@ -2,11 +2,11 @@ packages:
   - docs
 
 catalog:
-  '@ampproject/remapping': ^2.3.0
   '@antfu/eslint-config': ^5.0.0
   '@antfu/ni': ^25.0.0
   '@farmfe/cli': ^1.0.5
   '@farmfe/core': ^1.7.11
+  '@jridgewell/remapping': ^2.3.5
   '@rspack/cli': ^1.4.11
   '@rspack/core': ^1.4.11
   '@types/fs-extra': ^11.0.4

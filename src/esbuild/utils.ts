@@ -1,11 +1,11 @@
-import type { DecodedSourceMap, EncodedSourceMap } from '@ampproject/remapping'
+import type { DecodedSourceMap, EncodedSourceMap } from '@jridgewell/remapping'
 import type { Loader, Location, Message, PartialMessage, PluginBuild } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import { Buffer } from 'node:buffer'
 import fs from 'node:fs'
 import path from 'node:path'
-import remapping from '@ampproject/remapping'
+import remapping from '@jridgewell/remapping'
 import { parse } from '../utils/context'
 
 const ExtToLoader: Record<string, Loader> = {
