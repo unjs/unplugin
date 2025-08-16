@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v5
@@ -17,11 +18,17 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
       - name: Set node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: pnpm
 
       - run: npx changelogithub
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: pnpm install
+      - run: npm i -g npm@latest && pnpm publish --no-git-checks
