@@ -18,19 +18,29 @@ export default async function load(this: LoaderContext, source: string, map: any
 
   const context = createContext(this)
   const { handler } = normalizeObjectHook('load', plugin.load)
-  const res = await handler.call(
-    Object.assign(
-      {},
-      this._compilation && createBuildContext(this._compiler, this._compilation, this),
-      context,
-    ),
-    normalizeAbsolutePath(id),
-  )
+  try {
+    const res = await handler.call(
+      Object.assign(
+        {},
+        this._compilation && createBuildContext(this._compiler, this._compilation, this),
+        context,
+      ),
+      normalizeAbsolutePath(id),
+    )
 
-  if (res == null)
-    callback(null, source, map)
-  else if (typeof res !== 'string')
-    callback(null, res.code, res.map ?? map)
-  else
-    callback(null, res, map)
+    if (res == null)
+      callback(null, source, map)
+    else if (typeof res !== 'string')
+      callback(null, res.code, res.map ?? map)
+    else
+      callback(null, res, map)
+  }
+  catch (error) {
+    if (error instanceof Error) {
+      callback(error)
+    }
+    else {
+      callback(new Error(String(error)))
+    }
+  }
 }
