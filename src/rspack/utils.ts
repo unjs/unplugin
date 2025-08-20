@@ -17,18 +17,36 @@ export function isVirtualModuleId(encoded: string, plugin: ResolvedUnpluginOptio
 
 export class FakeVirtualModulesPlugin {
   name = 'FakeVirtualModulesPlugin'
-  static counter = 0
+  static counters: Map<string, number> = new Map<string, number>()
+
+  static {
+    ['SIGINT', 'SIGTERM', 'SIGQUIT', 'exit'].forEach((event) => {
+      process.once(event, () => {
+        this.counters.forEach((_, dir) => {
+          fs.rmSync(dir, { recursive: true, force: true })
+        })
+      })
+    })
+  }
+
   constructor(private plugin: ResolvedUnpluginOptions) {}
 
   apply(compiler: Compiler): void {
-    FakeVirtualModulesPlugin.counter++
     const dir = this.plugin.__virtualModulePrefix
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
+    const counter = FakeVirtualModulesPlugin.counters.get(dir) ?? 0
+    FakeVirtualModulesPlugin.counters.set(dir, counter + 1)
+
     compiler.hooks.shutdown.tap(this.name, () => {
-      if (--FakeVirtualModulesPlugin.counter === 0) {
+      const counter = (FakeVirtualModulesPlugin.counters.get(dir) ?? 1) - 1
+      if (counter === 0) {
+        FakeVirtualModulesPlugin.counters.delete(dir)
         fs.rmSync(dir, { recursive: true, force: true })
+      }
+      else {
+        FakeVirtualModulesPlugin.counters.set(dir, counter)
       }
     })
   }

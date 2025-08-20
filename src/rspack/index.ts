@@ -32,7 +32,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
       apply(compiler) {
         // We need the prefix of virtual modules to be an absolute path so rspack lets us load them (even if it's made up)
         // In the loader we strip the made up prefix path again
-        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual')
+        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', process.pid.toString())
 
         const meta: UnpluginContextMeta = {
           framework: 'rspack',
