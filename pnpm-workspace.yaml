@@ -31,7 +31,7 @@ catalog:
   unplugin-unused: ^0.5.1
   vite: ^7.1.2
   vitest: ^3.2.4
-  webpack: ^5.101.1
+  webpack: ^5.101.3
   webpack-cli: ^6.0.1
 
 catalogs:
