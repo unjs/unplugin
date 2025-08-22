@@ -11,7 +11,6 @@ catalog:
   '@types/picomatch': ^4.0.2
   ansis: ^4.2.0
   bumpp: ^10.3.1
-  bun-types-no-globals: github:alii/bun-types-no-globals
   esbuild: ^0.25.12
   eslint: ^9.39.0
   eslint-plugin-format: ^1.0.2

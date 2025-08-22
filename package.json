@@ -59,7 +59,6 @@
     "@types/picomatch": "catalog:",
     "ansis": "catalog:",
     "bumpp": "catalog:",
-    "bun-types-no-globals": "catalog:",
     "esbuild": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
