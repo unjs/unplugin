@@ -1,5 +1,6 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
+import type { BunPlugin } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
@@ -9,6 +10,7 @@ import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, Lo
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export type {
+  BunPlugin,
   EsbuildPlugin,
   RolldownPlugin,
   RollupPlugin,
@@ -142,6 +144,7 @@ export interface UnpluginOptions {
     config?: ((options: BuildOptions) => void) | undefined
   } | undefined
   farm?: Partial<FarmPlugin> | undefined
+  bun?: Partial<BunPlugin> | undefined
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
@@ -168,11 +171,12 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   unloader: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<UnloaderPlugin> : UnloaderPlugin>
   farm: UnpluginFactoryOutput<UserOptions, FarmPlugin>
+  bun: UnpluginFactoryOutput<UserOptions, BunPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
-  framework: 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader'
+  framework: 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader' | 'bun'
 } | {
   framework: 'webpack'
   webpack: { compiler: WebpackCompiler }

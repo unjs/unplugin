@@ -12,7 +12,8 @@
     },
     "resolveJsonModule": true,
     "types": [
-      "node"
+      "node",
+      "bun-types-no-globals"
     ],
     "strict": true,
     "noUnusedLocals": true,

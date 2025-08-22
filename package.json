@@ -45,6 +45,7 @@
   "dependencies": {
     "@jridgewell/remapping": "catalog:prod",
     "acorn": "catalog:prod",
+    "bun-types-no-globals": "catalog:",
     "picomatch": "catalog:prod",
     "webpack-virtual-modules": "catalog:prod"
   },

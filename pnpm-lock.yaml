@@ -24,6 +24,9 @@ catalogs:
     bumpp:
       specifier: ^10.3.1
       version: 10.3.1
+    bun-types-no-globals:
+      specifier: github:alii/bun-types-no-globals
+      version: 1.3.2-canary.20251102T140546
     eslint:
       specifier: ^9.39.0
       version: 9.39.0
@@ -159,6 +162,9 @@ importers:
       acorn:
         specifier: catalog:prod
         version: 8.15.0
+      bun-types-no-globals:
+        specifier: 'catalog:'
+        version: https://codeload.github.com/alii/bun-types-no-globals/tar.gz/f80c453b9a9673bc7d0293217ddb7d02202e671e
       picomatch:
         specifier: catalog:prod
         version: 4.0.3
@@ -2106,6 +2112,10 @@ packages:
     resolution: {integrity: sha512-cOKPRFCWvHcYPJQAHN6V7Jp/wAfnyqQRXQ+2fgWIL6Gao20rpu7xQ1cGGo1APOfmbQmmHngEPg9Fy7nJ3giRkQ==}
     engines: {node: '>=18'}
     hasBin: true
+
+  bun-types-no-globals@https://codeload.github.com/alii/bun-types-no-globals/tar.gz/f80c453b9a9673bc7d0293217ddb7d02202e671e:
+    resolution: {tarball: https://codeload.github.com/alii/bun-types-no-globals/tar.gz/f80c453b9a9673bc7d0293217ddb7d02202e671e}
+    version: 1.3.2-canary.20251102T140546
 
   bundle-name@3.0.0:
     resolution: {integrity: sha512-PKA4BeSvBpQKQ8iPOGCSiell+N8P+Tf1DlwqmYhpe2gAhKPHn8EYOxVT+ShuGmhg8lN8XiSlS80yiExKXrURlw==}
@@ -7187,6 +7197,8 @@ snapshots:
       yaml: 2.8.1
     transitivePeerDependencies:
       - magicast
+
+  bun-types-no-globals@https://codeload.github.com/alii/bun-types-no-globals/tar.gz/f80c453b9a9673bc7d0293217ddb7d02202e671e: {}
 
   bundle-name@3.0.0:
     dependencies:
