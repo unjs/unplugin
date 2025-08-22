@@ -40,7 +40,7 @@ for (const name of fixtures) {
   execSync('npx farm --version', { cwd: path, stdio: 'inherit' })
   execSync('npx farm build', { cwd: path, stdio: 'inherit' })
 
-  console.log(c.green.inverse.bold`\n  Bun  `, name, '\n')
+  console.log(c.magentaBright.inverse.bold`\n  Bun  `, name, '\n')
   execSync('bun --version', { cwd: path, stdio: 'inherit' })
   execSync('bun bun.config.js', { cwd: path, stdio: 'inherit' })
 }
