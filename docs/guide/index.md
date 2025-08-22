@@ -270,6 +270,7 @@ export const webpackPlugin = unplugin.webpack
 export const rspackPlugin = unplugin.rspack
 export const esbuildPlugin = unplugin.esbuild
 export const farmPlugin = unplugin.farm
+export const bunPlugin = unplugin.bun
 ```
 
 ### Filters
@@ -306,14 +307,14 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 ## Supported Context
 
-| Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Farm | Rolldown |
-| ------------------------------------------------------------------------------------- | :----: | :--: | :-----: | :-----: | :----: | :--: | :------: |
-| [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    |
-| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    |
-| [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>1</sup> |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    |
-| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    |
-| [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    |
-| [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    |
+| Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Farm | Rolldown | Bun |
+| ------------------------------------------------------------------------------------- | :----: | :--: | :-----: | :-----: | :----: | :--: | :------: | :-: |
+| [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
+| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    | ✅  |
+| [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>1</sup> |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
+| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    | ✅  |
+| [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
+| [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
 
 ::: info Notice
 
@@ -326,9 +327,9 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 ### Bundler Supported
 
-|         Rollup         | Vite | webpack | Rspack | esbuild | Farm | Rolldown |
-| :--------------------: | :--: | :-----: | :----: | :-----: | :--: | :------: |
-| ✅ `>=3.1`<sup>1</sup> |  ✅  |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    |
+|         Rollup         | Vite | webpack | Rspack | esbuild | Farm | Rolldown | Bun |
+| :--------------------: | :--: | :-----: | :----: | :-----: | :--: | :------: | :-: |
+| ✅ `>=3.1`<sup>1</sup> |  ✅  |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ❌  |
 
 ::: details Notice
 
@@ -426,6 +427,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
     farm: {
       // Farm plugin
     },
+    bun: {
+      // Bun plugin
+    },
   }
 }
 
@@ -441,6 +445,7 @@ Each of the function takes the same generic factory argument as `createUnplugin`
 
 ```ts
 import {
+  createBunPlugin,
   createEsbuildPlugin,
   createFarmPlugin,
   createRolldownPlugin,
@@ -457,4 +462,5 @@ const esbuildPlugin = createEsbuildPlugin(/* factory */)
 const webpackPlugin = createWebpackPlugin(/* factory */)
 const rspackPlugin = createRspackPlugin(/* factory */)
 const farmPlugin = createFarmPlugin(/* factory */)
+const bunPlugin = createBunPlugin(/* factory */)
 ```
