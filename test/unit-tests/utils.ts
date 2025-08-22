@@ -1,5 +1,4 @@
 import * as rspack from '@rspack/core'
-import * as Bun from 'bun'
 import * as esbuild from 'esbuild'
 import * as rolldown from 'rolldown'
 import * as rollup from 'rollup'

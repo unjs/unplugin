@@ -1,6 +1,5 @@
 import type { BunPlugin } from 'bun'
 import type { UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
-import * as Bun from 'bun'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { createBuildContext, createPluginContext } from './utils'
