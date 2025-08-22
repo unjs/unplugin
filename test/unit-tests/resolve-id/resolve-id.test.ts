@@ -138,4 +138,17 @@ describe('resolveId hook', () => {
 
     checkResolveIdHook(mockResolveIdHook)
   })
+
+  it('bun', async () => {
+    const mockResolveIdHook = createResolveIdHook()
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
+
+    await build.bun({
+      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      plugins: [plugin()],
+      outdir: path.resolve(__dirname, 'test-out/bun'), // Bun requires outdir
+    })
+
+    checkResolveIdHook(mockResolveIdHook)
+  })
 })

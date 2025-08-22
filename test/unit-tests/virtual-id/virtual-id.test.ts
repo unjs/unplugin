@@ -158,4 +158,19 @@ describe('virtual ids', () => {
     checkResolveIdHook(mockResolveIdHook)
     checkLoadHook(mockLoadHook)
   })
+
+  it('bun', async () => {
+    const mockResolveIdHook = createResolveIdHook()
+    const mockLoadHook = createLoadHook()
+    const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).bun
+
+    await build.bun({
+      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      plugins: [plugin()],
+      outdir: path.resolve(__dirname, 'test-out/bun'),
+    })
+
+    checkResolveIdHook(mockResolveIdHook)
+    checkLoadHook(mockLoadHook)
+  })
 })

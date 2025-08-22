@@ -169,4 +169,19 @@ describe('filter', () => {
 
     check(resolveIdHandler, loadHandler, transformHandler)
   })
+
+  it('bun', async () => {
+    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
+    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: transform, handler: transformHandler } = createTransformHook()
+    const plugin = createUnpluginWithHooks(resolveId, load, transform).bun
+
+    await build.bun({
+      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      plugins: [plugin()],
+      outdir: path.resolve(__dirname, 'test-out/bun'),
+    })
+
+    check(resolveIdHandler, loadHandler, transformHandler)
+  })
 })
