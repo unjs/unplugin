@@ -5,7 +5,7 @@ sidebar: false
 hero:
   name: Unplugin
   text: The Unified<br>Plugin System
-  tagline: Supports Vite, Rollup, webpack, esbuild, and every framework built on top of them.
+  tagline: Supports Vite, Rollup, webpack, esbuild, Bun, and every framework built on top of them.
   image:
     light: /logo_light.svg
     dark: /logo_dark.svg
@@ -63,6 +63,12 @@ features:
     link: https://rolldown.rs/
     icon:
       src: /features/rolldown.svg
+
+  - title: Bun
+    details: All-in-one JavaScript runtime & toolkit
+    link: https://bun.com/
+    icon:
+      src: /features/bun.svg
 
   - title: More
     details: More supported bundlers...
