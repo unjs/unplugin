@@ -24,7 +24,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
     return {
       name: plugin.name,
       async setup(build) {
-        const context = createBuildContext()
+        const context = createBuildContext(build)
 
         if (plugin.buildStart) {
           await plugin.buildStart.call(context)

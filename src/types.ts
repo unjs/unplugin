@@ -1,6 +1,7 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
-import type { BunPlugin } from 'bun'
+import type { Options as AcornOptions } from 'acorn'
+import type { BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
@@ -54,12 +55,13 @@ export type NativeBuildContext
     | { framework: 'esbuild', build: PluginBuild }
     | { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext | undefined }
     | { framework: 'farm', context: FarmCompilationContext }
+    | { framework: 'bun', build: BunPluginBuilder }
 
 export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
-  parse: (input: string, options?: any) => AstNode
+  parse: (input: string, options?: Partial<AcornOptions>) => AstNode
   getNativeBuildContext?: (() => NativeBuildContext) | undefined
 }
 
