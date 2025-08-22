@@ -329,7 +329,7 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 |         Rollup         | Vite | webpack | Rspack | esbuild | Farm | Rolldown | Bun |
 | :--------------------: | :--: | :-----: | :----: | :-----: | :--: | :------: | :-: |
-| ✅ `>=3.1`<sup>1</sup> |  ✅  |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ❌  |
+| ✅ `>=3.1`<sup>1</sup> |  ✅  |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
 
 ::: details Notice
 

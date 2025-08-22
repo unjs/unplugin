@@ -38,12 +38,14 @@ describe('bun plugin', () => {
     expect(bunPlugin).toBeDefined()
   })
 
-  it('should throw error for multiple plugins', () => {
+  it('should support multiple plugins with host name', () => {
     const unplugin = createUnplugin(() => [
       { name: 'plugin-1' },
       { name: 'plugin-2' },
     ])
 
-    expect(() => unplugin.bun()).toThrow('[unplugin] Bun plugin does not support multiple plugins per instance yet.')
+    const bunPlugin = unplugin.bun()
+    expect(bunPlugin.name).toBe('unplugin-host:plugin-1:plugin-2')
+    expect(bunPlugin.setup).toBeDefined()
   })
 })

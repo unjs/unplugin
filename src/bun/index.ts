@@ -15,103 +15,124 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
 
     const plugins = toArray(factory(userOptions!, meta))
 
-    if (plugins.length !== 1) {
-      throw new Error('[unplugin] Bun plugin does not support multiple plugins per instance yet.')
-    }
-
-    const plugin = plugins[0]
-
     return {
-      name: plugin.name,
+      name: plugins.length === 1
+        ? plugins[0].name
+        : `unplugin-host:${plugins.map(p => p.name).join(':')}`,
+
       async setup(build) {
         const context = createBuildContext(build)
 
-        if (plugin.buildStart) {
-          await plugin.buildStart.call(context)
+        for (const plugin of plugins) {
+          if (plugin.buildStart) {
+            await plugin.buildStart.call(context)
+          }
         }
 
-        if (plugin.resolveId) {
-          const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId)
+        const resolveIdHooks = plugins
+          .filter(plugin => plugin.resolveId)
+          .map(plugin => normalizeObjectHook('resolveId', plugin.resolveId!))
 
+        if (resolveIdHooks.length) {
           build.onResolve({ filter: /.*/ }, async (args) => {
-            if (!filter(args.path))
-              return
+            for (const { handler, filter } of resolveIdHooks) {
+              if (!filter(args.path))
+                continue
 
-            const { mixedContext } = createPluginContext(context)
-            const isEntry = args.kind === 'entry-point-run' || args.kind === 'entry-point-build'
+              const { mixedContext } = createPluginContext(context)
+              const isEntry = args.kind === 'entry-point-run' || args.kind === 'entry-point-build'
 
-            const result = await handler.call(
-              mixedContext,
-              args.path,
-              args.importer,
-              { isEntry },
-            )
+              const result = await handler.call(
+                mixedContext,
+                args.path,
+                args.importer,
+                { isEntry },
+              )
 
-            if (typeof result === 'string') {
-              return { path: result }
-            }
-            else if (typeof result === 'object' && result !== null) {
-              return {
-                path: result.id,
-                external: result.external,
+              if (typeof result === 'string') {
+                return { path: result }
+              }
+              else if (typeof result === 'object' && result !== null) {
+                return {
+                  path: result.id,
+                  external: result.external,
+                }
               }
             }
           })
         }
 
-        if (plugin.load) {
-          const { handler, filter } = normalizeObjectHook('load', plugin.load)
+        const loadHooks = plugins
+          .filter(plugin => plugin.load)
+          .map(plugin => ({
+            plugin,
+            ...normalizeObjectHook('load', plugin.load!),
+          }))
 
+        if (loadHooks.length) {
           build.onLoad({ filter: /.*/ }, async (args) => {
             const id = args.path
 
-            if (plugin.loadInclude && !plugin.loadInclude(id))
-              return
-            if (!filter(id))
-              return
+            for (const { plugin, handler, filter } of loadHooks) {
+              if (plugin.loadInclude && !plugin.loadInclude(id))
+                continue
+              if (!filter(id))
+                continue
 
-            const { mixedContext } = createPluginContext(context)
-            const result = await handler.call(mixedContext, id)
+              const { mixedContext } = createPluginContext(context)
+              const result = await handler.call(mixedContext, id)
 
-            if (typeof result === 'string') {
-              return {
-                contents: result,
-                loader: args.loader,
+              if (typeof result === 'string') {
+                return {
+                  contents: result,
+                  loader: args.loader,
+                }
               }
-            }
-            else if (typeof result === 'object' && result !== null) {
-              return {
-                contents: result.code,
-                loader: args.loader,
+              else if (typeof result === 'object' && result !== null) {
+                return {
+                  contents: result.code,
+                  loader: args.loader,
+                }
               }
             }
           })
         }
 
-        if (plugin.transform) {
-          const { handler, filter } = normalizeObjectHook('transform', plugin.transform)
+        const transformHooks = plugins
+          .filter(plugin => plugin.transform || plugin.transformInclude)
+          .map(plugin => ({
+            plugin,
+            ...normalizeObjectHook('transform', plugin.transform!),
+          }))
 
+        if (transformHooks.length) {
           build.onLoad({ filter: /.*/ }, async (args) => {
             const id = args.path
-            const code = await Bun.file(id).text()
+            let code = await Bun.file(id).text()
+            let transformedCode: string | undefined
 
-            if (plugin.transformInclude && !plugin.transformInclude(id))
-              return
-            if (!filter(id, code))
-              return
+            for (const { plugin, handler, filter } of transformHooks) {
+              if (plugin.transformInclude && !plugin.transformInclude(id))
+                continue
+              if (!filter(id, code))
+                continue
 
-            const { mixedContext } = createPluginContext(context)
-            const result = await handler.call(mixedContext, code, id)
+              const { mixedContext } = createPluginContext(context)
+              const result = await handler.call(mixedContext, code, id)
 
-            if (typeof result === 'string') {
-              return {
-                contents: result,
-                loader: args.loader,
+              if (typeof result === 'string') {
+                code = result
+                transformedCode = result
+              }
+              else if (typeof result === 'object' && result !== null) {
+                code = result.code
+                transformedCode = result.code
               }
             }
-            else if (typeof result === 'object' && result !== null) {
+
+            if (transformedCode !== undefined) {
               return {
-                contents: result.code,
+                contents: transformedCode,
                 loader: args.loader,
               }
             }
@@ -120,6 +141,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
 
         // Note: Bun doesn't support buildEnd/writeBundle hooks yet
         // Bun's plugin API doesn't have onEnd hook like esbuild
+        // Track support: https://github.com/oven-sh/bun/issues/22061
       },
     }
   }
