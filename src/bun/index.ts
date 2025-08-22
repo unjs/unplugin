@@ -118,11 +118,8 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           })
         }
 
-        if (plugin.buildEnd) {
-          process.on('beforeExit', async () => {
-            await plugin.buildEnd!.call(context)
-          })
-        }
+        // Note: Bun doesn't support buildEnd/writeBundle hooks yet
+        // Bun's plugin API doesn't have onEnd hook like esbuild
       },
     }
   }
