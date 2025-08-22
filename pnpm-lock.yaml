@@ -162,9 +162,6 @@ importers:
       acorn:
         specifier: catalog:prod
         version: 8.15.0
-      bun-types-no-globals:
-        specifier: 'catalog:'
-        version: https://codeload.github.com/alii/bun-types-no-globals/tar.gz/f80c453b9a9673bc7d0293217ddb7d02202e671e
       picomatch:
         specifier: catalog:prod
         version: 4.0.3
@@ -202,6 +199,9 @@ importers:
       bumpp:
         specifier: 'catalog:'
         version: 10.3.1
+      bun-types-no-globals:
+        specifier: 'catalog:'
+        version: https://codeload.github.com/alii/bun-types-no-globals/tar.gz/f80c453b9a9673bc7d0293217ddb7d02202e671e
       esbuild:
         specifier: ^0.25.12
         version: 0.25.12
@@ -5329,14 +5329,14 @@ snapshots:
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/parser': 7.27.7
+      '@babel/parser': 7.28.5
       '@babel/types': 7.28.5
 
   '@babel/traverse@7.27.7':
     dependencies:
       '@babel/code-frame': 7.27.1
       '@babel/generator': 7.28.5
-      '@babel/parser': 7.27.7
+      '@babel/parser': 7.28.5
       '@babel/template': 7.27.2
       '@babel/types': 7.28.5
       debug: 4.4.3
