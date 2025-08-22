@@ -5,6 +5,6 @@ const plugin = unplugin.bun()
 
 await Bun.build({
   entrypoints: ['./src/main.js'],
-  outdir: './dist',
+  outdir: './dist/bun',
   plugins: [plugin],
 })
