@@ -68,9 +68,18 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             ...normalizeObjectHook('load', plugin.load!),
           }))
 
-        if (loadHooks.length) {
+        const transformHooks = plugins
+          .filter(plugin => plugin.transform || plugin.transformInclude)
+          .map(plugin => ({
+            plugin,
+            ...normalizeObjectHook('transform', plugin.transform!),
+          }))
+
+        if (loadHooks.length || transformHooks.length) {
           build.onLoad({ filter: /.*/ }, async (args) => {
             const id = args.path
+            let code: string | undefined
+            let hasLoadResult = false
 
             for (const { plugin, handler, filter } of loadHooks) {
               if (plugin.loadInclude && !plugin.loadInclude(id))
@@ -82,56 +91,45 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               const result = await handler.call(mixedContext, id)
 
               if (typeof result === 'string') {
-                return {
-                  contents: result,
-                  loader: args.loader,
-                }
-              }
-              else if (typeof result === 'object' && result !== null) {
-                return {
-                  contents: result.code,
-                  loader: args.loader,
-                }
-              }
-            }
-          })
-        }
-
-        const transformHooks = plugins
-          .filter(plugin => plugin.transform || plugin.transformInclude)
-          .map(plugin => ({
-            plugin,
-            ...normalizeObjectHook('transform', plugin.transform!),
-          }))
-
-        if (transformHooks.length) {
-          build.onLoad({ filter: /.*/ }, async (args) => {
-            const id = args.path
-            let code = await Bun.file(id).text()
-            let transformedCode: string | undefined
-
-            for (const { plugin, handler, filter } of transformHooks) {
-              if (plugin.transformInclude && !plugin.transformInclude(id))
-                continue
-              if (!filter(id, code))
-                continue
-
-              const { mixedContext } = createPluginContext(context)
-              const result = await handler.call(mixedContext, code, id)
-
-              if (typeof result === 'string') {
                 code = result
-                transformedCode = result
+                hasLoadResult = true
+                break
               }
               else if (typeof result === 'object' && result !== null) {
                 code = result.code
-                transformedCode = result.code
+                hasLoadResult = true
+                break
               }
             }
 
-            if (transformedCode !== undefined) {
+            if (!hasLoadResult && transformHooks.length > 0) {
+              code = await Bun.file(id).text()
+            }
+
+            if (code !== undefined) {
+              for (const { plugin, handler, filter } of transformHooks) {
+                if (plugin.transformInclude && !plugin.transformInclude(id))
+                  continue
+                if (!filter(id, code))
+                  continue
+
+                const { mixedContext } = createPluginContext(context)
+                const result = await handler.call(mixedContext, code, id)
+
+                if (typeof result === 'string') {
+                  code = result
+                  hasLoadResult = true
+                }
+                else if (typeof result === 'object' && result !== null) {
+                  code = result.code
+                  hasLoadResult = true
+                }
+              }
+            }
+
+            if (hasLoadResult && code !== undefined) {
               return {
-                contents: transformedCode,
+                contents: code,
                 loader: args.loader,
               }
             }

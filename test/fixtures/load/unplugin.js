@@ -1,6 +1,6 @@
 const fs = require('node:fs')
 const MagicString = require('magic-string')
-const { createUnplugin } = require('unplugin')
+const { createUnplugin } = require('../../../dist/index.cjs')
 
 const targetFileReg = /(?:\/|\\)msg\.js$/
 module.exports = createUnplugin((options) => {

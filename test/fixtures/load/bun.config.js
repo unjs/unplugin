@@ -1,10 +1,8 @@
-import * as Bun from 'bun'
-import unplugin from './unplugin.js'
-
-const plugin = unplugin.bun()
+const Bun = require('bun')
+const { bun } = require('./unplugin')
 
 await Bun.build({
   entrypoints: ['./src/main.js'],
   outdir: './dist/bun',
-  plugins: [plugin],
+  plugins: [bun({ msg: 'Bun' })],
 })
