@@ -1,4 +1,4 @@
-import type { BunPlugin } from 'bun'
+import type { BunPlugin, Loader } from 'bun'
 import type { TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
 import { isAbsolute } from 'node:path'
 import { normalizeObjectHook } from '../utils/filter'
@@ -34,6 +34,20 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           .map(plugin => ({
             plugin,
             ...normalizeObjectHook('resolveId', plugin.resolveId!),
+          }))
+
+        const loadHooks = plugins
+          .filter(plugin => plugin.load)
+          .map(plugin => ({
+            plugin,
+            ...normalizeObjectHook('load', plugin.load!),
+          }))
+
+        const transformHooks = plugins
+          .filter(plugin => plugin.transform || plugin.transformInclude)
+          .map(plugin => ({
+            plugin,
+            ...normalizeObjectHook('transform', plugin.transform!),
           }))
 
         const virtualModulePlugins = new Set<string>()
@@ -85,144 +99,86 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           })
         }
 
-        const loadHooks = plugins
-          .filter(plugin => plugin.load)
-          .map(plugin => ({
-            plugin,
-            ...normalizeObjectHook('load', plugin.load!),
-          }))
+        async function processLoadTransform(
+          id: string,
+          namespace: string,
+          loader?: Loader,
+        ): Promise<{ contents: string, loader: Loader } | undefined> {
+          let code: string | undefined
+          let hasResult = false
 
-        const transformHooks = plugins
-          .filter(plugin => plugin.transform || plugin.transformInclude)
-          .map(plugin => ({
-            plugin,
-            ...normalizeObjectHook('transform', plugin.transform!),
-          }))
+          const namespaceLoadHooks = namespace === 'file'
+            ? loadHooks
+            : loadHooks.filter(h => h.plugin.name === namespace)
 
-        if (loadHooks.length || transformHooks.length) {
-          build.onLoad({ filter: /.*/, namespace: 'file' }, async (args) => {
-            const id = args.path
-            let code: string | undefined
-            let hasLoadResult = false
+          for (const { plugin, handler, filter } of namespaceLoadHooks) {
+            if (plugin.loadInclude && !plugin.loadInclude(id))
+              continue
+            if (!filter(id))
+              continue
 
-            for (const { plugin, handler, filter } of loadHooks) {
-              if (plugin.loadInclude && !plugin.loadInclude(id))
+            const { mixedContext } = createPluginContext(context)
+            const result = await handler.call(mixedContext, id)
+
+            if (typeof result === 'string') {
+              code = result
+              hasResult = true
+              break
+            }
+            else if (typeof result === 'object' && result !== null) {
+              code = result.code
+              hasResult = true
+              break
+            }
+          }
+
+          if (!hasResult && namespace === 'file' && transformHooks.length > 0) {
+            code = await Bun.file(id).text()
+          }
+
+          if (code !== undefined) {
+            const namespaceTransformHooks = namespace === 'file'
+              ? transformHooks
+              : transformHooks.filter(h => h.plugin.name === namespace)
+
+            for (const { plugin, handler, filter } of namespaceTransformHooks) {
+              if (plugin.transformInclude && !plugin.transformInclude(id))
                 continue
-              if (!filter(id))
+              if (!filter(id, code))
                 continue
 
               const { mixedContext } = createPluginContext(context)
-              const result = await handler.call(mixedContext, id)
+              const result: TransformResult = await handler.call(mixedContext, code, id)
 
               if (typeof result === 'string') {
                 code = result
-                hasLoadResult = true
-                break
+                hasResult = true
               }
               else if (typeof result === 'object' && result !== null) {
                 code = result.code
-                hasLoadResult = true
-                break
+                hasResult = true
               }
             }
+          }
 
-            if (!hasLoadResult && transformHooks.length > 0) {
-              code = await Bun.file(id).text()
+          if (hasResult && code !== undefined) {
+            return {
+              contents: code,
+              loader: loader || 'js' as Loader,
             }
+          }
+        }
 
-            if (code !== undefined) {
-              for (const { plugin, handler, filter } of transformHooks) {
-                if (plugin.transformInclude && !plugin.transformInclude(id))
-                  continue
-                if (!filter(id, code))
-                  continue
-
-                const { mixedContext } = createPluginContext(context)
-                const result: TransformResult = await handler.call(mixedContext, code, id)
-
-                if (typeof result === 'string') {
-                  code = result
-                  hasLoadResult = true
-                }
-                else if (typeof result === 'object' && result !== null) {
-                  code = result.code
-                  hasLoadResult = true
-                }
-              }
-            }
-
-            if (hasLoadResult && code !== undefined) {
-              return {
-                contents: code,
-                loader: args.loader,
-              }
-            }
+        if (loadHooks.length || transformHooks.length) {
+          build.onLoad({ filter: /.*/, namespace: 'file' }, async (args) => {
+            return processLoadTransform(args.path, 'file', args.loader)
           })
         }
 
-        for (const plugin of plugins) {
-          if (!virtualModulePlugins.has(plugin.name))
-            continue
-
-          const pluginLoadHooks = loadHooks.filter(h => h.plugin === plugin)
-          const pluginTransformHooks = transformHooks.filter(h => h.plugin === plugin)
-
-          if (pluginLoadHooks.length || pluginTransformHooks.length) {
-            build.onLoad({ filter: /.*/, namespace: plugin.name }, async (args) => {
-              const id = args.path
-              let code: string | undefined
-              let hasLoadResult = false
-
-              for (const { handler, filter } of pluginLoadHooks) {
-                if (plugin.loadInclude && !plugin.loadInclude(id))
-                  continue
-                if (!filter(id))
-                  continue
-
-                const { mixedContext } = createPluginContext(context)
-                const result = await handler.call(mixedContext, id)
-
-                if (typeof result === 'string') {
-                  code = result
-                  hasLoadResult = true
-                  break
-                }
-                else if (typeof result === 'object' && result !== null) {
-                  code = result.code
-                  hasLoadResult = true
-                  break
-                }
-              }
-
-              if (code !== undefined) {
-                for (const { handler, filter } of pluginTransformHooks) {
-                  if (plugin.transformInclude && !plugin.transformInclude(id))
-                    continue
-                  if (!filter(id, code))
-                    continue
-
-                  const { mixedContext } = createPluginContext(context)
-                  const result: TransformResult = await handler.call(mixedContext, code, id)
-
-                  if (typeof result === 'string') {
-                    code = result
-                    hasLoadResult = true
-                  }
-                  else if (typeof result === 'object' && result !== null) {
-                    code = result.code
-                    hasLoadResult = true
-                  }
-                }
-              }
-
-              if (hasLoadResult && code !== undefined) {
-                return {
-                  contents: code,
-                  loader: args.loader,
-                }
-              }
-            })
-          }
+        for (const pluginName of virtualModulePlugins) {
+          build.onLoad({ filter: /.*/, namespace: pluginName }, async (args) => {
+            return processLoadTransform(args.path, pluginName, args.loader)
+          })
         }
 
         // Note: Bun doesn't support buildEnd/writeBundle hooks yet
