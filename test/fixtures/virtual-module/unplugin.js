@@ -1,4 +1,4 @@
-const { createUnplugin } = require('../../../dist/index.cjs')
+const { createUnplugin } = require('unplugin')
 
 module.exports = createUnplugin(() => {
   return {

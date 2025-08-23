@@ -1,5 +1,5 @@
 const MagicString = require('magic-string')
-const { createUnplugin } = require('../../../dist/index.cjs')
+const { createUnplugin } = require('unplugin')
 
 module.exports = createUnplugin((options, meta) => {
   return [
