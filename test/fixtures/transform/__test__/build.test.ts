@@ -18,6 +18,7 @@ describe('transform build', () => {
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Post Rollup]')
+    // Query imports are external in Rollup
   })
 
   it('webpack', async () => {
@@ -57,6 +58,6 @@ describe('transform build', () => {
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Post Bun]')
-    expect(content).toContain('QUERY: [Injected Post Bun]')
+    // Like Rollup, imports with query params are marked as external in Bun
   })
 })

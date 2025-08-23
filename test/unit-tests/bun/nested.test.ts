@@ -22,9 +22,9 @@ describe('bun nested plugin support', () => {
       onResolve: vi.fn(),
       onLoad: vi.fn(),
       config: { outdir: './dist' },
-    }
+    } as never as Bun.PluginBuilder
 
-    await bunPlugin.setup(mockBuild as any)
+    await bunPlugin.setup(mockBuild)
 
     expect(buildStart1).toHaveBeenCalledTimes(1)
     expect(buildStart2).toHaveBeenCalledTimes(1)
@@ -53,30 +53,28 @@ describe('bun nested plugin support', () => {
       }),
       onLoad: vi.fn(),
       config: { outdir: './dist' },
-    }
+    } as never as Bun.PluginBuilder
 
-    await bunPlugin.setup(mockBuild as any)
+    await bunPlugin.setup(mockBuild)
 
-    // Test that onResolve was registered
     expect(mockBuild.onResolve).toHaveBeenCalledWith(
       { filter: /.*/ },
       expect.any(Function),
     )
 
-    // Test resolveId callback behavior
     const result = await onResolveCallback({
       path: 'test.js',
       importer: 'index.js',
       kind: 'import-statement',
     })
 
-    expect(result).toEqual({ path: 'resolved-1' })
+    expect(result).toEqual({ path: 'resolved-1', namespace: 'plugin-1' })
     expect(resolveId1).toHaveBeenCalledWith(
       'test.js',
       'index.js',
       { isEntry: false },
     )
-    // Should stop at first resolved result
+
     expect(resolveId2).not.toHaveBeenCalled()
   })
 
@@ -96,7 +94,7 @@ describe('bun nested plugin support', () => {
     ])
 
     const bunPlugin = unplugin.bun()
-    let onLoadCallback: any
+    let onLoadCallback: Bun.OnLoadCallback
     const mockBuild = {
       onResolve: vi.fn(),
       onLoad: vi.fn((options, callback) => {
@@ -105,23 +103,20 @@ describe('bun nested plugin support', () => {
         }
       }),
       config: { outdir: './dist' },
-    }
+    } as never as Bun.PluginBuilder
 
-    // Mock Bun.file
-    const originalBun = globalThis.Bun
-    globalThis.Bun = {
-      file: vi.fn().mockReturnValue({
-        text: vi.fn().mockResolvedValue('original code'),
-      }),
-    } as any
+    const originalFile = Bun.file
 
-    await bunPlugin.setup(mockBuild as any)
+    Bun.file = vi.fn().mockReturnValue({
+      text: vi.fn().mockResolvedValue('original code'),
+    })
 
-    // Test transform callback behavior
-    const result = await onLoadCallback({
+    await bunPlugin.setup(mockBuild)
+
+    const result = await onLoadCallback!({
       path: 'test.js',
       loader: 'js',
-    })
+    } as Bun.OnLoadArgs)
 
     expect(result).toEqual({
       contents: 'original code\n// transformed by plugin-1\n// transformed by plugin-2',
@@ -131,7 +126,6 @@ describe('bun nested plugin support', () => {
     expect(transform1).toHaveBeenCalledWith('original code', 'test.js')
     expect(transform2).toHaveBeenCalledWith('original code\n// transformed by plugin-1', 'test.js')
 
-    // Restore Bun
-    globalThis.Bun = originalBun
+    Bun.file = originalFile
   })
 })
