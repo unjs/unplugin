@@ -6,8 +6,8 @@ module.exports = createUnplugin((options, meta) => {
     {
       name: 'transform-fixture-pre',
       resolveId(id) {
-        // Rollup doesn't know how to import module with query string so we ignore the module
-        if (id.includes('?query-param=query-value') && meta.framework === 'rollup') {
+        // Rollup and Bun don't know how to import module with query string so we ignore the module
+        if (id.includes('?query-param=query-value') && (meta.framework === 'rollup' || meta.framework === 'bun')) {
           return {
             id,
             external: true,
