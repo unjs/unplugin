@@ -59,6 +59,10 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
 
         if (resolveIdHooks.length) {
           build.onResolve({ filter: /.*/ }, async (args) => {
+            if (build.config?.external?.includes(args.path)) {
+              return
+            }
+
             for (const { plugin, handler, filter } of resolveIdHooks) {
               if (!filter(args.path))
                 continue
@@ -69,7 +73,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               const result = await handler.call(
                 mixedContext,
                 args.path,
-                args.importer,
+                isEntry ? undefined : args.importer,
                 { isEntry },
               )
 
@@ -181,9 +185,19 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           })
         }
 
-        // Note: Bun doesn't support buildEnd/writeBundle hooks yet
-        // Bun's plugin API doesn't have onEnd hook like esbuild
-        // Track support: https://github.com/oven-sh/bun/issues/22061
+        // Handle buildEnd and writeBundle hooks
+        if (plugins.some(plugin => plugin.buildEnd || plugin.writeBundle)) {
+          build.onEnd(async () => {
+            for (const plugin of plugins) {
+              if (plugin.buildEnd) {
+                await plugin.buildEnd.call(context)
+              }
+              if (plugin.writeBundle) {
+                await plugin.writeBundle()
+              }
+            }
+          })
+        }
       },
     }
   }
