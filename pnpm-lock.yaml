@@ -39,6 +39,9 @@ catalogs:
     bumpp:
       specifier: ^10.2.3
       version: 10.2.3
+    bun-types-no-globals:
+      specifier: ^1.2.20
+      version: 1.2.20
     esbuild-plugin-copy:
       specifier: ^2.1.1
       version: 2.1.1
@@ -212,6 +215,9 @@ importers:
       bumpp:
         specifier: 'catalog:'
         version: 10.2.3
+      bun-types-no-globals:
+        specifier: 'catalog:'
+        version: 1.2.20
       esbuild:
         specifier: ^0.25.9
         version: 0.25.9
@@ -2024,6 +2030,9 @@ packages:
     resolution: {integrity: sha512-nsFBZACxuBVu6yzDSaZZaWpX5hTQ+++9WtYkmO+0Bd3cpSq0Mzvqw5V83n+fOyRj3dYuZRFCQf5Z9NNfZj+Rnw==}
     engines: {node: '>=18'}
     hasBin: true
+
+  bun-types-no-globals@1.2.20:
+    resolution: {integrity: sha512-HOSVRqH2udAuNvigNZUmA18v8IliSVFb6Ea45zBk4MpmvqaSerDr6Dy0o+3b6oxi+xVXEt+Y8Peo1U/wWtnr9g==}
 
   bundle-name@3.0.0:
     resolution: {integrity: sha512-PKA4BeSvBpQKQ8iPOGCSiell+N8P+Tf1DlwqmYhpe2gAhKPHn8EYOxVT+ShuGmhg8lN8XiSlS80yiExKXrURlw==}
@@ -7087,6 +7096,8 @@ snapshots:
       yaml: 2.8.1
     transitivePeerDependencies:
       - magicast
+
+  bun-types-no-globals@1.2.20: {}
 
   bundle-name@3.0.0:
     dependencies:
