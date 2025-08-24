@@ -185,7 +185,6 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           })
         }
 
-        // Handle buildEnd and writeBundle hooks
         if (plugins.some(plugin => plugin.buildEnd || plugin.writeBundle)) {
           build.onEnd(async () => {
             for (const plugin of plugins) {
