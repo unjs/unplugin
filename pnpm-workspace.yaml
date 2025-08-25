@@ -15,17 +15,17 @@ catalog:
   bumpp: ^10.2.3
   esbuild: ^0.25.9
   esbuild-plugin-copy: ^2.1.1
-  eslint: ^9.33.0
+  eslint: ^9.34.0
   eslint-plugin-format: ^1.0.1
   fast-glob: ^3.3.3
   fs-extra: ^11.3.1
   jiti: ^2.5.1
   lint-staged: ^16.1.5
-  magic-string: ^0.30.17
-  rolldown: ^1.0.0-beta.33
-  rollup: ^4.46.4
+  magic-string: ^0.30.18
+  rolldown: ^1.0.0-beta.34
+  rollup: ^4.48.1
   simple-git-hooks: ^2.13.1
-  tsdown: ^0.14.1
+  tsdown: ^0.14.2
   typescript: ~5.9.2
   unloader: ^0.5.0
   unplugin-unused: ^0.5.2
@@ -44,13 +44,13 @@ catalogs:
     markdown-it: ^14.1.0
     markdown-it-github-alerts: ^1.0.0
     ofetch: ^1.4.1
-    tsx: ^4.20.4
+    tsx: ^4.20.5
     unocss: ^66.4.2
     unplugin-icons: ^22.2.0
     unplugin-vue-components: ^29.0.0
-    vitepress: 2.0.0-alpha.10
+    vitepress: 2.0.0-alpha.12
     vitepress-plugin-group-icons: ^1.6.3
-    vue: ^3.5.18
+    vue: ^3.5.20
     vue-tsc: ^3.0.6
 
   prod:
