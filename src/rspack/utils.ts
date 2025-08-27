@@ -20,11 +20,9 @@ export class FakeVirtualModulesPlugin {
   static counters: Map<string, number> = new Map<string, number>()
 
   static {
-    ['SIGINT', 'SIGTERM', 'SIGQUIT', 'exit'].forEach((event) => {
-      process.once(event, () => {
-        this.counters.forEach((_, dir) => {
-          fs.rmSync(dir, { recursive: true, force: true })
-        })
+    process.once('exit', () => {
+      this.counters.forEach((_, dir) => {
+        fs.rmSync(dir, { recursive: true, force: true })
       })
     })
   }
