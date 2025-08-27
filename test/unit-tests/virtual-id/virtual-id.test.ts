@@ -167,7 +167,6 @@ describe('virtual ids', () => {
     await build.bun({
       entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
       plugins: [plugin()],
-      outdir: path.resolve(__dirname, 'test-out/bun'),
     })
 
     checkResolveIdHook(mockResolveIdHook)
