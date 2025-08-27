@@ -54,9 +54,16 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
           // resolveId hook
           if (plugin.resolveId) {
-            const vfs = new FakeVirtualModulesPlugin(plugin)
+            const createPlugin = (plugin: ResolvedUnpluginOptions) => {
+              // rspack >= 1.5.0: use native virtual modules plugin
+              if (compiler.rspack.experiments.VirtualModulesPlugin)
+                return new compiler.rspack.experiments.VirtualModulesPlugin()
+              // rspack < 1.5.0: use fake virtual modules plugin
+              return new FakeVirtualModulesPlugin(plugin)
+            }
+            const vfs = createPlugin(plugin)
             vfs.apply(compiler)
-            const vfsModules = new Map<string, Promise<string>>()
+            const vfsModules = new Map<string, Promise<unknown>>()
             plugin.__vfsModules = vfsModules
             plugin.__vfs = vfs as any
 
@@ -102,11 +109,24 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
                 if (isExternal)
                   externalModules.add(resolved)
 
+                let isVirtual = true
+                try {
+                  // use the compiler's inputFileSystem if available, otherwise use the node:fs module
+                  (compiler.inputFileSystem?.statSync ?? fs.statSync)(resolved)
+                  isVirtual = false
+                }
+                catch {
+                  // already resolved virtual modules are not virtual themselves
+                  isVirtual = !isVirtualModuleId(resolved, plugin)
+                }
+
                 // If the resolved module does not exist,
                 // we treat it as a virtual module
-                if (!fs.existsSync(resolved)) {
+                if (isVirtual) {
+                  const encodedVirtualPath = encodeVirtualModuleId(resolved, plugin)
+
                   if (!vfsModules.has(resolved)) {
-                    const fsPromise = vfs.writeModule(resolved)
+                    const fsPromise = Promise.resolve(vfs.writeModule(encodedVirtualPath, ''))
                     vfsModules.set(resolved, fsPromise)
                     await fsPromise
                   }
@@ -115,7 +135,8 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
                     // before we use it.
                     await vfsModules.get(resolved)
                   }
-                  resolved = encodeVirtualModuleId(resolved, plugin)
+
+                  resolved = encodedVirtualPath
                 }
 
                 resolveData.request = resolved
