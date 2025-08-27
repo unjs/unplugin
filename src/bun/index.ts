@@ -3,7 +3,7 @@ import type { TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginIns
 import { isAbsolute } from 'node:path'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { createBuildContext, createPluginContext } from './utils'
+import { createBuildContext, createPluginContext, guessLoader } from './utils'
 
 export function getBunPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
@@ -16,9 +16,8 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
     const plugins = toArray(factory(userOptions!, meta))
 
     return {
-      name: plugins.length === 1
-        ? plugins[0].name
-        : `unplugin-host:${plugins.map(p => p.name).join(':')}`,
+      name: (plugins.length === 1 ? plugins[0].name : meta.bunHostName)
+        ?? `unplugin-host:${plugins.map(p => p.name).join(':')}`,
 
       async setup(build) {
         const context = createBuildContext(build)
@@ -168,7 +167,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           if (hasResult && code !== undefined) {
             return {
               contents: code,
-              loader: loader || 'js' as Loader,
+              loader: loader ?? guessLoader(id),
             }
           }
         }

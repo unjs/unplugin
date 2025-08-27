@@ -178,7 +178,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
 }
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
-  framework: 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader' | 'bun'
+  framework: 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader'
 } | {
   framework: 'webpack'
   webpack: { compiler: WebpackCompiler }
@@ -186,6 +186,10 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   framework: 'esbuild'
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string | undefined
+} | {
+  framework: 'bun'
+  /** Set the host plugin name of bun when returning multiple plugins */
+  bunHostName?: string | undefined
 } | {
   framework: 'rspack'
   rspack: { compiler: RspackCompiler }

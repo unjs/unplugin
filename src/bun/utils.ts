@@ -1,8 +1,30 @@
-import type { PluginBuilder } from 'bun'
-import type { UnpluginBuildContext, UnpluginContext } from '../types'
+import type { Loader, PluginBuilder } from 'bun'
+import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import fs from 'node:fs'
 import path from 'node:path'
 import * as acorn from 'acorn'
+
+const ExtToLoader: Record<string, Loader> = {
+  '.js': 'js',
+  '.mjs': 'js',
+  '.cjs': 'js',
+  '.jsx': 'jsx',
+  '.ts': 'ts',
+  '.cts': 'ts',
+  '.mts': 'ts',
+  '.tsx': 'tsx',
+  '.css': 'css',
+  '.less': 'css',
+  '.stylus': 'css',
+  '.scss': 'css',
+  '.sass': 'css',
+  '.json': 'json',
+  '.txt': 'text',
+}
+
+export function guessLoader(id: string): Loader {
+  return ExtToLoader[path.extname(id).toLowerCase()] || 'js'
+}
 
 export function createBuildContext(build: PluginBuilder): UnpluginBuildContext {
   const watchFiles: string[] = []
@@ -42,12 +64,12 @@ export function createBuildContext(build: PluginBuilder): UnpluginBuildContext {
 export function createPluginContext(
   buildContext: UnpluginBuildContext,
 ): {
-  errors: any[]
-  warnings: any[]
+  errors: Array<string | UnpluginMessage>
+  warnings: Array<string | UnpluginMessage>
   mixedContext: UnpluginBuildContext & UnpluginContext
 } {
-  const errors: any[] = []
-  const warnings: any[] = []
+  const errors: Array<string | UnpluginMessage> = []
+  const warnings: Array<string | UnpluginMessage> = []
 
   const mixedContext: UnpluginBuildContext & UnpluginContext = {
     ...buildContext,
