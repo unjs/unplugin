@@ -66,7 +66,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               if (!filter(args.path))
                 continue
 
-              const { mixedContext } = createPluginContext(context)
+              const { mixedContext, errors, warnings } = createPluginContext(context)
               const isEntry = args.kind === 'entry-point-run' || args.kind === 'entry-point-build'
 
               const result = await handler.call(
@@ -75,6 +75,14 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
                 isEntry ? undefined : args.importer,
                 { isEntry },
               )
+
+              for (const warning of warnings) {
+                console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
+              }
+              if (errors.length > 0) {
+                const errorMessage = errors.map(e => typeof e === 'string' ? e : e.message).join('\n')
+                throw new Error(`[unplugin] ${plugin.name}: ${errorMessage}`)
+              }
 
               if (typeof result === 'string') {
                 if (!isAbsolute(result)) {
@@ -120,8 +128,16 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             if (!filter(id))
               continue
 
-            const { mixedContext } = createPluginContext(context)
+            const { mixedContext, errors, warnings } = createPluginContext(context)
             const result = await handler.call(mixedContext, id)
+
+            for (const warning of warnings) {
+              console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
+            }
+            if (errors.length > 0) {
+              const errorMessage = errors.map(e => typeof e === 'string' ? e : e.message).join('\n')
+              throw new Error(`[unplugin] ${plugin.name}: ${errorMessage}`)
+            }
 
             if (typeof result === 'string') {
               code = result
@@ -150,8 +166,16 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               if (!filter(id, code))
                 continue
 
-              const { mixedContext } = createPluginContext(context)
+              const { mixedContext, errors, warnings } = createPluginContext(context)
               const result: TransformResult = await handler.call(mixedContext, code, id)
+
+              for (const warning of warnings) {
+                console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
+              }
+              if (errors.length > 0) {
+                const errorMessage = errors.map(e => typeof e === 'string' ? e : e.message).join('\n')
+                throw new Error(`[unplugin] ${plugin.name}: ${errorMessage}`)
+              }
 
               if (typeof result === 'string') {
                 code = result
