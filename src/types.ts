@@ -1,5 +1,7 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
+import type { Options as AcornOptions } from 'acorn'
+import type { BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
@@ -9,6 +11,7 @@ import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, Lo
 import type VirtualModulesPlugin from 'webpack-virtual-modules'
 
 export type {
+  BunPlugin,
   EsbuildPlugin,
   RolldownPlugin,
   RollupPlugin,
@@ -52,12 +55,13 @@ export type NativeBuildContext
     | { framework: 'esbuild', build: PluginBuild }
     | { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext | undefined }
     | { framework: 'farm', context: FarmCompilationContext }
+    | { framework: 'bun', build: BunPluginBuilder }
 
 export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
-  parse: (input: string, options?: any) => AstNode
+  parse: (input: string, options?: Partial<AcornOptions>) => AstNode
   getNativeBuildContext?: (() => NativeBuildContext) | undefined
 }
 
@@ -142,6 +146,7 @@ export interface UnpluginOptions {
     config?: ((options: BuildOptions) => void) | undefined
   } | undefined
   farm?: Partial<FarmPlugin> | undefined
+  bun?: Partial<BunPlugin> | undefined
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
@@ -168,6 +173,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   unloader: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<UnloaderPlugin> : UnloaderPlugin>
   farm: UnpluginFactoryOutput<UserOptions, FarmPlugin>
+  bun: UnpluginFactoryOutput<UserOptions, BunPlugin>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
@@ -180,6 +186,10 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
   framework: 'esbuild'
   /** Set the host plugin name of esbuild when returning multiple plugins */
   esbuildHostName?: string | undefined
+} | {
+  framework: 'bun'
+  /** Set the host plugin name of bun when returning multiple plugins */
+  bunHostName?: string | undefined
 } | {
   framework: 'rspack'
   rspack: { compiler: RspackCompiler }
