@@ -147,7 +147,7 @@ export interface UnpluginOptions {
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
   // injected internal objects
   __vfs?: VirtualModulesPlugin | undefined
-  __vfsModules?: Map<string, Promise<string>> | Set<string> | undefined
+  __vfsModules?: Map<string, Promise<unknown>> | Set<string> | undefined
   __virtualModulePrefix: string
 }
 

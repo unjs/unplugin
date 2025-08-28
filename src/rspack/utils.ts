@@ -51,9 +51,7 @@ export class FakeVirtualModulesPlugin {
     })
   }
 
-  async writeModule(file: string): Promise<string> {
-    const path = encodeVirtualModuleId(file, this.plugin)
-    await fs.promises.writeFile(path, '')
-    return path
+  async writeModule(file: string): Promise<void> {
+    return fs.promises.writeFile(file, '')
   }
 }
