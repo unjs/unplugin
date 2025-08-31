@@ -27,7 +27,7 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
 
     replaceHookHandler('resolveId', resolveIdHook, function (...args) {
       const [id] = args
-      const supportFilter = supportNativeFilter(this)
+      const supportFilter = supportNativeFilter(this, key)
       if (!supportFilter && !filter(id))
         return
 
@@ -47,7 +47,7 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
       if (plugin.loadInclude && !plugin.loadInclude(id))
         return
 
-      const supportFilter = supportNativeFilter(this)
+      const supportFilter = supportNativeFilter(this, key)
       if (!supportFilter && !filter(id))
         return
 
@@ -67,7 +67,7 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
       if (plugin.transformInclude && !plugin.transformInclude(id))
         return
 
-      const supportFilter = supportNativeFilter(this)
+      const supportFilter = supportNativeFilter(this, key)
       if (!supportFilter && !filter(id, code))
         return
 
@@ -94,7 +94,16 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
   }
 }
 
-function supportNativeFilter(context: any) {
+function supportNativeFilter(context: any, framework: 'rollup' | 'rolldown' | 'vite' | 'unloader') {
+  if (framework === 'unloader')
+    return false
+
+  if (framework === 'vite')
+    return !!context?.meta?.viteVersion // since Vite v7
+
+  if (framework === 'rolldown')
+    return true // always supported
+
   const rollupVersion: string | undefined = context?.meta?.rollupVersion
   if (!rollupVersion)
     return false
