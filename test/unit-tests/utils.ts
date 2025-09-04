@@ -11,6 +11,7 @@ export const viteBuild: typeof vite.build = vite.build
 export const rollupBuild: typeof rollup.rollup = rollup.rollup
 export const rolldownBuild: typeof rolldown.build = rolldown.build
 export const esbuildBuild: typeof esbuild.build = esbuild.build
+export const bunBuild: typeof Bun.build = Bun.build
 export const webpackBuild: typeof webpack.webpack = webpack.webpack || (webpack as any).default || webpack
 export const rspackBuild: typeof rspack.rspack = rspack.rspack
 
@@ -23,6 +24,7 @@ export const build: {
   rolldown: typeof rolldownBuild
   vite: typeof viteBuild
   esbuild: typeof esbuildBuild
+  bun: typeof bunBuild
 } = {
   webpack: webpackBuild,
   rspack: rspackBuild,
@@ -39,4 +41,5 @@ export const build: {
     }))
   },
   esbuild: esbuildBuild,
+  bun: bunBuild,
 }

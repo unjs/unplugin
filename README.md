@@ -15,6 +15,7 @@ Currently supports:
 - [Rspack](https://www.rspack.dev/)
 - [Rolldown](https://rolldown.rs/)
 - [Farm](https://www.farmfe.org/)
+- [Bun](https://bun.com/)
 - And every framework built on top of them.
 
 ## Documentations

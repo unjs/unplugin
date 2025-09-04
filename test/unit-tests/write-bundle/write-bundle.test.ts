@@ -166,4 +166,20 @@ describe('writeBundle hook', () => {
 
     checkWriteBundleHook(mockResolveIdHook)
   })
+
+  it('bun', async () => {
+    expect.assertions(3)
+    const mockResolveIdHook = vi.fn(generateMockWriteBundleHook(path.resolve(__dirname, 'test-out/bun')))
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
+
+    await build.bun({
+      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      plugins: [plugin()],
+      outdir: path.resolve(__dirname, 'test-out/bun'),
+      naming: 'output.[ext]',
+      sourcemap: 'external',
+    })
+
+    checkWriteBundleHook(mockResolveIdHook)
+  })
 })
