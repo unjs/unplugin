@@ -12,10 +12,3 @@ declare global {
    */
   declare const __DEV__: boolean
 }
-
-declare module 'bun' {
-  interface PluginBuilder {
-    // This can be removed once Bun 1.2.22 is released
-    onEnd: (callback: (build: BuildOutput) => void | Promise<void>) => void
-  }
-}

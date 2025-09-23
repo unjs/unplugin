@@ -9,6 +9,14 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['bun'] {
   return (userOptions?: UserOptions): BunPlugin => {
+    if (typeof Bun === 'undefined') {
+      throw new ReferenceError('Bun is not supported in this environment')
+    }
+
+    if (Bun.semver.satisfies(Bun.version, '>=1.2.22')) {
+      throw new Error('Bun 1.2.22 or higher is required, please upgrade Bun')
+    }
+
     const meta: UnpluginContextMeta = {
       framework: 'bun',
     }
