@@ -11,9 +11,13 @@ export const viteBuild: typeof vite.build = vite.build
 export const rollupBuild: typeof rollup.rollup = rollup.rollup
 export const rolldownBuild: typeof rolldown.build = rolldown.build
 export const esbuildBuild: typeof esbuild.build = esbuild.build
-export const bunBuild: typeof Bun.build = Bun.build
 export const webpackBuild: typeof webpack.webpack = webpack.webpack || (webpack as any).default || webpack
 export const rspackBuild: typeof rspack.rspack = rspack.rspack
+export const bunBuild: typeof Bun.build = typeof Bun !== 'undefined'
+  ? Bun.build
+  : () => {
+      throw new ReferenceError('Bun.build does not exist in this environment. Please run your app with the Bun runtime.')
+    }
 
 export const webpackVersion: string = ((webpack as any).default || webpack).version
 
