@@ -1,6 +1,9 @@
 packages:
   - docs
 
+ignoreWorkspaceRootCheck: true
+shellEmulator: true
+
 catalog:
   '@antfu/eslint-config': ^5.2.1
   '@antfu/ni': ^25.0.0
@@ -52,9 +55,13 @@ catalogs:
     vitepress-plugin-group-icons: ^1.6.3
     vue: ^3.5.18
     vue-tsc: ^3.0.6
-
   prod:
     '@jridgewell/remapping': ^2.3.5
     acorn: ^8.15.0
     picomatch: ^4.0.3
     webpack-virtual-modules: ^0.6.2
+
+onlyBuiltDependencies:
+  - core-js
+  - esbuild
+  - simple-git-hooks
