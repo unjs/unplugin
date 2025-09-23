@@ -139,7 +139,7 @@ describe('resolveId hook', () => {
     checkResolveIdHook(mockResolveIdHook)
   })
 
-  it('bun', async () => {
+  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
     const mockResolveIdHook = createResolveIdHook()
     const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
 

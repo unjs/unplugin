@@ -167,7 +167,7 @@ describe('writeBundle hook', () => {
     checkWriteBundleHook(mockResolveIdHook)
   })
 
-  it('bun', async () => {
+  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
     expect.assertions(3)
     const mockResolveIdHook = vi.fn(generateMockWriteBundleHook(path.resolve(__dirname, 'test-out/bun')))
     const plugin = createUnpluginWithCallback(mockResolveIdHook).bun

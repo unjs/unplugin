@@ -214,7 +214,7 @@ describe('id parameter should be consistent across hooks and plugins', () => {
     checkHookCalls('esbuild', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
-  it('bun', async () => {
+  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
     const mockResolveIdHook = vi.fn(() => undefined)
     const mockTransformIncludeHook = vi.fn(() => true)
     const mockTransformHook = vi.fn(() => undefined)

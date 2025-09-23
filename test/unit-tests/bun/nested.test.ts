@@ -1,7 +1,7 @@
 import { createUnplugin } from 'unplugin'
 import { describe, expect, it, vi } from 'vitest'
 
-describe('bun nested plugin support', () => {
+describe.skipIf(typeof Bun === 'undefined')('bun nested plugin support', () => {
   it('should call buildStart for all nested plugins', async () => {
     const buildStart1 = vi.fn()
     const buildStart2 = vi.fn()

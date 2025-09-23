@@ -159,7 +159,7 @@ describe('virtual ids', () => {
     checkLoadHook(mockLoadHook)
   })
 
-  it('bun', async () => {
+  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
     const mockResolveIdHook = createResolveIdHook()
     const mockLoadHook = createLoadHook()
     const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).bun

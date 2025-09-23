@@ -142,7 +142,7 @@ describe('load hook should not be called when resolveId hook returned `external:
     checkHookCalls()
   })
 
-  it('bun', async () => {
+  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
     const plugin = createMockedUnplugin().bun
 
     await build.bun({

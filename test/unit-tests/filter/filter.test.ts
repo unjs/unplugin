@@ -170,7 +170,7 @@ describe('filter', () => {
     check(resolveIdHandler, loadHandler, transformHandler)
   })
 
-  it('bun', async () => {
+  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
     const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
     const { hook: load, handler: loadHandler } = createIdHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()

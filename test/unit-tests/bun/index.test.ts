@@ -1,7 +1,7 @@
 import { createUnplugin } from 'unplugin'
 import { describe, expect, it } from 'vitest'
 
-describe('bun plugin', () => {
+describe.skipIf(typeof Bun === 'undefined')('bun plugin', () => {
   it('should export bun plugin', () => {
     const unplugin = createUnplugin(() => ({
       name: 'test-plugin',
