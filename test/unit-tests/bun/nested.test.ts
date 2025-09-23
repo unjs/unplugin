@@ -21,7 +21,7 @@ describe('bun nested plugin support', () => {
     const mockBuild: Bun.PluginBuilder = {
       onResolve: vi.fn(),
       onLoad: vi.fn(),
-      onStart: vi.fn(),
+      onStart: vi.fn(callback => callback()),
       config: { outdir: './dist' } as Bun.BuildConfig & { plugins: Bun.BunPlugin[] },
     } as Partial<Bun.PluginBuilder> as Bun.PluginBuilder
 
@@ -53,6 +53,7 @@ describe('bun nested plugin support', () => {
         onResolveCallback.mockImplementation(callback)
       }),
       onLoad: vi.fn(),
+      onStart: vi.fn(),
       config: { outdir: './dist' },
     } as never as Bun.PluginBuilder
 
