@@ -18,11 +18,12 @@ describe('bun nested plugin support', () => {
     ])
 
     const bunPlugin = unplugin.bun()
-    const mockBuild = {
+    const mockBuild: Bun.PluginBuilder = {
       onResolve: vi.fn(),
       onLoad: vi.fn(),
-      config: { outdir: './dist' },
-    } as never as Bun.PluginBuilder
+      onStart: vi.fn(),
+      config: { outdir: './dist' } as Bun.BuildConfig & { plugins: Bun.BunPlugin[] },
+    } as Partial<Bun.PluginBuilder> as Bun.PluginBuilder
 
     await bunPlugin.setup(mockBuild)
 
@@ -102,6 +103,7 @@ describe('bun nested plugin support', () => {
           onLoadCallback = callback
         }
       }),
+      onStart: vi.fn(),
       config: { outdir: './dist' },
     } as never as Bun.PluginBuilder
 
