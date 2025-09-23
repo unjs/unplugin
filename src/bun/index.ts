@@ -13,7 +13,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
       throw new ReferenceError('Bun is not supported in this environment')
     }
 
-    if (Bun.semver.satisfies(Bun.version, '>=1.2.22')) {
+    if (!Bun.semver.satisfies(Bun.version, '>=1.2.22')) {
       throw new Error('Bun 1.2.22 or higher is required, please upgrade Bun')
     }
 
@@ -30,10 +30,14 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
       async setup(build) {
         const context = createBuildContext(build)
 
-        for (const plugin of plugins) {
-          if (plugin.buildStart) {
-            await plugin.buildStart.call(context)
-          }
+        if (plugins.some(plugin => plugin.buildStart)) {
+          build.onStart(async () => {
+            for (const plugin of plugins) {
+              if (plugin.buildStart) {
+                await plugin.buildStart.call(context)
+              }
+            }
+          })
         }
 
         const resolveIdHooks = plugins
