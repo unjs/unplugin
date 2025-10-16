@@ -6,7 +6,7 @@ shellEmulator: true
 
 catalog:
   '@antfu/eslint-config': ^5.2.1
-  '@antfu/ni': ^25.0.0
+  '@antfu/ni': ^26.2.0
   '@farmfe/cli': ^1.0.5
   '@farmfe/core': ^1.7.11
   '@rspack/cli': ^1.5.0
