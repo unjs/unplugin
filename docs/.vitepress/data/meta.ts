@@ -18,4 +18,5 @@ export const repositoryMeta: {
   { owner: 'unplugin', name: 'unplugin-unused' },
   { owner: 'unplugin', name: 'unplugin-ast' },
   { owner: 'unplugin', name: 'unplugin-replace' },
+  { owner: 'unplugin', name: 'unplugin-preprocessor-directives' },
 ]
