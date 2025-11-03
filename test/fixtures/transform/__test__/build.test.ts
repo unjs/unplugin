@@ -1,5 +1,5 @@
+import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
-import fs from 'fs-extra'
 import { describe, expect, it } from 'vitest'
 
 const r = (...args: string[]) => resolve(__dirname, '../dist', ...args)

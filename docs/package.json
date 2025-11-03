@@ -6,7 +6,7 @@
     "node": ">=18.19.0"
   },
   "scripts": {
-    "gen-files": "tsx ./.vitepress/data/gen-files.ts",
+    "gen-files": "node ./.vitepress/data/gen-files.ts",
     "dev": "vitepress dev --open",
     "build": "pnpm gen-files && vitepress build",
     "lint": "case-police '**/*.md'",
@@ -21,7 +21,6 @@
     "markdown-it": "catalog:docs",
     "markdown-it-github-alerts": "catalog:docs",
     "ofetch": "catalog:docs",
-    "tsx": "catalog:docs",
     "unocss": "catalog:docs",
     "unplugin": "workspace:*",
     "unplugin-icons": "catalog:docs",

@@ -12,21 +12,21 @@
   },
   "sideEffects": false,
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./dist/webpack/loaders/*": "./dist/webpack/loaders/*.cjs",
-    "./dist/rspack/loaders/*": "./dist/rspack/loaders/*.cjs"
+    ".": "./dist/index.mjs",
+    "./rspack/loaders/load": "./dist/rspack/loaders/load.mjs",
+    "./rspack/loaders/transform": "./dist/rspack/loaders/transform.mjs",
+    "./webpack/loaders/load": "./dist/webpack/loaders/load.mjs",
+    "./webpack/loaders/transform": "./dist/webpack/loaders/transform.mjs",
+    "./package.json": "./package.json"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "engines": {
-    "node": ">=18.12.0"
+    "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
     "build": "tsdown",
@@ -39,7 +39,7 @@
     "docs:gen-files": "pnpm -C docs run gen-files",
     "prepublishOnly": "nr build",
     "release": "bumpp",
-    "test": "nr test:build && vitest run --pool=forks",
+    "test": "nr test:build && vitest run",
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "dependencies": {
@@ -51,36 +51,32 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
     "@antfu/ni": "catalog:",
-    "@farmfe/cli": "catalog:",
-    "@farmfe/core": "catalog:",
-    "@rspack/cli": "catalog:",
-    "@rspack/core": "catalog:",
-    "@types/fs-extra": "catalog:",
+    "@farmfe/cli": "catalog:test",
+    "@farmfe/core": "catalog:peer",
+    "@rspack/cli": "catalog:test",
+    "@rspack/core": "catalog:peer",
     "@types/node": "catalog:",
     "@types/picomatch": "catalog:",
     "ansis": "catalog:",
     "bumpp": "catalog:",
     "esbuild": "catalog:",
-    "esbuild-plugin-copy": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
-    "fast-glob": "catalog:",
-    "fs-extra": "catalog:",
-    "jiti": "catalog:",
+    "jiti": "catalog:default",
     "lint-staged": "catalog:",
-    "magic-string": "catalog:",
-    "rolldown": "catalog:",
-    "rollup": "catalog:",
+    "magic-string": "catalog:test",
+    "rolldown": "catalog:peer",
+    "rollup": "catalog:peer",
     "simple-git-hooks": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "unloader": "catalog:",
+    "unloader": "catalog:peer",
     "unplugin": "workspace:*",
     "unplugin-unused": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:",
-    "webpack": "catalog:",
-    "webpack-cli": "catalog:"
+    "vite": "catalog:peer",
+    "vitest": "catalog:test",
+    "webpack": "catalog:peer",
+    "webpack-cli": "catalog:test"
   },
   "resolutions": {
     "esbuild": "catalog:"

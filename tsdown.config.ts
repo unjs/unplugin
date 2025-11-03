@@ -1,16 +1,14 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/webpack/loaders/*', 'src/rspack/loaders/*'],
-  format: ['cjs', 'esm'],
-  clean: true,
-  target: 'node18.12',
-  dts: true,
-  sourcemap: false,
+  entry: ['src/index.ts', 'src/{webpack,rspack}/loaders/*'],
   define: {
     __DEV__: 'false',
   },
-  shims: true,
+  // peer dependencies
   external: ['vite', 'webpack', 'rollup', 'esbuild', '@farmfe/core'],
   unused: { level: 'error' },
+  fixedExtension: true,
+  inlineOnly: [],
+  exports: true,
 })

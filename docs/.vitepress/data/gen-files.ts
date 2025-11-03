@@ -1,11 +1,11 @@
-import type { Repository } from './repository.data'
+import type { Repository } from './repository.data.ts'
 import { writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { env } from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { consola } from 'consola'
 import { $fetch } from 'ofetch'
-import { repositoryMeta } from './meta'
+import { repositoryMeta } from './meta.ts'
 import 'dotenv/config'
 
 const GITHUB_TOKEN = env.GITHUB_TOKEN
@@ -34,6 +34,47 @@ query repositoryQuery($owner: String!, $name: String!, $readme: String!) {
     }
   }
 }`
+
+if (!GITHUB_TOKEN) {
+  consola.error('GITHUB_TOKEN is missing, please refer to https://github.com/unjs/unplugin/blob/main/docs/README.md#development')
+  process.exit(1)
+}
+
+const fetchs = repositoryMeta.map((repository) => {
+  return fetchRepo({
+    name: repository.name,
+    owner: repository.owner,
+    readme: repository.defaultBranch ? `${repository.defaultBranch}:README.md` : 'main:README.md',
+  })
+})
+
+Promise.allSettled(fetchs).then((res) => {
+  const repoMeta = res?.map((item) => {
+    if (item.status === 'fulfilled') {
+      return {
+        name: item.value?.name,
+        stargazers: item.value?.stargazers,
+        owner: item.value?.owner,
+        description: item.value?.description,
+        url: item.value?.url,
+        isTemplate: item.value?.isTemplate,
+        primaryLanguage: item.value?.primaryLanguage,
+        forkCount: item.value?.forkCount,
+      }
+    }
+
+    return null
+  })?.filter(item => item && item.name)
+
+  writeFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), './repository.json'),
+    JSON.stringify(repoMeta, null, 2),
+  )
+  consola.success('[repository.json] generate success!')
+  consola.success('All files generate done!')
+}).catch((error) => {
+  consola.error(error)
+})
 
 async function fetchRepo(meta: {
   owner: string
@@ -88,48 +129,3 @@ outline: deep
     consola.error(`[${name}.md]: generate failed: ${error}`)
   }
 }
-
-function main() {
-  if (!GITHUB_TOKEN) {
-    consola.error('GITHUB_TOKEN is missing, please refer to https://github.com/unjs/unplugin/blob/main/docs/README.md#development')
-    return false
-  }
-
-  const fetchs = repositoryMeta.map((repository) => {
-    return fetchRepo({
-      name: repository.name,
-      owner: repository.owner,
-      readme: repository.defaultBranch ? `${repository.defaultBranch}:README.md` : 'main:README.md',
-    })
-  })
-
-  Promise.allSettled(fetchs).then((res) => {
-    const repoMeta = res?.map((item) => {
-      if (item.status === 'fulfilled') {
-        return {
-          name: item.value?.name,
-          stargazers: item.value?.stargazers,
-          owner: item.value?.owner,
-          description: item.value?.description,
-          url: item.value?.url,
-          isTemplate: item.value?.isTemplate,
-          primaryLanguage: item.value?.primaryLanguage,
-          forkCount: item.value?.forkCount,
-        }
-      }
-
-      return null
-    })?.filter(item => item && item.name)
-
-    writeFileSync(
-      join(dirname(fileURLToPath(import.meta.url)), './repository.json'),
-      JSON.stringify(repoMeta, null, 2),
-    )
-    consola.success('[repository.json] generate success!')
-    consola.success('All files generate done!')
-  }).catch((error) => {
-    consola.error(error)
-  })
-}
-
-main()
