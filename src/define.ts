@@ -1,4 +1,5 @@
 import type { UnpluginFactory, UnpluginInstance } from './types'
+import { getBunPlugin } from './bun'
 import { getEsbuildPlugin } from './esbuild'
 import { getFarmPlugin } from './farm'
 import { getRolldownPlugin } from './rolldown'
@@ -35,6 +36,9 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     },
     get unloader() {
       return getUnloaderPlugin(factory)
+    },
+    get bun() {
+      return getBunPlugin(factory)
     },
     get raw() {
       return factory
@@ -88,4 +92,10 @@ export function createUnloaderPlugin<UserOptions, Nested extends boolean = boole
   factory: UnpluginFactory<UserOptions, Nested>,
 ): UnpluginInstance<UserOptions>['unloader'] {
   return getUnloaderPlugin(factory)
+}
+
+export function createBunPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+): UnpluginInstance<UserOptions>['bun'] {
+  return getBunPlugin(factory)
 }

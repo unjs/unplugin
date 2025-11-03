@@ -5,6 +5,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { onlyBun } from '../../utils'
 import { build, toArray, webpackVersion } from '../utils'
 
 function createUnpluginWithCallback(writeBundleCallback: UnpluginOptions['writeBundle']) {
@@ -162,6 +163,22 @@ describe('writeBundle hook', () => {
       outfile: path.resolve(__dirname, 'test-out/esbuild/output.js'),
       format: 'cjs',
       sourcemap: true,
+    })
+
+    checkWriteBundleHook(mockResolveIdHook)
+  })
+
+  onlyBun('bun', async () => {
+    expect.assertions(3)
+    const mockResolveIdHook = vi.fn(generateMockWriteBundleHook(path.resolve(__dirname, 'test-out/bun')))
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
+
+    await build.bun({
+      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      plugins: [plugin()],
+      outdir: path.resolve(__dirname, 'test-out/bun'),
+      naming: 'output.[ext]',
+      sourcemap: 'external',
     })
 
     checkWriteBundleHook(mockResolveIdHook)

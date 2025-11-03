@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { onlyBun } from '../../../utils'
 
 const r = (...args: string[]) => resolve(__dirname, '../dist', ...args)
 
@@ -18,6 +19,7 @@ describe('transform build', () => {
 
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Post Rollup]')
+    // Query imports are external in Rollup
   })
 
   it('webpack', async () => {
@@ -50,5 +52,13 @@ describe('transform build', () => {
     expect(content).toContain('NON-TARGET: __UNPLUGIN__')
     expect(content).toContain('TARGET: [Injected Post Farm]')
     expect(content).toContain('QUERY: [Injected Post Farm]')
+  })
+
+  onlyBun('bun', async () => {
+    const content = await fs.readFile(r('bun/main.js'), 'utf-8')
+
+    expect(content).toContain('NON-TARGET: __UNPLUGIN__')
+    expect(content).toContain('TARGET: [Injected Post Bun]')
+    // Like Rollup, imports with query params are marked as external in Bun
   })
 })

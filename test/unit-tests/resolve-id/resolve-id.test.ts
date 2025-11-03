@@ -3,6 +3,7 @@ import type { Mock } from 'vitest'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { onlyBun } from '../../utils'
 import { build, toArray } from '../utils'
 
 function createUnpluginWithCallback(resolveIdCallback: UnpluginOptions['resolveId']) {
@@ -134,6 +135,19 @@ describe('resolveId hook', () => {
       plugins: [plugin()],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
+    })
+
+    checkResolveIdHook(mockResolveIdHook)
+  })
+
+  onlyBun('bun', async () => {
+    const mockResolveIdHook = createResolveIdHook()
+    const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
+
+    await build.bun({
+      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
+      plugins: [plugin()],
+      outdir: path.resolve(__dirname, 'test-out/bun'), // Bun requires outdir
     })
 
     checkResolveIdHook(mockResolveIdHook)

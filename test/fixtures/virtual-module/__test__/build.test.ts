@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { onlyBun } from '../../../utils'
 
 const r = (...args: string[]) => resolve(__dirname, '../dist', ...args)
 
@@ -42,6 +43,13 @@ describe('virtual-module build', () => {
 
   it('farm', async () => {
     const content = await fs.readFile(r('farm/main.js'), 'utf-8')
+
+    expect(content).toContain('VIRTUAL:ONE')
+    expect(content).toContain('VIRTUAL:TWO')
+  })
+
+  onlyBun('bun', async () => {
+    const content = await fs.readFile(r('bun/main.js'), 'utf-8')
 
     expect(content).toContain('VIRTUAL:ONE')
     expect(content).toContain('VIRTUAL:TWO')

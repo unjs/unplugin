@@ -6,7 +6,7 @@
 Unplugin
 </h1>
 <p align="center">
-Unified plugin system, Support Vite, Rollup, webpack, esbuild, and more
+Unified plugin system, Support Vite, Rollup, webpack, esbuild, Bun, and more
 </p>
 
 <p align="center">

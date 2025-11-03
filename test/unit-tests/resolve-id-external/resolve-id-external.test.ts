@@ -2,6 +2,7 @@ import type { VitePlugin } from 'unplugin'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { onlyBun } from '../../utils'
 import { build, toArray } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
@@ -137,6 +138,19 @@ describe('load hook should not be called when resolveId hook returned `external:
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
       external: externals,
+    })
+
+    checkHookCalls()
+  })
+
+  onlyBun('bun', async () => {
+    const plugin = createMockedUnplugin().bun
+
+    await build.bun({
+      entrypoints: [entryFilePath],
+      plugins: [plugin()],
+      external: externals,
+      outdir: path.resolve(__dirname, 'test-out/bun'),
     })
 
     checkHookCalls()
