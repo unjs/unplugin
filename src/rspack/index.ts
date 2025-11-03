@@ -15,13 +15,15 @@ import { createBuildContext, normalizeMessage } from './context'
 import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin, isVirtualModuleId } from './utils'
 
 const TRANSFORM_LOADER = resolve(
-  __dirname,
-  __DEV__ ? '../../dist/rspack/loaders/transform.js' : 'rspack/loaders/transform',
+  // eslint-disable-next-line node/no-unsupported-features/node-builtins
+  import.meta.dirname,
+  __DEV__ ? '../../dist/rspack/loaders/transform.mjs' : 'rspack/loaders/transform.mjs',
 )
 
 const LOAD_LOADER = resolve(
-  __dirname,
-  __DEV__ ? '../../dist/rspack/loaders/load.js' : 'rspack/loaders/load',
+  // eslint-disable-next-line node/no-unsupported-features/node-builtins
+  import.meta.dirname,
+  __DEV__ ? '../../dist/rspack/loaders/load.mjs' : 'rspack/loaders/load.mjs',
 )
 
 export function getRspackPlugin<UserOptions = Record<string, never>>(
