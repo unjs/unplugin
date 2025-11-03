@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { onlyBun } from '../../../utils'
 
 const r = (...args: string[]) => resolve(__dirname, '../dist', ...args)
 
@@ -39,7 +40,7 @@ describe('load-called-before-transform', () => {
     expect(content).toContain('it is a msg -> through the load hook -> transform-[Injected Farm]')
   })
 
-  it('bun', async () => {
+  onlyBun('bun', async () => {
     const content = await fs.readFile(r('bun/main.js'), 'utf-8')
 
     expect(content).toContain('it is a msg -> through the load hook -> transform-[Injected Bun]')

@@ -2,6 +2,7 @@ import type { VitePlugin } from 'unplugin'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { onlyBun } from '../../utils'
 import { build, toArray } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
@@ -142,7 +143,7 @@ describe('load hook should not be called when resolveId hook returned `external:
     checkHookCalls()
   })
 
-  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
+  onlyBun('bun', async () => {
     const plugin = createMockedUnplugin().bun
 
     await build.bun({

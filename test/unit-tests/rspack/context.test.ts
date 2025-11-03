@@ -18,7 +18,7 @@ describe('createBuildContext', () => {
     })
   })
 
-  it.skipIf(typeof Bun !== 'undefined')('emitFile - should return expected', () => {
+  it('emitFile - should return expected', () => {
     const emitAssetMock = vi.fn()
     class RawSourceMock {
       content: any

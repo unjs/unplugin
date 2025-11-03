@@ -3,6 +3,7 @@ import type { Mock } from 'vitest'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { onlyBun } from '../../utils'
 import { build, toArray } from '../utils'
 
 function createUnpluginWithHooks(
@@ -170,7 +171,7 @@ describe('filter', () => {
     check(resolveIdHandler, loadHandler, transformHandler)
   })
 
-  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
+  onlyBun('bun', async () => {
     const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
     const { hook: load, handler: loadHandler } = createIdHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()

@@ -4,6 +4,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { onlyBun } from '../../utils'
 import { build, toArray } from '../utils'
 
 function createUnpluginWithCallbacks(resolveIdCallback: UnpluginOptions['resolveId'], loadCallback: UnpluginOptions['load']) {
@@ -159,7 +160,7 @@ describe('virtual ids', () => {
     checkLoadHook(mockLoadHook)
   })
 
-  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
+  onlyBun('bun', async () => {
     const mockResolveIdHook = createResolveIdHook()
     const mockLoadHook = createLoadHook()
     const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).bun

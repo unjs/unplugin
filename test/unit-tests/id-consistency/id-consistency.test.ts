@@ -3,6 +3,7 @@ import type { Mock } from 'vitest'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { onlyBun } from '../../utils'
 import { build, toArray } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
@@ -214,7 +215,7 @@ describe('id parameter should be consistent across hooks and plugins', () => {
     checkHookCalls('esbuild', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
   })
 
-  it.skipIf(typeof Bun === 'undefined')('bun', async () => {
+  onlyBun('bun', async () => {
     const mockResolveIdHook = vi.fn(() => undefined)
     const mockTransformIncludeHook = vi.fn(() => true)
     const mockTransformHook = vi.fn(() => undefined)
