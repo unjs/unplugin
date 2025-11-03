@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "type": "module",
-  "version": "2.3.10",
+  "version": "3.0.0-beta.1",
   "packageManager": "pnpm@10.20.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
@@ -27,6 +27,9 @@
   ],
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
+  },
+  "publishConfig": {
+    "tag": "beta"
   },
   "scripts": {
     "build": "tsdown",
