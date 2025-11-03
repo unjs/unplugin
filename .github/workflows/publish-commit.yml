@@ -1,27 +1,10 @@
 name: Publish Any Commit
 on: [push, pull_request]
 
+permissions: {}
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          persist-credentials: false
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4.1.0
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: lts/*
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm build
-
-      - run: pnpx pkg-pr-new publish
+  release:
+    uses: sxzz/workflows/.github/workflows/release-commit.yml@v1
+    with:
+      compact: true
