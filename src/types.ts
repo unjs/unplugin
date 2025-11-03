@@ -91,7 +91,7 @@ export interface HookFnMap {
     this: UnpluginBuildContext & UnpluginContext,
     id: string,
     importer: string | undefined,
-    options: { isEntry: boolean }
+    options: { isEntry: boolean },
   ) => Thenable<string | ExternalIdResult | null | undefined>
 
   // Output Generation Hooks
