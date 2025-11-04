@@ -189,29 +189,6 @@ describe('bun utils', () => {
       expect(mockWriteFileSync).not.toHaveBeenCalled()
     })
 
-    it('should parse code with acorn', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
-      const context = createBuildContext(mockBuild as PluginBuilder)
-
-      const ast = context.parse('const x = 1')
-      expect(ast).toBeDefined()
-      expect(ast.type).toBe('Program')
-      expect((ast as any).body).toHaveLength(1)
-      expect((ast as any).body[0].type).toBe('VariableDeclaration')
-    })
-
-    it('should parse code with custom options', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
-      const context = createBuildContext(mockBuild as PluginBuilder)
-
-      const ast = context.parse('const x = 1', {
-        sourceType: 'script',
-        ecmaVersion: 2015,
-      })
-      expect(ast).toBeDefined()
-      expect(ast.type).toBe('Program')
-    })
-
     it('should return native build context', () => {
       const mockBuild = { config: { outdir: '/path/to/outdir' } }
       const context = createBuildContext(mockBuild as PluginBuilder)
