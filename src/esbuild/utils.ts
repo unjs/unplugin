@@ -6,7 +6,7 @@ import { Buffer } from 'node:buffer'
 import fs from 'node:fs'
 import path from 'node:path'
 import remapping from '@jridgewell/remapping'
-import { parse } from '../utils/context'
+import { parse } from '../utils/parse'
 
 const ExtToLoader: Record<string, Loader> = {
   '.js': 'js',

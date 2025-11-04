@@ -4,7 +4,7 @@ import { Buffer } from 'node:buffer'
 import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { parse } from '../utils/context'
+import { parse } from '../utils/parse'
 
 interface ContextOptions {
   addWatchFile: (file: string) => void

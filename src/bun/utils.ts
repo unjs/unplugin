@@ -2,7 +2,7 @@ import type { Loader, PluginBuilder } from 'bun'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import fs from 'node:fs'
 import path from 'node:path'
-import * as acorn from 'acorn'
+import { parse } from '../utils/parse'
 
 const ExtToLoader: Record<string, Loader> = {
   '.js': 'js',
@@ -47,14 +47,7 @@ export function createBuildContext(build: PluginBuilder): UnpluginBuildContext {
         fs.writeFileSync(outPath, emittedFile.source)
       }
     },
-    parse(code, opts = {}) {
-      return acorn.parse(code, {
-        sourceType: 'module',
-        ecmaVersion: 'latest',
-        locations: true,
-        ...opts,
-      })
-    },
+    parse,
     getNativeBuildContext() {
       return { framework: 'bun', build }
     },

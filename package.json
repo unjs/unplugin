@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "@jridgewell/remapping": "catalog:prod",
-    "acorn": "catalog:prod",
     "picomatch": "catalog:prod",
     "webpack-virtual-modules": "catalog:prod"
   },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parse } from '../../../src/utils/context'
+import { parse } from '../../../src/utils/parse'
 
 describe('parse', () => {
   it('should parse valid JavaScript code', () => {

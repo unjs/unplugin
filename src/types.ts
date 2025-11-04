@@ -1,10 +1,9 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
-import type { Options as AcornOptions } from 'acorn'
 import type { BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
-import type { AstNode, EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
+import type { EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Plugin as UnloaderPlugin } from 'unloader'
 import type { Plugin as VitePlugin } from 'vite'
 import type { Compilation as WebpackCompilation, Compiler as WebpackCompiler, LoaderContext as WebpackLoaderContext, WebpackPluginInstance } from 'webpack'
@@ -61,7 +60,7 @@ export interface UnpluginBuildContext {
   addWatchFile: (id: string) => void
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
-  parse: (input: string, options?: Partial<AcornOptions>) => AstNode
+  parse: (input: string, options?: any) => any
   getNativeBuildContext?: (() => NativeBuildContext) | undefined
 }
 

@@ -123,9 +123,6 @@ catalogs:
     '@jridgewell/remapping':
       specifier: ^2.3.5
       version: 2.3.5
-    acorn:
-      specifier: ^8.15.0
-      version: 8.15.0
     picomatch:
       specifier: ^4.0.3
       version: 4.0.3
@@ -159,9 +156,6 @@ importers:
       '@jridgewell/remapping':
         specifier: catalog:prod
         version: 2.3.5
-      acorn:
-        specifier: catalog:prod
-        version: 8.15.0
       picomatch:
         specifier: catalog:prod
         version: 4.0.3
