@@ -95,9 +95,6 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
 }
 
 function supportNativeFilter(context: any, framework: 'rollup' | 'rolldown' | 'vite' | 'unloader') {
-  if (framework === 'unloader')
-    return false
-
   if (framework === 'vite')
     return !!context?.meta?.viteVersion // since Vite v7
 
