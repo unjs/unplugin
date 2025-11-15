@@ -2,7 +2,7 @@
   "name": "unplugin",
   "type": "module",
   "version": "2.3.10",
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@10.22.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "homepage": "https://unplugin.unjs.io",
