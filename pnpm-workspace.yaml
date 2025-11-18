@@ -3,6 +3,9 @@ packages:
 
 ignoreWorkspaceRootCheck: true
 shellEmulator: true
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - chokidar@4.0.3
 
 catalog:
   '@antfu/eslint-config': ^6.2.0
