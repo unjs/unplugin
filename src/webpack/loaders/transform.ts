@@ -3,6 +3,8 @@ import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeObjectHook } from '../../utils/filter'
 import { createBuildContext, createContext } from '../context'
 
+export const raw = true
+
 export default async function transform(this: LoaderContext<any>, source: string, map: any): Promise<void> {
   const callback = this.async()
 
