@@ -46,6 +46,27 @@ describe('webpack - utils', () => {
         expect.anything(),
       )
     })
+
+    it('should add expected values to native build context', () => {
+      const options = {
+        addWatchFile: vi.fn(),
+        getWatchFiles: vi.fn(() => ['file1.js']),
+      }
+      const compiler = { name: 'testCompiler' } as Compiler
+      const compilation = { name: 'testCompilation' } as Compilation
+      const loaderContext = { name: 'testLoaderContext' } as unknown as LoaderContext<{ unpluginName: string }>
+      const inputSourceMap = { name: 'inputSourceMap' }
+
+      const buildContext = createBuildContext(options, compiler, compilation, loaderContext, inputSourceMap)
+
+      expect(buildContext.getNativeBuildContext!()).toEqual({
+        framework: 'webpack',
+        compiler,
+        compilation,
+        loaderContext,
+        inputSourceMap,
+      })
+    })
   })
 
   describe('createContext', () => {

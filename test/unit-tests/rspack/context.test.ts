@@ -7,14 +7,16 @@ describe('createBuildContext', () => {
     const compiler = { name: 'testCompiler' }
     const compilation = { name: 'testCompilation' }
     const loaderContext = { name: 'testLoaderContext' }
+    const inputSourceMap = { name: 'inputSourceMap' }
 
-    const buildContext = createBuildContext(compiler as any, compilation as any, loaderContext as any)
+    const buildContext = createBuildContext(compiler as any, compilation as any, loaderContext as any, inputSourceMap as any)
 
     expect(buildContext.getNativeBuildContext!()).toEqual({
       framework: 'rspack',
       compiler,
       compilation,
       loaderContext,
+      inputSourceMap,
     })
   })
 
