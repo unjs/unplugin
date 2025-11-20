@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
+import type { NativeBuildContext, UnpluginBuildContext } from '../../../../src/types'
+import { assert, describe, expect, it, vi } from 'vitest'
 import transform from '../../../../src/rspack/loaders/transform'
 
 describe('transform', () => {
@@ -35,10 +36,6 @@ describe('transform', () => {
     const source = 'test source'
     const map = 'test map'
 
-    vi.mock('../../../../src/utils/filter', () => ({
-      normalizeObjectHook: vi.fn(() => ({ handler: vi.fn().mockRejectedValue(new Error('Handler error')), filter: vi.fn().mockReturnValue(true) })),
-    }))
-
     await transform.call(mockLoaderContext, source, map)
 
     expect(mockCallback).toHaveBeenCalledWith(expect.any(Error))
@@ -63,13 +60,54 @@ describe('transform', () => {
     const source = 'test source'
     const map = 'test map'
 
-    vi.mock('../../../../src/utils/filter', () => ({
-      normalizeObjectHook: vi.fn(() => ({ handler: vi.fn().mockRejectedValue(new Error('Handler error')), filter: vi.fn().mockReturnValue(true) })),
-    }))
-
     await transform.call(mockLoaderContext, source, map)
 
     expect(mockCallback).toHaveBeenCalledWith(expect.any(Error))
     expect(mockCallback.mock.calls[0][0].message).toBe('Handler error')
+  })
+
+  it('should include input source map on native build context', async () => {
+    const source = 'source code'
+    const map = 'source map'
+    const transformedCode = 'transformed code'
+    const transformedMap = 'transformed map'
+
+    let handlerSource: string | undefined
+    let handlerId: string | undefined
+    let handlerNativeBuildContext: NativeBuildContext | undefined
+    const handlerMock = vi.fn().mockImplementation(function (this: UnpluginBuildContext, source: string, id: string) {
+      handlerSource = source
+      handlerId = id
+      handlerNativeBuildContext = this.getNativeBuildContext?.()
+      return { code: transformedCode, map: transformedMap }
+    })
+
+    const mockCallback = vi.fn()
+    const mockLoaderContext = {
+      async: () => mockCallback,
+      query: {
+        plugin: {
+          transform: {
+            handler: handlerMock,
+            filter: vi.fn().mockReturnValue(true),
+          },
+        },
+      },
+      resource: 'test resource',
+      addDependency: vi.fn(),
+      getDependencies: vi.fn().mockReturnValue(['/path/to/dependency']),
+      _compiler: {},
+      _compilation: {},
+    } as any
+
+    await transform.call(mockLoaderContext as any, source, map)
+
+    expect(handlerMock).toHaveBeenCalled()
+    expect(handlerSource).toBe(source)
+    expect(handlerId).toBe(mockLoaderContext.resource)
+    assert(handlerNativeBuildContext?.framework === 'rspack')
+    expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
+
+    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, transformedMap)
   })
 })

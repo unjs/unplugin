@@ -4,7 +4,7 @@ import { Buffer } from 'node:buffer'
 import { resolve } from 'node:path'
 import { parse } from '../utils/parse'
 
-export function createBuildContext(compiler: Compiler, compilation: Compilation, loaderContext?: LoaderContext): UnpluginBuildContext {
+export function createBuildContext(compiler: Compiler, compilation: Compilation, loaderContext?: LoaderContext, inputSourceMap?: any): UnpluginBuildContext {
   return {
     getNativeBuildContext() {
       return {
@@ -12,6 +12,7 @@ export function createBuildContext(compiler: Compiler, compilation: Compilation,
         compiler,
         compilation,
         loaderContext,
+        inputSourceMap,
       }
     },
     addWatchFile(file) {
