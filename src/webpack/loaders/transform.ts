@@ -24,7 +24,7 @@ export default async function transform(this: LoaderContext<any>, source: string
         getWatchFiles: () => {
           return this.getDependencies()
         },
-      }, this._compiler!, this._compilation, this), context),
+      }, this._compiler!, this._compilation, this, map), context),
       source,
       this.resource,
     )

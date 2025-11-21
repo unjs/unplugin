@@ -30,7 +30,7 @@ export function getSource(fileSource: string | Uint8Array): sources.RawSource {
   )
 }
 
-export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>): UnpluginBuildContext {
+export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>, inputSourceMap?: any): UnpluginBuildContext {
   return {
     parse,
     addWatchFile(id) {
@@ -51,7 +51,7 @@ export function createBuildContext(options: ContextOptions, compiler: Compiler, 
       return options.getWatchFiles()
     },
     getNativeBuildContext() {
-      return { framework: 'webpack', compiler, compilation, loaderContext }
+      return { framework: 'webpack', compiler, compilation, loaderContext, inputSourceMap }
     },
   }
 }

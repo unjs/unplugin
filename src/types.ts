@@ -50,9 +50,9 @@ export type TransformResult = string | { code: string, map?: SourceMapInput | So
 export interface ExternalIdResult { id: string, external?: boolean | undefined }
 
 export type NativeBuildContext
-  = { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation | undefined, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> | undefined }
+  = { framework: 'webpack', compiler: WebpackCompiler, compilation?: WebpackCompilation | undefined, loaderContext?: WebpackLoaderContext<{ unpluginName: string }> | undefined, inputSourceMap?: any }
     | { framework: 'esbuild', build: PluginBuild }
-    | { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext | undefined }
+    | { framework: 'rspack', compiler: RspackCompiler, compilation: RspackCompilation, loaderContext?: RspackLoaderContext | undefined, inputSourceMap?: any }
     | { framework: 'farm', context: FarmCompilationContext }
     | { framework: 'bun', build: BunPluginBuilder }
 
