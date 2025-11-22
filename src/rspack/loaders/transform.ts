@@ -23,7 +23,7 @@ export default async function transform(
     const res = await handler.call(
       Object.assign(
         {},
-        this._compilation && createBuildContext(this._compiler, this._compilation, this),
+        this._compilation && createBuildContext(this._compiler, this._compilation, this, map),
         context,
       ),
       source,

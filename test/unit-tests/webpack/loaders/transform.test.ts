@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
+import type { NativeBuildContext, UnpluginBuildContext } from '../../../../src/types'
+import { assert, describe, expect, it, vi } from 'vitest'
 import transform from '../../../../src/webpack/loaders/transform'
 
 describe('transform loader', () => {
@@ -103,5 +104,41 @@ describe('transform loader', () => {
 
     expect(handlerMock).toHaveBeenCalled()
     expect(mockCallback).toHaveBeenCalledWith(error)
+  })
+
+  it('should include input source map on native build context', async () => {
+    const source = 'source code'
+    const map = 'source map'
+    const transformedCode = 'transformed code'
+    const transformedMap = 'transformed map'
+
+    let handlerSource: string | undefined
+    let handlerId: string | undefined
+    let handlerNativeBuildContext: NativeBuildContext | undefined
+    const handlerMock = vi.fn().mockImplementation(function (this: UnpluginBuildContext, source: string, id: string) {
+      handlerSource = source
+      handlerId = id
+      handlerNativeBuildContext = this.getNativeBuildContext?.()
+      return { code: transformedCode, map: transformedMap }
+    })
+
+    mockLoaderContext.query = {
+      plugin: {
+        transform: {
+          handler: handlerMock,
+          filter: vi.fn().mockReturnValue(true),
+        },
+      },
+    }
+
+    await transform.call(mockLoaderContext as any, source, map)
+
+    expect(handlerMock).toHaveBeenCalled()
+    expect(handlerSource).toBe(source)
+    expect(handlerId).toBe(mockLoaderContext.resource)
+    assert(handlerNativeBuildContext?.framework === 'webpack')
+    expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
+
+    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, transformedMap)
   })
 })
