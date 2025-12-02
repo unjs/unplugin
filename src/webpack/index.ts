@@ -1,9 +1,9 @@
 import type { ResolvePluginInstance, Resolver } from 'webpack'
+import type VirtualModulesPluginType from 'webpack-virtual-modules'
 import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
@@ -24,6 +24,9 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['webpack'] {
   return (userOptions?: UserOptions) => {
+    // eslint-disable-next-line ts/no-require-imports
+    const VirtualModulesPlugin: typeof VirtualModulesPluginType = require('webpack-virtual-modules')
+
     return {
       apply(compiler: WebpackCompiler) {
         // We need the prefix of virtual modules to be an absolute path so webpack let's us load them (even if it's made up)
@@ -51,7 +54,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           // resolveId hook
           if (plugin.resolveId) {
-            let vfs = compiler.options.plugins.find(i => i instanceof VirtualModulesPlugin) as VirtualModulesPlugin
+            let vfs = compiler.options.plugins.find(i => i instanceof VirtualModulesPlugin)
             if (!vfs) {
               vfs = new VirtualModulesPlugin()
               compiler.options.plugins.push(vfs)
