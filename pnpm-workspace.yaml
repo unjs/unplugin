@@ -1,5 +1,4 @@
 catalogMode: prefer
-cleanupUnusedCatalogs: true
 ignoreWorkspaceRootCheck: true
 shellEmulator: true
 trustPolicy: no-downgrade
@@ -14,7 +13,7 @@ packages:
   - docs
 
 catalog:
-  '@antfu/eslint-config': ^6.4.1
+  '@antfu/eslint-config': ^7.0.0
   '@antfu/ni': ^28.0.0
   '@types/node': ^24.10.1
   '@types/picomatch': ^4.0.2
