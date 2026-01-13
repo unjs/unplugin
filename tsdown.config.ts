@@ -5,8 +5,17 @@ export default defineConfig({
   define: {
     __DEV__: 'false',
   },
-  // peer dependencies
-  external: ['vite', 'webpack', 'rollup', 'esbuild', '@farmfe/core'],
+  external: [
+    // peer dependencies
+    'vite',
+    'webpack',
+    'rollup',
+    'esbuild',
+    '@farmfe/core',
+    '@rspack/core',
+    'rolldown',
+    'unloader',
+  ],
   unused: { level: 'error' },
   fixedExtension: true,
   inlineOnly: [],

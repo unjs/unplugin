@@ -2,7 +2,7 @@
   "name": "unplugin",
   "type": "module",
   "version": "3.0.0-beta.3",
-  "packageManager": "pnpm@10.24.0",
+  "packageManager": "pnpm@10.28.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "homepage": "https://unplugin.unjs.io",
@@ -19,8 +19,6 @@
     "./webpack/loaders/transform": "./dist/webpack/loaders/transform.mjs",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "files": [
     "dist"
