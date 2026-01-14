@@ -41,7 +41,7 @@ catalogs:
     markdown-it-github-alerts: ^1.0.0
     ofetch: ^1.5.1
     unocss: ^66.5.12
-    unplugin-icons: ^22.5.0
+    unplugin-icons: ^23.0.0
     unplugin-vue-components: ^30.0.0
     vitepress: 2.0.0-alpha.15
     vitepress-plugin-group-icons: ^1.6.5
