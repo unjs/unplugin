@@ -3,8 +3,9 @@ import { defineConfig } from 'tsdown'
 export default defineConfig({
   entry: ['src/index.ts', 'src/{webpack,rspack}/loaders/*'],
   define: {
-    __DEV__: 'false',
+    'import.meta.dev': 'false',
   },
+  inlineOnly: [],
   external: [
     // peer dependencies
     'vite',
@@ -17,7 +18,5 @@ export default defineConfig({
     'unloader',
   ],
   unused: { level: 'error' },
-  fixedExtension: true,
-  inlineOnly: [],
   exports: true,
 })

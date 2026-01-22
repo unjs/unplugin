@@ -12,13 +12,13 @@ import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } f
 const TRANSFORM_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  __DEV__ ? '../../dist/webpack/loaders/transform.mjs' : 'webpack/loaders/transform.mjs',
+  import.meta.dev ? '../../dist/webpack/loaders/transform.mjs' : 'webpack/loaders/transform.mjs',
 )
 
 const LOAD_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  __DEV__ ? '../../dist/webpack/loaders/load.mjs' : 'webpack/loaders/load.mjs',
+  import.meta.dev ? '../../dist/webpack/loaders/load.mjs' : 'webpack/loaders/load.mjs',
 )
 export function getWebpackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
