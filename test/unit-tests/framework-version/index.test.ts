@@ -1,5 +1,4 @@
-import { createRequire } from 'node:module'
-import nodeModule from 'node:module'
+import nodeModule, { createRequire } from 'node:module'
 import path from 'node:path'
 import { registerSync } from 'unloader'
 import { describe, expect, it } from 'vitest'

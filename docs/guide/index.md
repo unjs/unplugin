@@ -449,13 +449,14 @@ When your plugin needs behavior depending on the exact bundler version,
 use `meta.frameworkVersion` which is the version string `"x.y.z"`
 from the host framework version.
 
-|     Rollup     |      Vite      | webpack | Rspack | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
-| :------------: | :------------: | :-----: | :----: | :-----: | :--: | :------------: | :------------: | :-: |
-| ✅<sup>1</sup> | ✅<sup>1</sup> |   ✅    |   ✅   |   ❌    |  ❌  | ✅<sup>1</sup> | ✅<sup>1</sup> | ✅  |
+|     Rollup     |       Vite       | webpack | Rspack | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
+| :------------: | :--------------: | :-----: | :----: | :-----: | :--: | :------------: | :------------: | :-: |
+| ✅<sup>1</sup> | ✅<sup>1,2</sup> |   ✅    |   ✅   |   ❌    |  ❌  | ✅<sup>1</sup> | ✅<sup>1</sup> | ✅  |
 
 ::: details Notice
 
 1. For Rollup-compatible hosts (`vite`, `rollup`, `rolldown`, `unloader`), `frameworkVersion` is not available until hook code, starting with `buildStart`.
+2. Vite added `this.meta.viteVersion` in `v7.0.0` ([vitejs/vite#20088](https://github.com/vitejs/vite/pull/20088)). On Vite versions before `v7.0.0`, `meta.frameworkVersion` is `undefined`.
 
 :::
 
