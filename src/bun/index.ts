@@ -19,6 +19,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
 
     const meta: UnpluginContextMeta = {
       framework: 'bun',
+      frameworkVersion: Bun.version,
     }
 
     const plugins = toArray(factory(userOptions!, meta))

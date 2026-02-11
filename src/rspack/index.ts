@@ -38,6 +38,7 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 
         const meta: UnpluginContextMeta = {
           framework: 'rspack',
+          frameworkVersion: (compiler as any).rspack?.rspackVersion ?? (compiler as any).rspack?.version,
           rspack: {
             compiler,
           },

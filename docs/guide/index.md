@@ -374,7 +374,7 @@ While **Unplugin** provides compatible layers for some hooks, the functionality 
 
 ### Hooks
 
-```ts {9,18,24,27,30,33,36,48} twoslash
+```ts {9,18,20,26,29,32,35,38,50} twoslash
 import type { UnpluginFactory } from 'unplugin'
 import { createUnplugin } from 'unplugin'
 
@@ -389,6 +389,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   console.log(meta.framework) // vite rollup webpack esbuild rspack...
   return {
     name: 'unplugin-starter',
+    buildStart() {
+      console.log(meta.frameworkVersion) // x.y.z
+    },
     transform: {
       // an additional hook is needed for better perf on webpack and rolldown
       filter: {
@@ -439,6 +442,22 @@ export const unplugin = /* #__PURE__ */ createUnplugin(unpluginFactory)
 
 export default unplugin
 ```
+
+#### `meta.frameworkVersion`
+
+When your plugin needs behavior depending on the exact bundler version,
+use `meta.frameworkVersion` which is the version string `"x.y.z"`
+from the host framework version.
+
+|     Rollup     |      Vite      | webpack | Rspack | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
+| :------------: | :------------: | :-----: | :----: | :-----: | :--: | :------------: | :------------: | :-: |
+| ✅<sup>1</sup> | ✅<sup>1</sup> |   ✅    |   ✅   |   ❌    |  ❌  | ✅<sup>1</sup> | ✅<sup>1</sup> | ✅  |
+
+::: details Notice
+
+1. For Rollup-compatible hosts (`vite`, `rollup`, `rolldown`, `unloader`), `frameworkVersion` is not available until hook code, starting with `buildStart`.
+
+:::
 
 ### Plugins
 

@@ -35,6 +35,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
         const meta: UnpluginContextMeta = {
           framework: 'webpack',
+          frameworkVersion: (compiler as any).webpack?.version,
           webpack: {
             compiler,
           },

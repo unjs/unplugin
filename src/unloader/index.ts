@@ -12,7 +12,7 @@ export function getUnloaderPlugin<UserOptions = Record<string, never>, Nested ex
     const rawPlugins = toArray(factory(userOptions!, meta))
 
     const plugins = rawPlugins.map((rawPlugin) => {
-      const plugin = toRollupPlugin(rawPlugin, 'unloader') as UnloaderPlugin
+      const plugin = toRollupPlugin(rawPlugin, 'unloader', meta) as UnloaderPlugin
       return plugin
     })
 

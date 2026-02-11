@@ -176,7 +176,9 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
-export type UnpluginContextMeta = Partial<RollupContextMeta> & ({
+export type UnpluginContextMeta = Partial<RollupContextMeta> & {
+  frameworkVersion?: string | undefined
+} & ({
   framework: 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader'
 } | {
   framework: 'webpack'
