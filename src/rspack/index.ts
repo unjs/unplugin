@@ -18,13 +18,13 @@ import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin,
 const TRANSFORM_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  __DEV__ ? '../../dist/rspack/loaders/transform.mjs' : 'rspack/loaders/transform.mjs',
+  import.meta.dev ? '../../dist/rspack/loaders/transform.mjs' : 'rspack/loaders/transform.mjs',
 )
 
 const LOAD_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  __DEV__ ? '../../dist/rspack/loaders/load.mjs' : 'rspack/loaders/load.mjs',
+  import.meta.dev ? '../../dist/rspack/loaders/load.mjs' : 'rspack/loaders/load.mjs',
 )
 
 export function getRspackPlugin<UserOptions = Record<string, never>>(

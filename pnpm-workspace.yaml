@@ -12,21 +12,21 @@ packages:
   - docs
 
 catalog:
-  '@antfu/eslint-config': ^7.0.0
-  '@antfu/ni': ^28.1.0
-  '@types/node': ^25.0.8
+  '@antfu/eslint-config': ^7.2.0
+  '@antfu/ni': ^28.2.0
+  '@types/node': ^25.0.10
   '@types/picomatch': ^4.0.2
-  '@typescript/native-preview': 7.0.0-dev.20260113.1
+  '@typescript/native-preview': 7.0.0-dev.20260122.3
   ansis: ^4.2.0
   bumpp: ^10.4.0
-  bun-types-no-globals: ^1.3.4
+  bun-types-no-globals: ^1.3.6
   esbuild: ^0.27.2
   eslint: ^9.39.2
-  eslint-plugin-format: ^1.3.0
+  eslint-plugin-format: ^1.3.1
   jiti: ^2.6.1
   lint-staged: ^16.2.7
   simple-git-hooks: ^2.13.1
-  tsdown: ^0.20.0-beta.2
+  tsdown: ^0.20.0
   typescript: ~5.9.3
   unplugin-unused: ^0.5.6
 
@@ -38,21 +38,21 @@ catalogs:
     consola: ^3.4.2
     dotenv: ^17.2.3
     markdown-it: ^14.1.0
-    markdown-it-github-alerts: ^1.0.0
+    markdown-it-github-alerts: ^1.0.1
     ofetch: ^1.5.1
-    unocss: ^66.5.12
-    unplugin-icons: ^23.0.0
+    unocss: ^66.6.0
+    unplugin-icons: ^23.0.1
     unplugin-vue-components: ^31.0.0
     vitepress: 2.0.0-alpha.15
-    vitepress-plugin-group-icons: ^1.6.5
-    vue: ^3.5.26
+    vitepress-plugin-group-icons: ^1.7.1
+    vue: ^3.5.27
     vue-tsc: ^3.2.2
 
   peer:
     '@farmfe/core': ^1.7.11
-    '@rspack/core': ^1.7.2
-    rolldown: ^1.0.0-beta.59
-    rollup: ^4.55.1
+    '@rspack/core': ^1.7.3
+    rolldown: ^1.0.0-rc.1
+    rollup: ^4.56.0
     unloader: ^0.8.3
     vite: ^7.3.1
     webpack: ^5.104.1
@@ -64,7 +64,7 @@ catalogs:
 
   test:
     '@farmfe/cli': ^1.0.5
-    '@rspack/cli': ^1.7.2
+    '@rspack/cli': ^1.7.3
     magic-string: ^0.30.21
     vitest: ^4.0.17
     webpack-cli: ^6.0.1
