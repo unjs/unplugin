@@ -374,7 +374,7 @@ While **Unplugin** provides compatible layers for some hooks, the functionality 
 
 ### Hooks
 
-```ts {9,18,20,26,29,32,35,38,50} twoslash
+```ts {9,18,24,27,30,33,36,48} twoslash
 import type { UnpluginFactory } from 'unplugin'
 import { createUnplugin } from 'unplugin'
 
