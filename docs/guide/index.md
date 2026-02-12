@@ -386,11 +386,15 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   options,
   meta,
 ) => {
-  console.log(meta.framework) // vite rollup webpack esbuild rspack...
+  // unplugin context meta
+  console.log(meta.framework) // vite | rollup | webpack | esbuild | rspack | farm | bun
+
   return {
     name: 'unplugin-starter',
     buildStart() {
-      console.log(meta.frameworkVersion) // x.y.z
+      // framework version is available since buildStart hook
+      // not all frameworks support provides version info
+      console.log(meta.frameworkVersion) // x.y.z | undefined
     },
     transform: {
       // an additional hook is needed for better perf on webpack and rolldown
@@ -447,7 +451,9 @@ export default unplugin
 
 When your plugin needs behavior depending on the exact bundler version,
 use `meta.frameworkVersion` which is the version string `"x.y.z"`
-from the host framework version.
+from the host framework version, or `undefined` if the framework does not provide version info.
+
+Also note that the `frameworkVersion` is usually only available after the `buildStart` hook, before that it might be `undefined`.
 
 |     Rollup     |       Vite       | webpack | Rspack | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
 | :------------: | :--------------: | :-----: | :----: | :-----: | :--: | :------------: | :------------: | :-: |
