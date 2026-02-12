@@ -17,15 +17,17 @@ const rspackVersion: string = require('@rspack/core/package.json').version
 const entry = path.resolve(__dirname, '../filter/test-src/entry.js')
 const runWithRegisterHooks = typeof (nodeModule as any).registerHooks === 'function' ? it : it.skip
 
-describe('frameworkVersion', () => {
-  it('rollup sets frameworkVersion from rollupVersion', async () => {
+describe('framework versions', () => {
+  it('rollup sets versions.rollup', async () => {
     let hostVersion: string | undefined
-    let frameworkVersion: string | undefined
+    let versionsRollup: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
     const plugin = createUnplugin((_options, meta) => ({
-      name: 'framework-version-rollup',
+      name: 'framework-versions-rollup',
       buildStart() {
         hostVersion = (this as any).meta?.rollupVersion
-        frameworkVersion = meta.frameworkVersion
+        versionsRollup = meta.versions.rollup
+        allVersions = meta.versions
       },
     }))
 
@@ -35,17 +37,20 @@ describe('frameworkVersion', () => {
     })
 
     expect(hostVersion).toBe(rollupVersion)
-    expect(frameworkVersion).toBe(rollupVersion)
+    expect(versionsRollup).toBe(rollupVersion)
+    expect(allVersions).toMatchObject({ rollup: rollupVersion, unplugin: expect.any(String) })
   })
 
-  it('vite sets frameworkVersion from viteVersion', async () => {
+  it('vite sets versions.vite and underlying bundler version', async () => {
     let hostVersion: string | undefined
-    let frameworkVersion: string | undefined
+    let versionsVite: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
     const plugin = createUnplugin((_options, meta) => ({
-      name: 'framework-version-vite',
+      name: 'framework-versions-vite',
       buildStart() {
         hostVersion = (this as any).meta?.viteVersion
-        frameworkVersion = meta.frameworkVersion
+        versionsVite = meta.versions.vite
+        allVersions = meta.versions
       },
     }))
 
@@ -62,17 +67,23 @@ describe('frameworkVersion', () => {
     })
 
     expect(hostVersion).toBe(viteVersion)
-    expect(frameworkVersion).toBe(viteVersion)
+    expect(versionsVite).toBe(viteVersion)
+    // Vite uses either Rollup or Rolldown as underlying bundler
+    expect(allVersions?.vite).toBe(viteVersion)
+    expect(allVersions?.rollup || allVersions?.rolldown).toBeDefined()
+    expect(allVersions?.unplugin).toBeDefined()
   })
 
-  it('rolldown sets frameworkVersion from rolldownVersion', async () => {
+  it('rolldown sets versions.rolldown', async () => {
     let hostVersion: string | undefined
-    let frameworkVersion: string | undefined
+    let versionsRolldown: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
     const plugin = createUnplugin((_options, meta) => ({
-      name: 'framework-version-rolldown',
+      name: 'framework-versions-rolldown',
       buildStart() {
         hostVersion = (this as any).meta?.rolldownVersion
-        frameworkVersion = meta.frameworkVersion
+        versionsRolldown = meta.versions.rolldown
+        allVersions = meta.versions
       },
     }))
 
@@ -82,17 +93,20 @@ describe('frameworkVersion', () => {
     })
 
     expect(hostVersion).toBe(rolldownVersion)
-    expect(frameworkVersion).toBe(rolldownVersion)
+    expect(versionsRolldown).toBe(rolldownVersion)
+    expect(allVersions).toMatchObject({ rolldown: rolldownVersion, unplugin: expect.any(String) })
   })
 
-  runWithRegisterHooks('unloader sets frameworkVersion from unloaderVersion', () => {
+  runWithRegisterHooks('unloader sets versions.unloader', () => {
     let hostVersion: string | undefined
-    let frameworkVersion: string | undefined
+    let versionsUnloader: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
     const plugin = createUnplugin<undefined, false>((_options, meta) => ({
-      name: 'framework-version-unloader',
+      name: 'framework-versions-unloader',
       buildStart() {
         hostVersion = (this as any).meta?.unloaderVersion
-        frameworkVersion = meta.frameworkVersion
+        versionsUnloader = meta.versions.unloader
+        allVersions = meta.versions
       },
     }))
 
@@ -102,17 +116,20 @@ describe('frameworkVersion', () => {
     deactivate()
 
     expect(hostVersion).toBe(unloaderVersion)
-    expect(frameworkVersion).toBe(unloaderVersion)
+    expect(versionsUnloader).toBe(unloaderVersion)
+    expect(allVersions).toMatchObject({ unloader: unloaderVersion, unplugin: expect.any(String) })
   })
 
-  it('webpack sets frameworkVersion from compiler.webpack.version', async () => {
+  it('webpack sets versions.webpack', async () => {
     let hostVersion: string | undefined
-    let frameworkVersion: string | undefined
+    let versionsWebpack: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
     const plugin = createUnplugin((_options, meta) => ({
-      name: 'framework-version-webpack',
+      name: 'framework-versions-webpack',
       buildStart() {
         hostVersion = (this.getNativeBuildContext?.() as any)?.compiler?.webpack?.version
-        frameworkVersion = meta.frameworkVersion
+        versionsWebpack = meta.versions.webpack
+        allVersions = meta.versions
       },
     }))
 
@@ -127,17 +144,20 @@ describe('frameworkVersion', () => {
     })
 
     expect(hostVersion).toBe(webpackVersion)
-    expect(frameworkVersion).toBe(webpackVersion)
+    expect(versionsWebpack).toBe(webpackVersion)
+    expect(allVersions).toMatchObject({ webpack: webpackVersion, unplugin: expect.any(String) })
   }, 20_000)
 
-  it('rspack sets frameworkVersion from compiler.rspack.rspackVersion', async () => {
+  it('rspack sets versions.rspack', async () => {
     let hostVersion: string | undefined
-    let frameworkVersion: string | undefined
+    let versionsRspack: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
     const plugin = createUnplugin((_options, meta) => ({
-      name: 'framework-version-rspack',
+      name: 'framework-versions-rspack',
       buildStart() {
         hostVersion = (this.getNativeBuildContext?.() as any)?.compiler?.rspack?.rspackVersion
-        frameworkVersion = meta.frameworkVersion
+        versionsRspack = meta.versions.rspack
+        allVersions = meta.versions
       },
     }))
 
@@ -152,17 +172,20 @@ describe('frameworkVersion', () => {
     })
 
     expect(hostVersion).toBe(rspackVersion)
-    expect(frameworkVersion).toBe(rspackVersion)
+    expect(versionsRspack).toBe(rspackVersion)
+    expect(allVersions).toMatchObject({ rspack: rspackVersion, unplugin: expect.any(String) })
   }, 20_000)
 
-  onlyBun('bun sets frameworkVersion from Bun.version', async () => {
+  onlyBun('bun sets versions.bun', async () => {
     let hostVersion: string | undefined
-    let frameworkVersion: string | undefined
+    let versionsBun: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
     const plugin = createUnplugin<undefined, false>((_options, meta) => ({
-      name: 'framework-version-bun',
+      name: 'framework-versions-bun',
       buildStart() {
         hostVersion = Bun.version
-        frameworkVersion = meta.frameworkVersion
+        versionsBun = meta.versions.bun
+        allVersions = meta.versions
       },
     }))
 
@@ -173,6 +196,7 @@ describe('frameworkVersion', () => {
     })
 
     expect(hostVersion).toBe(Bun.version)
-    expect(frameworkVersion).toBe(Bun.version)
+    expect(versionsBun).toBe(Bun.version)
+    expect(allVersions).toMatchObject({ bun: Bun.version, unplugin: expect.any(String) })
   })
 })

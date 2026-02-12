@@ -176,8 +176,20 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
+export type SupportedFramework = 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader' | 'webpack' | 'rspack' | 'esbuild' | 'bun'
+
 export type UnpluginContextMeta = Partial<RollupContextMeta> & {
-  frameworkVersion?: string | undefined
+  /**
+   * Version information for frameworks.
+   * Access the current framework version via: `meta.versions[meta.framework]`
+   *
+   * For Vite, includes both Vite's version and the underlying bundler (Rollup/Rolldown).
+   * For Rollup-compatible frameworks (vite, rollup, rolldown, unloader),
+   * versions are only available after the `buildStart` hook.
+   *
+   * The `unplugin` version is always available for all frameworks.
+   */
+  versions: Partial<Record<SupportedFramework | 'unplugin', string>>
 } & ({
   framework: 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader'
 } | {

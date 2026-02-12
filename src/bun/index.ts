@@ -1,6 +1,7 @@
 import type { BunPlugin, Loader } from 'bun'
 import type { TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
 import { isAbsolute } from 'node:path'
+import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { createBuildContext, createPluginContext, guessLoader } from './utils'
@@ -19,7 +20,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
 
     const meta: UnpluginContextMeta = {
       framework: 'bun',
-      frameworkVersion: Bun.version,
+      versions: { bun: Bun.version, unplugin: unpluginVersion },
     }
 
     const plugins = toArray(factory(userOptions!, meta))

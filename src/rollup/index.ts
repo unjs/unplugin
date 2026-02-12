@@ -1,4 +1,5 @@
 import type { Hook, HookFnMap, RollupPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
+import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 
@@ -8,6 +9,7 @@ export function getRollupPlugin<UserOptions = Record<string, never>, Nested exte
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'rollup',
+      versions: { unplugin: unpluginVersion }, // Will be populated in buildStart hook
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
     const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin, 'rollup', meta))
@@ -87,32 +89,30 @@ export function toRollupPlugin(
     ? buildStartHook?.handler
     : buildStartHook
 
-  switch (key) {
-    case 'vite':
-      replaceHookHandler('buildStart', buildStartHook, function (...args) {
-        meta.frameworkVersion = (this as any)?.meta?.viteVersion
-        return buildStartHandler?.apply(this, args)
-      })
-      break
-    case 'rollup':
-      replaceHookHandler('buildStart', buildStartHook, function (...args) {
-        meta.frameworkVersion = (this as any)?.meta?.rollupVersion
-        return buildStartHandler?.apply(this, args)
-      })
-      break
-    case 'rolldown':
-      replaceHookHandler('buildStart', buildStartHook, function (...args) {
-        meta.frameworkVersion = (this as any)?.meta?.rolldownVersion
-        return buildStartHandler?.apply(this, args)
-      })
-      break
-    case 'unloader':
-      replaceHookHandler('buildStart', buildStartHook, function (...args) {
-        meta.frameworkVersion = (this as any)?.meta?.unloaderVersion
-        return buildStartHandler?.apply(this, args)
-      })
-      break
-  }
+  replaceHookHandler('buildStart', buildStartHook, function (...args) {
+    const versions: Partial<Record<string, string>> = { unplugin: unpluginVersion }
+
+    // Vite's own version
+    const viteVersion = (this as any)?.meta?.viteVersion
+    if (viteVersion)
+      versions.vite = viteVersion
+
+    // Underlying bundler version (Rollup or Rolldown)
+    const rollupVersion = (this as any)?.meta?.rollupVersion
+    if (rollupVersion)
+      versions.rollup = rollupVersion
+
+    const rolldownVersion = (this as any)?.meta?.rolldownVersion
+    if (rolldownVersion)
+      versions.rolldown = rolldownVersion
+
+    const unloaderVersion = (this as any)?.meta?.unloaderVersion
+    if (unloaderVersion)
+      versions.unloader = unloaderVersion
+
+    meta.versions = versions
+    return buildStartHandler?.apply(this, args)
+  })
 
   return plugin as RollupPlugin
 

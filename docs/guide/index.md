@@ -386,16 +386,10 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   options,
   meta,
 ) => {
-  // unplugin context meta
   console.log(meta.framework) // vite | rollup | webpack | esbuild | rspack | farm | bun
 
   return {
     name: 'unplugin-starter',
-    buildStart() {
-      // framework version is available since buildStart hook
-      // not all frameworks support provides version info
-      console.log(meta.frameworkVersion) // x.y.z | undefined
-    },
     transform: {
       // an additional hook is needed for better perf on webpack and rolldown
       filter: {
@@ -447,13 +441,33 @@ export const unplugin = /* #__PURE__ */ createUnplugin(unpluginFactory)
 export default unplugin
 ```
 
-#### `meta.frameworkVersion`
+#### `meta.versions`
 
 When your plugin needs behavior depending on the exact bundler version,
-use `meta.frameworkVersion` which is the version string `"x.y.z"`
-from the host framework version, or `undefined` if the framework does not provide version info.
+use `meta.versions[meta.framework]` to access the version string `"x.y.z"`
+from the host framework, or `undefined` if the framework does not provide version info.
 
-Also note that the `frameworkVersion` is usually only available after the `buildStart` hook, before that it might be `undefined`.
+```typescript
+export const unpluginFactory = defineUnplugin((options, meta) => {
+  return {
+    name: 'my-plugin',
+    buildStart() {
+      // Access current framework version
+      const version = meta.versions[meta.framework]
+      console.log(`Running on ${meta.framework} ${version}`)
+
+      // unplugin version is always available
+      console.log(`unplugin version: ${meta.versions.unplugin}`)
+
+      // For Vite, you can also access the underlying bundler version
+      if (meta.framework === 'vite') {
+        const bundlerVersion = meta.versions.rollup ?? meta.versions.rolldown
+        console.log(`Vite is using bundler version: ${bundlerVersion}`)
+      }
+    }
+  }
+})
+```
 
 |     Rollup     |       Vite       | webpack | Rspack | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
 | :------------: | :--------------: | :-----: | :----: | :-----: | :--: | :------------: | :------------: | :-: |
@@ -461,8 +475,8 @@ Also note that the `frameworkVersion` is usually only available after the `build
 
 ::: details Notice
 
-1. For Rollup-compatible hosts (`vite`, `rollup`, `rolldown`, `unloader`), `frameworkVersion` is not available until hook code, starting with `buildStart`.
-2. Vite added `this.meta.viteVersion` in `v7.0.0` ([vitejs/vite#20088](https://github.com/vitejs/vite/pull/20088)). On Vite versions before `v7.0.0`, `meta.frameworkVersion` is `undefined`.
+1. For Rollup-compatible hosts (`vite`, `rollup`, `rolldown`, `unloader`), framework versions are only available after the `buildStart` hook. The `unplugin` version is always available.
+2. Vite requires **v7.0.0 or later** to provide `viteVersion` ([vitejs/vite#20088](https://github.com/vitejs/vite/pull/20088)). On earlier versions, `meta.versions.vite` will be `undefined`. Vite also provides the underlying bundler version (`rollup` or `rolldown`).
 
 :::
 

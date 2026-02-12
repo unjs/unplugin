@@ -13,7 +13,10 @@ describe('getRolldownPlugin', () => {
     const factory = vi.fn()
     const plugin = getRolldownPlugin(factory)
     plugin({ foo: 'bar' })
-    expect(factory).toHaveBeenCalledWith({ foo: 'bar' }, { framework: 'rolldown' })
+    expect(factory).toHaveBeenCalledWith({ foo: 'bar' }, expect.objectContaining({
+      framework: 'rolldown',
+      versions: expect.objectContaining({ unplugin: expect.any(String) }),
+    }))
   })
 
   it('should return an array of plugins if multiple plugins are returned', () => {
