@@ -55,7 +55,7 @@ catalogs:
     rollup: ^4.56.0
     unloader: ^0.8.3
     vite: ^7.3.1
-    webpack: ^5.104.1
+    webpack: ^5.105.2
 
   prod:
     '@jridgewell/remapping': ^2.3.5
