@@ -43,8 +43,7 @@ export function toRollupPlugin(
 
   if (plugin.load && (
     plugin.loadInclude
-    || (!nativeFilter && typeof plugin.load === 'object' && plugin.load.filter))
-  ) {
+    || (!nativeFilter && typeof plugin.load === 'object' && plugin.load.filter))) {
     const loadHook = plugin.load
     const { handler, filter } = normalizeObjectHook('load', loadHook)
 
@@ -63,8 +62,7 @@ export function toRollupPlugin(
 
   if (plugin.transform && (
     plugin.transformInclude
-    || (!nativeFilter && typeof plugin.transform === 'object' && plugin.transform.filter))
-  ) {
+    || (!nativeFilter && typeof plugin.transform === 'object' && plugin.transform.filter))) {
     const transformHook = plugin.transform
     const { handler, filter } = normalizeObjectHook('transform', transformHook)
 
