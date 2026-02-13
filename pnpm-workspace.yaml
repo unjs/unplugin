@@ -50,7 +50,7 @@ catalogs:
 
   peer:
     '@farmfe/core': ^1.7.11
-    '@rspack/core': ^1.7.3
+    '@rspack/core': ^1.7.6
     rolldown: ^1.0.0-rc.1
     rollup: ^4.56.0
     unloader: ^0.8.3
@@ -64,7 +64,7 @@ catalogs:
 
   test:
     '@farmfe/cli': ^1.0.5
-    '@rspack/cli': ^1.7.3
+    '@rspack/cli': ^1.7.6
     magic-string: ^0.30.21
     vitest: ^4.0.17
     webpack-cli: ^6.0.1
