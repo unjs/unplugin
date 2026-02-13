@@ -13,7 +13,10 @@ describe('getUnloaderPlugin', () => {
     const factory = vi.fn()
     const plugin = getUnloaderPlugin(factory)
     plugin({ foo: 'bar' })
-    expect(factory).toHaveBeenCalledWith({ foo: 'bar' }, { framework: 'unloader' })
+    expect(factory).toHaveBeenCalledWith({ foo: 'bar' }, expect.objectContaining({
+      framework: 'unloader',
+      versions: expect.objectContaining({ unplugin: expect.any(String) }),
+    }))
   })
 
   it('should return an array of plugins if multiple plugins are returned', () => {

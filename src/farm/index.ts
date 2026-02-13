@@ -17,6 +17,7 @@ import type {
 import type { JsPluginExtended, WatchChangeEvents } from './utils'
 
 import path from 'node:path'
+import { version as unpluginVersion } from '../../package.json'
 
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
@@ -43,6 +44,7 @@ export function getFarmPlugin<
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'farm',
+      versions: { unplugin: unpluginVersion }, // farm doesn't expose version to plugins yet
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
 

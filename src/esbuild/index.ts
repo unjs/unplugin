@@ -10,6 +10,7 @@ import type {
 } from '../types'
 import fs from 'node:fs'
 import path from 'node:path'
+import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import {
@@ -54,6 +55,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
   return (userOptions?: UserOptions): EsbuildPlugin => {
     const meta: UnpluginContextMeta = {
       framework: 'esbuild',
+      versions: { unplugin: unpluginVersion }, // esbuild doesn't expose version to plugins
     }
     const plugins = toArray(factory(userOptions!, meta))
 

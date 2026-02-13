@@ -4,6 +4,7 @@ import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, Unp
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
+import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
@@ -33,8 +34,10 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
         // In the loader we strip the made up prefix path again
         const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), '_virtual_')
 
+        const version = (compiler as any).webpack?.version
         const meta: UnpluginContextMeta = {
           framework: 'webpack',
+          versions: { webpack: version, unplugin: unpluginVersion },
           webpack: {
             compiler,
           },

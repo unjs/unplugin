@@ -1,4 +1,5 @@
 import type { UnpluginContextMeta, UnpluginFactory, UnpluginInstance, VitePlugin } from '../types'
+import { version as unpluginVersion } from '../../package.json'
 import { toRollupPlugin } from '../rollup'
 import { toArray } from '../utils/general'
 
@@ -8,11 +9,12 @@ export function getVitePlugin<UserOptions = Record<string, never>, Nested extend
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'vite',
+      versions: { unplugin: unpluginVersion }, // Will be populated in buildStart hook
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
 
     const plugins = rawPlugins.map((rawPlugin) => {
-      const plugin = toRollupPlugin(rawPlugin, 'vite') as VitePlugin
+      const plugin = toRollupPlugin(rawPlugin, 'vite', meta) as VitePlugin
       return plugin
     })
 

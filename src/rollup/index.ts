@@ -1,4 +1,5 @@
 import type { Hook, HookFnMap, RollupPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, UnpluginOptions } from '../types'
+import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 
@@ -8,14 +9,19 @@ export function getRollupPlugin<UserOptions = Record<string, never>, Nested exte
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'rollup',
+      versions: { unplugin: unpluginVersion }, // Will be populated in buildStart hook
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
-    const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin, 'rollup'))
+    const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin, 'rollup', meta))
     return plugins.length === 1 ? plugins[0] : plugins
   }) as UnpluginInstance<UserOptions, Nested>['rollup']
 }
 
-export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldown' | 'vite' | 'unloader'): RollupPlugin {
+export function toRollupPlugin(
+  plugin: UnpluginOptions,
+  key: 'rollup' | 'rolldown' | 'vite' | 'unloader',
+  meta: UnpluginContextMeta,
+): RollupPlugin {
   const nativeFilter = key === 'rolldown'
 
   if (
@@ -78,18 +84,48 @@ export function toRollupPlugin(plugin: UnpluginOptions, key: 'rollup' | 'rolldow
   if (plugin[key])
     Object.assign(plugin, plugin[key])
 
+  const buildStartHook = plugin.buildStart as Hook<HookFnMap['buildStart'], any> | undefined
+  const buildStartHandler = typeof buildStartHook === 'object'
+    ? buildStartHook?.handler
+    : buildStartHook
+
+  replaceHookHandler('buildStart', buildStartHook, function (...args) {
+    const versions: Partial<Record<string, string>> = { unplugin: unpluginVersion }
+
+    // Vite's own version
+    const viteVersion = (this as any)?.meta?.viteVersion
+    if (viteVersion)
+      versions.vite = viteVersion
+
+    // Underlying bundler version (Rollup or Rolldown)
+    const rollupVersion = (this as any)?.meta?.rollupVersion
+    if (rollupVersion)
+      versions.rollup = rollupVersion
+
+    const rolldownVersion = (this as any)?.meta?.rolldownVersion
+    if (rolldownVersion)
+      versions.rolldown = rolldownVersion
+
+    const unloaderVersion = (this as any)?.meta?.unloaderVersion
+    if (unloaderVersion)
+      versions.unloader = unloaderVersion
+
+    meta.versions = versions
+    return buildStartHandler?.apply(this, args)
+  })
+
   return plugin as RollupPlugin
 
   function replaceHookHandler<K extends keyof HookFnMap>(
     name: K,
-    hook: Hook<HookFnMap[K], any>,
+    hook: Hook<HookFnMap[K], any> | undefined,
     handler: HookFnMap[K],
   ) {
-    if (typeof hook === 'function') {
-      plugin[name] = handler as any
+    if (typeof hook === 'object') {
+      hook.handler = handler
     }
     else {
-      hook.handler = handler
+      plugin[name] = handler as any
     }
   }
 }

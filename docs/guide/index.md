@@ -386,7 +386,8 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   options,
   meta,
 ) => {
-  console.log(meta.framework) // vite rollup webpack esbuild rspack...
+  console.log(meta.framework) // vite | rollup | webpack | esbuild | rspack | farm | bun
+
   return {
     name: 'unplugin-starter',
     transform: {
@@ -439,6 +440,45 @@ export const unplugin = /* #__PURE__ */ createUnplugin(unpluginFactory)
 
 export default unplugin
 ```
+
+#### `meta.versions`
+
+When your plugin needs behavior depending on the exact bundler version,
+use `meta.versions[meta.framework]` to access the version string `"x.y.z"`
+from the host framework, or `undefined` if the framework does not provide version info.
+
+```typescript
+export const unpluginFactory = defineUnplugin((options, meta) => {
+  return {
+    name: 'my-plugin',
+    buildStart() {
+      // Access current framework version
+      const version = meta.versions[meta.framework]
+      console.log(`Running on ${meta.framework} ${version}`)
+
+      // unplugin version is always available
+      console.log(`unplugin version: ${meta.versions.unplugin}`)
+
+      // For Vite, you can also access the underlying bundler version
+      if (meta.framework === 'vite') {
+        const bundlerVersion = meta.versions.rollup ?? meta.versions.rolldown
+        console.log(`Vite is using bundler version: ${bundlerVersion}`)
+      }
+    }
+  }
+})
+```
+
+|     Rollup     |       Vite       | webpack | Rspack | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
+| :------------: | :--------------: | :-----: | :----: | :-----: | :--: | :------------: | :------------: | :-: |
+| ✅<sup>1</sup> | ✅<sup>1,2</sup> |   ✅    |   ✅   |   ❌    |  ❌  | ✅<sup>1</sup> | ✅<sup>1</sup> | ✅  |
+
+::: details Notice
+
+1. For Rollup-compatible hosts (`vite`, `rollup`, `rolldown`, `unloader`), framework versions are only available after the `buildStart` hook. The `unplugin` version is always available.
+2. Vite requires **v7.0.0 or later** to provide `viteVersion` ([vitejs/vite#20088](https://github.com/vitejs/vite/pull/20088)). On earlier versions, `meta.versions.vite` will be `undefined`. Vite also provides the underlying bundler version (`rollup` or `rolldown`).
+
+:::
 
 ### Plugins
 

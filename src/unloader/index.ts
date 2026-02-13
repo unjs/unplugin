@@ -1,4 +1,5 @@
 import type { UnloaderPlugin, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
+import { version as unpluginVersion } from '../../package.json'
 import { toRollupPlugin } from '../rollup'
 import { toArray } from '../utils/general'
 
@@ -8,11 +9,12 @@ export function getUnloaderPlugin<UserOptions = Record<string, never>, Nested ex
   return ((userOptions?: UserOptions) => {
     const meta: UnpluginContextMeta = {
       framework: 'unloader',
+      versions: { unplugin: unpluginVersion }, // Will be populated in buildStart hook
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
 
     const plugins = rawPlugins.map((rawPlugin) => {
-      const plugin = toRollupPlugin(rawPlugin, 'unloader') as UnloaderPlugin
+      const plugin = toRollupPlugin(rawPlugin, 'unloader', meta) as UnloaderPlugin
       return plugin
     })
 
