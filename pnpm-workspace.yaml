@@ -33,7 +33,7 @@ catalogs:
 
   docs:
     '@iconify-json/ri': ^1.2.10
-    '@shikijs/vitepress-twoslash': ^3.22.0
+    '@shikijs/vitepress-twoslash': ^4.0.0
     case-police: ^2.1.1
     consola: ^3.4.2
     dotenv: ^17.3.1
