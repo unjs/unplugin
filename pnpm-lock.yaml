@@ -89,8 +89,8 @@ catalogs:
       specifier: ^31.0.0
       version: 31.0.0
     vitepress:
-      specifier: 2.0.0-alpha.15
-      version: 2.0.0-alpha.15
+      specifier: 2.0.0-alpha.16
+      version: 2.0.0-alpha.16
     vitepress-plugin-group-icons:
       specifier: ^1.7.1
       version: 1.7.1
@@ -297,7 +297,7 @@ importers:
         version: 31.0.0(vue@3.5.29(typescript@5.9.3))
       vitepress:
         specifier: catalog:docs
-        version: 2.0.0-alpha.15(@types/node@25.3.2)(change-case@5.4.4)(jiti@2.6.1)(postcss@8.5.6)(terser@5.46.0)(typescript@5.9.3)(yaml@2.8.2)
+        version: 2.0.0-alpha.16(@types/node@25.3.2)(change-case@5.4.4)(jiti@2.6.1)(postcss@8.5.6)(terser@5.46.0)(typescript@5.9.3)(yaml@2.8.2)
       vitepress-plugin-group-icons:
         specifier: catalog:docs
         version: 1.7.1(vite@7.3.1(@types/node@25.3.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2))
@@ -519,6 +519,9 @@ packages:
 
   '@docsearch/js@4.6.0':
     resolution: {integrity: sha512-9/rbgkm/BgTq46cwxIohvSAz3koOFjnPpg0mwkJItAfzKbQIj+310PvwtgUY1YITDuGCag6yOL50GW2DBkaaBw==}
+
+  '@docsearch/sidepanel-js@4.6.0':
+    resolution: {integrity: sha512-lFT5KLwlzUmpoGArCScNoK41l9a22JYsEPwBzMrz+/ILVR5Ax87UphCuiyDFQWEvEmbwzn/kJx5W/O5BUlN1Rw==}
 
   '@dprint/formatter@0.5.1':
     resolution: {integrity: sha512-cdZUrm0iv/FnnY3CKE2dEcVhNEzrC551aE2h2mTFwQCRBrqyARLDnb7D+3PlXTUVp3s34ftlnGOVCmhLT9DeKA==}
@@ -5287,8 +5290,8 @@ packages:
       vite:
         optional: true
 
-  vitepress@2.0.0-alpha.15:
-    resolution: {integrity: sha512-jhjSYd10Z6RZiKOa7jy0xMVf5NB5oSc/lS3bD/QoUc6V8PrvQR5JhC9104NEt6+oTGY/ftieVWxY9v7YI+1IjA==}
+  vitepress@2.0.0-alpha.16:
+    resolution: {integrity: sha512-w1nwsefDVIsje7BZr2tsKxkZutDGjG0YoQ2yxO7+a9tvYVqfljYbwj5LMYkPy8Tb7YbPwa22HtIhk62jbrvuEQ==}
     hasBin: true
     peerDependencies:
       markdown-it-mathjax3: ^4
@@ -5834,6 +5837,8 @@ snapshots:
   '@docsearch/css@4.6.0': {}
 
   '@docsearch/js@4.6.0': {}
+
+  '@docsearch/sidepanel-js@4.6.0': {}
 
   '@dprint/formatter@0.5.1': {}
 
@@ -10856,10 +10861,11 @@ snapshots:
     optionalDependencies:
       vite: 7.3.1(@types/node@25.3.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)
 
-  vitepress@2.0.0-alpha.15(@types/node@25.3.2)(change-case@5.4.4)(jiti@2.6.1)(postcss@8.5.6)(terser@5.46.0)(typescript@5.9.3)(yaml@2.8.2):
+  vitepress@2.0.0-alpha.16(@types/node@25.3.2)(change-case@5.4.4)(jiti@2.6.1)(postcss@8.5.6)(terser@5.46.0)(typescript@5.9.3)(yaml@2.8.2):
     dependencies:
       '@docsearch/css': 4.6.0
       '@docsearch/js': 4.6.0
+      '@docsearch/sidepanel-js': 4.6.0
       '@iconify-json/simple-icons': 1.2.71
       '@shikijs/core': 3.23.0
       '@shikijs/transformers': 3.23.0
