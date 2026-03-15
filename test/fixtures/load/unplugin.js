@@ -3,6 +3,7 @@ const MagicString = require('magic-string')
 const { createUnplugin } = require('unplugin')
 
 const targetFileReg = /(?:\/|\\)msg\.js$/
+
 module.exports = createUnplugin((options) => {
   return {
     name: 'load-called-before-transform',
