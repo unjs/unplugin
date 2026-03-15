@@ -38,6 +38,8 @@ module.exports = createUnplugin(() => {
 
       const s = new MagicString(code)
       const index = code.indexOf('msg#hash')
+      if (index === -1)
+        throw new Error(`load expected token "msg#hash" in ${JSON.stringify(id)}`)
 
       s.overwrite(index, index + 'msg#hash'.length, 'msg -> through the load hook -> __unplugin__#hash')
       return s.toString()
@@ -55,6 +57,8 @@ module.exports = createUnplugin(() => {
 
       const s = new MagicString(code)
       const index = code.indexOf('__unplugin__')
+      if (index === -1)
+        throw new Error(`transform expected token "__unplugin__" in ${JSON.stringify(id)}`)
 
       s.overwrite(index, index + '__unplugin__'.length, 'transform')
       return {
