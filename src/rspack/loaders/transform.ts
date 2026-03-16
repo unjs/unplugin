@@ -1,7 +1,7 @@
 import type { LoaderContext } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeObjectHook } from '../../utils/filter'
-import { normalizeAbsolutePath, unescapeResourcePath } from '../../utils/webpack-like'
+import { unescapeResourcePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
 export default async function transform(
@@ -14,7 +14,7 @@ export default async function transform(
   if (!plugin?.transform)
     return callback(null, source, map)
 
-  const id = normalizeAbsolutePath(unescapeResourcePath(this.resource))
+  const id = unescapeResourcePath(this.resource)
   const context = createContext(this)
   const { handler, filter } = normalizeObjectHook('transform', plugin.transform)
   if (!filter(id, source))
