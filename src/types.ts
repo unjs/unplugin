@@ -2,6 +2,7 @@ import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlug
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
 import type { BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
+import type { PathLike, Stats } from 'node:fs'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
 import type { Plugin as UnloaderPlugin } from 'unloader'
@@ -57,11 +58,18 @@ export type NativeBuildContext
     | { framework: 'bun', build: BunPluginBuilder }
 
 export interface UnpluginBuildContext {
+  fs: UnpluginContextFs
   addWatchFile: (id: string) => void
   emitFile: (emittedFile: EmittedAsset) => void
   getWatchFiles: () => string[]
   parse: (input: string, options?: any) => any
   getNativeBuildContext?: (() => NativeBuildContext) | undefined
+}
+
+export interface UnpluginContextFs {
+  readFile: (path: PathLike, options?: any) => Promise<string | Uint8Array>
+  stat: (path: PathLike, options?: any) => Promise<Stats>
+  lstat: (path: PathLike, options?: any) => Promise<Stats>
 }
 
 export type StringOrRegExp = string | RegExp

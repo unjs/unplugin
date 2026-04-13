@@ -2,10 +2,13 @@ import type { Compilation, Compiler, LoaderContext } from '@rspack/core'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import { Buffer } from 'node:buffer'
 import { resolve } from 'node:path'
+import { createBuildContextFs } from '../utils/fs'
 import { parse } from '../utils/parse'
 
 export function createBuildContext(compiler: Compiler, compilation: Compilation, loaderContext?: LoaderContext, inputSourceMap?: any): UnpluginBuildContext {
+  const inputFs = loaderContext?.fs ?? compiler.inputFileSystem
   return {
+    fs: createBuildContextFs(inputFs),
     getNativeBuildContext() {
       return {
         framework: 'rspack',

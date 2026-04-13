@@ -138,6 +138,9 @@ catalogs:
     picomatch:
       specifier: ^4.0.4
       version: 4.0.4
+    pify:
+      specifier: ^6.1.0
+      version: 6.1.0
     webpack-virtual-modules:
       specifier: ^0.6.2
       version: 0.6.2
@@ -168,6 +171,9 @@ importers:
       picomatch:
         specifier: catalog:prod
         version: 4.0.4
+      pify:
+        specifier: catalog:prod
+        version: 6.1.0
       webpack-virtual-modules:
         specifier: catalog:prod
         version: 0.6.2
@@ -4404,6 +4410,10 @@ packages:
   pify@4.0.1:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
+
+  pify@6.1.0:
+    resolution: {integrity: sha512-KocF8ve28eFjjuBKKGvzOBGzG8ew2OqOOSxTTZhirkzH7h3BI1vyzqlR0qbfcDBve1Yzo3FVlWUAtCRrbVN8Fw==}
+    engines: {node: '>=14.16'}
 
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
@@ -9548,6 +9558,8 @@ snapshots:
   picomatch@4.0.4: {}
 
   pify@4.0.1: {}
+
+  pify@6.1.0: {}
 
   pkg-dir@4.2.0:
     dependencies:

@@ -12,6 +12,10 @@ describe('createFarmContext', () => {
 
     const farmContext = createFarmContext(mockContext)
 
+    expect(farmContext.fs).toBeDefined()
+    expect(farmContext.fs.readFile).toBeInstanceOf(Function)
+    expect(farmContext.fs.stat).toBeInstanceOf(Function)
+    expect(farmContext.fs.lstat).toBeInstanceOf(Function)
     expect(farmContext.parse).toBeDefined()
     expect(farmContext.parse).toBeInstanceOf(Function)
   })

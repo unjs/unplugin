@@ -2,6 +2,7 @@ import type { Loader, PluginBuilder } from 'bun'
 import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../types'
 import fs from 'node:fs'
 import path from 'node:path'
+import { createBuildContextFs } from '../utils/fs'
 import { parse } from '../utils/parse'
 
 const ExtToLoader: Record<string, Loader> = {
@@ -30,6 +31,7 @@ export function createBuildContext(build: PluginBuilder): UnpluginBuildContext {
   const watchFiles: string[] = []
 
   return {
+    fs: createBuildContextFs(),
     addWatchFile(file) {
       watchFiles.push(file)
     },

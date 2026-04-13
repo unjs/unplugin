@@ -46,6 +46,7 @@
   "dependencies": {
     "@jridgewell/remapping": "catalog:prod",
     "picomatch": "catalog:prod",
+    "pify": "catalog:prod",
     "webpack-virtual-modules": "catalog:prod"
   },
   "devDependencies": {

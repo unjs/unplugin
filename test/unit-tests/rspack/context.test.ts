@@ -10,6 +10,10 @@ describe('createBuildContext', () => {
     const inputSourceMap = { name: 'inputSourceMap' }
 
     const buildContext = createBuildContext(compiler as any, compilation as any, loaderContext as any, inputSourceMap as any)
+    expect(buildContext.fs).toBeInstanceOf(Object)
+    expect(buildContext.fs.readFile).toBeInstanceOf(Function)
+    expect(buildContext.fs.stat).toBeInstanceOf(Function)
+    expect(buildContext.fs.lstat).toBeInstanceOf(Function)
 
     expect(buildContext.getNativeBuildContext!()).toEqual({
       framework: 'rspack',

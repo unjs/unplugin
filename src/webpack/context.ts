@@ -4,6 +4,7 @@ import { Buffer } from 'node:buffer'
 import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 import process from 'node:process'
+import { createBuildContextFs } from '../utils/fs'
 import { parse } from '../utils/parse'
 
 interface ContextOptions {
@@ -31,7 +32,9 @@ export function getSource(fileSource: string | Uint8Array): sources.RawSource {
 }
 
 export function createBuildContext(options: ContextOptions, compiler: Compiler, compilation?: Compilation, loaderContext?: LoaderContext<{ unpluginName: string }>, inputSourceMap?: any): UnpluginBuildContext {
+  const inputFs = loaderContext?.fs ?? compiler.inputFileSystem
   return {
+    fs: createBuildContextFs(inputFs),
     parse,
     addWatchFile(id) {
       options.addWatchFile(resolve(process.cwd(), id))

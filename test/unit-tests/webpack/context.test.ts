@@ -37,6 +37,10 @@ describe('webpack - utils', () => {
       } as unknown as Compilation
 
       const buildContext = createBuildContext(mockOptions, mockCompiler, mockCompilation)
+      expect(buildContext.fs).toBeInstanceOf(Object)
+      expect(buildContext.fs.readFile).toBeInstanceOf(Function)
+      expect(buildContext.fs.stat).toBeInstanceOf(Function)
+      expect(buildContext.fs.lstat).toBeInstanceOf(Function)
       buildContext.addWatchFile('file2.js')
       expect(mockOptions.addWatchFile).toHaveBeenCalledWith(expect.stringContaining('file2.js'))
 

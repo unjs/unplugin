@@ -61,6 +61,7 @@ catalogs:
   prod:
     '@jridgewell/remapping': ^2.3.5
     picomatch: ^4.0.4
+    pify: ^6.1.0
     webpack-virtual-modules: ^0.6.2
 
   test:
