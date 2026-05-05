@@ -14,7 +14,7 @@ permissions: {}
 
 jobs:
   unit-test:
-    uses: sxzz/workflows/.github/workflows/unit-test.yml@v1
+    uses: sxzz/workflows/.github/workflows/unit-test.yml@main
     with:
       os-matrix: '"ubuntu-latest", "windows-latest"'
       typecheck: pnpm run build && pnpm run typecheck
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup JS
-        uses: sxzz/workflows/setup-js@v1
+        uses: sxzz/workflows/setup-js@main
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2.1.2
