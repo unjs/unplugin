@@ -24,7 +24,7 @@ lastUpdated: false
 
 You can try **Unplugin** in your browser directly.
 
-[![open](/open_in_codeflow.svg)](https://stackblitz.com/~/github.com/yuyinws/unplugin-starter?file=src/index.ts)
+[![open](/open_in_codeflow.svg)](https://stackblitz.com/~/github.com/unplugin/unplugin-starter?file=src/index.ts)
 
 ## Creating an Unplugin package
 
