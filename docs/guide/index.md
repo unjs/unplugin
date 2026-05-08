@@ -219,8 +219,8 @@ export default defineConfig({
 | ~~`transformInclude`~~<sup>2</sup>                                                |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
 | [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |  ✅  |    ✅    |       ✅        |
 | [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |   ✅    |       ❌        |       ✅        |  ✅  |    ✅    |       ❌        |
-| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    | ❌ <sup>6</sup> |
-| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    | ❌ <sup>6</sup> |
+| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
+| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
 
 ::: details Notice
 
@@ -231,7 +231,7 @@ export default defineConfig({
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
 5. Rspack supports `resolveId` with a minimum required version of v1.0.0-alpha.1.
-6. Bun's plugin API doesn't have an `onEnd` hook yet, so `buildEnd` and `writeBundle` are not supported.
+6. Bun supports `buildEnd` and `writeBundle` with a minimum required version of v1.3.0.
 
 :::
 
