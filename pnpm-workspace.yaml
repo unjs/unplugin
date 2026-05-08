@@ -1,11 +1,10 @@
 catalogMode: prefer
 ignoreWorkspaceRootCheck: true
+minimumReleaseAge: 0
 shellEmulator: true
 trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 604800 # 7 days
 trustPolicyExclude:
-  - chokidar@4.0.3
-  - koa@2.16.3
-  - rxjs@7.8.2
   - ua-parser-js@1.0.41
 
 packages:
@@ -13,61 +12,61 @@ packages:
 
 catalogs:
   dev:
-    '@antfu/eslint-config': ^7.6.1
-    '@antfu/ni': ^28.2.0
-    '@types/node': ^25.3.2
-    '@types/picomatch': ^4.0.2
-    '@typescript/native-preview': 7.0.0-dev.20260227.1
+    '@antfu/eslint-config': ^8.2.0
+    '@antfu/ni': ^30.1.0
+    '@types/node': ^25.6.2
+    '@types/picomatch': ^4.0.3
+    '@typescript/native-preview': 7.0.0-dev.20260508.1
     ansis: ^4.2.0
-    bumpp: ^10.4.1
-    bun-types-no-globals: ^1.3.10
-    esbuild: ^0.27.3
-    eslint: ^10.0.2
+    bumpp: ^11.1.0
+    bun-types-no-globals: ^1.3.11
+    esbuild: ^0.28.0
+    eslint: ^10.3.0
     eslint-plugin-format: ^2.0.1
-    jiti: ^2.6.1
-    lint-staged: ^16.2.7
+    jiti: ^2.7.0
+    lint-staged: ^17.0.2
     simple-git-hooks: ^2.13.1
-    tsdown: ^0.21.0-beta.2
-    typescript: ~5.9.3
+    tsdown: ^0.22.0
+    typescript: ~6.0.3
     unplugin-unused: ^0.5.7
 
   docs:
     '@iconify-json/ri': ^1.2.10
-    '@shikijs/vitepress-twoslash': ^4.0.0
-    case-police: ^2.2.0
+    '@shikijs/vitepress-twoslash': ^4.0.2
+    case-police: ^2.2.1
     consola: ^3.4.2
-    dotenv: ^17.3.1
+    dotenv: ^17.4.2
     markdown-it: ^14.1.1
     markdown-it-github-alerts: ^1.0.1
     ofetch: ^1.5.1
-    unocss: ^66.6.2
+    unocss: ^66.6.8
     unplugin-icons: ^23.0.1
-    unplugin-vue-components: ^31.0.0
+    unplugin-vue-components: ^32.0.0
     vitepress: 2.0.0-alpha.15
-    vitepress-plugin-group-icons: ^1.7.1
-    vue: ^3.5.29
-    vue-tsc: ^3.2.5
+    vitepress-plugin-group-icons: ^1.7.5
+    vue: ^3.5.34
+    vue-tsc: ^3.2.8
 
   peer:
     '@farmfe/core': ^1.7.11
-    '@rspack/core': ^1.7.6
-    rolldown: ^1.0.0-rc.6
-    rollup: ^4.59.0
-    unloader: ^0.8.3
-    vite: ^7.3.1
-    webpack: ^5.105.3
+    '@rspack/core': ^2.0.2
+    rolldown: ^1.0.0
+    rollup: ^4.60.3
+    unloader: ^0.9.0
+    vite: ^8.0.11
+    webpack: ^5.106.2
 
   prod:
     '@jridgewell/remapping': ^2.3.5
-    picomatch: ^4.0.3
+    picomatch: ^4.0.4
     webpack-virtual-modules: ^0.6.2
 
   test:
     '@farmfe/cli': ^1.0.5
-    '@rspack/cli': ^1.7.6
+    '@rspack/cli': ^2.0.2
     magic-string: ^0.30.21
-    vitest: ^4.0.18
-    webpack-cli: ^6.0.1
+    vitest: ^4.1.5
+    webpack-cli: ^7.0.2
 
 allowBuilds:
   core-js: false
