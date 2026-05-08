@@ -1,6 +1,6 @@
 import nodeModule, { createRequire } from 'node:module'
 import path from 'node:path'
-import { registerSync } from 'unloader'
+import { register } from 'unloader'
 import { describe, expect, it } from 'vitest'
 import { createUnplugin } from '../../../src/define'
 import { onlyBun } from '../../utils'
@@ -110,8 +110,8 @@ describe('framework versions', () => {
       },
     }))
 
-    const deactivate = registerSync({
-      plugins: [plugin.unloader() as any],
+    const deactivate = register({
+      plugins: [plugin.unloader()],
     })
     deactivate()
 

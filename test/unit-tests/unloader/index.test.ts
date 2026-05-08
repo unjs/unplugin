@@ -22,7 +22,7 @@ describe('getUnloaderPlugin', () => {
   it('should return an array of plugins if multiple plugins are returned', () => {
     const factory = vi.fn(() => [() => {}, () => {}])
     const plugin = getUnloaderPlugin(factory)
-    const result = plugin({}) as UnloaderPlugin<any>[]
+    const result = plugin({}) as UnloaderPlugin[]
     expect(Array.isArray(result)).toBe(true)
     expect(result.length).toBe(2)
   })
