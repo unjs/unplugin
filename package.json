@@ -51,6 +51,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
     "@antfu/ni": "catalog:dev",
+    "@arethetypeswrong/core": "catalog:dev",
     "@farmfe/cli": "catalog:test",
     "@farmfe/core": "catalog:peer",
     "@rspack/cli": "catalog:test",
@@ -67,6 +68,7 @@
     "jiti": "catalog:dev",
     "lint-staged": "catalog:dev",
     "magic-string": "catalog:test",
+    "publint": "catalog:dev",
     "rolldown": "catalog:peer",
     "rollup": "catalog:peer",
     "simple-git-hooks": "catalog:dev",
