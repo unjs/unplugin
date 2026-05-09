@@ -310,6 +310,7 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 | Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Farm | Rolldown | Bun |
 | ------------------------------------------------------------------------------------- | :----: | :--: | :-----: | :-----: | :----: | :--: | :------: | :-: |
 | [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)<sup>1</sup>       |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
+| [`this.fs`](https://rollupjs.org/plugin-development/#this-fs)<sup>3</sup>             |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
 | [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    | ✅  |
 | [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>2</sup> |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
 | [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    | ✅  |
@@ -320,6 +321,7 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 1. For bundlers other than Rollup, Rolldown, or Vite, `setParseImpl` must be called to manually provide a parser implementation. Parsers such as [Acorn](https://github.com/acornjs/acorn), [Babel](https://babeljs.io/), or [Oxc](https://oxc.rs/) can be used.
 2. Currently, [`this.emitFile`](https://rollupjs.org/plugin-development/#thisemitfile) only supports the `EmittedAsset` variant.
+3. For bundlers without native plugin context file-system APIs, `this.fs` falls back to a Node-compatible implementation.
 
 :::
 

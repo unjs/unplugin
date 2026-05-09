@@ -122,6 +122,10 @@ describe('utils', () => {
       expect(actual.parse).toBeInstanceOf(Function)
       expect(actual.emitFile).toBeInstanceOf(Function)
       expect(actual.addWatchFile).toBeInstanceOf(Function)
+      expect(actual.fs).toBeInstanceOf(Object)
+      expect(actual.fs.readFile).toBeInstanceOf(Function)
+      expect(actual.fs.stat).toBeInstanceOf(Function)
+      expect(actual.fs.lstat).toBeInstanceOf(Function)
       expect(actual.getNativeBuildContext).toBeInstanceOf(Function)
 
       expect(actual.getNativeBuildContext!()).toEqual({

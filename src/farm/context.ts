@@ -2,6 +2,7 @@ import type { CompilationContext } from '@farmfe/core'
 import type { UnpluginBuildContext, UnpluginContext } from '../types'
 import { Buffer } from 'node:buffer'
 import { extname } from 'node:path'
+import { createBuildContextFs } from '../utils/fs'
 import { parse } from '../utils/parse'
 
 export function createFarmContext(
@@ -9,6 +10,7 @@ export function createFarmContext(
   currentResolveId?: string,
 ): UnpluginBuildContext {
   return {
+    fs: createBuildContextFs(),
     parse,
 
     addWatchFile(id: string) {

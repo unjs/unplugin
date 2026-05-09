@@ -6,6 +6,7 @@ import { Buffer } from 'node:buffer'
 import fs from 'node:fs'
 import path from 'node:path'
 import remapping from '@jridgewell/remapping'
+import { createBuildContextFs } from '../utils/fs'
 import { parse } from '../utils/parse'
 
 const ExtToLoader: Record<string, Loader> = {
@@ -113,6 +114,7 @@ export function createBuildContext(build: PluginBuild): UnpluginBuildContext {
   const watchFiles: string[] = []
   const { initialOptions } = build
   return {
+    fs: createBuildContextFs(),
     parse,
     addWatchFile() {
       throw new Error('unplugin/esbuild: addWatchFile outside supported hooks (resolveId, load, transform)')
