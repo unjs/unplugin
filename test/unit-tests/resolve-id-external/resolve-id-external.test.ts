@@ -65,6 +65,7 @@ describe('load hook should not be called when resolveId hook returned `external:
         lib: {
           entry: entryFilePath,
           name: 'TestLib',
+          formats: ['es'],
         },
         rollupOptions: {
           external: externals,

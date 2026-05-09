@@ -25,6 +25,11 @@ function createUnpluginWithCallback(
 }
 
 // We extract this check because all bundlers should behave the same
+// Filter out bundler-internal virtual modules (e.g. Rolldown's `\0rolldown/runtime.js`).
+function isUserId(id: unknown): id is string {
+  return typeof id === 'string' && !id.startsWith('\0')
+}
+
 function checkHookCalls(
   name: 'webpack' | 'rollup' | 'vite' | 'rspack' | 'esbuild' | 'bun',
   resolveIdCallback: Mock,
@@ -33,17 +38,22 @@ function checkHookCalls(
   loadCallback: Mock,
 ): void {
   const EXPECT_CALLED_TIMES = 4
-  // Ensure that all bundlers call the hooks the same amount of times
-  expect(resolveIdCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
-  expect(transformIncludeCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
-  expect(transformCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
-  expect(loadCallback).toHaveBeenCalledTimes(EXPECT_CALLED_TIMES)
+  const resolveIdIds = resolveIdCallback.mock.calls.map(call => call[0]).filter(isUserId)
+  const transformIncludeIds = transformIncludeCallback.mock.calls.map(call => call[0]).filter(isUserId)
+  const transformIds = transformCallback.mock.calls.map(call => call[1]).filter(isUserId)
+  const loadIds = loadCallback.mock.calls.map(call => call[0]).filter(isUserId)
+
+  // Ensure that all bundlers call the hooks the same amount of times (excluding bundler-internal virtual ids)
+  expect(resolveIdIds).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(transformIncludeIds).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(transformIds).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(loadIds).toHaveLength(EXPECT_CALLED_TIMES)
 
   // Ensure that each hook was called with unique ids
-  expect(new Set(resolveIdCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
-  expect(new Set(transformIncludeCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
-  expect(new Set(transformCallback.mock.calls.map(call => call[1]))).toHaveLength(EXPECT_CALLED_TIMES)
-  expect(new Set(loadCallback.mock.calls.map(call => call[0]))).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(resolveIdIds)).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(transformIncludeIds)).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(transformIds)).toHaveLength(EXPECT_CALLED_TIMES)
+  expect(new Set(loadIds)).toHaveLength(EXPECT_CALLED_TIMES)
 
   // Ensure that the `resolveId` hook was called with expected values
   expect(resolveIdCallback).toHaveBeenCalledWith(entryFilePath, undefined, expect.anything())
@@ -52,8 +62,7 @@ function checkHookCalls(
   expect(resolveIdCallback).toHaveBeenCalledWith('./default-export', expect.anything(), expect.anything())
 
   // Ensure that the `transformInclude`, `transform` and `load` hooks were called with the same (absolute) ids
-  const ids = transformIncludeCallback.mock.calls.map(call => call[0])
-  ids.forEach((id) => {
+  transformIncludeIds.forEach((id) => {
     expect(path.isAbsolute(id)).toBe(true)
 
     const hasExtraOptions = name === 'vite' || name === 'rollup'
@@ -97,6 +106,7 @@ describe('id parameter should be consistent across hooks and plugins', () => {
         lib: {
           entry: entryFilePath,
           name: 'TestLib',
+          formats: ['es'],
         },
         rollupOptions: {
           external: externals,

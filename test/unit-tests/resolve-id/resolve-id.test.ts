@@ -14,7 +14,8 @@ function createUnpluginWithCallback(resolveIdCallback: UnpluginOptions['resolveI
 }
 
 // We extract this check because all bundlers should behave the same
-const propsToTest: (keyof (UnpluginContext & UnpluginBuildContext))[] = ['addWatchFile', 'emitFile', 'getWatchFiles', 'parse', 'error', 'warn']
+// `getWatchFiles` is intentionally omitted: Vite 8 uses Rolldown whose plugin context lacks it.
+const propsToTest: (keyof (UnpluginContext & UnpluginBuildContext))[] = ['addWatchFile', 'emitFile', 'parse', 'error', 'warn']
 
 function createResolveIdHook(): Mock {
   const mockResolveIdHook = vi.fn(function (this: UnpluginContext & UnpluginBuildContext) {
@@ -72,6 +73,7 @@ describe('resolveId hook', () => {
         lib: {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
           name: 'TestLib',
+          formats: ['es'],
         },
         write: false, // don't output anything
       },

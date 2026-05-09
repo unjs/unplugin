@@ -83,6 +83,7 @@ describe('filter', () => {
         lib: {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
           name: 'TestLib',
+          formats: ['es'],
         },
         write: false, // don't output anything
       },
