@@ -1,6 +1,6 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
-import type { BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
+import type { Loader as BunLoader, BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
@@ -47,6 +47,8 @@ export interface SourceMapCompact {
 
 export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null | undefined } | null | undefined | void
 
+export type LoadResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null | undefined, loader?: BunLoader | undefined } | null | undefined | void
+
 export interface ExternalIdResult { id: string, external?: boolean | undefined }
 
 export type NativeBuildContext
@@ -89,7 +91,7 @@ export interface HookFnMap {
   buildEnd: (this: UnpluginBuildContext) => Thenable<void>
 
   transform: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
-  load: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
+  load: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<LoadResult>
   resolveId: (
     this: UnpluginBuildContext & UnpluginContext,
     id: string,

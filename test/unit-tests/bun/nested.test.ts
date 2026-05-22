@@ -131,4 +131,46 @@ describe.skipIf(typeof Bun === 'undefined')('bun nested plugin support', () => {
 
     Bun.file = originalFile
   })
+
+  it('should respect loader returned from a load hook', async () => {
+    const unplugin = createUnplugin(() => ({
+      name: 'jsx-virtual',
+      resolveId(id: string) {
+        return id === 'virtual:component' ? id : null
+      },
+      load(id: string) {
+        if (id === 'virtual:component') {
+          return { code: 'export default () => <h1>hi</h1>', loader: 'tsx' as const }
+        }
+        return null
+      },
+    }))
+
+    const bunPlugin = unplugin.bun()
+    const onLoadCallbacks: Array<{ namespace?: string, cb: Bun.OnLoadCallback }> = []
+    const mockBuild = {
+      onResolve: vi.fn(),
+      onLoad: vi.fn((options, callback) => {
+        onLoadCallbacks.push({ namespace: options.namespace, cb: callback })
+      }),
+      onStart: vi.fn(),
+      config: { outdir: './dist' },
+    } as never as Bun.PluginBuilder
+
+    await bunPlugin.setup(mockBuild)
+
+    const virtualHandler = onLoadCallbacks.find(c => c.namespace !== 'file')?.cb
+    expect(virtualHandler).toBeDefined()
+
+    const result = await virtualHandler!({
+      path: 'virtual:component',
+      // Bun's own guess for an id without a recognized extension
+      loader: 'js',
+    } as Bun.OnLoadArgs)
+
+    expect(result).toEqual({
+      contents: 'export default () => <h1>hi</h1>',
+      loader: 'tsx',
+    })
+  })
 })

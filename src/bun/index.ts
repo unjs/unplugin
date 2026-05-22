@@ -1,5 +1,5 @@
 import type { BunPlugin, Loader } from 'bun'
-import type { TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
+import type { LoadResult, TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
 import { isAbsolute } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
@@ -131,6 +131,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
         ): Promise<{ contents: string, loader: Loader } | undefined> {
           let code: string | undefined
           let hasResult = false
+          let loaderOverride: Loader | undefined
 
           const namespaceLoadHooks = namespace === 'file'
             ? loadHooks
@@ -143,7 +144,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               continue
 
             const { mixedContext, errors, warnings } = createPluginContext(context)
-            const result = await handler.call(mixedContext, id)
+            const result: LoadResult = await handler.call(mixedContext, id)
 
             for (const warning of warnings) {
               console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
@@ -160,6 +161,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             }
             else if (typeof result === 'object' && result !== null) {
               code = result.code
+              loaderOverride = result.loader
               hasResult = true
               break
             }
@@ -205,7 +207,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           if (hasResult && code !== undefined) {
             return {
               contents: code,
-              loader: loader ?? guessLoader(id),
+              loader: loaderOverride ?? loader ?? guessLoader(id),
             }
           }
         }
