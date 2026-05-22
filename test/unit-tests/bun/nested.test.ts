@@ -131,4 +131,36 @@ describe.skipIf(typeof Bun === 'undefined')('bun nested plugin support', () => {
 
     Bun.file = originalFile
   })
+
+  it('should call plugin.bun.setup with the build before standard hooks', async () => {
+    const callOrder: string[] = []
+    const bunSetup = vi.fn((_build: Bun.PluginBuilder) => {
+      callOrder.push('plugin.bun.setup')
+    })
+
+    const unplugin = createUnplugin(() => ({
+      name: 'with-bun-setup',
+      bun: { setup: bunSetup },
+      resolveId: () => null,
+      load: () => null,
+    }))
+
+    const bunPlugin = unplugin.bun()
+    const mockBuild = {
+      onResolve: vi.fn(() => {
+        callOrder.push('onResolve')
+      }),
+      onLoad: vi.fn(() => {
+        callOrder.push('onLoad')
+      }),
+      onStart: vi.fn(),
+      config: { outdir: './dist' },
+    } as never as Bun.PluginBuilder
+
+    await bunPlugin.setup(mockBuild)
+
+    expect(bunSetup).toHaveBeenCalledTimes(1)
+    expect(bunSetup).toHaveBeenCalledWith(mockBuild)
+    expect(callOrder).toEqual(['plugin.bun.setup', 'onResolve', 'onLoad', 'onLoad'])
+  })
 })

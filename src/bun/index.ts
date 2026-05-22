@@ -32,6 +32,10 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
       async setup(build) {
         const context = createBuildContext(build)
 
+        for (const plugin of plugins) {
+          await plugin.bun?.setup?.(build)
+        }
+
         if (plugins.some(plugin => plugin.buildStart)) {
           build.onStart(async () => {
             for (const plugin of plugins) {
