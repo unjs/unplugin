@@ -6,6 +6,12 @@ import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { createBuildContext, createPluginContext, guessLoader } from './utils'
 
+// Coerce plugin.name to satisfy Bun's namespace validator:
+// https://github.com/oven-sh/bun/blob/12d77d1ac561771e9fa1d0822e954273248e7f9a/src/js/builtins/BundlerPlugin.ts#L215-L217
+function toBunNamespace(name: string): string {
+  return name.replace(/[^\w$-]/g, '-')
+}
+
 export function getBunPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['bun'] {
@@ -102,7 +108,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
                 if (!isAbsolute(result)) {
                   return {
                     path: result,
-                    namespace: plugin.name,
+                    namespace: toBunNamespace(plugin.name),
                   }
                 }
                 return { path: result }
@@ -112,7 +118,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
                   return {
                     path: result.id,
                     external: result.external,
-                    namespace: plugin.name,
+                    namespace: toBunNamespace(plugin.name),
                   }
                 }
                 return {
@@ -217,7 +223,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
         }
 
         for (const pluginName of virtualModulePlugins) {
-          build.onLoad({ filter: /.*/, namespace: pluginName }, async (args) => {
+          build.onLoad({ filter: /.*/, namespace: toBunNamespace(pluginName) }, async (args) => {
             return processLoadTransform(args.path, pluginName, args.loader)
           })
         }
