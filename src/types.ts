@@ -147,7 +147,10 @@ export interface UnpluginOptions {
     config?: ((options: BuildOptions) => void) | undefined
   } | undefined
   farm?: Partial<FarmPlugin> | undefined
-  bun?: Partial<BunPlugin> | undefined
+  bun?: {
+    loader?: BunLoader | ((code: string, id: string) => BunLoader) | undefined
+    setup?: ((build: BunPluginBuilder) => void | Promise<void>) | undefined
+  } | undefined
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {

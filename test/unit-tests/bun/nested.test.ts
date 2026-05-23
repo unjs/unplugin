@@ -174,6 +174,130 @@ describe.skipIf(typeof Bun === 'undefined')('bun nested plugin support', () => {
     })
   })
 
+  it('should respect a static plugin.bun.loader', async () => {
+    const unplugin = createUnplugin(() => ({
+      name: 'tsx-loader',
+      resolveId(id: string) {
+        return id === 'virtual:component' ? id : null
+      },
+      load(id: string) {
+        if (id === 'virtual:component') {
+          return 'export default () => <h1>hi</h1>'
+        }
+        return null
+      },
+      bun: { loader: 'tsx' as const },
+    }))
+
+    const bunPlugin = unplugin.bun()
+    const onLoadCallbacks: Array<{ namespace?: string, cb: Bun.OnLoadCallback }> = []
+    const mockBuild = {
+      onResolve: vi.fn(),
+      onLoad: vi.fn((options, callback) => {
+        onLoadCallbacks.push({ namespace: options.namespace, cb: callback })
+      }),
+      onStart: vi.fn(),
+      config: { outdir: './dist' },
+    } as never as Bun.PluginBuilder
+
+    await bunPlugin.setup(mockBuild)
+
+    const virtualHandler = onLoadCallbacks.find(c => c.namespace !== 'file')?.cb
+    expect(virtualHandler).toBeDefined()
+
+    const result = await virtualHandler!({
+      path: 'virtual:component',
+      loader: 'js',
+    } as Bun.OnLoadArgs)
+
+    expect(result).toEqual({
+      contents: 'export default () => <h1>hi</h1>',
+      loader: 'tsx',
+    })
+  })
+
+  it('should call plugin.bun.loader as a function with code and id', async () => {
+    const loaderFn = vi.fn((_code: string, _id: string) => 'tsx' as const)
+    const unplugin = createUnplugin(() => ({
+      name: 'tsx-loader-fn',
+      resolveId(id: string) {
+        return id === 'virtual:component' ? id : null
+      },
+      load(id: string) {
+        if (id === 'virtual:component') {
+          return 'export default () => <h1>hi</h1>'
+        }
+        return null
+      },
+      bun: { loader: loaderFn },
+    }))
+
+    const bunPlugin = unplugin.bun()
+    const onLoadCallbacks: Array<{ namespace?: string, cb: Bun.OnLoadCallback }> = []
+    const mockBuild = {
+      onResolve: vi.fn(),
+      onLoad: vi.fn((options, callback) => {
+        onLoadCallbacks.push({ namespace: options.namespace, cb: callback })
+      }),
+      onStart: vi.fn(),
+      config: { outdir: './dist' },
+    } as never as Bun.PluginBuilder
+
+    await bunPlugin.setup(mockBuild)
+
+    const virtualHandler = onLoadCallbacks.find(c => c.namespace !== 'file')?.cb
+    const result = await virtualHandler!({
+      path: 'virtual:component',
+      loader: 'js',
+    } as Bun.OnLoadArgs)
+
+    expect(loaderFn).toHaveBeenCalledWith('export default () => <h1>hi</h1>', 'virtual:component')
+    expect(result).toEqual({
+      contents: 'export default () => <h1>hi</h1>',
+      loader: 'tsx',
+    })
+  })
+
+  it('should prefer load-hook loader over plugin.bun.loader', async () => {
+    const unplugin = createUnplugin(() => ({
+      name: 'loader-priority',
+      resolveId(id: string) {
+        return id === 'virtual:component' ? id : null
+      },
+      load(id: string) {
+        if (id === 'virtual:component') {
+          return { code: 'export default () => <h1>hi</h1>', loader: 'tsx' as const }
+        }
+        return null
+      },
+      bun: { loader: 'js' as const },
+    }))
+
+    const bunPlugin = unplugin.bun()
+    const onLoadCallbacks: Array<{ namespace?: string, cb: Bun.OnLoadCallback }> = []
+    const mockBuild = {
+      onResolve: vi.fn(),
+      onLoad: vi.fn((options, callback) => {
+        onLoadCallbacks.push({ namespace: options.namespace, cb: callback })
+      }),
+      onStart: vi.fn(),
+      config: { outdir: './dist' },
+    } as never as Bun.PluginBuilder
+
+    await bunPlugin.setup(mockBuild)
+
+    const virtualHandler = onLoadCallbacks.find(c => c.namespace !== 'file')?.cb
+    const result = await virtualHandler!({
+      path: 'virtual:component',
+      loader: 'js',
+    } as Bun.OnLoadArgs)
+
+    expect(result).toEqual({
+      contents: 'export default () => <h1>hi</h1>',
+      loader: 'tsx',
+    })
+  })
+
   it('should call plugin.bun.setup with the build before standard hooks', async () => {
     const callOrder: string[] = []
     const bunSetup = vi.fn((_build: Bun.PluginBuilder) => {
