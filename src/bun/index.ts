@@ -1,5 +1,5 @@
 import type { BunPlugin, Loader } from 'bun'
-import type { LoadResult, TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
+import type { TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
 import { isAbsolute } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
@@ -141,7 +141,6 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
         ): Promise<{ contents: string, loader: Loader } | undefined> {
           let code: string | undefined
           let hasResult = false
-          let loaderOverride: Loader | undefined
           let activePlugin: typeof plugins[number] | undefined
 
           const namespaceLoadHooks = namespace === 'file'
@@ -155,7 +154,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               continue
 
             const { mixedContext, errors, warnings } = createPluginContext(context)
-            const result: LoadResult = await handler.call(mixedContext, id)
+            const result: TransformResult = await handler.call(mixedContext, id)
 
             for (const warning of warnings) {
               console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
@@ -173,7 +172,6 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             }
             else if (typeof result === 'object' && result !== null) {
               code = result.code
-              loaderOverride = result.loader
               hasResult = true
               activePlugin = plugin
               break
@@ -221,8 +219,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             const pluginLoader = activePlugin?.bun?.loader
             return {
               contents: code,
-              loader: loaderOverride
-                ?? (pluginLoader && unwrapLoader(pluginLoader, code, id))
+              loader: (pluginLoader && unwrapLoader(pluginLoader, code, id))
                 ?? loader
                 ?? guessLoader(id),
             }

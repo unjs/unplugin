@@ -47,8 +47,6 @@ export interface SourceMapCompact {
 
 export type TransformResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null | undefined } | null | undefined | void
 
-export type LoadResult = string | { code: string, map?: SourceMapInput | SourceMapCompact | null | undefined, loader?: BunLoader | undefined } | null | undefined | void
-
 export interface ExternalIdResult { id: string, external?: boolean | undefined }
 
 export type NativeBuildContext
@@ -91,7 +89,7 @@ export interface HookFnMap {
   buildEnd: (this: UnpluginBuildContext) => Thenable<void>
 
   transform: (this: UnpluginBuildContext & UnpluginContext, code: string, id: string) => Thenable<TransformResult>
-  load: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<LoadResult>
+  load: (this: UnpluginBuildContext & UnpluginContext, id: string) => Thenable<TransformResult>
   resolveId: (
     this: UnpluginBuildContext & UnpluginContext,
     id: string,
