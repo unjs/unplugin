@@ -30,12 +30,6 @@ catalogs:
     bumpp:
       specifier: ^11.1.0
       version: 11.1.0
-    bun-types-no-globals:
-      specifier: ^1.3.11
-      version: 1.3.11
-    esbuild:
-      specifier: ^0.28.0
-      version: 0.28.0
     eslint:
       specifier: ^10.3.0
       version: 10.3.0
@@ -116,6 +110,12 @@ catalogs:
     '@rspack/core':
       specifier: ^2.0.2
       version: 2.0.2
+    bun-types-no-globals:
+      specifier: ^1.3.11
+      version: 1.3.11
+    esbuild:
+      specifier: ^0.28.0
+      version: 0.28.0
     rolldown:
       specifier: ^1.0.0
       version: 1.0.0
@@ -209,10 +209,10 @@ importers:
         specifier: catalog:dev
         version: 11.1.0
       bun-types-no-globals:
-        specifier: catalog:dev
+        specifier: catalog:peer
         version: 1.3.11
       esbuild:
-        specifier: catalog:dev
+        specifier: catalog:peer
         version: 0.28.0
       eslint:
         specifier: catalog:dev
