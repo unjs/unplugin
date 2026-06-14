@@ -54,6 +54,7 @@
     "@arethetypeswrong/core": "catalog:dev",
     "@farmfe/cli": "catalog:test",
     "@farmfe/core": "catalog:peer",
+    "@rsbuild/core": "catalog:peer",
     "@rspack/cli": "catalog:test",
     "@rspack/core": "catalog:peer",
     "@types/node": "catalog:dev",

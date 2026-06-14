@@ -16,6 +16,7 @@ lastUpdated: false
 - [webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/)
+- [Rsbuild](https://rsbuild.rs/)
 - [Rolldown](https://rolldown.rs/)
 - [Farm](https://www.farmfe.org/)
 - [Bun](https://bun.com/)
@@ -131,6 +132,20 @@ module.exports = {
 }
 ```
 
+```ts [Rsbuild]
+// rsbuild.config.ts
+import { defineConfig } from '@rsbuild/core'
+import Starter from 'unplugin-starter/rsbuild'
+
+export default defineConfig({
+  plugins: [
+    Starter({
+      /* options */
+    }),
+  ],
+})
+```
+
 ```js [esbuild]
 // esbuild.config.js
 import { build } from 'esbuild'
@@ -209,18 +224,18 @@ export default defineConfig({
 
 ## Supported Hooks
 
-| Hook                                                                              |     Rollup      | Vite | webpack |     esbuild     |     Rspack      | Farm | Rolldown |       Bun       |
-| --------------------------------------------------------------------------------- | :-------------: | :--: | :-----: | :-------------: | :-------------: | :--: | :------: | :-------------: |
-| [`enforce`](https://vite.dev/guide/api-plugin.html#plugin-ordering)               | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |  ✅  |    ✅    |       ❌        |
-| [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |   ✅    |       ✅        | ✅ <sup>5</sup> |  ✅  |    ✅    |       ✅        |
-| ~~`loadInclude`~~<sup>2</sup>                                                     |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |  ✅  |    ✅    |       ✅        |
-| ~~`transformInclude`~~<sup>2</sup>                                                |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |   ✅    |       ❌        |       ✅        |  ✅  |    ✅    |       ❌        |
-| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
-| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
+| Hook                                                                              |     Rollup      | Vite | webpack |     esbuild     |     Rspack      |     Rsbuild     | Farm | Rolldown |       Bun       |
+| --------------------------------------------------------------------------------- | :-------------: | :--: | :-----: | :-------------: | :-------------: | :-------------: | :--: | :------: | :-------------: |
+| [`enforce`](https://vite.dev/guide/api-plugin.html#plugin-ordering)               | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |       ✅        |  ✅  |    ✅    |       ❌        |
+| [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
+| [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |   ✅    |       ✅        | ✅ <sup>5</sup> | ✅ <sup>5</sup> |  ✅  |    ✅    |       ✅        |
+| ~~`loadInclude`~~<sup>2</sup>                                                     |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
+| [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
+| ~~`transformInclude`~~<sup>2</sup>                                                |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
+| [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
+| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |   ✅    |       ❌        |       ✅        |       ✅        |  ✅  |    ✅    |       ❌        |
+| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
+| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
 
 ::: details Notice
 
@@ -230,7 +245,7 @@ export default defineConfig({
    In Rollup, this hook has been polyfilled to match the behaviors. See the following usage examples for reference.
 3. Although esbuild can handle both JavaScript and CSS and many other file formats, you can only return JavaScript in `load` and `transform` results.
 4. Currently, `writeBundle` is only serves as a hook for the timing. It doesn't pass any arguments.
-5. Rspack supports `resolveId` with a minimum required version of v1.0.0-alpha.1.
+5. Rspack and Rsbuild support `resolveId` with a minimum required Rspack version of v1.0.0-alpha.1.
 6. Bun supports `buildEnd` and `writeBundle` with a minimum required version of v1.3.0.
 
 :::
@@ -268,6 +283,7 @@ export const rollupPlugin = unplugin.rollup
 export const rolldownPlugin = unplugin.rolldown
 export const webpackPlugin = unplugin.webpack
 export const rspackPlugin = unplugin.rspack
+export const rsbuildPlugin = unplugin.rsbuild
 export const esbuildPlugin = unplugin.esbuild
 export const farmPlugin = unplugin.farm
 export const bunPlugin = unplugin.bun
@@ -307,14 +323,14 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 ## Supported Context
 
-| Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Farm | Rolldown | Bun |
-| ------------------------------------------------------------------------------------- | :----: | :--: | :-----: | :-----: | :----: | :--: | :------: | :-: |
-| [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)<sup>1</sup>       |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
-| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    | ✅  |
-| [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>2</sup> |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
-| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |  ✅  |    ✅    | ✅  |
-| [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
-| [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |  ✅  |    ✅    | ✅  |
+| Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Rsbuild | Farm | Rolldown | Bun |
+| ------------------------------------------------------------------------------------- | :----: | :--: | :-----: | :-----: | :----: | :-----: | :--: | :------: | :-: |
+| [`this.parse`](https://rollupjs.org/plugin-development/#this-parse)<sup>1</sup>       |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
+| [`this.addWatchFile`](https://rollupjs.org/plugin-development/#this-addwatchfile)     |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
+| [`this.emitFile`](https://rollupjs.org/plugin-development/#this-emitfile)<sup>2</sup> |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
+| [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
+| [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
+| [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
 
 ::: info Notice
 
@@ -329,9 +345,9 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 ### Bundler Supported
 
-|         Rollup         | Vite | webpack | Rspack | esbuild | Farm | Rolldown | Bun |
-| :--------------------: | :--: | :-----: | :----: | :-----: | :--: | :------: | :-: |
-| ✅ `>=3.1`<sup>1</sup> |  ✅  |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
+|         Rollup         | Vite | webpack | Rspack | Rsbuild | esbuild | Farm | Rolldown | Bun |
+| :--------------------: | :--: | :-----: | :----: | :-----: | :-----: | :--: | :------: | :-: |
+| ✅ `>=3.1`<sup>1</sup> |  ✅  |   ✅    |   ✅   |   ✅    |   ✅    |  ✅  |    ✅    | ✅  |
 
 ::: details Notice
 
@@ -386,7 +402,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   options,
   meta,
 ) => {
-  console.log(meta.framework) // vite | rollup | webpack | esbuild | rspack | farm | bun
+  console.log(meta.framework) // vite | rollup | webpack | esbuild | rspack | rsbuild | farm | bun
 
   return {
     name: 'unplugin-starter',
@@ -416,6 +432,12 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
     },
     rspack(compiler) {
       // Configure Rspack compiler
+    },
+    rsbuild: {
+      // Rsbuild plugin
+      setup(api) {
+        // Configure Rsbuild
+      },
     },
     esbuild: {
       // Change the filter of onResolve and onLoad
@@ -464,19 +486,26 @@ export const unpluginFactory = defineUnplugin((options, meta) => {
         const bundlerVersion = meta.versions.rollup ?? meta.versions.rolldown
         console.log(`Vite is using bundler version: ${bundlerVersion}`)
       }
+
+      // For Rsbuild, you can also access the underlying Rspack version
+      if (meta.framework === 'rsbuild') {
+        const rspackVersion = meta.versions.rspack
+        console.log(`Rsbuild is using Rspack version: ${rspackVersion}`)
+      }
     }
   }
 })
 ```
 
-|     Rollup     |       Vite       | webpack | Rspack | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
-| :------------: | :--------------: | :-----: | :----: | :-----: | :--: | :------------: | :------------: | :-: |
-| ✅<sup>1</sup> | ✅<sup>1,2</sup> |   ✅    |   ✅   |   ❌    |  ❌  | ✅<sup>1</sup> | ✅<sup>1</sup> | ✅  |
+|     Rollup     |       Vite       | webpack | Rspack |    Rsbuild     | esbuild | Farm |    Rolldown    |    Unloader    | Bun |
+| :------------: | :--------------: | :-----: | :----: | :------------: | :-----: | :--: | :------------: | :------------: | :-: |
+| ✅<sup>1</sup> | ✅<sup>1,2</sup> |   ✅    |   ✅   | ✅<sup>3</sup> |   ❌    |  ❌  | ✅<sup>1</sup> | ✅<sup>1</sup> | ✅  |
 
 ::: details Notice
 
 1. For Rollup-compatible hosts (`vite`, `rollup`, `rolldown`, `unloader`), framework versions are only available after the `buildStart` hook. The `unplugin` version is always available.
 2. Vite requires **v7.0.0 or later** to provide `viteVersion` ([vitejs/vite#20088](https://github.com/vitejs/vite/pull/20088)). On earlier versions, `meta.versions.vite` will be `undefined`. Vite also provides the underlying bundler version (`rollup` or `rolldown`).
+3. Rsbuild also provides the underlying Rspack version via `meta.versions.rspack`.
 
 :::
 
@@ -492,6 +521,7 @@ import {
   createFarmPlugin,
   createRolldownPlugin,
   createRollupPlugin,
+  createRsbuildPlugin,
   createRspackPlugin,
   createVitePlugin,
   createWebpackPlugin,
@@ -503,6 +533,7 @@ const rolldownPlugin = createRolldownPlugin(/* factory */)
 const esbuildPlugin = createEsbuildPlugin(/* factory */)
 const webpackPlugin = createWebpackPlugin(/* factory */)
 const rspackPlugin = createRspackPlugin(/* factory */)
+const rsbuildPlugin = createRsbuildPlugin(/* factory */)
 const farmPlugin = createFarmPlugin(/* factory */)
 const bunPlugin = createBunPlugin(/* factory */)
 ```

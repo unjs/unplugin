@@ -1,10 +1,11 @@
-import type { RspackPluginInstance } from '@rspack/core'
+import type { Compiler, RspackPluginInstance } from '@rspack/core'
 import type {
   ResolvedUnpluginOptions,
   UnpluginContext,
   UnpluginContextMeta,
   UnpluginFactory,
   UnpluginInstance,
+  UnpluginOptions,
 } from '../types'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
@@ -27,16 +28,16 @@ const LOAD_LOADER = resolve(
   import.meta.dev ? '../../dist/rspack/loaders/load.mjs' : 'rspack/loaders/load.mjs',
 )
 
+interface ApplyRspackPluginsOptions {
+  applyRspackHook?: boolean
+}
+
 export function getRspackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['rspack'] {
   return (userOptions?: UserOptions): RspackPluginInstance => {
     return {
       apply(compiler) {
-        // We need the prefix of virtual modules to be an absolute path so rspack lets us load them (even if it's made up)
-        // In the loader we strip the made up prefix path again
-        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin ? '' : process.pid.toString())
-
         const version = (compiler as any).rspack?.rspackVersion ?? (compiler as any).rspack?.version
         const meta: UnpluginContextMeta = {
           framework: 'rspack',
@@ -46,187 +47,224 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
           },
         }
         const rawPlugins = toArray(factory(userOptions!, meta))
-        for (const rawPlugin of rawPlugins) {
-          const plugin = Object.assign(
-            rawPlugin,
-            {
-              __unpluginMeta: meta,
-              __virtualModulePrefix: VIRTUAL_MODULE_PREFIX,
-            },
-          ) as ResolvedUnpluginOptions
-
-          const externalModules = new Set<string>()
-
-          // resolveId hook
-          if (plugin.resolveId) {
-            const createPlugin = (plugin: ResolvedUnpluginOptions) => {
-              // rspack >= 1.5.0: use native virtual modules plugin
-              if (compiler.rspack.experiments.VirtualModulesPlugin)
-                return new compiler.rspack.experiments.VirtualModulesPlugin()
-              // rspack < 1.5.0: use fake virtual modules plugin
-              return new FakeVirtualModulesPlugin(plugin)
-            }
-            const vfs = createPlugin(plugin)
-            vfs.apply(compiler)
-            const vfsModules = new Map<string, Promise<unknown>>()
-            plugin.__vfsModules = vfsModules
-            plugin.__vfs = vfs as any
-
-            compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {
-              normalModuleFactory.hooks.resolve.tapPromise(plugin.name, async (resolveData) => {
-                const id = normalizeAbsolutePath(resolveData.request)
-
-                const requestContext = resolveData.contextInfo
-                let importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
-                const isEntry = requestContext.issuer === ''
-
-                if (importer?.startsWith(plugin.__virtualModulePrefix))
-                  importer = decodeURIComponent(importer.slice(plugin.__virtualModulePrefix.length))
-
-                const context = createBuildContext(compiler, compilation)
-                let error: Error | undefined
-                const pluginContext: UnpluginContext = {
-                  error(msg) {
-                    if (error == null)
-                      error = normalizeMessage(msg)
-                    else
-                      console.error(`unplugin/rspack: multiple errors returned from resolveId hook: ${msg}`)
-                  },
-                  warn(msg) {
-                    console.warn(`unplugin/rspack: warning from resolveId hook: ${msg}`)
-                  },
-                }
-
-                const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
-                if (!filter(id))
-                  return
-
-                const resolveIdResult = await handler.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
-
-                if (error != null)
-                  throw error
-                if (resolveIdResult == null)
-                  return
-
-                let resolved = typeof resolveIdResult === 'string' ? resolveIdResult : resolveIdResult.id
-
-                const isExternal = typeof resolveIdResult === 'string' ? false : resolveIdResult.external === true
-                if (isExternal)
-                  externalModules.add(resolved)
-
-                let isVirtual = true
-                try {
-                  // use the compiler's inputFileSystem if available, otherwise use the node:fs module
-                  (compiler.inputFileSystem?.statSync ?? fs.statSync)(resolved)
-                  isVirtual = false
-                }
-                catch {
-                  // already resolved virtual modules are not virtual themselves
-                  isVirtual = !isVirtualModuleId(resolved, plugin)
-                }
-
-                // If the resolved module does not exist,
-                // we treat it as a virtual module
-                if (isVirtual) {
-                  const encodedVirtualPath = encodeVirtualModuleId(resolved, plugin)
-
-                  if (!vfsModules.has(resolved)) {
-                    const fsPromise = Promise.resolve(vfs.writeModule(encodedVirtualPath, ''))
-                    vfsModules.set(resolved, fsPromise)
-                    await fsPromise
-                  }
-                  else {
-                    // Ensure that the module is written to the virtual file system
-                    // before we use it.
-                    await vfsModules.get(resolved)
-                  }
-
-                  resolved = encodedVirtualPath
-                }
-
-                resolveData.request = resolved
-              })
-            })
-          }
-
-          // load hook
-          if (plugin.load) {
-            compiler.options.module.rules.unshift({
-              enforce: plugin.enforce,
-              include(id) {
-                if (isVirtualModuleId(id, plugin))
-                  id = decodeVirtualModuleId(id, plugin)
-
-                // load include filter
-                if (plugin.loadInclude && !plugin.loadInclude(id))
-                  return false
-
-                const { filter } = normalizeObjectHook('load', plugin.load!)
-                if (!filter(id))
-                  return false
-
-                // Don't run load hook for external modules
-                return !externalModules.has(id)
-              },
-              use: [{
-                loader: LOAD_LOADER,
-                options: {
-                  plugin,
-                },
-              }],
-              type: 'javascript/auto',
-            })
-          }
-
-          // transform hook
-          if (plugin.transform) {
-            compiler.options.module.rules.unshift({
-              enforce: plugin.enforce,
-              use(data) {
-                return transformUse(data, plugin, TRANSFORM_LOADER)
-              },
-            })
-          }
-
-          if (plugin.rspack)
-            plugin.rspack(compiler)
-
-          if (plugin.watchChange || plugin.buildStart) {
-            compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
-              const context = createBuildContext(compiler, compilation)
-              if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
-                const promises: Promise<void>[] = []
-                if (compiler.modifiedFiles) {
-                  compiler.modifiedFiles.forEach(file =>
-                    promises.push(Promise.resolve(plugin.watchChange!.call(context, file, { event: 'update' }))),
-                  )
-                }
-                if (compiler.removedFiles) {
-                  compiler.removedFiles.forEach(file =>
-                    promises.push(Promise.resolve(plugin.watchChange!.call(context, file, { event: 'delete' }))),
-                  )
-                }
-                await Promise.all(promises)
-              }
-
-              if (plugin.buildStart)
-                return await plugin.buildStart.call(context)
-            })
-          }
-
-          if (plugin.buildEnd) {
-            compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-              await plugin.buildEnd!.call(createBuildContext(compiler, compilation))
-            })
-          }
-
-          if (plugin.writeBundle) {
-            compiler.hooks.afterEmit.tapPromise(plugin.name, async () => {
-              await plugin.writeBundle!()
-            })
-          }
-        }
+        applyRspackPlugins(compiler, rawPlugins, meta)
       },
+    }
+  }
+}
+
+export function getRspackPluginFromRaw(
+  rawPlugins: UnpluginOptions[],
+  meta: UnpluginContextMeta,
+  options?: ApplyRspackPluginsOptions,
+): RspackPluginInstance {
+  return {
+    apply(compiler) {
+      applyRspackPlugins(compiler, rawPlugins, meta, options)
+    },
+  }
+}
+
+function applyRspackPlugins(
+  compiler: Compiler,
+  rawPlugins: UnpluginOptions[],
+  meta: UnpluginContextMeta,
+  options: ApplyRspackPluginsOptions = {},
+) {
+  const { applyRspackHook = true } = options
+
+  // We need the prefix of virtual modules to be an absolute path so rspack lets us load them (even if it's made up)
+  // In the loader we strip the made up prefix path again
+  const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin ? '' : process.pid.toString())
+
+  const version = (compiler as any).rspack?.rspackVersion ?? (compiler as any).rspack?.version
+  meta.versions = {
+    ...meta.versions,
+    rspack: version,
+    unplugin: meta.versions.unplugin ?? unpluginVersion,
+  }
+  if (meta.framework === 'rspack')
+    meta.rspack.compiler = compiler
+
+  for (const rawPlugin of rawPlugins) {
+    const plugin = Object.assign(
+      {},
+      rawPlugin,
+      {
+        __unpluginMeta: meta,
+        __virtualModulePrefix: VIRTUAL_MODULE_PREFIX,
+      },
+    ) as ResolvedUnpluginOptions
+
+    const externalModules = new Set<string>()
+
+    // resolveId hook
+    if (plugin.resolveId) {
+      const createPlugin = (plugin: ResolvedUnpluginOptions) => {
+        // rspack >= 1.5.0: use native virtual modules plugin
+        if (compiler.rspack.experiments.VirtualModulesPlugin)
+          return new compiler.rspack.experiments.VirtualModulesPlugin()
+        // rspack < 1.5.0: use fake virtual modules plugin
+        return new FakeVirtualModulesPlugin(plugin)
+      }
+      const vfs = createPlugin(plugin)
+      vfs.apply(compiler)
+      const vfsModules = new Map<string, Promise<unknown>>()
+      plugin.__vfsModules = vfsModules
+      plugin.__vfs = vfs as any
+
+      compiler.hooks.compilation.tap(plugin.name, (compilation, { normalModuleFactory }) => {
+        normalModuleFactory.hooks.resolve.tapPromise(plugin.name, async (resolveData) => {
+          const id = normalizeAbsolutePath(resolveData.request)
+
+          const requestContext = resolveData.contextInfo
+          let importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
+          const isEntry = requestContext.issuer === ''
+
+          if (importer?.startsWith(plugin.__virtualModulePrefix))
+            importer = decodeURIComponent(importer.slice(plugin.__virtualModulePrefix.length))
+
+          const context = createBuildContext(compiler, compilation)
+          let error: Error | undefined
+          const pluginContext: UnpluginContext = {
+            error(msg) {
+              if (error == null)
+                error = normalizeMessage(msg)
+              else
+                console.error(`unplugin/rspack: multiple errors returned from resolveId hook: ${msg}`)
+            },
+            warn(msg) {
+              console.warn(`unplugin/rspack: warning from resolveId hook: ${msg}`)
+            },
+          }
+
+          const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
+          if (!filter(id))
+            return
+
+          const resolveIdResult = await handler.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
+
+          if (error != null)
+            throw error
+          if (resolveIdResult == null)
+            return
+
+          let resolved = typeof resolveIdResult === 'string' ? resolveIdResult : resolveIdResult.id
+
+          const isExternal = typeof resolveIdResult === 'string' ? false : resolveIdResult.external === true
+          if (isExternal)
+            externalModules.add(resolved)
+
+          let isVirtual = true
+          try {
+            // use the compiler's inputFileSystem if available, otherwise use the node:fs module
+            (compiler.inputFileSystem?.statSync ?? fs.statSync)(resolved)
+            isVirtual = false
+          }
+          catch {
+            // already resolved virtual modules are not virtual themselves
+            isVirtual = !isVirtualModuleId(resolved, plugin)
+          }
+
+          // If the resolved module does not exist,
+          // we treat it as a virtual module
+          if (isVirtual) {
+            const encodedVirtualPath = encodeVirtualModuleId(resolved, plugin)
+
+            if (!vfsModules.has(resolved)) {
+              const fsPromise = Promise.resolve(vfs.writeModule(encodedVirtualPath, ''))
+              vfsModules.set(resolved, fsPromise)
+              await fsPromise
+            }
+            else {
+              // Ensure that the module is written to the virtual file system
+              // before we use it.
+              await vfsModules.get(resolved)
+            }
+
+            resolved = encodedVirtualPath
+          }
+
+          resolveData.request = resolved
+        })
+      })
+    }
+
+    // load hook
+    if (plugin.load) {
+      compiler.options.module.rules.unshift({
+        enforce: plugin.enforce,
+        include(id) {
+          if (isVirtualModuleId(id, plugin))
+            id = decodeVirtualModuleId(id, plugin)
+
+          // load include filter
+          if (plugin.loadInclude && !plugin.loadInclude(id))
+            return false
+
+          const { filter } = normalizeObjectHook('load', plugin.load!)
+          if (!filter(id))
+            return false
+
+          // Don't run load hook for external modules
+          return !externalModules.has(id)
+        },
+        use: [{
+          loader: LOAD_LOADER,
+          options: {
+            plugin,
+          },
+        }],
+        type: 'javascript/auto',
+      })
+    }
+
+    // transform hook
+    if (plugin.transform) {
+      compiler.options.module.rules.unshift({
+        enforce: plugin.enforce,
+        use(data) {
+          return transformUse(data, plugin, TRANSFORM_LOADER)
+        },
+      })
+    }
+
+    if (applyRspackHook && plugin.rspack)
+      plugin.rspack(compiler)
+
+    if (plugin.watchChange || plugin.buildStart) {
+      compiler.hooks.make.tapPromise(plugin.name, async (compilation) => {
+        const context = createBuildContext(compiler, compilation)
+        if (plugin.watchChange && (compiler.modifiedFiles || compiler.removedFiles)) {
+          const promises: Promise<void>[] = []
+          if (compiler.modifiedFiles) {
+            compiler.modifiedFiles.forEach(file =>
+              promises.push(Promise.resolve(plugin.watchChange!.call(context, file, { event: 'update' }))),
+            )
+          }
+          if (compiler.removedFiles) {
+            compiler.removedFiles.forEach(file =>
+              promises.push(Promise.resolve(plugin.watchChange!.call(context, file, { event: 'delete' }))),
+            )
+          }
+          await Promise.all(promises)
+        }
+
+        if (plugin.buildStart)
+          return await plugin.buildStart.call(context)
+      })
+    }
+
+    if (plugin.buildEnd) {
+      compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
+        await plugin.buildEnd!.call(createBuildContext(compiler, compilation))
+      })
+    }
+
+    if (plugin.writeBundle) {
+      compiler.hooks.afterEmit.tapPromise(plugin.name, async () => {
+        await plugin.writeBundle!()
+      })
     }
   }
 }

@@ -4,7 +4,7 @@ import { register } from 'unloader'
 import { describe, expect, it } from 'vitest'
 import { createUnplugin } from '../../../src/define'
 import { onlyBun } from '../../utils'
-import { build } from '../utils'
+import { build, toArray } from '../utils'
 
 const require = createRequire(import.meta.url)
 const rollupVersion: string = require('rollup/package.json').version
@@ -13,6 +13,10 @@ const rolldownVersion: string = require('rolldown/package.json').version
 const unloaderVersion: string = require('unloader/package.json').version
 const webpackVersion: string = require('webpack/package.json').version
 const rspackVersion: string = require('@rspack/core/package.json').version
+const rsbuildVersion: string = require('@rsbuild/core/package.json').version
+
+const rsbuildPath = path.dirname(require.resolve('@rsbuild/core/package.json'))
+const rsbuildRspackVersion: string = require(require.resolve('@rspack/core/package.json', { paths: [rsbuildPath] })).version
 
 const entry = path.resolve(__dirname, '../filter/test-src/entry.js')
 const runWithRegisterHooks = typeof (nodeModule as any).registerHooks === 'function' ? it : it.skip
@@ -174,6 +178,204 @@ describe('framework versions', () => {
     expect(hostVersion).toBe(rspackVersion)
     expect(versionsRspack).toBe(rspackVersion)
     expect(allVersions).toMatchObject({ rspack: rspackVersion, unplugin: expect.any(String) })
+  }, 20_000)
+
+  it('rsbuild sets versions.rsbuild and versions.rspack', async () => {
+    let framework: string | undefined
+    let versionsRsbuild: string | undefined
+    let versionsRspack: string | undefined
+    let allVersions: Partial<Record<string, string>> | undefined
+    let rsbuildSetupCalled = false
+    const plugin = createUnplugin((_options, meta) => {
+      framework = meta.framework
+      return {
+        name: 'framework-versions-rsbuild',
+        buildStart() {
+          versionsRsbuild = meta.versions.rsbuild
+          versionsRspack = meta.versions.rspack
+          allVersions = meta.versions
+        },
+        rsbuild: {
+          setup() {
+            rsbuildSetupCalled = true
+          },
+        },
+      }
+    })
+
+    await build.rsbuild({
+      config: {
+        source: {
+          entry: {
+            main: entry,
+          },
+        },
+        output: {
+          distPath: {
+            root: path.resolve(__dirname, '../../../temp/rsbuild-framework-version'),
+            js: '',
+          },
+          filename: {
+            js: '[name].js',
+          },
+          filenameHash: false,
+        },
+        plugins: [plugin.rsbuild()],
+        tools: {
+          htmlPlugin: false,
+        },
+      },
+    })
+
+    expect(framework).toBe('rsbuild')
+    expect(rsbuildSetupCalled).toBe(true)
+    expect(versionsRsbuild).toBe(rsbuildVersion)
+    expect(versionsRspack).toBe(rsbuildRspackVersion)
+    expect(allVersions).toMatchObject({
+      rsbuild: rsbuildVersion,
+      rspack: rsbuildRspackVersion,
+      unplugin: expect.any(String),
+    })
+  }, 20_000)
+
+  it('rsbuild does not call the rspack-specific hook', async () => {
+    let buildStartCalled = false
+    let rspackCalled = false
+    const plugin = createUnplugin(() => ({
+      name: 'rsbuild-with-rspack-hook',
+      buildStart() {
+        buildStartCalled = true
+      },
+      rspack() {
+        rspackCalled = true
+      },
+    }))
+
+    await build.rsbuild({
+      config: {
+        source: {
+          entry: {
+            main: entry,
+          },
+        },
+        output: {
+          distPath: {
+            root: path.resolve(__dirname, '../../../temp/rsbuild-rspack-hook'),
+            js: '',
+          },
+          filename: {
+            js: '[name].js',
+          },
+          filenameHash: false,
+        },
+        plugins: [plugin.rsbuild()],
+        tools: {
+          htmlPlugin: false,
+        },
+      },
+    })
+
+    expect(buildStartCalled).toBe(true)
+    expect(rspackCalled).toBe(false)
+  }, 20_000)
+
+  it('rsbuild respects apply for nested plugins', async () => {
+    const setupCalls: string[] = []
+    const buildStartCalls: string[] = []
+    const plugin = createUnplugin<undefined, true>(() => [
+      {
+        name: 'rsbuild-nested-build',
+        buildStart() {
+          buildStartCalls.push('build')
+        },
+        rsbuild: {
+          apply: 'build',
+          setup() {
+            setupCalls.push('build')
+          },
+        },
+      },
+      {
+        name: 'rsbuild-nested-serve',
+        buildStart() {
+          buildStartCalls.push('serve')
+        },
+        rsbuild: {
+          apply: 'serve',
+          setup() {
+            setupCalls.push('serve')
+          },
+        },
+      },
+    ])
+
+    await build.rsbuild({
+      config: {
+        source: {
+          entry: {
+            main: entry,
+          },
+        },
+        output: {
+          distPath: {
+            root: path.resolve(__dirname, '../../../temp/rsbuild-nested-apply'),
+            js: '',
+          },
+          filename: {
+            js: '[name].js',
+          },
+          filenameHash: false,
+        },
+        plugins: plugin.rsbuild(),
+        tools: {
+          htmlPlugin: false,
+        },
+      },
+    })
+
+    expect(setupCalls).toEqual(['build'])
+    expect(buildStartCalls).toEqual(['build'])
+  }, 20_000)
+
+  it('rsbuild runs a single nested plugin', async () => {
+    const buildStartCalls: string[] = []
+    const plugin = createUnplugin<undefined, true>(() => [
+      {
+        name: 'rsbuild-single-nested',
+        buildStart() {
+          buildStartCalls.push('build')
+        },
+      },
+    ])
+
+    const rsbuildPlugin = plugin.rsbuild()
+    expect(Array.isArray(rsbuildPlugin)).toBe(false)
+
+    await build.rsbuild({
+      config: {
+        source: {
+          entry: {
+            main: entry,
+          },
+        },
+        output: {
+          distPath: {
+            root: path.resolve(__dirname, '../../../temp/rsbuild-single-nested'),
+            js: '',
+          },
+          filename: {
+            js: '[name].js',
+          },
+          filenameHash: false,
+        },
+        plugins: toArray(rsbuildPlugin),
+        tools: {
+          htmlPlugin: false,
+        },
+      },
+    })
+
+    expect(buildStartCalls).toEqual(['build'])
   }, 20_000)
 
   onlyBun('bun sets versions.bun', async () => {
