@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/unjs/unplugin.git"
   },
+  "bugs": {
+    "url": "https://github.com/unjs/unplugin/issues"
+  },
   "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs",
