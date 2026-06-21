@@ -45,7 +45,6 @@ function toRsbuildPlugin(
       }
 
       api.modifyRspackConfig((config) => {
-        config.plugins ||= []
         config.plugins.push(getRspackPluginFromRaw([rawPlugin], meta, { applyRspackHook: false }))
       })
 
