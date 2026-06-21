@@ -32,16 +32,19 @@ interface ApplyRspackPluginsOptions {
   applyRspackHook?: boolean
 }
 
+function getRspackVersion(compiler: Compiler): string {
+  return compiler.rspack.rspackVersion ?? compiler.rspack.version
+}
+
 export function getRspackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
 ): UnpluginInstance<UserOptions>['rspack'] {
   return (userOptions?: UserOptions): RspackPluginInstance => {
     return {
       apply(compiler) {
-        const version = (compiler as any).rspack?.rspackVersion ?? (compiler as any).rspack?.version
         const meta: UnpluginContextMeta = {
           framework: 'rspack',
-          versions: { rspack: version, unplugin: unpluginVersion },
+          versions: { rspack: getRspackVersion(compiler), unplugin: unpluginVersion },
           rspack: {
             compiler,
           },
@@ -77,10 +80,9 @@ function applyRspackPlugins(
   // In the loader we strip the made up prefix path again
   const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin ? '' : process.pid.toString())
 
-  const version = (compiler as any).rspack?.rspackVersion ?? (compiler as any).rspack?.version
   meta.versions = {
     ...meta.versions,
-    rspack: version,
+    rspack: getRspackVersion(compiler),
     unplugin: meta.versions.unplugin ?? unpluginVersion,
   }
   if (meta.framework === 'rspack')
@@ -100,14 +102,11 @@ function applyRspackPlugins(
 
     // resolveId hook
     if (plugin.resolveId) {
-      const createPlugin = (plugin: ResolvedUnpluginOptions) => {
-        // rspack >= 1.5.0: use native virtual modules plugin
-        if (compiler.rspack.experiments.VirtualModulesPlugin)
-          return new compiler.rspack.experiments.VirtualModulesPlugin()
-        // rspack < 1.5.0: use fake virtual modules plugin
-        return new FakeVirtualModulesPlugin(plugin)
-      }
-      const vfs = createPlugin(plugin)
+      // rspack >= 1.5.0: use native virtual modules plugin
+      // rspack < 1.5.0: use fake virtual modules plugin
+      const vfs = compiler.rspack.experiments.VirtualModulesPlugin
+        ? new compiler.rspack.experiments.VirtualModulesPlugin()
+        : new FakeVirtualModulesPlugin(plugin)
       vfs.apply(compiler)
       const vfsModules = new Map<string, Promise<unknown>>()
       plugin.__vfsModules = vfsModules
