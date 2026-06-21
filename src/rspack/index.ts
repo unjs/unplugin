@@ -28,10 +28,6 @@ const LOAD_LOADER = resolve(
   import.meta.dev ? '../../dist/rspack/loaders/load.mjs' : 'rspack/loaders/load.mjs',
 )
 
-interface ApplyRspackPluginsOptions {
-  applyRspackHook?: boolean
-}
-
 function getRspackVersion(compiler: Compiler): string {
   return compiler.rspack.rspackVersion ?? compiler.rspack.version
 }
@@ -59,11 +55,10 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
 export function getRspackPluginFromRaw(
   rawPlugins: UnpluginOptions[],
   meta: UnpluginContextMeta,
-  options?: ApplyRspackPluginsOptions,
 ): RspackPluginInstance {
   return {
     apply(compiler) {
-      applyRspackPlugins(compiler, rawPlugins, meta, options)
+      applyRspackPlugins(compiler, rawPlugins, meta)
     },
   }
 }
@@ -72,10 +67,7 @@ function applyRspackPlugins(
   compiler: Compiler,
   rawPlugins: UnpluginOptions[],
   meta: UnpluginContextMeta,
-  options: ApplyRspackPluginsOptions = {},
 ) {
-  const { applyRspackHook = true } = options
-
   // We need the prefix of virtual modules to be an absolute path so rspack lets us load them (even if it's made up)
   // In the loader we strip the made up prefix path again
   const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin ? '' : process.pid.toString())
@@ -228,7 +220,7 @@ function applyRspackPlugins(
       })
     }
 
-    if (applyRspackHook && plugin.rspack)
+    if (meta.framework === 'rspack' && plugin.rspack)
       plugin.rspack(compiler)
 
     if (plugin.watchChange || plugin.buildStart) {

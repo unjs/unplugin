@@ -45,7 +45,7 @@ function toRsbuildPlugin(
       }
 
       api.modifyRspackConfig((config) => {
-        config.plugins.push(getRspackPluginFromRaw([rawPlugin], meta, { applyRspackHook: false }))
+        config.plugins.push(getRspackPluginFromRaw([rawPlugin], meta))
       })
 
       await rsbuildOptions?.setup?.(api)
