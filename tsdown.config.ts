@@ -21,6 +21,7 @@ export default defineConfig({
   },
   unused: {
     level: 'error',
+    ignore: ['bun-types-no-globals'],
   },
   exports: true,
   publint: 'ci-only',
