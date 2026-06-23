@@ -26,6 +26,17 @@ export function guessLoader(id: string): Loader {
   return ExtToLoader[path.extname(id).toLowerCase()] || 'js'
 }
 
+export function unwrapLoader(
+  loader: Loader | ((code: string, id: string) => Loader),
+  code: string,
+  id: string,
+): Loader {
+  if (typeof loader === 'function')
+    return loader(code, id)
+
+  return loader
+}
+
 export function createBuildContext(build: PluginBuilder): UnpluginBuildContext {
   const watchFiles: string[] = []
 
