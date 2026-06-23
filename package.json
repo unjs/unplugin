@@ -2,13 +2,16 @@
   "name": "unplugin",
   "type": "module",
   "version": "3.1.0",
-  "packageManager": "pnpm@11.0.8",
+  "packageManager": "pnpm@11.8.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "homepage": "https://unplugin.unjs.io",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/unjs/unplugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/unjs/unplugin/issues"
   },
   "sideEffects": false,
   "exports": {
@@ -44,15 +47,15 @@
     "test:build": "jiti scripts/buildFixtures.ts"
   },
   "peerDependencies": {
-    "@farmfe/core": "catalog:peer",
-    "@rspack/core": "catalog:peer",
-    "bun-types-no-globals": "catalog:peer",
-    "esbuild": "catalog:peer",
-    "rolldown": "catalog:peer",
-    "rollup": "catalog:peer",
-    "unloader": "catalog:peer",
-    "vite": "catalog:peer",
-    "webpack": "catalog:peer"
+    "@farmfe/core": "*",
+    "@rspack/core": "*",
+    "bun-types-no-globals": "*",
+    "esbuild": "*",
+    "rolldown": "*",
+    "rollup": "*",
+    "unloader": "*",
+    "vite": "*",
+    "webpack": "*"
   },
   "peerDependenciesMeta": {
     "@farmfe/core": {

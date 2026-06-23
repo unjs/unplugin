@@ -1,6 +1,6 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
-import type { BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
+import type { Loader as BunLoader, BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
 import type { Plugin as RolldownPlugin } from 'rolldown'
 import type { EmittedAsset, PluginContextMeta as RollupContextMeta, Plugin as RollupPlugin, SourceMapInput } from 'rollup'
@@ -145,7 +145,10 @@ export interface UnpluginOptions {
     config?: ((options: BuildOptions) => void) | undefined
   } | undefined
   farm?: Partial<FarmPlugin> | undefined
-  bun?: Partial<BunPlugin> | undefined
+  bun?: {
+    loader?: BunLoader | ((code: string, id: string) => BunLoader) | undefined
+    setup?: ((build: BunPluginBuilder) => void | Promise<void>) | undefined
+  } | undefined
 }
 
 export interface ResolvedUnpluginOptions extends UnpluginOptions {
