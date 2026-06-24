@@ -46,6 +46,46 @@
     "test": "nr test:build && vitest run",
     "test:build": "jiti scripts/buildFixtures.ts"
   },
+  "peerDependencies": {
+    "@farmfe/core": "*",
+    "@rspack/core": "*",
+    "bun-types-no-globals": "*",
+    "esbuild": "*",
+    "rolldown": "*",
+    "rollup": "*",
+    "unloader": "*",
+    "vite": "*",
+    "webpack": "*"
+  },
+  "peerDependenciesMeta": {
+    "@farmfe/core": {
+      "optional": true
+    },
+    "@rspack/core": {
+      "optional": true
+    },
+    "bun-types-no-globals": {
+      "optional": true
+    },
+    "esbuild": {
+      "optional": true
+    },
+    "rolldown": {
+      "optional": true
+    },
+    "rollup": {
+      "optional": true
+    },
+    "unloader": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "@jridgewell/remapping": "catalog:prod",
     "picomatch": "catalog:prod",
@@ -64,8 +104,8 @@
     "@typescript/native-preview": "catalog:dev",
     "ansis": "catalog:dev",
     "bumpp": "catalog:dev",
-    "bun-types-no-globals": "catalog:dev",
-    "esbuild": "catalog:dev",
+    "bun-types-no-globals": "catalog:peer",
+    "esbuild": "catalog:peer",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",
     "jiti": "catalog:dev",
@@ -86,7 +126,7 @@
     "webpack-cli": "catalog:test"
   },
   "resolutions": {
-    "esbuild": "catalog:dev"
+    "esbuild": "catalog:peer"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && pnpm exec lint-staged"
