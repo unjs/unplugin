@@ -62,4 +62,17 @@ describe('load function', () => {
 
     expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, map)
   })
+
+  it('should call callback with the error if the handler throws', async () => {
+    const source = 'source code'
+    const map = 'source map'
+    const error = new Error('Handler error')
+    const pluginLoadHandler = vi.fn().mockRejectedValue(error)
+    mockLoaderContext.query.plugin.load = pluginLoadHandler
+
+    await load.call(mockLoaderContext as any, source, map)
+
+    expect(pluginLoadHandler).toHaveBeenCalled()
+    expect(mockCallback).toHaveBeenCalledWith(error)
+  })
 })
