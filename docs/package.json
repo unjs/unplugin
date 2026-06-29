@@ -6,7 +6,7 @@
     "node": ">=18.19.0"
   },
   "scripts": {
-    "gen-files": "node ./.vitepress/data/gen-files.ts",
+    "gen-files": "node --env-file-if-exists=.env ./.vitepress/data/gen-files.ts",
     "dev": "vitepress dev --open",
     "build": "pnpm gen-files && vitepress build",
     "lint": "case-police '**/*.md'",
@@ -17,7 +17,6 @@
     "@shikijs/vitepress-twoslash": "catalog:docs",
     "case-police": "catalog:docs",
     "consola": "catalog:docs",
-    "dotenv": "catalog:docs",
     "markdown-it": "catalog:docs",
     "markdown-it-github-alerts": "catalog:docs",
     "ofetch": "catalog:docs",

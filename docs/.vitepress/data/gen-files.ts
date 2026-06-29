@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url'
 import { consola } from 'consola'
 import { $fetch } from 'ofetch'
 import { repositoryMeta } from './meta.ts'
-import 'dotenv/config'
 
 const GITHUB_TOKEN = env.GITHUB_TOKEN
 

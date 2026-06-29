@@ -35,7 +35,6 @@ catalogs:
     '@shikijs/vitepress-twoslash': ^4.3.0
     case-police: ^2.2.1
     consola: ^3.4.2
-    dotenv: ^17.4.2
     markdown-it: ^14.2.0
     markdown-it-github-alerts: ^1.0.1
     ofetch: ^1.5.1
