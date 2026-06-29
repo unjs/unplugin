@@ -12,52 +12,52 @@ packages:
 
 catalogs:
   dev:
-    '@antfu/eslint-config': ^8.2.0
+    '@antfu/eslint-config': ^9.0.0
     '@antfu/ni': ^30.1.0
-    '@arethetypeswrong/core': ^0.18.2
-    '@types/node': ^25.6.2
+    '@arethetypeswrong/core': ^0.18.3
+    '@types/node': ^26.0.0
     '@types/picomatch': ^4.0.3
     '@typescript/native-preview': 7.0.0-dev.20260508.1
-    ansis: ^4.2.0
+    ansis: ^4.3.1
     bumpp: ^11.1.0
-    bun-types-no-globals: ^1.3.11
-    esbuild: ^0.28.0
-    eslint: ^10.3.0
+    eslint: ^10.5.0
     eslint-plugin-format: ^2.0.1
     jiti: ^2.7.0
-    lint-staged: ^17.0.2
-    publint: ^0.3.19
+    lint-staged: ^17.0.8
+    publint: ^0.3.21
     simple-git-hooks: ^2.13.1
-    tsdown: ^0.22.0
+    tsdown: ^0.22.3
     typescript: ~6.0.3
     unplugin-unused: ^0.5.7
 
   docs:
     '@iconify-json/ri': ^1.2.10
-    '@shikijs/vitepress-twoslash': ^4.0.2
+    '@shikijs/vitepress-twoslash': ^4.2.0
     case-police: ^2.2.1
     consola: ^3.4.2
     dotenv: ^17.4.2
-    markdown-it: ^14.1.1
+    markdown-it: ^14.2.0
     markdown-it-github-alerts: ^1.0.1
     ofetch: ^1.5.1
-    unocss: ^66.6.8
+    unocss: ^66.7.2
     unplugin-icons: ^23.0.1
-    unplugin-vue-components: ^32.0.0
+    unplugin-vue-components: ^32.1.0
     vitepress: 2.0.0-alpha.15
     vitepress-plugin-group-icons: ^1.7.5
-    vue: ^3.5.34
-    vue-tsc: ^3.2.8
+    vue: ^3.5.38
+    vue-tsc: ^3.3.5
 
   peer:
     '@farmfe/core': ^1.7.11
     '@rsbuild/core': ^2.0.14
-    '@rspack/core': ^2.0.2
-    rolldown: ^1.0.0
-    rollup: ^4.60.3
+    '@rspack/core': ^2.0.8
+    bun-types-no-globals: ^1.3.11
+    esbuild: ^0.28.1
+    rolldown: ^1.1.2
+    rollup: ^4.62.2
     unloader: ^0.9.0
-    vite: ^8.0.11
-    webpack: ^5.106.2
+    vite: ^8.0.16
+    webpack: ^5.107.2
 
   prod:
     '@jridgewell/remapping': ^2.3.5
@@ -66,10 +66,10 @@ catalogs:
 
   test:
     '@farmfe/cli': ^1.0.5
-    '@rspack/cli': ^2.0.2
+    '@rspack/cli': ^2.0.8
     magic-string: ^0.30.21
-    vitest: ^4.1.5
-    webpack-cli: ^7.0.2
+    vitest: ^4.1.9
+    webpack-cli: ^7.0.3
 
 allowBuilds:
   core-js: false

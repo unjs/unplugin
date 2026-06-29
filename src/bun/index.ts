@@ -4,7 +4,7 @@ import { isAbsolute } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { createBuildContext, createPluginContext, guessLoader } from './utils'
+import { createBuildContext, createPluginContext, guessLoader, unwrapLoader } from './utils'
 
 // Coerce plugin.name to satisfy Bun's namespace validator:
 // https://github.com/oven-sh/bun/blob/12d77d1ac561771e9fa1d0822e954273248e7f9a/src/js/builtins/BundlerPlugin.ts#L215-L217
@@ -141,6 +141,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
         ): Promise<{ contents: string, loader: Loader } | undefined> {
           let code: string | undefined
           let hasResult = false
+          let activePlugin: typeof plugins[number] | undefined
 
           const namespaceLoadHooks = namespace === 'file'
             ? loadHooks
@@ -153,7 +154,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               continue
 
             const { mixedContext, errors, warnings } = createPluginContext(context)
-            const result = await handler.call(mixedContext, id)
+            const result: TransformResult = await handler.call(mixedContext, id)
 
             for (const warning of warnings) {
               console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
@@ -166,11 +167,13 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             if (typeof result === 'string') {
               code = result
               hasResult = true
+              activePlugin = plugin
               break
             }
             else if (typeof result === 'object' && result !== null) {
               code = result.code
               hasResult = true
+              activePlugin = plugin
               break
             }
           }
@@ -213,9 +216,12 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           }
 
           if (hasResult && code !== undefined) {
+            const pluginLoader = activePlugin?.bun?.loader
             return {
               contents: code,
-              loader: loader ?? guessLoader(id),
+              loader: (pluginLoader && unwrapLoader(pluginLoader, code, id))
+                ?? loader
+                ?? guessLoader(id),
             }
           }
         }
