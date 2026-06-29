@@ -13,6 +13,7 @@ Currently supports:
 - [Webpack](https://webpack.js.org/)
 - [esbuild](https://esbuild.github.io/)
 - [Rspack](https://www.rspack.dev/)
+- [Rsbuild](https://rsbuild.rs/)
 - [Rolldown](https://rolldown.rs/)
 - [Farm](https://www.farmfe.org/)
 - [Bun](https://bun.com/)

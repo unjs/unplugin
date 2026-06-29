@@ -102,10 +102,6 @@ img[src*="features"] {
   width: 48px;
 }
 
-img[src*="/features/rspack"] {
-  margin-bottom: 28px!important;
-}
-
 details > summary:hover {
     cursor: pointer;
     user-select: none;

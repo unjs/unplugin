@@ -1,3 +1,4 @@
+import * as rsbuild from '@rsbuild/core'
 import * as rspack from '@rspack/core'
 import * as esbuild from 'esbuild'
 import * as rolldown from 'rolldown'
@@ -13,6 +14,12 @@ export const rolldownBuild: typeof rolldown.build = rolldown.build
 export const esbuildBuild: typeof esbuild.build = esbuild.build
 export const webpackBuild: typeof webpack.webpack = webpack.webpack || (webpack as any).default || webpack
 export const rspackBuild: typeof rspack.rspack = rspack.rspack
+export async function rsbuildBuild(options?: rsbuild.CreateRsbuildOptions, buildOptions?: rsbuild.BuildOptions): Promise<rsbuild.BuildResult> {
+  const instance = await rsbuild.createRsbuild(options)
+  const result = await instance.build(buildOptions)
+  await result.close()
+  return result
+}
 export const bunBuild: typeof Bun.build = typeof Bun !== 'undefined'
   ? Bun.build
   : () => {
@@ -24,6 +31,7 @@ export const webpackVersion: string = ((webpack as any).default || webpack).vers
 export const build: {
   webpack: typeof webpack.webpack
   rspack: typeof rspackBuild
+  rsbuild: typeof rsbuildBuild
   rollup: typeof rollupBuild
   rolldown: typeof rolldownBuild
   vite: typeof viteBuild
@@ -32,6 +40,7 @@ export const build: {
 } = {
   webpack: webpackBuild,
   rspack: rspackBuild,
+  rsbuild: rsbuildBuild,
   rollup: rollupBuild,
   rolldown: rolldownBuild,
   vite(config) {

@@ -14,6 +14,7 @@ export default defineConfig({
       'rollup',
       'esbuild',
       '@farmfe/core',
+      '@rsbuild/core',
       '@rspack/core',
       'rolldown',
       'unloader',
