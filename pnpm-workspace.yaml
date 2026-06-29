@@ -12,15 +12,15 @@ packages:
 
 catalogs:
   dev:
-    '@antfu/eslint-config': ^9.0.0
-    '@antfu/ni': ^30.1.0
-    '@arethetypeswrong/core': ^0.18.3
-    '@types/node': ^26.0.0
+    '@antfu/eslint-config': ^9.1.0
+    '@antfu/ni': ^30.2.0
+    '@arethetypeswrong/core': ^0.18.4
+    '@types/node': ^26.0.1
     '@types/picomatch': ^4.0.3
-    '@typescript/native-preview': 7.0.0-dev.20260508.1
+    '@typescript/native-preview': 7.0.0-dev.20260628.1
     ansis: ^4.3.1
     bumpp: ^11.1.0
-    eslint: ^10.5.0
+    eslint: ^10.6.0
     eslint-plugin-format: ^2.0.1
     jiti: ^2.7.0
     lint-staged: ^17.0.8
@@ -32,32 +32,32 @@ catalogs:
 
   docs:
     '@iconify-json/ri': ^1.2.10
-    '@shikijs/vitepress-twoslash': ^4.2.0
+    '@shikijs/vitepress-twoslash': ^4.3.0
     case-police: ^2.2.1
     consola: ^3.4.2
     dotenv: ^17.4.2
     markdown-it: ^14.2.0
     markdown-it-github-alerts: ^1.0.1
     ofetch: ^1.5.1
-    unocss: ^66.7.2
+    unocss: ^66.7.3
     unplugin-icons: ^23.0.1
     unplugin-vue-components: ^32.1.0
     vitepress: 2.0.0-alpha.15
     vitepress-plugin-group-icons: ^1.7.5
-    vue: ^3.5.38
+    vue: ^3.5.39
     vue-tsc: ^3.3.5
 
   peer:
     '@farmfe/core': ^1.7.11
-    '@rsbuild/core': ^2.0.14
-    '@rspack/core': ^2.0.8
+    '@rsbuild/core': ^2.1.1
+    '@rspack/core': ^2.1.1
     bun-types-no-globals: ^1.3.11
     esbuild: ^0.28.1
-    rolldown: ^1.1.2
+    rolldown: ^1.1.3
     rollup: ^4.62.2
     unloader: ^0.9.0
-    vite: ^8.0.16
-    webpack: ^5.107.2
+    vite: ^8.1.0
+    webpack: ^5.108.1
 
   prod:
     '@jridgewell/remapping': ^2.3.5
@@ -66,10 +66,10 @@ catalogs:
 
   test:
     '@farmfe/cli': ^1.0.5
-    '@rspack/cli': ^2.0.8
+    '@rspack/cli': ^2.1.1
     magic-string: ^0.30.21
     vitest: ^4.1.9
-    webpack-cli: ^7.0.3
+    webpack-cli: ^7.1.0
 
 allowBuilds:
   core-js: false
