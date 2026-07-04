@@ -119,7 +119,18 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
                   // caution: 'utf8' assumes the input file is not in binary.
                   // if you want your plugin handle binary files, make sure to
                   // `plugin.load()` them first.
-                  return (fsContentsCache = await fs.promises.readFile(args.path, 'utf8'))
+                  try {
+                    return (fsContentsCache = await fs.promises.readFile(args.path, 'utf8'))
+                  }
+                  catch (error) {
+                    // esbuild resolves `package.json#browser` entries mapped to `false`
+                    // to a path that does not exist on disk (the module is meant to be
+                    // stubbed out as empty). Treat a missing file the same way esbuild
+                    // itself treats these stubs instead of throwing.
+                    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT')
+                      return (fsContentsCache = '')
+                    throw error
+                  }
                 },
               }
 
