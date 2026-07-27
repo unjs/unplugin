@@ -12,7 +12,7 @@ packages:
 
 catalogs:
   dev:
-    '@antfu/eslint-config': ^9.1.0
+    '@antfu/eslint-config': ^9.2.0
     '@antfu/ni': ^30.2.0
     '@arethetypeswrong/core': ^0.18.4
     '@types/node': ^26.0.1
@@ -26,7 +26,8 @@ catalogs:
     publint: ^0.3.21
     simple-git-hooks: ^2.13.1
     tsdown: ^0.22.3
-    typescript: ~7.0.2
+    typescript: ^6.0.3
+    typescript-7: npm:typescript@~7.0.2
     unplugin-unused: ^0.5.7
 
   docs:
