@@ -17,7 +17,6 @@ catalogs:
     '@arethetypeswrong/core': ^0.18.4
     '@types/node': ^26.0.1
     '@types/picomatch': ^4.0.3
-    '@typescript/native-preview': 7.0.0-dev.20260628.1
     ansis: ^4.3.1
     bumpp: ^11.1.0
     eslint: ^10.6.0
@@ -27,7 +26,7 @@ catalogs:
     publint: ^0.3.21
     simple-git-hooks: ^2.13.1
     tsdown: ^0.22.3
-    typescript: ~6.0.3
+    typescript: ~7.0.2
     unplugin-unused: ^0.5.7
 
   docs:
