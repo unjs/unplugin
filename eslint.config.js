@@ -15,6 +15,7 @@ export default antfu(
       '**/output.js',
       'docs/showcase/*.md',
       'docs/.vitepress/data/repository.json',
+      '**/test-out',
     ],
   },
   {
