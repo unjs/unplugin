@@ -1,9 +1,8 @@
 import type { RepositoryMeta } from './meta.ts'
 import type { Repository } from './repository.data.ts'
 import { writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import path from 'node:path'
 import { env } from 'node:process'
-import { fileURLToPath } from 'node:url'
 import { consola } from 'consola'
 import { $fetch } from 'ofetch'
 import { repositoryMeta } from './meta.ts'
@@ -39,7 +38,7 @@ for (const [key, repo] of Object.entries(data)) {
 }
 
 writeFileSync(
-  join(import.meta.dirname, 'repository.json'),
+  path.resolve(import.meta.dirname, 'repository.json'),
   JSON.stringify(Object.values(data), null, 2),
 )
 
@@ -82,7 +81,7 @@ outline: deep
 `
 
   writeFileSync(
-    join(dirname(fileURLToPath(import.meta.url)), `../../showcase/${meta.name}.md`),
+    path.resolve(import.meta.dirname, `../../showcase/${meta.name}.md`),
     markdownFrontmatter + repo.object.text,
   )
   consola.success(`[${meta.name}.md]: generate success`)

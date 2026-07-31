@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 export interface Repository {
   name: string
@@ -30,7 +29,7 @@ export { data }
 export default {
   watch: ['./repository.json'],
   load() {
-    const fileContent = readFileSync(resolve(fileURLToPath(import.meta.url), '../repository.json'), 'utf-8')
+    const fileContent = readFileSync(resolve(import.meta.dirname, '../repository.json'), 'utf-8')
     return JSON.parse(fileContent)
   },
 }

@@ -13,7 +13,6 @@ export default defineConfig({
       dirs: '.vitepress/components',
       dts: '.vitepress/components.d.ts',
     }),
-    // @ts-expect-error mismatch vite version
     Unocss(),
     Icons(),
     groupIconVitePlugin({
