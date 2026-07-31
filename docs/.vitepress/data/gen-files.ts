@@ -38,6 +38,11 @@ for (const [key, repo] of Object.entries(data)) {
   writeReadme(repo, meta)
 }
 
+writeFileSync(
+  join(import.meta.dirname, 'repository.json'),
+  JSON.stringify(Object.values(data), null, 2),
+)
+
 consola.success('All files generate done!')
 
 function getRepoId({ owner, name }: RepositoryMeta) {
