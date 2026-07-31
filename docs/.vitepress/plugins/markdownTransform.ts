@@ -27,7 +27,7 @@ export function MarkdownTransform(): PluginOption {
 
       // replace markdown img link
       // code reference: https://github.com/unjs/ungh/blob/main/utils/markdown.ts
-      const { name, owner, defaultBranch } = repositoryMeta.find(({ name }) => name === basename(id, '.md'))!
+      const { name, owner, branch: defaultBranch } = repositoryMeta.find(({ name }) => name === basename(id, '.md'))!
       const _defaultBranch = defaultBranch || 'main'
       code = code.replaceAll(MARKDOWN_LINK_RE, (match, _, url: string | undefined, url2: string) => {
         const path = url || url2
