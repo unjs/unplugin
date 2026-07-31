@@ -77,6 +77,8 @@ async function fetchRepo({ owner, name, readme }: {
       }),
     })
 
+    console.log(results)
+
     const repositoryInfo = results.data.repository as Repository
 
     const markdownFrontmatter = `---
