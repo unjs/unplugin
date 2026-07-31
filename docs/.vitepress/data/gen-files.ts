@@ -46,24 +46,7 @@ const repos = repositoryMeta.map(repository => fetchRepo({
 }))
 
 // eslint-disable-next-line antfu/no-top-level-await
-const res = await Promise.allSettled(repos)
-const repoMeta = res?.map((item) => {
-  if (item.status === 'fulfilled') {
-    return {
-      name: item.value?.name,
-      stargazers: item.value?.stargazers,
-      owner: item.value?.owner,
-      description: item.value?.description,
-      url: item.value?.url,
-      isTemplate: item.value?.isTemplate,
-      primaryLanguage: item.value?.primaryLanguage,
-      forkCount: item.value?.forkCount,
-    }
-  }
-
-  return null
-})?.filter(item => item && item.name)
-
+const repoMeta = await Promise.all(repos)
 writeFileSync(
   join(dirname(fileURLToPath(import.meta.url)), './repository.json'),
   JSON.stringify(repoMeta, null, 2),
