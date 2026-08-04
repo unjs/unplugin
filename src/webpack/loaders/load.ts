@@ -1,7 +1,7 @@
 import type { LoaderContext } from 'webpack'
 import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeObjectHook } from '../../utils/filter'
-import { normalizeAbsolutePath } from '../../utils/webpack-like'
+import { normalizeAbsolutePath, unescapeResourcePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
 export default async function load(this: LoaderContext<any>, source: string, map: any): Promise<void> {
@@ -14,6 +14,8 @@ export default async function load(this: LoaderContext<any>, source: string, map
 
   if (id.startsWith(plugin.__virtualModulePrefix))
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
+
+  id = unescapeResourcePath(id)
 
   const context = createContext(this)
   const { handler } = normalizeObjectHook('load', plugin.load)
