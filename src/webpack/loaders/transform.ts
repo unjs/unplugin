@@ -29,12 +29,21 @@ export default async function transform(this: LoaderContext<any>, source: string
       this.resource,
     )
 
-    if (res == null)
+    if (res == null) {
       callback(null, source, map)
-    else if (typeof res !== 'string')
-      callback(null, res.code, map == null ? map : (res.map || map))
-    else
+    }
+    else if (typeof res !== 'string') {
+      const resultMap = map && res.map
+        ? (await import('@jridgewell/remapping')).default(
+            [res.map, map],
+            () => null,
+          )
+        : (res.map ?? map)
+      callback(null, res.code, resultMap)
+    }
+    else {
       callback(null, res, map)
+    }
   }
   catch (error) {
     if (error instanceof Error) {

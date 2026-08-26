@@ -3,6 +3,20 @@ import { assert, describe, expect, it, vi } from 'vitest'
 import transform from '../../../../src/webpack/loaders/transform'
 
 describe('transform loader', () => {
+  const originalSourceMap = {
+    version: 3,
+    names: [],
+    sources: ['original.ts'],
+    sourcesContent: ['original source'],
+    mappings: 'AACA',
+  }
+  const transformedSourceMap = {
+    version: 3,
+    names: [],
+    sources: ['intermediate.js'],
+    sourcesContent: ['intermediate source'],
+    mappings: ';AAAA',
+  }
   const mockCallback = vi.fn()
   const mockLoaderContext = {
     async: () => mockCallback,
@@ -66,7 +80,7 @@ describe('transform loader', () => {
 
   it('should call handler and return transformed code and map if handler returns an object', async () => {
     const source = 'source code'
-    const map = 'source map'
+    const map = null
     const transformedResult = { code: 'transformed code', map: 'transformed map' }
 
     const handlerMock = vi.fn().mockResolvedValue(transformedResult)
@@ -83,6 +97,65 @@ describe('transform loader', () => {
 
     expect(handlerMock).toHaveBeenCalled()
     expect(mockCallback).toHaveBeenCalledWith(null, transformedResult.code, transformedResult.map)
+  })
+
+  it('should return the transformed source map without an input source map', async () => {
+    const source = 'source code'
+    const transformedCode = 'transformed code'
+
+    mockLoaderContext.query = {
+      plugin: {
+        transform: {
+          handler: vi.fn().mockResolvedValue({
+            code: transformedCode,
+            map: transformedSourceMap,
+          }),
+          filter: vi.fn().mockReturnValue(true),
+        },
+      },
+    }
+
+    await transform.call(mockLoaderContext as any, source, null)
+
+    expect(mockCallback).toHaveBeenCalledWith(
+      null,
+      transformedCode,
+      transformedSourceMap,
+    )
+  })
+
+  it('should combine input and transformed source maps', async () => {
+    const source = 'source code'
+    const transformedCode = 'transformed code'
+
+    mockLoaderContext.query = {
+      plugin: {
+        transform: {
+          handler: vi.fn().mockResolvedValue({
+            code: transformedCode,
+            map: transformedSourceMap,
+          }),
+          filter: vi.fn().mockReturnValue(true),
+        },
+      },
+    }
+
+    await transform.call(
+      mockLoaderContext as any,
+      source,
+      originalSourceMap,
+    )
+
+    expect(mockCallback).toHaveBeenCalledWith(
+      null,
+      transformedCode,
+      expect.objectContaining({
+        version: 3,
+        sources: ['original.ts'],
+        sourcesContent: ['original source'],
+        mappings: ';AACA',
+      }),
+    )
   })
 
   it('should handle errors thrown by the handler', async () => {
@@ -108,9 +181,9 @@ describe('transform loader', () => {
 
   it('should include input source map on native build context', async () => {
     const source = 'source code'
-    const map = 'source map'
+    const map = originalSourceMap
     const transformedCode = 'transformed code'
-    const transformedMap = 'transformed map'
+    const transformedMap = transformedSourceMap
 
     let handlerSource: string | undefined
     let handlerId: string | undefined
@@ -139,6 +212,14 @@ describe('transform loader', () => {
     assert(handlerNativeBuildContext?.framework === 'webpack')
     expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
 
-    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, transformedMap)
+    expect(mockCallback).toHaveBeenCalledWith(
+      null,
+      transformedCode,
+      expect.objectContaining({
+        sources: ['original.ts'],
+        sourcesContent: ['original source'],
+        mappings: ';AACA',
+      }),
+    )
   })
 })
