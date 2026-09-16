@@ -54,6 +54,7 @@
   },
   "peerDependencies": {
     "@farmfe/core": "*",
+    "@rsbuild/core": "*",
     "@rspack/core": "*",
     "bun-types-no-globals": "*",
     "esbuild": "*",
@@ -65,6 +66,9 @@
   },
   "peerDependenciesMeta": {
     "@farmfe/core": {
+      "optional": true
+    },
+    "@rsbuild/core": {
       "optional": true
     },
     "@rspack/core": {
@@ -91,6 +95,7 @@
     "webpack": {
       "optional": true
     }
+
   },
   "dependencies": {
     "@jridgewell/remapping": "catalog:prod",
