@@ -294,6 +294,8 @@ export const bunPlugin = unplugin.bun
 To optimize performance in native bundlers, leverage the `filter` option in `resolveId`, `transform`, and `load`
 hooks to exclude files that don’t require processing.
 
+`resolveId.filter.id` only accepts a `RegExp`.
+
 ```ts twoslash
 import { createUnplugin } from 'unplugin'
 

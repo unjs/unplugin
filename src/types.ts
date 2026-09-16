@@ -71,19 +71,24 @@ export type FilterPattern = Arrayable<StringOrRegExp>
 export type StringFilter
   = | FilterPattern
     | { include?: FilterPattern | undefined, exclude?: FilterPattern | undefined }
-export interface HookFilter {
+
+export interface ResolveIdHookFilter {
+  id?: RegExp | undefined
+}
+
+export interface LoadHookFilter {
   id?: StringFilter | undefined
+}
+
+export interface TransformHookFilter extends LoadHookFilter {
   code?: StringFilter | undefined
 }
 
-export interface ObjectHook<T extends HookFnMap[keyof HookFnMap], F extends keyof HookFilter> {
-  filter?: Pick<HookFilter, F> | undefined
+export interface ObjectHook<T extends HookFnMap[keyof HookFnMap], F> {
+  filter?: F | undefined
   handler: T
 }
-export type Hook<
-  T extends HookFnMap[keyof HookFnMap],
-  F extends keyof HookFilter,
-> = T | ObjectHook<T, F>
+export type Hook<T extends HookFnMap[keyof HookFnMap], F> = T | ObjectHook<T, F>
 
 export interface HookFnMap {
   // Build Hooks
@@ -109,9 +114,9 @@ export interface UnpluginOptions {
 
   buildStart?: HookFnMap['buildStart'] | undefined
   buildEnd?: HookFnMap['buildEnd'] | undefined
-  transform?: Hook<HookFnMap['transform'], 'code' | 'id'> | undefined
-  load?: Hook<HookFnMap['load'], 'id'> | undefined
-  resolveId?: Hook<HookFnMap['resolveId'], 'id'> | undefined
+  transform?: Hook<HookFnMap['transform'], TransformHookFilter> | undefined
+  load?: Hook<HookFnMap['load'], LoadHookFilter> | undefined
+  resolveId?: Hook<HookFnMap['resolveId'], ResolveIdHookFilter> | undefined
   writeBundle?: HookFnMap['writeBundle'] | undefined
 
   watchChange?: ((this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void) | undefined
