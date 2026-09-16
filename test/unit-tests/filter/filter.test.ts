@@ -24,7 +24,10 @@ function createIdHook() {
   return {
     hook: {
       filter: {
-        id: { include: [/\.js$/], exclude: ['**/entry.js', /not-expect/] },
+        id: {
+          include: [/\.js$/],
+          exclude: [/entry.js$/, /not-expect/],
+        },
       },
       handler,
     },
@@ -47,9 +50,9 @@ function createTransformHook() {
 }
 
 function check(resolveIdHandler: Mock, loadHandler: Mock, transformHandler: Mock): void {
-  expect(resolveIdHandler).toBeCalledTimes(1)
-  expect(loadHandler).toBeCalledTimes(1)
-  expect(transformHandler).toBeCalledTimes(1)
+  expect(resolveIdHandler).toHaveBeenCalledTimes(1)
+  expect(loadHandler).toHaveBeenCalledTimes(1)
+  expect(transformHandler).toHaveBeenCalledTimes(1)
 
   const testName = expect.getState().currentTestName
   const hasExtraOptions = testName?.includes('vite')

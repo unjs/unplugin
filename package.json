@@ -50,7 +50,7 @@
     "prepublishOnly": "nr build",
     "release": "bumpp",
     "test": "nr test:build && vitest run",
-    "test:build": "jiti scripts/buildFixtures.ts"
+    "test:build": "node scripts/buildFixtures.ts"
   },
   "peerDependencies": {
     "@farmfe/core": "*",
@@ -120,7 +120,6 @@
     "esbuild": "catalog:peer",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",
-    "jiti": "catalog:dev",
     "lint-staged": "catalog:dev",
     "magic-string": "catalog:test",
     "publint": "catalog:dev",
