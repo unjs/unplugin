@@ -1,7 +1,7 @@
 {
   "name": "unplugin",
   "type": "module",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "homepage": "https://unplugin.unjs.io",
