@@ -1,6 +1,7 @@
 import type { LoaderContext } from 'webpack'
 import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeObjectHook } from '../../utils/filter'
+import { unescapeResourcePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
 export default async function transform(this: LoaderContext<any>, source: string, map: any): Promise<void> {
@@ -10,9 +11,10 @@ export default async function transform(this: LoaderContext<any>, source: string
   if (!plugin?.transform)
     return callback(null, source, map)
 
+  const id = unescapeResourcePath(this.resource)
   const context = createContext(this)
   const { handler, filter } = normalizeObjectHook('transform', plugin.transform)
-  if (!filter(this.resource, source))
+  if (!filter(id, source))
     return callback(null, source, map)
 
   try {
@@ -26,7 +28,7 @@ export default async function transform(this: LoaderContext<any>, source: string
         },
       }, this._compiler!, this._compilation, this, map), context),
       source,
-      this.resource,
+      id,
     )
 
     if (res == null)

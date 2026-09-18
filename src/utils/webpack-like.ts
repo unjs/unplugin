@@ -49,3 +49,9 @@ export function normalizeAbsolutePath(path: string): string {
   else
     return path
 }
+
+export function unescapeResourcePath(path: string): string {
+  return path
+    .replace(/\0(.)/g, '$1')
+    .replace(/\u200B#/g, '#')
+}
