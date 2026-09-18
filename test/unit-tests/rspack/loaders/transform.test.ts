@@ -3,6 +3,21 @@ import { assert, describe, expect, it, vi } from 'vitest'
 import transform from '../../../../src/rspack/loaders/transform'
 
 describe('transform', () => {
+  const originalSourceMap = {
+    version: 3,
+    names: [],
+    sources: ['original.ts'],
+    sourcesContent: ['original source'],
+    mappings: 'AACA',
+  }
+  const transformedSourceMap = {
+    version: 3,
+    names: [],
+    sources: ['intermediate.js'],
+    sourcesContent: ['intermediate source'],
+    mappings: ';AAAA',
+  }
+
   it('should call callback with source and map if plugin.transform is not defined', async () => {
     const mockCallback = vi.fn()
     const mockLoaderContext = {
@@ -66,11 +81,74 @@ describe('transform', () => {
     expect(mockCallback.mock.calls[0][0].message).toBe('Handler error')
   })
 
+  it('should return the transformed source map without an input source map', async () => {
+    const mockCallback = vi.fn()
+    const mockLoaderContext = {
+      async: () => mockCallback,
+      query: {
+        plugin: {
+          transform: {
+            handler: vi.fn().mockResolvedValue({
+              code: 'transformed source',
+              map: transformedSourceMap,
+            }),
+            filter: vi.fn().mockReturnValue(true),
+          },
+        },
+      },
+      resource: 'test resource',
+      _compiler: {},
+      _compilation: {},
+    } as any
+
+    await transform.call(mockLoaderContext, 'test source', null)
+
+    expect(mockCallback).toHaveBeenCalledWith(
+      null,
+      'transformed source',
+      transformedSourceMap,
+    )
+  })
+
+  it('should combine input and transformed source maps', async () => {
+    const mockCallback = vi.fn()
+    const mockLoaderContext = {
+      async: () => mockCallback,
+      query: {
+        plugin: {
+          transform: {
+            handler: vi.fn().mockResolvedValue({
+              code: 'transformed source',
+              map: transformedSourceMap,
+            }),
+            filter: vi.fn().mockReturnValue(true),
+          },
+        },
+      },
+      resource: 'test resource',
+      _compiler: {},
+      _compilation: {},
+    } as any
+
+    await transform.call(mockLoaderContext, 'test source', originalSourceMap)
+
+    expect(mockCallback).toHaveBeenCalledWith(
+      null,
+      'transformed source',
+      expect.objectContaining({
+        version: 3,
+        sources: ['original.ts'],
+        sourcesContent: ['original source'],
+        mappings: ';AACA',
+      }),
+    )
+  })
+
   it('should include input source map on native build context', async () => {
     const source = 'source code'
-    const map = 'source map'
+    const map = originalSourceMap
     const transformedCode = 'transformed code'
-    const transformedMap = 'transformed map'
+    const transformedMap = transformedSourceMap
 
     let handlerSource: string | undefined
     let handlerId: string | undefined
@@ -108,6 +186,14 @@ describe('transform', () => {
     assert(handlerNativeBuildContext?.framework === 'rspack')
     expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
 
-    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, transformedMap)
+    expect(mockCallback).toHaveBeenCalledWith(
+      null,
+      transformedCode,
+      expect.objectContaining({
+        sources: ['original.ts'],
+        sourcesContent: ['original source'],
+        mappings: ';AACA',
+      }),
+    )
   })
 })
