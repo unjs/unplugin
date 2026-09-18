@@ -2,6 +2,7 @@ ignoreWorkspaceRootCheck: true
 catalogMode: prefer
 minimumReleaseAge: 0
 minimumReleaseAgeExcludePrune: true
+trustLockfile: true
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 10080 # 7 days
 shellEmulator: true
