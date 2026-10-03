@@ -218,9 +218,22 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
           }
 
           if (plugin.buildEnd) {
-            compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-              await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation))
-            })
+            const processAssetsStage = (compiler as any).webpack?.Compilation?.PROCESS_ASSETS_STAGE_ADDITIONAL
+            if (processAssetsStage == null) {
+              compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
+                await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation))
+              })
+            }
+            else {
+              compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
+                compilation.hooks.processAssets.tapPromise({
+                  name: plugin.name,
+                  stage: processAssetsStage,
+                }, async () => {
+                  await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation))
+                })
+              })
+            }
           }
 
           if (plugin.writeBundle) {
