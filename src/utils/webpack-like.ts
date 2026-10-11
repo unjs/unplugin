@@ -1,12 +1,25 @@
 import type { RuleSetUseItem } from '@rspack/core'
-import type { ResolvedUnpluginOptions } from '../types'
+import type { Hook, LoadHookFilter, ResolvedUnpluginOptions } from '../types'
+import type { PluginFilter } from './filter'
 import { isAbsolute, normalize } from 'node:path'
 import { normalizeObjectHook } from './filter'
+
+export function createCachedIdFilter<T extends (...args: any[]) => any>(getHook: () => Hook<T, LoadHookFilter>): PluginFilter {
+  let cached: { hook: Hook<T, LoadHookFilter>, cwd: string, filter: PluginFilter } | undefined
+  return (id) => {
+    const hook = getHook()
+    const cwd = process.cwd()
+    if (cached?.hook !== hook || cached.cwd !== cwd)
+      cached = { hook, cwd, filter: normalizeObjectHook('load', hook).filter }
+    return cached.filter(id)
+  }
+}
 
 export function transformUse(
   data: { resource?: string, resourceQuery?: string },
   plugin: ResolvedUnpluginOptions,
   transformLoader: string,
+  filter: PluginFilter,
 ): RuleSetUseItem[] {
   if (data.resource == null)
     return []
@@ -15,12 +28,6 @@ export function transformUse(
   if (plugin.transformInclude && !plugin.transformInclude(id))
     return []
 
-  const { filter } = normalizeObjectHook(
-    // WARN: treat `transform` as `load` here, since cannot get `code` outside of `transform`
-    // `code` should be checked in the loader
-    'load',
-    plugin.transform!,
-  )
   if (!filter(id))
     return []
 

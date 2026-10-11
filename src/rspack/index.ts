@@ -1,5 +1,6 @@
 import type { Compiler, RspackPluginInstance } from '@rspack/core'
 import type {
+  HookFnMap,
   ResolvedUnpluginOptions,
   UnpluginContext,
   UnpluginContextMeta,
@@ -7,12 +8,13 @@ import type {
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
+import type { PluginFilter } from '../utils/filter'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
+import { createCachedIdFilter, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { createBuildContext, normalizeMessage } from './context'
 import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin, isVirtualModuleId } from './utils'
 
@@ -94,6 +96,7 @@ function applyRspackPlugins(
 
     // resolveId hook
     if (plugin.resolveId) {
+      let cachedResolveId: { hook: NonNullable<ResolvedUnpluginOptions['resolveId']>, cwd: string, filter: PluginFilter } | undefined
       // rspack >= 1.5.0: use native virtual modules plugin
       // rspack < 1.5.0: use fake virtual modules plugin
       const vfs = compiler.rspack.experiments.VirtualModulesPlugin
@@ -129,7 +132,18 @@ function applyRspackPlugins(
             },
           }
 
-          const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
+          const hook = plugin.resolveId!
+          const cwd = process.cwd()
+          let handler: HookFnMap['resolveId']
+          if (cachedResolveId?.hook === hook && cachedResolveId.cwd === cwd) {
+            handler = typeof hook === 'function' ? hook : hook.handler
+          }
+          else {
+            const normalized = normalizeObjectHook('resolveId', hook)
+            handler = normalized.handler
+            cachedResolveId = { hook, cwd, filter: normalized.filter }
+          }
+          const { filter } = cachedResolveId
           if (!filter(id))
             return
 
@@ -183,6 +197,7 @@ function applyRspackPlugins(
 
     // load hook
     if (plugin.load) {
+      const filter = createCachedIdFilter(() => plugin.load!)
       compiler.options.module.rules.unshift({
         enforce: plugin.enforce,
         include(id) {
@@ -193,7 +208,6 @@ function applyRspackPlugins(
           if (plugin.loadInclude && !plugin.loadInclude(id))
             return false
 
-          const { filter } = normalizeObjectHook('load', plugin.load!)
           if (!filter(id))
             return false
 
@@ -212,10 +226,12 @@ function applyRspackPlugins(
 
     // transform hook
     if (plugin.transform) {
+      // Only the id filter applies here; the loader checks the code filter.
+      const filter = createCachedIdFilter(() => plugin.transform!)
       compiler.options.module.rules.unshift({
         enforce: plugin.enforce,
         use(data) {
-          return transformUse(data, plugin, TRANSFORM_LOADER)
+          return transformUse(data, plugin, TRANSFORM_LOADER, filter)
         },
       })
     }

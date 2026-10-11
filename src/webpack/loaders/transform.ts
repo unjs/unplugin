@@ -1,7 +1,13 @@
 import type { LoaderContext } from 'webpack'
-import type { ResolvedUnpluginOptions } from '../../types'
+import type { HookFnMap, ResolvedUnpluginOptions } from '../../types'
+import type { TransformHookFilter } from '../../utils/filter'
 import { normalizeObjectHook } from '../../utils/filter'
 import { createBuildContext, createContext } from '../context'
+
+const filters = new WeakMap<
+  NonNullable<ResolvedUnpluginOptions['transform']>,
+  { cwd: string, filter: TransformHookFilter }
+>()
 
 export default async function transform(this: LoaderContext<any>, source: string, map: any): Promise<void> {
   const callback = this.async()
@@ -11,7 +17,20 @@ export default async function transform(this: LoaderContext<any>, source: string
     return callback(null, source, map)
 
   const context = createContext(this)
-  const { handler, filter } = normalizeObjectHook('transform', plugin.transform)
+  const hook = plugin.transform
+  const cwd = process.cwd()
+  let cached = filters.get(hook)
+  let handler: HookFnMap['transform']
+  if (cached?.cwd === cwd) {
+    handler = typeof hook === 'function' ? hook : hook.handler
+  }
+  else {
+    const normalized = normalizeObjectHook('transform', hook)
+    handler = normalized.handler
+    cached = { cwd, filter: normalized.filter }
+    filters.set(hook, cached)
+  }
+  const { filter } = cached
   if (!filter(this.resource, source))
     return callback(null, source, map)
 
