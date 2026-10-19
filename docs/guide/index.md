@@ -224,22 +224,22 @@ export default defineConfig({
 
 ## Supported Hooks
 
-| Hook                                                                              |     Rollup      | Vite | webpack |     esbuild     |     Rspack      |     Rsbuild     | Farm | Rolldown |       Bun       |
-| --------------------------------------------------------------------------------- | :-------------: | :--: | :-----: | :-------------: | :-------------: | :-------------: | :--: | :------: | :-------------: |
-| [`enforce`](https://vite.dev/guide/api-plugin.html#plugin-ordering)               | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |       ✅        |  ✅  |    ✅    |       ❌        |
-| [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |   ✅    |       ✅        | ✅ <sup>5</sup> | ✅ <sup>5</sup> |  ✅  |    ✅    |       ✅        |
-| ~~`loadInclude`~~<sup>2</sup>                                                     |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| ~~`transformInclude`~~<sup>2</sup>                                                |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |       ✅        |  ✅  |    ✅    |       ✅        |
-| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |   ✅    |       ❌        |       ✅        |       ✅        |  ✅  |    ✅    |       ❌        |
-| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
-| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |    ✅    | ✅ <sup>6</sup> |
+| Hook                                                                              |     Rollup      | Vite | webpack |     esbuild     |     Rspack      |     Rsbuild     | Farm |    Rolldown     |       Bun       |
+| --------------------------------------------------------------------------------- | :-------------: | :--: | :-----: | :-------------: | :-------------: | :-------------: | :--: | :-------------: | :-------------: |
+| [`enforce`](https://vite.dev/guide/api-plugin.html#plugin-ordering)               | ❌ <sup>1</sup> |  ✅  |   ✅    | ❌ <sup>1</sup> |       ✅        |       ✅        |  ✅  | ❌ <sup>1</sup> |       ❌        |
+| [`buildStart`](https://rollupjs.org/plugin-development/#buildstart)               |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |       ✅        |       ✅        |
+| [`resolveId`](https://rollupjs.org/plugin-development/#resolveid)                 |       ✅        |  ✅  |   ✅    |       ✅        | ✅ <sup>5</sup> | ✅ <sup>5</sup> |  ✅  |       ✅        |       ✅        |
+| ~~`loadInclude`~~<sup>2</sup>                                                     |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |       ✅        |       ✅        |
+| [`load`](https://rollupjs.org/plugin-development/#load)                           |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |       ✅        |  ✅  |       ✅        |       ✅        |
+| ~~`transformInclude`~~<sup>2</sup>                                                |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |       ✅        |       ✅        |
+| [`transform`](https://rollupjs.org/plugin-development/#transform)                 |       ✅        |  ✅  |   ✅    | ✅ <sup>3</sup> |       ✅        |       ✅        |  ✅  |       ✅        |       ✅        |
+| [`watchChange`](https://rollupjs.org/plugin-development/#watchchange)             |       ✅        |  ✅  |   ✅    |       ❌        |       ✅        |       ✅        |  ✅  |       ✅        |       ❌        |
+| [`buildEnd`](https://rollupjs.org/plugin-development/#buildend)                   |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |       ✅        | ✅ <sup>6</sup> |
+| [`writeBundle`](https://rollupjs.org/plugin-development/#writebundle)<sup>4</sup> |       ✅        |  ✅  |   ✅    |       ✅        |       ✅        |       ✅        |  ✅  |       ✅        | ✅ <sup>6</sup> |
 
 ::: details Notice
 
-1. Rollup and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
+1. Rollup, Rolldown and esbuild do not support using `enforce` to control the order of plugins. Users need to maintain the order manually.
 2. Webpack's id filter is outside of loader logic; an additional hook is needed for better performance on Webpack and Rolldown.
    However, it is now deprecated. Please use `transform/load/resolveId.filter` instead.
    In Rollup, this hook has been polyfilled to match the behaviors. See the following usage examples for reference.
