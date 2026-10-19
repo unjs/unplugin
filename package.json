@@ -31,12 +31,9 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "12.5.0",
+      "version": "12.14.0",
       "onFail": "download"
     }
-  },
-  "publishConfig": {
-    "tag": "beta"
   },
   "scripts": {
     "build": "tsdown",
