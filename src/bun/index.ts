@@ -212,6 +212,9 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               }
 
               if (typeof result === 'string') {
+                if (sourcemapResults && result !== code) {
+                  sourcemapResults.length = 0
+                }
                 code = result
                 hasResult = true
               }
@@ -229,12 +232,19 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               ?? loader
               ?? guessLoader(id)
             if (sourcemapResults && ['js', 'jsx', 'ts', 'tsx'].includes(resolvedLoader)) {
-              const sourcemaps = sourcemapResults.flatMap((result) => {
+              const sourcemaps: RawSourceMap[] = []
+              for (let i = sourcemapResults.length - 1; i >= 0; i--) {
+                const result = sourcemapResults[i]!
                 const map = result.map
-                return map ? [typeof map === 'string' ? JSON.parse(map) : map as RawSourceMap] : []
-              })
+                if (map) {
+                  sourcemaps.push(typeof map === 'string' ? JSON.parse(map) : map as RawSourceMap)
+                }
+                else if (i > 0 && result.code !== sourcemapResults[i - 1]!.code) {
+                  break
+                }
+              }
               if (sourcemaps.length) {
-                const map = combineSourcemaps(id, sourcemaps.reverse(), true)
+                const map = combineSourcemaps(id, sourcemaps, true)
                 code = processCodeWithSourceMap(map as SourceMap, code)
               }
             }

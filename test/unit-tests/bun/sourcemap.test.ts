@@ -41,16 +41,68 @@ async function probeInputMaps() {
 
 describe.skipIf(typeof Bun === 'undefined')('bun sourcemaps', () => {
   it('forwards composed hook maps to the Bun onLoad callback', async () => {
-    const original = '\n\nexport const originalToken = 42\n'
+    const result = await load([
+      transform('originalToken', 'intermediateToken', true),
+      transform('intermediateToken', 'finalToken'),
+    ])
+    expectOriginal(result, 'finalToken', result.original)
+  })
+
+  const maplessKinds = ['string', 'object', 'null-map', 'undefined-map'] as const
+  it.each(maplessKinds.flatMap(kind => [false, true].map(changed => ({ kind, changed }))))(
+    'invalidates $kind maps only when code changes: $changed',
+    async ({ kind, changed }) => {
+      const result = await load([
+        transform('originalToken', 'intermediateToken'),
+        {
+          name: 'mapless-transform',
+          transform(code) {
+            code = changed ? `\n${code.replace('intermediateToken', 'finalToken')}` : code
+            return kind === 'string'
+              ? code
+              : kind === 'null-map'
+                ? { code, map: null }
+                : kind === 'undefined-map' ? { code, map: undefined } : { code }
+          },
+        },
+      ])
+      expect(result.code).toContain(changed ? 'finalToken' : 'intermediateToken')
+      if (changed) {
+        expect(result.map).toBeUndefined()
+      }
+      else {
+        expectOriginal(result, 'intermediateToken', result.original)
+      }
+    },
+  )
+
+  it.each(maplessKinds)('starts a new map chain after a changed %s result', async (kind) => {
+    let intermediate = ''
+    const result = await load([
+      transform('originalToken', 'intermediateToken'),
+      {
+        name: 'mapless-transform',
+        transform(code) {
+          intermediate = `\n${code.replace('intermediateToken', 'unmappedToken')}`
+          return kind === 'string'
+            ? intermediate
+            : kind === 'null-map'
+              ? { code: intermediate, map: null }
+              : kind === 'undefined-map' ? { code: intermediate, map: undefined } : { code: intermediate }
+        },
+      },
+      transform('unmappedToken', 'finalToken'),
+    ])
+    expectOriginal(result, 'finalToken', intermediate, 4)
+  })
+
+  async function load(plugins: UnpluginOptions[], original = '\n\nexport const originalToken = 42\n') {
     const directory = await mkdtemp(join(tmpdir(), 'unplugin-bun-map-'))
     const entry = join(directory, 'entry.js')
     await writeFile(entry, original)
     try {
       let onLoad: OnLoadCallback | undefined
-      const plugin = createBunPlugin(() => [
-        transform('originalToken', 'intermediateToken', true),
-        transform('intermediateToken', 'finalToken'),
-      ])()
+      const plugin = createBunPlugin(() => plugins)()
       await plugin.setup({
         config: { sourcemap: 'external' },
         onLoad(_options, callback) {
@@ -63,14 +115,13 @@ describe.skipIf(typeof Bun === 'undefined')('bun sourcemaps', () => {
       assert(typeof result.contents === 'string')
       const code = result.contents
       const encodedMap = code.match(/\/\/# sourceMappingURL=data:application\/json[^,]*,([^\n]+)/)?.[1]
-      expect(encodedMap).toBeDefined()
-      const map = JSON.parse(Buffer.from(encodedMap!, 'base64').toString())
-      expectOriginal({ code, map, original, entry }, 'finalToken', original)
+      const map = encodedMap ? JSON.parse(Buffer.from(encodedMap, 'base64').toString()) : undefined
+      return { code, map, original, entry }
     }
     finally {
       await rm(directory, { recursive: true, force: true })
     }
-  })
+  }
 
   async function build(plugins: UnpluginOptions[], sourcemap?: 'external' | 'none' | false, filename = 'entry.js', original = '\n\nexport const originalToken = 42\n') {
     const directory = await mkdtemp(join(tmpdir(), 'unplugin-bun-map-'))
@@ -109,14 +160,14 @@ describe.skipIf(typeof Bun === 'undefined')('bun sourcemaps', () => {
     }
   }
 
-  function expectOriginal(result: Awaited<ReturnType<typeof build>>, token: string, content: string) {
+  function expectOriginal(result: Awaited<ReturnType<typeof build>>, token: string, content: string, line = 2) {
     expect(result.map).toBeDefined()
     const offset = result.code.indexOf(token)
     expect(offset).toBeGreaterThanOrEqual(0)
     const before = result.code.slice(0, offset).split('\n')
     const position = new SourceMap(result.map).findEntry(before.length - 1, before.at(-1)!.length)
     assert('originalLine' in position)
-    expect(position.originalLine).toBe(2)
+    expect(position.originalLine).toBe(line)
     expect(position.originalColumn).toBe(13)
     expect(result.map.sourcesContent).toContain(content)
   }
