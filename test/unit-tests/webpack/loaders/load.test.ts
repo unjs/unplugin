@@ -20,7 +20,10 @@ describe('load function', () => {
   }
 
   it('should call callback with source and map if plugin.load is not defined', async () => {
-    const context = { ...mockLoaderContext, query: { plugin: {} } }
+    const context = {
+      ...mockLoaderContext,
+      query: { plugin: {} },
+    }
     const source = 'source code'
     const map = 'source map'
 
@@ -64,12 +67,37 @@ describe('load function', () => {
     expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, map)
   })
 
+  it('should call callback with the error if the handler throws', async () => {
+    const source = 'source code'
+    const map = 'source map'
+    const error = new Error('Handler error')
+    const pluginLoadHandler = vi.fn().mockRejectedValue(error)
+    mockLoaderContext.query.plugin.load = pluginLoadHandler
+
+    await load.call(mockLoaderContext as any, source, map)
+
+    expect(pluginLoadHandler).toHaveBeenCalled()
+    expect(mockCallback).toHaveBeenCalledWith(error)
+  })
+
   it('should be a raw loader so binary files are not decoded as text', () => {
     expect(raw).toBe(true)
   })
 
   it('should pass a binary source on untouched when the load hook does not handle it', async () => {
-    const png = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0xFF, 0xFE, 0x00])
+    const png = Buffer.from([
+      0x89,
+      0x50,
+      0x4E,
+      0x47,
+      0x0D,
+      0x0A,
+      0x1A,
+      0x0A,
+      0xFF,
+      0xFE,
+      0x00,
+    ])
     mockLoaderContext.query.plugin.load = vi.fn().mockResolvedValue(null)
     mockLoaderContext.resource = '/virtual/image.png'
 
