@@ -14,13 +14,17 @@ import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } f
 const TRANSFORM_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  import.meta.dev ? '../../dist/webpack/loaders/transform.mjs' : 'webpack/loaders/transform.mjs',
+  import.meta.dev
+    ? '../../dist/webpack/loaders/transform.mjs'
+    : 'webpack/loaders/transform.mjs',
 )
 
 const LOAD_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  import.meta.dev ? '../../dist/webpack/loaders/load.mjs' : 'webpack/loaders/load.mjs',
+  import.meta.dev
+    ? '../../dist/webpack/loaders/load.mjs'
+    : 'webpack/loaders/load.mjs',
 )
 export function getWebpackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
@@ -85,7 +89,9 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const id = normalizeAbsolutePath(request.request)
 
                     const requestContext = (request as unknown as { context: { issuer: string } }).context
-                    let importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
+                    let importer = requestContext.issuer !== ''
+                      ? requestContext.issuer
+                      : undefined
                     const isEntry = requestContext.issuer === ''
 
                     if (importer?.startsWith(plugin.__virtualModulePrefix))
@@ -121,7 +127,9 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const cwd = process.cwd()
                     let handler: HookFnMap['resolveId']
                     if (cachedResolveId?.hook === hook && cachedResolveId.cwd === cwd) {
-                      handler = typeof hook === 'function' ? hook : hook.handler
+                      handler = typeof hook === 'function'
+                        ? hook
+                        : hook.handler
                     }
                     else {
                       const normalized = normalizeObjectHook('resolveId', hook)
@@ -132,16 +140,23 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     if (!filter(id))
                       return callback()
 
-                    const resolveIdResult = await handler.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
+                    const resolveIdResult = await handler.call!({
+                      ...context,
+                      ...pluginContext,
+                    }, id, importer, { isEntry })
 
                     if (error != null)
                       return callback(error)
                     if (resolveIdResult == null)
                       return callback()
 
-                    let resolved = typeof resolveIdResult === 'string' ? resolveIdResult : resolveIdResult.id
+                    let resolved = typeof resolveIdResult === 'string'
+                      ? resolveIdResult
+                      : resolveIdResult.id
 
-                    const isExternal = typeof resolveIdResult === 'string' ? false : resolveIdResult.external === true
+                    const isExternal = typeof resolveIdResult === 'string'
+                      ? false
+                      : resolveIdResult.external === true
                     if (isExternal)
                       externalModules.add(resolved)
 
@@ -185,12 +200,14 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                 return shouldLoad(id, plugin, externalModules, filter)
               },
               enforce: plugin.enforce,
-              use: [{
-                loader: LOAD_LOADER,
-                options: {
-                  plugin,
+              use: [
+                {
+                  loader: LOAD_LOADER,
+                  options: {
+                    plugin,
+                  },
                 },
-              }],
+              ],
               type: 'javascript/auto',
             })
           }
@@ -234,9 +251,22 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
           }
 
           if (plugin.buildEnd) {
-            compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-              await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation))
-            })
+            const processAssetsStage = (compiler as any).webpack?.Compilation?.PROCESS_ASSETS_STAGE_ADDITIONAL
+            if (processAssetsStage == null) {
+              compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
+                await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation))
+              })
+            }
+            else {
+              compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
+                compilation.hooks.processAssets.tapPromise({
+                  name: plugin.name,
+                  stage: processAssetsStage,
+                }, async () => {
+                  await plugin.buildEnd!.call(createBuildContext(contextOptionsFromCompilation(compilation), compiler, compilation))
+                })
+              })
+            }
           }
 
           if (plugin.writeBundle) {

@@ -100,6 +100,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
           }
 
           let fsContentsCache: string | undefined
+          let fsContentsCached = false
 
           for (const { options, onTransformCb } of loaders) {
             if (!checkFilter(options))
@@ -113,13 +114,29 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
                   if (result?.contents)
                     return result.contents as string
 
-                  if (fsContentsCache)
-                    return fsContentsCache
+                  if (fsContentsCached)
+                    return fsContentsCache as string
 
                   // caution: 'utf8' assumes the input file is not in binary.
                   // if you want your plugin handle binary files, make sure to
                   // `plugin.load()` them first.
-                  return (fsContentsCache = await fs.promises.readFile(args.path, 'utf8'))
+                  try {
+                    fsContentsCache = await fs.promises.readFile(args.path, 'utf8')
+                    fsContentsCached = true
+                    return fsContentsCache
+                  }
+                  catch (error) {
+                    // esbuild resolves `package.json#browser` entries mapped to `false`
+                    // to a path that does not exist on disk (the module is meant to be
+                    // stubbed out as empty). Treat a missing file the same way esbuild
+                    // itself treats these stubs instead of throwing.
+                    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') {
+                      fsContentsCache = ''
+                      fsContentsCached = true
+                      return fsContentsCache
+                    }
+                    throw error
+                  }
                 },
               }
 

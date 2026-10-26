@@ -1,6 +1,7 @@
 import type { NativeBuildContext, UnpluginBuildContext } from '../../../../src/types'
+import { Buffer } from 'node:buffer'
 import { assert, describe, expect, it, vi } from 'vitest'
-import transform from '../../../../src/webpack/loaders/transform'
+import transform, { raw } from '../../../../src/webpack/loaders/transform'
 
 describe('transform loader', () => {
   const mockCallback = vi.fn()
@@ -140,5 +141,43 @@ describe('transform loader', () => {
     expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
 
     expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, transformedMap)
+  })
+
+  it('should be a raw loader so binary files are not decoded as text', () => {
+    expect(raw).toBe(true)
+  })
+
+  it('should pass a binary source on untouched when the filter does not match', async () => {
+    const png = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0xFF, 0xFE, 0x00])
+    mockLoaderContext.query = {
+      plugin: {
+        transform: {
+          handler: vi.fn(),
+          filter: vi.fn().mockReturnValue(false),
+        },
+      },
+    }
+
+    await transform.call(mockLoaderContext as any, png, undefined)
+
+    const [, passedSource] = mockCallback.mock.calls.at(-1)!
+    expect(Buffer.isBuffer(passedSource) && passedSource.equals(png)).toBe(true)
+  })
+
+  it('should give the handler the source as a string when it receives a Buffer', async () => {
+    const handler = vi.fn().mockResolvedValue('transformed')
+    mockLoaderContext.query = {
+      plugin: {
+        transform: {
+          handler,
+          filter: vi.fn().mockReturnValue(true),
+        },
+      },
+    }
+
+    await transform.call(mockLoaderContext as any, Buffer.from('const a = 1'), undefined)
+
+    expect(handler).toHaveBeenCalledWith('const a = 1', '/path/to/resource')
+    expect(mockCallback).toHaveBeenLastCalledWith(null, 'transformed', undefined)
   })
 })
