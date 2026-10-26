@@ -1,8 +1,14 @@
 import type { Buffer } from 'node:buffer'
 import type { LoaderContext } from 'webpack'
-import type { ResolvedUnpluginOptions } from '../../types'
+import type { HookFnMap, ResolvedUnpluginOptions } from '../../types'
+import type { TransformHookFilter } from '../../utils/filter'
 import { normalizeObjectHook } from '../../utils/filter'
 import { createBuildContext, createContext } from '../context'
+
+const filters = new WeakMap<
+  NonNullable<ResolvedUnpluginOptions['transform']>,
+  { cwd: string, filter: TransformHookFilter }
+>()
 
 // Receive the source as a Buffer so that files the transform hook does not handle, like images and
 // fonts, are passed on byte for byte instead of being decoded as UTF-8 text.
@@ -17,8 +23,25 @@ export default async function transform(this: LoaderContext<any>, source: string
     return callback(null, source, map)
 
   const context = createContext(this)
-  const { handler, filter } = normalizeObjectHook('transform', plugin.transform)
-  const code = typeof source === 'string' ? source : source.toString('utf-8')
+  const hook = plugin.transform
+  const cwd = process.cwd()
+  let cached = filters.get(hook)
+  let handler: HookFnMap['transform']
+  if (cached?.cwd === cwd) {
+    handler = typeof hook === 'function'
+      ? hook
+      : hook.handler
+  }
+  else {
+    const normalized = normalizeObjectHook('transform', hook)
+    handler = normalized.handler
+    cached = { cwd, filter: normalized.filter }
+    filters.set(hook, cached)
+  }
+  const { filter } = cached
+  const code = typeof source === 'string'
+    ? source
+    : source.toString('utf-8')
   if (!filter(this.resource, code))
     return callback(null, source, map)
 
@@ -36,12 +59,17 @@ export default async function transform(this: LoaderContext<any>, source: string
       this.resource,
     )
 
-    if (res == null)
+    if (res == null) {
       callback(null, source, map)
-    else if (typeof res !== 'string')
-      callback(null, res.code, map == null ? map : (res.map || map))
-    else
+    }
+    else if (typeof res !== 'string') {
+      callback(null, res.code, map == null
+        ? map
+        : (res.map || map))
+    }
+    else {
       callback(null, res, map)
+    }
   }
   catch (error) {
     if (error instanceof Error) {

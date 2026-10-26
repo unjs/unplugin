@@ -1,6 +1,5 @@
 import type { LoaderContext } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../../types'
-import { normalizeObjectHook } from '../../utils/filter'
 import { normalizeAbsolutePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
@@ -17,7 +16,8 @@ export default async function load(this: LoaderContext, source: string, map: any
     id = decodeVirtualModuleId(id, plugin)
 
   const context = createContext(this)
-  const { handler } = normalizeObjectHook('load', plugin.load)
+  const hook = plugin.load
+  const handler = typeof hook === 'function' ? hook : hook.handler
   try {
     const res = await handler.call(
       Object.assign(

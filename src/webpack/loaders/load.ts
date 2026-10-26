@@ -1,7 +1,6 @@
 import type { Buffer } from 'node:buffer'
 import type { LoaderContext } from 'webpack'
 import type { ResolvedUnpluginOptions } from '../../types'
-import { normalizeObjectHook } from '../../utils/filter'
 import { normalizeAbsolutePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
@@ -22,7 +21,10 @@ export default async function load(this: LoaderContext<any>, source: string | Bu
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
   const context = createContext(this)
-  const { handler } = normalizeObjectHook('load', plugin.load)
+  const hook = plugin.load
+  const handler = typeof hook === 'function'
+    ? hook
+    : hook.handler
   try {
     const res = await handler.call(
       Object.assign({}, createBuildContext({

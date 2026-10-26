@@ -1,25 +1,30 @@
 import type { ResolvePluginInstance, Resolver } from 'webpack'
 import type VirtualModulesPluginType from 'webpack-virtual-modules'
-import type { ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
+import type { HookFnMap, ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
+import type { PluginFilter } from '../utils/filter'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
+import { createCachedIdFilter, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
 
 const TRANSFORM_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  import.meta.dev ? '../../dist/webpack/loaders/transform.mjs' : 'webpack/loaders/transform.mjs',
+  import.meta.dev
+    ? '../../dist/webpack/loaders/transform.mjs'
+    : 'webpack/loaders/transform.mjs',
 )
 
 const LOAD_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  import.meta.dev ? '../../dist/webpack/loaders/load.mjs' : 'webpack/loaders/load.mjs',
+  import.meta.dev
+    ? '../../dist/webpack/loaders/load.mjs'
+    : 'webpack/loaders/load.mjs',
 )
 export function getWebpackPlugin<UserOptions = Record<string, never>>(
   factory: UnpluginFactory<UserOptions>,
@@ -57,6 +62,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           // resolveId hook
           if (plugin.resolveId) {
+            let cachedResolveId: { hook: NonNullable<ResolvedUnpluginOptions['resolveId']>, cwd: string, filter: PluginFilter } | undefined
             let vfs = compiler.options.plugins.find(i => i instanceof VirtualModulesPlugin)
             if (!vfs) {
               vfs = new VirtualModulesPlugin()
@@ -83,7 +89,9 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     const id = normalizeAbsolutePath(request.request)
 
                     const requestContext = (request as unknown as { context: { issuer: string } }).context
-                    let importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
+                    let importer = requestContext.issuer !== ''
+                      ? requestContext.issuer
+                      : undefined
                     const isEntry = requestContext.issuer === ''
 
                     if (importer?.startsWith(plugin.__virtualModulePrefix))
@@ -115,20 +123,40 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                       },
                     }
 
-                    const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
+                    const hook = plugin.resolveId!
+                    const cwd = process.cwd()
+                    let handler: HookFnMap['resolveId']
+                    if (cachedResolveId?.hook === hook && cachedResolveId.cwd === cwd) {
+                      handler = typeof hook === 'function'
+                        ? hook
+                        : hook.handler
+                    }
+                    else {
+                      const normalized = normalizeObjectHook('resolveId', hook)
+                      handler = normalized.handler
+                      cachedResolveId = { hook, cwd, filter: normalized.filter }
+                    }
+                    const { filter } = cachedResolveId
                     if (!filter(id))
                       return callback()
 
-                    const resolveIdResult = await handler.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
+                    const resolveIdResult = await handler.call!({
+                      ...context,
+                      ...pluginContext,
+                    }, id, importer, { isEntry })
 
                     if (error != null)
                       return callback(error)
                     if (resolveIdResult == null)
                       return callback()
 
-                    let resolved = typeof resolveIdResult === 'string' ? resolveIdResult : resolveIdResult.id
+                    let resolved = typeof resolveIdResult === 'string'
+                      ? resolveIdResult
+                      : resolveIdResult.id
 
-                    const isExternal = typeof resolveIdResult === 'string' ? false : resolveIdResult.external === true
+                    const isExternal = typeof resolveIdResult === 'string'
+                      ? false
+                      : resolveIdResult.external === true
                     if (isExternal)
                       externalModules.add(resolved)
 
@@ -166,27 +194,32 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           // load hook
           if (plugin.load) {
+            const filter = createCachedIdFilter(() => plugin.load!)
             compiler.options.module.rules.unshift({
               include(id) {
-                return shouldLoad(id, plugin, externalModules)
+                return shouldLoad(id, plugin, externalModules, filter)
               },
               enforce: plugin.enforce,
-              use: [{
-                loader: LOAD_LOADER,
-                options: {
-                  plugin,
+              use: [
+                {
+                  loader: LOAD_LOADER,
+                  options: {
+                    plugin,
+                  },
                 },
-              }],
+              ],
               type: 'javascript/auto',
             })
           }
 
           // transform hook
           if (plugin.transform) {
+            // Only the id filter applies here; the loader checks the code filter.
+            const filter = createCachedIdFilter(() => plugin.transform!)
             compiler.options.module.rules.unshift({
               enforce: plugin.enforce,
               use(data: { resource?: string, resourceQuery?: string }) {
-                return transformUse(data, plugin, TRANSFORM_LOADER)
+                return transformUse(data, plugin, TRANSFORM_LOADER, filter)
               },
             })
           }
@@ -247,7 +280,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
   }
 }
 
-export function shouldLoad(id: string, plugin: ResolvedUnpluginOptions, externalModules: Set<string>): boolean {
+export function shouldLoad(id: string, plugin: ResolvedUnpluginOptions, externalModules: Set<string>, filter: PluginFilter): boolean {
   if (id.startsWith(plugin.__virtualModulePrefix))
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
 
@@ -255,7 +288,6 @@ export function shouldLoad(id: string, plugin: ResolvedUnpluginOptions, external
   if (plugin.loadInclude && !plugin.loadInclude(id))
     return false
 
-  const { filter } = normalizeObjectHook('load', plugin.load!)
   if (!filter(id))
     return false
 
