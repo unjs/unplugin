@@ -75,15 +75,42 @@ export default defineConfig({
     },
   },
   head: [
-    ['meta', { name: 'theme-color', content: '#ffffff' }],
-    ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
-    ['meta', { name: 'author', content: 'Nuxt Contrib' }],
-    ['meta', { property: 'og:title', content: title }],
-    ['meta', { property: 'og:image', content: ogImage }],
-    ['meta', { property: 'og:description', content: description }],
-    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:image', content: ogImage }],
-    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' }],
+    [
+      'meta',
+      { name: 'theme-color', content: '#ffffff' },
+    ],
+    [
+      'link',
+      { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' },
+    ],
+    [
+      'meta',
+      { name: 'author', content: 'Nuxt Contrib' },
+    ],
+    [
+      'meta',
+      { property: 'og:title', content: title },
+    ],
+    [
+      'meta',
+      { property: 'og:image', content: ogImage },
+    ],
+    [
+      'meta',
+      { property: 'og:description', content: description },
+    ],
+    [
+      'meta',
+      { name: 'twitter:card', content: 'summary_large_image' },
+    ],
+    [
+      'meta',
+      { name: 'twitter:image', content: ogImage },
+    ],
+    [
+      'meta',
+      { name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover' },
+    ],
   ],
   markdown: {
     config: (md) => {
@@ -96,7 +123,9 @@ export default defineConfig({
         twoslashOptions: {
           compilerOptions: {
             paths: {
-              unplugin: [path.resolve(import.meta.dirname, '../../src/index.ts')],
+              unplugin: [
+                path.resolve(import.meta.dirname, '../../src/index.ts'),
+              ],
             },
           },
         },

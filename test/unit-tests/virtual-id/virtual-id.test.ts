@@ -57,12 +57,20 @@ function checkLoadHook(loadCallback: Mock): void {
 
   expect(loadCallback).toHaveBeenCalledWith(
     expect.stringMatching(/(?:\/|\\)entry\.js\.js$/),
-    ...(hasExtraOptions ? [expect.anything()] : []),
+    ...(hasExtraOptions
+      ? [
+          expect.anything(),
+        ]
+      : []),
   )
 
   expect(loadCallback).toHaveBeenCalledWith(
     expect.stringMatching(/(?:\/|\\)imported\.js\.js$/),
-    ...(hasExtraOptions ? [expect.anything()] : []),
+    ...(hasExtraOptions
+      ? [
+          expect.anything(),
+        ]
+      : []),
   )
 }
 
@@ -101,7 +109,9 @@ describe('virtual ids', () => {
 
     await build.rollup({
       input: path.resolve(__dirname, 'test-src/entry.js'),
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
     })
 
     checkResolveIdHook(mockResolveIdHook)
@@ -117,7 +127,9 @@ describe('virtual ids', () => {
       build.webpack(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
         },
         resolve,
       )
@@ -136,7 +148,9 @@ describe('virtual ids', () => {
       build.rspack(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
         },
         resolve,
       )
@@ -152,8 +166,12 @@ describe('virtual ids', () => {
     const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).esbuild
 
     await build.esbuild({
-      entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entryPoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
     })
@@ -168,8 +186,12 @@ describe('virtual ids', () => {
     const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).bun
 
     await build.bun({
-      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entrypoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
     })
 
     checkResolveIdHook(mockResolveIdHook)

@@ -17,7 +17,9 @@ export default async function load(this: LoaderContext, source: string, map: any
 
   const context = createContext(this)
   const hook = plugin.load
-  const handler = typeof hook === 'function' ? hook : hook.handler
+  const handler = typeof hook === 'function'
+    ? hook
+    : hook.handler
   try {
     const res = await handler.call(
       Object.assign(

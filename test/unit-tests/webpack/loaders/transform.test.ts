@@ -148,7 +148,19 @@ describe('transform loader', () => {
   })
 
   it('should pass a binary source on untouched when the filter does not match', async () => {
-    const png = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0xFF, 0xFE, 0x00])
+    const png = Buffer.from([
+      0x89,
+      0x50,
+      0x4E,
+      0x47,
+      0x0D,
+      0x0A,
+      0x1A,
+      0x0A,
+      0xFF,
+      0xFE,
+      0x00,
+    ])
     mockLoaderContext.query = {
       plugin: {
         transform: {

@@ -79,7 +79,9 @@ describe('writeBundle hook', () => {
     })
 
     await rollupBuild.write({
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       file: path.resolve(__dirname, 'test-out/rollup/output.js'),
       format: 'cjs',
       exports: 'named',
@@ -102,13 +104,17 @@ describe('writeBundle hook', () => {
         filename: 'output.js',
         libraryTarget: 'commonjs',
       },
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       devtool: 'source-map',
     }
 
     const webpack5Options = {
       entry: path.resolve(__dirname, 'test-src/entry.js'),
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       devtool: 'source-map',
       output: {
         path: path.resolve(__dirname, 'test-out/webpack'),
@@ -120,7 +126,9 @@ describe('writeBundle hook', () => {
     }
 
     await new Promise((resolve) => {
-      build.webpack(webpackVersion!.startsWith('4') ? webpack4Options : webpack5Options, resolve)
+      build.webpack(webpackVersion!.startsWith('4')
+        ? webpack4Options
+        : webpack5Options, resolve)
     })
 
     checkWriteBundleHook(mockResolveIdHook)
@@ -133,7 +141,9 @@ describe('writeBundle hook', () => {
 
     const rspackOptions: RspackOptions = {
       entry: path.resolve(__dirname, 'test-src/entry.js'),
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       devtool: 'source-map',
       output: {
         path: path.resolve(__dirname, 'test-out/rspack'),
@@ -157,8 +167,12 @@ describe('writeBundle hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).esbuild
 
     await build.esbuild({
-      entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entryPoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
       bundle: true, // actually traverse imports
       outfile: path.resolve(__dirname, 'test-out/esbuild/output.js'),
       format: 'cjs',
@@ -174,8 +188,12 @@ describe('writeBundle hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
 
     await build.bun({
-      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entrypoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
       outdir: path.resolve(__dirname, 'test-out/bun'),
       naming: 'output.[ext]',
       sourcemap: 'external',

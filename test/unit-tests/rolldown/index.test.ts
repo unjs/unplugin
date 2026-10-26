@@ -15,12 +15,17 @@ describe('getRolldownPlugin', () => {
     plugin({ foo: 'bar' })
     expect(factory).toHaveBeenCalledWith({ foo: 'bar' }, expect.objectContaining({
       framework: 'rolldown',
-      versions: expect.objectContaining({ unplugin: expect.any(String) }),
+      versions: expect.objectContaining({
+        unplugin: expect.any(String),
+      }),
     }))
   })
 
   it('should return an array of plugins if multiple plugins are returned', () => {
-    const factory = vi.fn(() => [() => {}, () => {}])
+    const factory = vi.fn(() => [
+      () => {},
+      () => {},
+    ])
     const plugin = getRolldownPlugin(factory)
     const result = plugin({}) as RolldownPlugin<any>[]
     expect(Array.isArray(result)).toBe(true)

@@ -118,7 +118,9 @@ describe('utils', () => {
   describe('createBuildContext', async () => {
     it('should return expected', async () => {
       const { createBuildContext } = await import('../../../src/esbuild/utils')
-      const actual = createBuildContext({ initialOptions: { outdir: '/path/to' } } as any)
+      const actual = createBuildContext({
+        initialOptions: { outdir: '/path/to' },
+      } as any)
       expect(actual.parse).toBeInstanceOf(Function)
       expect(actual.emitFile).toBeInstanceOf(Function)
       expect(actual.addWatchFile).toBeInstanceOf(Function)
@@ -126,7 +128,9 @@ describe('utils', () => {
 
       expect(actual.getNativeBuildContext!()).toEqual({
         framework: 'esbuild',
-        build: { initialOptions: { outdir: '/path/to' } },
+        build: {
+          initialOptions: { outdir: '/path/to' },
+        },
       })
       expect(() => actual.addWatchFile('id')).toThrow(
         'unplugin/esbuild: addWatchFile outside supported hooks (resolveId, load, transform)',
@@ -137,7 +141,9 @@ describe('utils', () => {
   describe('createPluginContext', () => {
     it('should return expected', () => {
       const watchFiles: any = []
-      const actual = createPluginContext({ getWatchFiles: () => watchFiles } as any)
+      const actual = createPluginContext({
+        getWatchFiles: () => watchFiles,
+      } as any)
       expect(actual.errors).toBeInstanceOf(Array)
       expect(actual.warnings).toBeInstanceOf(Array)
       expect(actual.mixedContext).toBeInstanceOf(Object)
@@ -209,7 +215,13 @@ describe('utils', () => {
     })
 
     it('when map is not null, should return expected', () => {
-      const actual = processCodeWithSourceMap({ file: 'file', names: ['name'], sources: ['source'], sourcesContent: ['content'], version: 0 } as any, 'code')
+      const actual = processCodeWithSourceMap({
+        file: 'file',
+        names: ['name'],
+        sources: ['source'],
+        sourcesContent: ['content'],
+        version: 0,
+      } as any, 'code')
       expect(actual).toEqual('code\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiZmlsZSIsIm5hbWVzIjpbIm5hbWUiXSwic291cmNlcyI6WyJzb3VyY2UiXSwic291cmNlc0NvbnRlbnQiOlsiY29udGVudCJdLCJ2ZXJzaW9uIjowfQ==')
     })
   })

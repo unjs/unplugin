@@ -29,7 +29,9 @@ describe('utils.ts', () => {
 
   it('transformQuery should append query string to resolvedPath', () => {
     const context = {
-      query: [['key', 'value']],
+      query: [
+        ['key', 'value'],
+      ],
       resolvedPath: '/path/to/file',
     }
     transformQuery(context)
@@ -69,7 +71,9 @@ describe('utils.ts', () => {
   })
 
   it('customParseQueryString should parse query strings correctly', () => {
-    expect(customParseQueryString('http://example.com?key=value')).toEqual([['key', 'value']])
+    expect(customParseQueryString('http://example.com?key=value')).toEqual([
+      ['key', 'value'],
+    ])
     expect(customParseQueryString(null)).toEqual([])
   })
 
@@ -100,12 +104,16 @@ describe('utils.ts', () => {
   })
 
   it('appendQuery should append query to id', () => {
-    expect(appendQuery('id', [['key', 'value']])).toBe('id?key=value')
+    expect(appendQuery('id', [
+      ['key', 'value'],
+    ])).toBe('id?key=value')
     expect(appendQuery('id', [])).toBe('id')
   })
 
   it('stringifyQuery should convert query array to string', () => {
-    expect(stringifyQuery([['key', 'value']])).toBe('key=value')
+    expect(stringifyQuery([
+      ['key', 'value'],
+    ])).toBe('key=value')
     expect(stringifyQuery([])).toBe('')
   })
 

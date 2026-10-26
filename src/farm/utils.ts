@@ -206,7 +206,9 @@ export function stringifyQuery(query: [string, string][]): string {
   let queryStr = ''
 
   for (const [key, value] of query) {
-    queryStr += `${key}${value ? `=${value}` : ''}&`
+    queryStr += `${key}${value
+      ? `=${value}`
+      : ''}&`
   }
 
   return `${queryStr.slice(0, -1)}`

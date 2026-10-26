@@ -23,7 +23,9 @@ export default defineConfig({
       js: 'source-map',
     },
   },
-  plugins: [rsbuild()],
+  plugins: [
+    rsbuild(),
+  ],
   tools: {
     htmlPlugin: false,
   },

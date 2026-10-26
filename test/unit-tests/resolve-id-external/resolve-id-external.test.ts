@@ -41,11 +41,19 @@ describe('load hook should not be called when resolveId hook returned `external:
     expect(mockLoadHook).toHaveBeenCalledTimes(2)
     expect(mockLoadHook).toHaveBeenCalledWith(
       expect.stringMatching(/(?:\/|\\)entry\.js$/),
-      ...(hasExtraOptions ? [expect.anything()] : []),
+      ...(hasExtraOptions
+        ? [
+            expect.anything(),
+          ]
+        : []),
     )
     expect(mockLoadHook).toHaveBeenCalledWith(
       expect.stringMatching(/(?:\/|\\)internal-module\.js$/),
-      ...(hasExtraOptions ? [expect.anything()] : []),
+      ...(hasExtraOptions
+        ? [
+            expect.anything(),
+          ]
+        : []),
     )
   }
 
@@ -82,7 +90,9 @@ describe('load hook should not be called when resolveId hook returned `external:
 
     await build.rollup({
       input: entryFilePath,
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       external: externals,
     })
 
@@ -96,7 +106,9 @@ describe('load hook should not be called when resolveId hook returned `external:
       build.webpack(
         {
           entry: entryFilePath,
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
           externals,
           mode: 'production',
           target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
@@ -117,7 +129,9 @@ describe('load hook should not be called when resolveId hook returned `external:
       build.rspack(
         {
           entry: entryFilePath,
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
           externals,
           mode: 'production',
           target: 'node',
@@ -136,7 +150,9 @@ describe('load hook should not be called when resolveId hook returned `external:
 
     await build.esbuild({
       entryPoints: [entryFilePath],
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
       external: externals,
@@ -150,7 +166,9 @@ describe('load hook should not be called when resolveId hook returned `external:
 
     await build.bun({
       entrypoints: [entryFilePath],
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       external: externals,
       outdir: path.resolve(__dirname, 'test-out/bun'),
     })

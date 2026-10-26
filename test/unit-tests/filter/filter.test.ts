@@ -50,7 +50,10 @@ function createTransformHook() {
   return {
     hook: {
       filter: {
-        id: { include: [/\.js$/], exclude: ['**/entry.js', /not-expect/] },
+        id: {
+          include: [/\.js$/],
+          exclude: ['**/entry.js', /not-expect/],
+        },
         code: { include: '42' },
       },
       handler,
@@ -72,7 +75,11 @@ function check(resolveIdHandler: Mock, loadHandler: Mock, transformHandler: Mock
   expect(transformHandler).lastCalledWith(
     expect.stringMatching('export default 42'),
     expect.stringMatching(/\bmod\.js$/),
-    ...hasExtraOptions ? [expect.anything()] : [],
+    ...hasExtraOptions
+      ? [
+          expect.anything(),
+        ]
+      : [],
   )
 }
 
@@ -113,7 +120,9 @@ describe('filter', () => {
 
     await build.rollup({
       input: path.resolve(__dirname, 'test-src/entry.js'),
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
     })
 
     check(resolveIdHandler, loadHandler, transformHandler)
@@ -127,7 +136,9 @@ describe('filter', () => {
 
     await build.rolldown({
       input: path.resolve(__dirname, 'test-src/entry.js'),
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
     })
 
     check(resolveIdHandler, loadHandler, transformHandler)
@@ -143,7 +154,9 @@ describe('filter', () => {
       build.webpack(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
         },
         resolve,
       )
@@ -162,7 +175,9 @@ describe('filter', () => {
       build.rspack(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
         },
         resolve,
       )
@@ -178,8 +193,12 @@ describe('filter', () => {
     const plugin = createUnpluginWithHooks(resolveId, load, transform).esbuild
 
     await build.esbuild({
-      entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entryPoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
     })
@@ -194,8 +213,12 @@ describe('filter', () => {
     const plugin = createUnpluginWithHooks(resolveId, load, transform).bun
 
     await build.bun({
-      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entrypoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
       outdir: path.resolve(__dirname, 'test-out/bun'),
     })
 

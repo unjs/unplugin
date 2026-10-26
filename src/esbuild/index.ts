@@ -83,7 +83,9 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
       }
 
       if (loaders.length) {
-        build.onLoad(loaders.length === 1 ? loaders[0].options! : { filter: /.*/ }, async (args) => {
+        build.onLoad(loaders.length === 1
+          ? loaders[0].options!
+          : { filter: /.*/ }, async (args) => {
           function checkFilter(options: Loader['options']) {
             return loaders.length === 1 || !options?.filter || options.filter.test(args.path)
           }
@@ -153,8 +155,10 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
     }
 
     return {
-      name: (plugins.length === 1 ? plugins[0].name : meta.esbuildHostName)
-        ?? `unplugin-host:${plugins.map(p => p.name).join(':')}`,
+      name: (plugins.length === 1
+        ? plugins[0].name
+        : meta.esbuildHostName)
+      ?? `unplugin-host:${plugins.map(p => p.name).join(':')}`,
       setup: setupPlugins,
     }
   }
@@ -304,7 +308,9 @@ function buildSetup() {
             // combine the two sourcemaps
             if (map && result.map) {
               map = combineSourcemaps(args.path, [
-                result.map === 'string' ? JSON.parse(result.map) : result.map as RawSourceMap,
+                result.map === 'string'
+                  ? JSON.parse(result.map)
+                  : result.map as RawSourceMap,
                 map as RawSourceMap,
               ]) as SourceMap
             }

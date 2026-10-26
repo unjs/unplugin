@@ -40,7 +40,10 @@ it('webpack allows emitting assets from buildEnd', async () => {
         path: outputPath,
         filename: 'output.js',
       },
-      plugins: [beforeEmitPlugin, plugin()],
+      plugins: [
+        beforeEmitPlugin,
+        plugin(),
+      ],
     }, (error, stats) => {
       if (error)
         reject(error)

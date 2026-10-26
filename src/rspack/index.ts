@@ -21,13 +21,17 @@ import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin,
 const TRANSFORM_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  import.meta.dev ? '../../dist/rspack/loaders/transform.mjs' : 'rspack/loaders/transform.mjs',
+  import.meta.dev
+    ? '../../dist/rspack/loaders/transform.mjs'
+    : 'rspack/loaders/transform.mjs',
 )
 
 const LOAD_LOADER = resolve(
   // eslint-disable-next-line node/no-unsupported-features/node-builtins
   import.meta.dirname,
-  import.meta.dev ? '../../dist/rspack/loaders/load.mjs' : 'rspack/loaders/load.mjs',
+  import.meta.dev
+    ? '../../dist/rspack/loaders/load.mjs'
+    : 'rspack/loaders/load.mjs',
 )
 
 function getRspackVersion(compiler: Compiler): string {
@@ -42,7 +46,10 @@ export function getRspackPlugin<UserOptions = Record<string, never>>(
       apply(compiler) {
         const meta: UnpluginContextMeta = {
           framework: 'rspack',
-          versions: { rspack: getRspackVersion(compiler), unplugin: unpluginVersion },
+          versions: {
+            rspack: getRspackVersion(compiler),
+            unplugin: unpluginVersion,
+          },
           rspack: {
             compiler,
           },
@@ -72,7 +79,9 @@ function applyRspackPlugins(
 ) {
   // We need the prefix of virtual modules to be an absolute path so rspack lets us load them (even if it's made up)
   // In the loader we strip the made up prefix path again
-  const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin ? '' : process.pid.toString())
+  const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin
+    ? ''
+    : process.pid.toString())
 
   meta.versions = {
     ...meta.versions,
@@ -112,7 +121,9 @@ function applyRspackPlugins(
           const id = normalizeAbsolutePath(resolveData.request)
 
           const requestContext = resolveData.contextInfo
-          let importer = requestContext.issuer !== '' ? requestContext.issuer : undefined
+          let importer = requestContext.issuer !== ''
+            ? requestContext.issuer
+            : undefined
           const isEntry = requestContext.issuer === ''
 
           if (importer?.startsWith(plugin.__virtualModulePrefix))
@@ -136,7 +147,9 @@ function applyRspackPlugins(
           const cwd = process.cwd()
           let handler: HookFnMap['resolveId']
           if (cachedResolveId?.hook === hook && cachedResolveId.cwd === cwd) {
-            handler = typeof hook === 'function' ? hook : hook.handler
+            handler = typeof hook === 'function'
+              ? hook
+              : hook.handler
           }
           else {
             const normalized = normalizeObjectHook('resolveId', hook)
@@ -147,16 +160,23 @@ function applyRspackPlugins(
           if (!filter(id))
             return
 
-          const resolveIdResult = await handler.call!({ ...context, ...pluginContext }, id, importer, { isEntry })
+          const resolveIdResult = await handler.call!({
+            ...context,
+            ...pluginContext,
+          }, id, importer, { isEntry })
 
           if (error != null)
             throw error
           if (resolveIdResult == null)
             return
 
-          let resolved = typeof resolveIdResult === 'string' ? resolveIdResult : resolveIdResult.id
+          let resolved = typeof resolveIdResult === 'string'
+            ? resolveIdResult
+            : resolveIdResult.id
 
-          const isExternal = typeof resolveIdResult === 'string' ? false : resolveIdResult.external === true
+          const isExternal = typeof resolveIdResult === 'string'
+            ? false
+            : resolveIdResult.external === true
           if (isExternal)
             externalModules.add(resolved)
 
@@ -214,12 +234,14 @@ function applyRspackPlugins(
           // Don't run load hook for external modules
           return !externalModules.has(id)
         },
-        use: [{
-          loader: LOAD_LOADER,
-          options: {
-            plugin,
+        use: [
+          {
+            loader: LOAD_LOADER,
+            options: {
+              plugin,
+            },
           },
-        }],
+        ],
         type: 'javascript/auto',
       })
     }

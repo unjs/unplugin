@@ -23,7 +23,9 @@ export function getRsbuildPlugin<UserOptions = Record<string, never>>(
     const rawPlugins = toArray(factory(userOptions!, meta))
     const plugins = rawPlugins.map(rawPlugin => toRsbuildPlugin(rawPlugin, meta))
 
-    return plugins.length === 1 ? plugins[0] : plugins
+    return plugins.length === 1
+      ? plugins[0]
+      : plugins
   }
 }
 

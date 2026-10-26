@@ -152,7 +152,9 @@ import { build } from 'esbuild'
 import Starter from 'unplugin-starter/esbuild'
 
 build({
-  plugins: [Starter()],
+  plugins: [
+    Starter()
+  ],
 })
 ```
 
@@ -218,7 +220,9 @@ import Starter from 'unplugin-turbo-console/astro'
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [Starter()],
+  integrations: [
+    Starter()
+  ],
 })
 ```
 

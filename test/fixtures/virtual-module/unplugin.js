@@ -4,7 +4,9 @@ module.exports = createUnplugin(() => {
   return {
     name: 'virtual-module-fixture',
     resolveId(id) {
-      return id.startsWith('virtual/') ? id : null
+      return id.startsWith('virtual/')
+        ? id
+        : null
     },
     loadInclude(id) {
       return id.startsWith('virtual/')

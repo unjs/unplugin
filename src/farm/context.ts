@@ -20,7 +20,9 @@ export function createFarmContext(
         context.emitFile({
           resolvedPath: outFileName,
           name: outFileName,
-          content: [...Buffer.from(emittedFile.source as any)],
+          content: [
+            ...Buffer.from(emittedFile.source as any),
+          ],
           resourceType: extname(outFileName),
         })
       }
@@ -37,8 +39,12 @@ export function createFarmContext(
 export function unpluginContext(context: CompilationContext): UnpluginContext {
   return {
     error: (error: any) =>
-      context!.error(typeof error === 'string' ? new Error(error) : error),
+      context!.error(typeof error === 'string'
+        ? new Error(error)
+        : error),
     warn: (error: any) =>
-      context!.warn(typeof error === 'string' ? new Error(error) : error),
+      context!.warn(typeof error === 'string'
+        ? new Error(error)
+        : error),
   }
 }

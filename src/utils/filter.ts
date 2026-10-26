@@ -97,8 +97,12 @@ function normalizeFilter(filter: StringFilter): NormalizedStringFilter {
     }
   }
   return {
-    exclude: filter.exclude ? toArray(filter.exclude) : undefined,
-    include: filter.include ? toArray(filter.include) : undefined,
+    exclude: filter.exclude
+      ? toArray(filter.exclude)
+      : undefined,
+    include: filter.include
+      ? toArray(filter.include)
+      : undefined,
   }
 }
 
@@ -122,7 +126,9 @@ function createCodeFilter(filter: StringFilter | undefined): PluginFilter | unde
 
 function createFilterForId(filter: StringFilter | undefined): PluginFilter | undefined {
   const filterFunction = createIdFilter(filter)
-  return filterFunction ? id => !!filterFunction(id) : undefined
+  return filterFunction
+    ? id => !!filterFunction(id)
+    : undefined
 }
 
 function createFilterForTransform(

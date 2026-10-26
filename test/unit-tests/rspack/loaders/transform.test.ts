@@ -14,10 +14,19 @@ describe('transform', () => {
     const firstCwd = resolve(import.meta.dirname, '../../filter/test-src')
     const secondCwd = resolve(import.meta.dirname, '../../resolve-id/test-src')
     try {
-      for (const [getPlugin, loader] of [[getRspackPlugin, transform], [getWebpackPlugin, webpackTransform]] as const) {
+      for (const [getPlugin, loader] of [
+        [getRspackPlugin, transform],
+        [getWebpackPlugin, webpackTransform],
+      ] as const) {
         process.chdir(firstCwd)
         let reads = 0
-        const filter = { id: { include: [] as string[], exclude: ['not-expect.js'] }, code: { include: 'allowed' } }
+        const filter = {
+          id: {
+            include: [] as string[],
+            exclude: ['not-expect.js'],
+          },
+          code: { include: 'allowed' },
+        }
         const hook = {
           get filter() {
             reads++
@@ -27,10 +36,17 @@ describe('transform', () => {
         }
         let start: (compilation: any) => Promise<unknown>
         const compiler = {
-          options: { context: firstCwd, module: { rules: [] as any[] } },
+          options: {
+            context: firstCwd,
+            module: { rules: [] as any[] },
+          },
           rspack: { version: '2.0.0', experiments: {} },
           webpack: { version: '5.0.0' },
-          hooks: { make: { tapPromise(_name: string, callback: typeof start) { start = callback } } },
+          hooks: {
+            make: {
+              tapPromise(_name: string, callback: typeof start) { start = callback },
+            },
+          },
         }
         getPlugin(() => ({
           name: 'lazy-filter',
@@ -38,7 +54,9 @@ describe('transform', () => {
           buildStart() { filter.id.include.push('*.js') },
         }))({}).apply(compiler as any)
         expect(reads).toBe(0)
-        await start!({ fileDependencies: new Set() })
+        await start!({
+          fileDependencies: new Set(),
+        })
         const rule = compiler.options.module.rules[0]
         const accepted = resolve(firstCwd, 'mod.js')
         const invoke = async (id: string, source: string) => {
@@ -59,13 +77,23 @@ describe('transform', () => {
         }
         const cases = [
           [accepted, 'allowed', 'allowed:first'],
-          [resolve(firstCwd, 'not-expect.js'), 'allowed', 'allowed'],
-          [resolve(firstCwd, 'mod.ts'), 'allowed', 'allowed'],
+          [
+            resolve(firstCwd, 'not-expect.js'),
+            'allowed',
+            'allowed',
+          ],
+          [
+            resolve(firstCwd, 'mod.ts'),
+            'allowed',
+            'allowed',
+          ],
           [accepted, 'denied', 'denied'],
         ] as const
         for (const [id, code, expected] of cases) {
           const stock = normalizeObjectHook('transform', { handler: hook.handler, filter }).filter(id, code)
-          expect(await invoke(id, code)).toBe(stock ? hook.handler(code) : code)
+          expect(await invoke(id, code)).toBe(stock
+            ? hook.handler(code)
+            : code)
           expect(await invoke(id, code)).toBe(expected)
         }
         expect(reads).toBe(2) // One rule filter and one loader filter.
@@ -78,8 +106,13 @@ describe('transform', () => {
         expect(await invoke(resolve(secondCwd, 'mod.js'), 'allowed')).toBe('allowed:second')
         expect(reads).toBe(4)
 
-        const plugin = rule.use({ resource: resolve(secondCwd, 'mod.js') })[0].options.plugin
-        plugin.transform = { filter: { id: '*.ts' }, handler: () => 'replacement' }
+        const plugin = rule.use({
+          resource: resolve(secondCwd, 'mod.js'),
+        })[0].options.plugin
+        plugin.transform = {
+          filter: { id: '*.ts' },
+          handler: () => 'replacement',
+        }
         expect(await invoke(resolve(secondCwd, 'mod.js'), 'allowed')).toBe('allowed')
         expect(await invoke(resolve(secondCwd, 'mod.ts'), 'allowed')).toBe('replacement')
       }

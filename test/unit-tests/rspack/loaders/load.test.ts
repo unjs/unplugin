@@ -5,7 +5,10 @@ describe('load', () => {
   it('should call callback with source and map when plugin.load is not defined', async () => {
     const asyncMock = vi.fn()
     const query = { plugin: {} }
-    await load.call({ async: () => asyncMock, query } as any, 'source', 'map')
+    await load.call({
+      async: () => asyncMock,
+      query,
+    } as any, 'source', 'map')
 
     expect(asyncMock).toHaveBeenCalledWith(null, 'source', 'map')
   })

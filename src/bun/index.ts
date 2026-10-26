@@ -32,8 +32,10 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
     const plugins = toArray(factory(userOptions!, meta))
 
     return {
-      name: (plugins.length === 1 ? plugins[0].name : meta.bunHostName)
-        ?? `unplugin-host:${plugins.map(p => p.name).join(':')}`,
+      name: (plugins.length === 1
+        ? plugins[0].name
+        : meta.bunHostName)
+      ?? `unplugin-host:${plugins.map(p => p.name).join(':')}`,
 
       async setup(build) {
         const context = createBuildContext(build)
@@ -101,10 +103,14 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               )
 
               for (const warning of warnings) {
-                console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
+                console.warn('[unplugin]', typeof warning === 'string'
+                  ? warning
+                  : warning.message)
               }
               if (errors.length > 0) {
-                const errorMessage = errors.map(e => typeof e === 'string' ? e : e.message).join('\n')
+                const errorMessage = errors.map(e => typeof e === 'string'
+                  ? e
+                  : e.message).join('\n')
                 throw new Error(`[unplugin] ${plugin.name}: ${errorMessage}`)
               }
 
@@ -157,10 +163,14 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             const result: TransformResult = await handler.call(mixedContext, id)
 
             for (const warning of warnings) {
-              console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
+              console.warn('[unplugin]', typeof warning === 'string'
+                ? warning
+                : warning.message)
             }
             if (errors.length > 0) {
-              const errorMessage = errors.map(e => typeof e === 'string' ? e : e.message).join('\n')
+              const errorMessage = errors.map(e => typeof e === 'string'
+                ? e
+                : e.message).join('\n')
               throw new Error(`[unplugin] ${plugin.name}: ${errorMessage}`)
             }
 
@@ -197,10 +207,14 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               const result: TransformResult = await handler.call(mixedContext, code, id)
 
               for (const warning of warnings) {
-                console.warn('[unplugin]', typeof warning === 'string' ? warning : warning.message)
+                console.warn('[unplugin]', typeof warning === 'string'
+                  ? warning
+                  : warning.message)
               }
               if (errors.length > 0) {
-                const errorMessage = errors.map(e => typeof e === 'string' ? e : e.message).join('\n')
+                const errorMessage = errors.map(e => typeof e === 'string'
+                  ? e
+                  : e.message).join('\n')
                 throw new Error(`[unplugin] ${plugin.name}: ${errorMessage}`)
               }
 
@@ -233,7 +247,10 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
         }
 
         for (const pluginName of virtualModulePlugins) {
-          build.onLoad({ filter: /.*/, namespace: toBunNamespace(pluginName) }, async (args) => {
+          build.onLoad({
+            filter: /.*/,
+            namespace: toBunNamespace(pluginName),
+          }, async (args) => {
             return processLoadTransform(args.path, pluginName, args.loader)
           })
         }

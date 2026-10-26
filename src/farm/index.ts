@@ -56,7 +56,9 @@ export function getFarmPlugin<
       return plugin
     })
 
-    return plugins.length === 1 ? plugins[0] : plugins
+    return plugins.length === 1
+      ? plugins[0]
+      : plugins
   }) as UnpluginInstance<UserOptions>['farm']
 }
 
@@ -90,7 +92,12 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
       filters = options?.filters ?? []
 
     farmPlugin.resolve = {
-      filters: { sources: filters.length ? filters : ['.*'], importers: ['.*'] },
+      filters: {
+        sources: filters.length
+          ? filters
+          : ['.*'],
+        importers: ['.*'],
+      },
       async executor(params: PluginResolveHookParam, context: CompilationContext) {
         const resolvedIdPath = path.resolve(
           params.importer ?? '',
@@ -178,7 +185,10 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
   if (plugin.transform) {
     const _transform = plugin.transform
     farmPlugin.transform = {
-      filters: { resolvedPaths: ['.*'], moduleTypes: ['.*'] },
+      filters: {
+        resolvedPaths: ['.*'],
+        moduleTypes: ['.*'],
+      },
       async executor(
         params: PluginTransformHookParam,
         context: CompilationContext,

@@ -18,7 +18,9 @@ describe('bun utils', () => {
 
   describe('createBuildContext', () => {
     it('should create build context with all required methods', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       expect(context.addWatchFile).toBeInstanceOf(Function)
@@ -29,7 +31,9 @@ describe('bun utils', () => {
     })
 
     it('should handle addWatchFile and getWatchFiles', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       expect(context.getWatchFiles()).toEqual([])
@@ -50,7 +54,9 @@ describe('bun utils', () => {
       mockResolve.mockReturnValue('/path/to/outdir/output.js')
       mockDirname.mockReturnValue('/path/to/outdir')
 
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       context.emitFile({
@@ -77,7 +83,9 @@ describe('bun utils', () => {
       mockResolve.mockReturnValue('/path/to/outdir/output.js')
       mockDirname.mockReturnValue('/path/to/outdir')
 
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       context.emitFile({
@@ -104,7 +112,9 @@ describe('bun utils', () => {
       mockResolve.mockReturnValue('/path/to/outdir/nested/output.js')
       mockDirname.mockReturnValue('/path/to/outdir/nested')
 
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       context.emitFile({
@@ -130,7 +140,9 @@ describe('bun utils', () => {
       mockResolve.mockReturnValue('/path/to/outdir/output.bin')
       mockDirname.mockReturnValue('/path/to/outdir')
 
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
       const bufferSource = Buffer.from('binary data')
 
@@ -149,7 +161,9 @@ describe('bun utils', () => {
     it('should not emit file when source is missing', () => {
       const mockWriteFileSync = vi.mocked(fs.writeFileSync)
 
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       context.emitFile({
@@ -163,7 +177,9 @@ describe('bun utils', () => {
     it('should not emit file when both fileName and name are missing', () => {
       const mockWriteFileSync = vi.mocked(fs.writeFileSync)
 
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       context.emitFile({
@@ -190,7 +206,9 @@ describe('bun utils', () => {
     })
 
     it('should return native build context', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const context = createBuildContext(mockBuild as PluginBuilder)
 
       const nativeContext = context.getNativeBuildContext!()
@@ -203,7 +221,9 @@ describe('bun utils', () => {
 
   describe('createPluginContext', () => {
     it('should create plugin context with error and warn methods', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const buildContext = createBuildContext(mockBuild as PluginBuilder)
       const pluginContext = createPluginContext(buildContext)
 
@@ -215,7 +235,9 @@ describe('bun utils', () => {
     })
 
     it('should collect errors when error is called', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const buildContext = createBuildContext(mockBuild as PluginBuilder)
       const pluginContext = createPluginContext(buildContext)
 
@@ -229,7 +251,9 @@ describe('bun utils', () => {
     })
 
     it('should collect warnings when warn is called', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const buildContext = createBuildContext(mockBuild as PluginBuilder)
       const pluginContext = createPluginContext(buildContext)
 
@@ -243,7 +267,9 @@ describe('bun utils', () => {
     })
 
     it('should include build context methods in mixed context', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const buildContext = createBuildContext(mockBuild as PluginBuilder)
       const pluginContext = createPluginContext(buildContext)
 
@@ -254,7 +280,9 @@ describe('bun utils', () => {
     })
 
     it('should handle complex error objects', () => {
-      const mockBuild = { config: { outdir: '/path/to/outdir' } }
+      const mockBuild = {
+        config: { outdir: '/path/to/outdir' },
+      }
       const buildContext = createBuildContext(mockBuild as PluginBuilder)
       const pluginContext = createPluginContext(buildContext)
 

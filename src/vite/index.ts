@@ -18,6 +18,8 @@ export function getVitePlugin<UserOptions = Record<string, never>, Nested extend
       return plugin
     })
 
-    return plugins.length === 1 ? plugins[0] : plugins
+    return plugins.length === 1
+      ? plugins[0]
+      : plugins
   }) as UnpluginInstance<UserOptions, Nested>['vite']
 }

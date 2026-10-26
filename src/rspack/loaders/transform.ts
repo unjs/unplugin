@@ -26,7 +26,9 @@ export default async function transform(
   let cached = filters.get(hook)
   let handler: HookFnMap['transform']
   if (cached?.cwd === cwd) {
-    handler = typeof hook === 'function' ? hook : hook.handler
+    handler = typeof hook === 'function'
+      ? hook
+      : hook.handler
   }
   else {
     const normalized = normalizeObjectHook('transform', hook)
@@ -49,11 +51,17 @@ export default async function transform(
       id,
     )
 
-    if (res == null)
+    if (res == null) {
       callback(null, source, map)
-    else if (typeof res !== 'string')
-      callback(null, res.code, map == null ? map : (res.map || map))
-    else callback(null, res, map)
+    }
+    else if (typeof res !== 'string') {
+      callback(null, res.code, map == null
+        ? map
+        : (res.map || map))
+    }
+    else {
+      callback(null, res, map)
+    }
   }
   catch (error) {
     if (error instanceof Error) {

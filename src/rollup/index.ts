@@ -13,7 +13,9 @@ export function getRollupPlugin<UserOptions = Record<string, never>, Nested exte
     }
     const rawPlugins = toArray(factory(userOptions!, meta))
     const plugins = rawPlugins.map(plugin => toRollupPlugin(plugin, 'rollup', meta))
-    return plugins.length === 1 ? plugins[0] : plugins
+    return plugins.length === 1
+      ? plugins[0]
+      : plugins
   }) as UnpluginInstance<UserOptions, Nested>['rollup']
 }
 

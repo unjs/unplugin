@@ -18,6 +18,8 @@ export function getUnloaderPlugin<UserOptions = Record<string, never>, Nested ex
       return plugin
     })
 
-    return plugins.length === 1 ? plugins[0] : plugins
+    return plugins.length === 1
+      ? plugins[0]
+      : plugins
   }) as UnpluginInstance<UserOptions, Nested>['unloader']
 }

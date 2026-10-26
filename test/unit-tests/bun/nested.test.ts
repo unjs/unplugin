@@ -136,7 +136,9 @@ describe.skipIf(typeof Bun === 'undefined')('bun nested plugin support', () => {
     const unplugin = createUnplugin(() => ({
       name: 'tsx-loader',
       resolveId(id: string) {
-        return id === 'virtual:component' ? id : null
+        return id === 'virtual:component'
+          ? id
+          : null
       },
       load(id: string) {
         if (id === 'virtual:component') {
@@ -179,7 +181,9 @@ describe.skipIf(typeof Bun === 'undefined')('bun nested plugin support', () => {
     const unplugin = createUnplugin(() => ({
       name: 'tsx-loader-fn',
       resolveId(id: string) {
-        return id === 'virtual:component' ? id : null
+        return id === 'virtual:component'
+          ? id
+          : null
       },
       load(id: string) {
         if (id === 'virtual:component') {
@@ -245,6 +249,11 @@ describe.skipIf(typeof Bun === 'undefined')('bun nested plugin support', () => {
 
     expect(bunSetup).toHaveBeenCalledTimes(1)
     expect(bunSetup).toHaveBeenCalledWith(mockBuild)
-    expect(callOrder).toEqual(['plugin.bun.setup', 'onResolve', 'onLoad', 'onLoad'])
+    expect(callOrder).toEqual([
+      'plugin.bun.setup',
+      'onResolve',
+      'onLoad',
+      'onLoad',
+    ])
   })
 })

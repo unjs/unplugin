@@ -86,7 +86,12 @@ describe('toFarmPlugin', () => {
 
     expect(farmPlugin.load).toBeDefined()
     const result = await farmPlugin.load?.executor(
-      { resolvedPath: 'test-path', query: [['', '']] } as any,
+      {
+        resolvedPath: 'test-path',
+        query: [
+          ['', ''],
+        ],
+      } as any,
       {} as any,
     )
 
@@ -105,7 +110,13 @@ describe('toFarmPlugin', () => {
 
     expect(farmPlugin.transform).toBeDefined()
     const result = await farmPlugin.transform?.executor(
-      { resolvedPath: 'test-path', content: 'original-content', query: [['', '']] } as any,
+      {
+        resolvedPath: 'test-path',
+        content: 'original-content',
+        query: [
+          ['', ''],
+        ],
+      } as any,
       {} as any,
     )
 
@@ -124,7 +135,11 @@ describe('toFarmPlugin', () => {
 
     expect(farmPlugin.updateModules).toBeDefined()
     await farmPlugin.updateModules?.executor(
-      { paths: [['test-path', 'change']] },
+      {
+        paths: [
+          ['test-path', 'change'],
+        ],
+      },
       {} as any,
     )
 
@@ -166,7 +181,9 @@ describe('toFarmPlugin', () => {
       resolveId: resolveIdMock,
     }
 
-    const farmPlugin = toFarmPlugin(plugin, { filters: ['custom-filter'] })
+    const farmPlugin = toFarmPlugin(plugin, {
+      filters: ['custom-filter'],
+    })
 
     expect(farmPlugin.resolve).toBeDefined()
     expect(farmPlugin.resolve?.filters.sources).toContain('custom-filter')
@@ -182,7 +199,11 @@ describe('toFarmPlugin', () => {
     const farmPlugin = toFarmPlugin(plugin)
 
     const result = await farmPlugin.resolve?.executor(
-      { source: 'test-source', importer: 'test-importer', kind: { entry: 'index' } } as any,
+      {
+        source: 'test-source',
+        importer: 'test-importer',
+        kind: { entry: 'index' },
+      } as any,
       {} as any,
     )
 

@@ -109,8 +109,12 @@ describe.skipIf(typeof Bun === 'undefined')('bun namespace sanitization', () => 
 
     await unplugin.bun().setup(build)
 
-    expect([...loadCallbacks.keys()]).toContain('unplugin-virtual-mod')
-    expect([...loadCallbacks.keys()]).not.toContain('unplugin:virtual.mod')
+    expect([
+      ...loadCallbacks.keys(),
+    ]).toContain('unplugin-virtual-mod')
+    expect([
+      ...loadCallbacks.keys(),
+    ]).not.toContain('unplugin:virtual.mod')
 
     const result = await loadCallbacks.get('unplugin-virtual-mod')!({
       path: 'virtual-id',

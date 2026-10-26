@@ -26,7 +26,9 @@ const require = createRequire(import.meta.url)
 export function getSource(fileSource: string | Uint8Array): sources.RawSource {
   const webpack = require('webpack')
   return new webpack.sources.RawSource(
-    typeof fileSource === 'string' ? fileSource : Buffer.from(fileSource.buffer),
+    typeof fileSource === 'string'
+      ? fileSource
+      : Buffer.from(fileSource.buffer),
   )
 }
 
@@ -51,7 +53,13 @@ export function createBuildContext(options: ContextOptions, compiler: Compiler, 
       return options.getWatchFiles()
     },
     getNativeBuildContext() {
-      return { framework: 'webpack', compiler, compilation, loaderContext, inputSourceMap }
+      return {
+        framework: 'webpack',
+        compiler,
+        compilation,
+        loaderContext,
+        inputSourceMap,
+      }
     },
   }
 }
@@ -64,7 +72,9 @@ export function createContext(loader: LoaderContext<{ unpluginName: string }>): 
 }
 
 export function normalizeMessage(error: string | UnpluginMessage): Error {
-  const err = new Error(typeof error === 'string' ? error : error.message)
+  const err = new Error(typeof error === 'string'
+    ? error
+    : error.message)
   if (typeof error === 'object') {
     err.stack = error.stack
     err.cause = error.meta

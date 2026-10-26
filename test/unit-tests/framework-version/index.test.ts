@@ -16,10 +16,14 @@ const rspackVersion: string = require('@rspack/core/package.json').version
 const rsbuildVersion: string = require('@rsbuild/core/package.json').version
 
 const rsbuildPath = path.dirname(require.resolve('@rsbuild/core/package.json'))
-const rsbuildRspackVersion: string = require(require.resolve('@rspack/core/package.json', { paths: [rsbuildPath] })).version
+const rsbuildRspackVersion: string = require(require.resolve('@rspack/core/package.json', {
+  paths: [rsbuildPath],
+})).version
 
 const entry = path.resolve(__dirname, '../filter/test-src/entry.js')
-const runWithRegisterHooks = typeof (nodeModule as any).registerHooks === 'function' ? it : it.skip
+const runWithRegisterHooks = typeof (nodeModule as any).registerHooks === 'function'
+  ? it
+  : it.skip
 
 describe('framework versions', () => {
   it('rollup sets versions.rollup', async () => {
@@ -37,12 +41,17 @@ describe('framework versions', () => {
 
     await build.rollup({
       input: entry,
-      plugins: [plugin.rollup()],
+      plugins: [
+        plugin.rollup(),
+      ],
     })
 
     expect(hostVersion).toBe(rollupVersion)
     expect(versionsRollup).toBe(rollupVersion)
-    expect(allVersions).toMatchObject({ rollup: rollupVersion, unplugin: expect.any(String) })
+    expect(allVersions).toMatchObject({
+      rollup: rollupVersion,
+      unplugin: expect.any(String),
+    })
   })
 
   it('vite sets versions.vite and underlying bundler version', async () => {
@@ -60,7 +69,9 @@ describe('framework versions', () => {
 
     await build.vite({
       clearScreen: false,
-      plugins: [plugin.vite()],
+      plugins: [
+        plugin.vite(),
+      ],
       build: {
         lib: {
           entry,
@@ -93,12 +104,17 @@ describe('framework versions', () => {
 
     await build.rolldown({
       input: entry,
-      plugins: [plugin.rolldown()],
+      plugins: [
+        plugin.rolldown(),
+      ],
     })
 
     expect(hostVersion).toBe(rolldownVersion)
     expect(versionsRolldown).toBe(rolldownVersion)
-    expect(allVersions).toMatchObject({ rolldown: rolldownVersion, unplugin: expect.any(String) })
+    expect(allVersions).toMatchObject({
+      rolldown: rolldownVersion,
+      unplugin: expect.any(String),
+    })
   })
 
   runWithRegisterHooks('unloader sets versions.unloader', () => {
@@ -115,13 +131,18 @@ describe('framework versions', () => {
     }))
 
     const deactivate = register({
-      plugins: [plugin.unloader()],
+      plugins: [
+        plugin.unloader(),
+      ],
     })
     deactivate()
 
     expect(hostVersion).toBe(unloaderVersion)
     expect(versionsUnloader).toBe(unloaderVersion)
-    expect(allVersions).toMatchObject({ unloader: unloaderVersion, unplugin: expect.any(String) })
+    expect(allVersions).toMatchObject({
+      unloader: unloaderVersion,
+      unplugin: expect.any(String),
+    })
   })
 
   it('webpack sets versions.webpack', async () => {
@@ -141,7 +162,9 @@ describe('framework versions', () => {
       build.webpack(
         {
           entry,
-          plugins: [plugin.webpack()],
+          plugins: [
+            plugin.webpack(),
+          ],
         },
         () => resolve(),
       )
@@ -149,7 +172,10 @@ describe('framework versions', () => {
 
     expect(hostVersion).toBe(webpackVersion)
     expect(versionsWebpack).toBe(webpackVersion)
-    expect(allVersions).toMatchObject({ webpack: webpackVersion, unplugin: expect.any(String) })
+    expect(allVersions).toMatchObject({
+      webpack: webpackVersion,
+      unplugin: expect.any(String),
+    })
   }, 20_000)
 
   it('rspack sets versions.rspack', async () => {
@@ -169,7 +195,9 @@ describe('framework versions', () => {
       build.rspack(
         {
           entry,
-          plugins: [plugin.rspack()],
+          plugins: [
+            plugin.rspack(),
+          ],
         },
         () => resolve(),
       )
@@ -177,7 +205,10 @@ describe('framework versions', () => {
 
     expect(hostVersion).toBe(rspackVersion)
     expect(versionsRspack).toBe(rspackVersion)
-    expect(allVersions).toMatchObject({ rspack: rspackVersion, unplugin: expect.any(String) })
+    expect(allVersions).toMatchObject({
+      rspack: rspackVersion,
+      unplugin: expect.any(String),
+    })
   }, 20_000)
 
   it('rsbuild sets versions.rsbuild and versions.rspack', async () => {
@@ -220,7 +251,9 @@ describe('framework versions', () => {
           },
           filenameHash: false,
         },
-        plugins: [plugin.rsbuild()],
+        plugins: [
+          plugin.rsbuild(),
+        ],
         tools: {
           htmlPlugin: false,
         },
@@ -268,7 +301,9 @@ describe('framework versions', () => {
           },
           filenameHash: false,
         },
-        plugins: [plugin.rsbuild()],
+        plugins: [
+          plugin.rsbuild(),
+        ],
         tools: {
           htmlPlugin: false,
         },
@@ -394,11 +429,16 @@ describe('framework versions', () => {
     await build.bun({
       entrypoints: [entry],
       outdir: path.resolve(__dirname, '../filter/test-out/bun-framework-version'),
-      plugins: [plugin.bun()],
+      plugins: [
+        plugin.bun(),
+      ],
     })
 
     expect(hostVersion).toBe(Bun.version)
     expect(versionsBun).toBe(Bun.version)
-    expect(allVersions).toMatchObject({ bun: Bun.version, unplugin: expect.any(String) })
+    expect(allVersions).toMatchObject({
+      bun: Bun.version,
+      unplugin: expect.any(String),
+    })
   })
 })

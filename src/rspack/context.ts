@@ -50,7 +50,9 @@ export function createContext(loader: LoaderContext): UnpluginContext {
 }
 
 export function normalizeMessage(error: string | UnpluginMessage): Error {
-  const err = new Error(typeof error === 'string' ? error : error.message)
+  const err = new Error(typeof error === 'string'
+    ? error
+    : error.message)
   if (typeof error === 'object') {
     err.stack = error.stack
     err.cause = error.meta

@@ -15,7 +15,13 @@ function createUnpluginWithCallback(resolveIdCallback: UnpluginOptions['resolveI
 
 // We extract this check because all bundlers should behave the same
 // `getWatchFiles` is intentionally omitted: Vite 8 uses Rolldown whose plugin context lacks it.
-const propsToTest: (keyof (UnpluginContext & UnpluginBuildContext))[] = ['addWatchFile', 'emitFile', 'parse', 'error', 'warn']
+const propsToTest: (keyof (UnpluginContext & UnpluginBuildContext))[] = [
+  'addWatchFile',
+  'emitFile',
+  'parse',
+  'error',
+  'warn',
+]
 
 function createResolveIdHook(): Mock {
   const mockResolveIdHook = vi.fn(function (this: UnpluginContext & UnpluginBuildContext) {
@@ -88,7 +94,9 @@ describe('resolveId hook', () => {
 
     await build.rollup({
       input: path.resolve(__dirname, 'test-src/entry.js'),
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
     })
 
     checkResolveIdHook(mockResolveIdHook)
@@ -102,7 +110,9 @@ describe('resolveId hook', () => {
       build.webpack(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
         },
         resolve,
       )
@@ -119,7 +129,9 @@ describe('resolveId hook', () => {
       build.rspack(
         {
           entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
         },
         resolve,
       )
@@ -133,8 +145,12 @@ describe('resolveId hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).esbuild
 
     await build.esbuild({
-      entryPoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entryPoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
     })
@@ -147,8 +163,12 @@ describe('resolveId hook', () => {
     const plugin = createUnpluginWithCallback(mockResolveIdHook).bun
 
     await build.bun({
-      entrypoints: [path.resolve(__dirname, 'test-src/entry.js')],
-      plugins: [plugin()],
+      entrypoints: [
+        path.resolve(__dirname, 'test-src/entry.js'),
+      ],
+      plugins: [
+        plugin(),
+      ],
       outdir: path.resolve(__dirname, 'test-out/bun'), // Bun requires outdir
     })
 

@@ -74,7 +74,11 @@ function checkHookCalls(
     }
     expect(loadCallback).toHaveBeenCalledWith(
       id,
-      ...(hasExtraOptions ? [expect.anything()] : []),
+      ...(hasExtraOptions
+        ? [
+            expect.anything(),
+          ]
+        : []),
     )
   })
 }
@@ -133,7 +137,9 @@ describe('id parameter should be consistent across hooks and plugins', () => {
 
     await build.rollup({
       input: entryFilePath,
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       external: externals,
     })
 
@@ -157,7 +163,9 @@ describe('id parameter should be consistent across hooks and plugins', () => {
       build.webpack(
         {
           entry: entryFilePath,
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
           externals,
           mode: 'production',
           target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
@@ -188,7 +196,9 @@ describe('id parameter should be consistent across hooks and plugins', () => {
       build.rspack(
         {
           entry: entryFilePath,
-          plugins: [plugin()],
+          plugins: [
+            plugin(),
+          ],
           externals,
           mode: 'production',
           target: 'node',
@@ -217,7 +227,9 @@ describe('id parameter should be consistent across hooks and plugins', () => {
 
     await build.esbuild({
       entryPoints: [entryFilePath],
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       bundle: true, // actually traverse imports
       write: false, // don't pollute console
       external: externals,
@@ -241,7 +253,9 @@ describe('id parameter should be consistent across hooks and plugins', () => {
 
     await build.bun({
       entrypoints: [entryFilePath],
-      plugins: [plugin()],
+      plugins: [
+        plugin(),
+      ],
       external: externals,
       outdir: path.resolve(__dirname, 'test-out/bun'),
     })

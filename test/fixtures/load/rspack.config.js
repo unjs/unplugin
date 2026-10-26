@@ -9,6 +9,8 @@ module.exports = {
     path: resolve(__dirname, 'dist/rspack'),
     filename: 'main.js',
   },
-  plugins: [rspack({ msg: 'Rspack' })],
+  plugins: [
+    rspack({ msg: 'Rspack' }),
+  ],
   devtool: 'source-map',
 }
