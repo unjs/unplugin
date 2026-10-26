@@ -1,4 +1,5 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
+import type { RsbuildPlugin } from '@rsbuild/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
 import type { Loader as BunLoader, BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
 import type { BuildOptions, Plugin as EsbuildPlugin, Loader, PluginBuild } from 'esbuild'
@@ -14,6 +15,7 @@ export type {
   EsbuildPlugin,
   RolldownPlugin,
   RollupPlugin,
+  RsbuildPlugin,
   RspackCompiler,
   RspackPluginInstance,
   UnloaderPlugin,
@@ -69,19 +71,24 @@ export type FilterPattern = Arrayable<StringOrRegExp>
 export type StringFilter
   = | FilterPattern
     | { include?: FilterPattern | undefined, exclude?: FilterPattern | undefined }
-export interface HookFilter {
+
+export interface ResolveIdHookFilter {
+  id?: RegExp | undefined
+}
+
+export interface LoadHookFilter {
   id?: StringFilter | undefined
+}
+
+export interface TransformHookFilter extends LoadHookFilter {
   code?: StringFilter | undefined
 }
 
-export interface ObjectHook<T extends HookFnMap[keyof HookFnMap], F extends keyof HookFilter> {
-  filter?: Pick<HookFilter, F> | undefined
+export interface ObjectHook<T extends HookFnMap[keyof HookFnMap], F> {
+  filter?: F | undefined
   handler: T
 }
-export type Hook<
-  T extends HookFnMap[keyof HookFnMap],
-  F extends keyof HookFilter,
-> = T | ObjectHook<T, F>
+export type Hook<T extends HookFnMap[keyof HookFnMap], F> = T | ObjectHook<T, F>
 
 export interface HookFnMap {
   // Build Hooks
@@ -107,9 +114,9 @@ export interface UnpluginOptions {
 
   buildStart?: HookFnMap['buildStart'] | undefined
   buildEnd?: HookFnMap['buildEnd'] | undefined
-  transform?: Hook<HookFnMap['transform'], 'code' | 'id'> | undefined
-  load?: Hook<HookFnMap['load'], 'id'> | undefined
-  resolveId?: Hook<HookFnMap['resolveId'], 'id'> | undefined
+  transform?: Hook<HookFnMap['transform'], TransformHookFilter> | undefined
+  load?: Hook<HookFnMap['load'], LoadHookFilter> | undefined
+  resolveId?: Hook<HookFnMap['resolveId'], ResolveIdHookFilter> | undefined
   writeBundle?: HookFnMap['writeBundle'] | undefined
 
   watchChange?: ((this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void) | undefined
@@ -133,6 +140,7 @@ export interface UnpluginOptions {
   rollup?: Partial<RollupPlugin> | undefined
   webpack?: ((compiler: WebpackCompiler) => void) | undefined
   rspack?: ((compiler: RspackCompiler) => void) | undefined
+  rsbuild?: Partial<RsbuildPlugin> | undefined
   vite?: Partial<VitePlugin> | undefined
   unloader?: Partial<UnloaderPlugin> | undefined
   rolldown?: Partial<RolldownPlugin> | undefined
@@ -172,6 +180,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   rolldown: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RolldownPlugin> : RolldownPlugin>
   webpack: UnpluginFactoryOutput<UserOptions, WebpackPluginInstance>
   rspack: UnpluginFactoryOutput<UserOptions, RspackPluginInstance>
+  rsbuild: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<RsbuildPlugin> : RsbuildPlugin>
   esbuild: UnpluginFactoryOutput<UserOptions, EsbuildPlugin>
   unloader: UnpluginFactoryOutput<UserOptions, Nested extends true ? Array<UnloaderPlugin> : UnloaderPlugin>
   farm: UnpluginFactoryOutput<UserOptions, FarmPlugin>
@@ -179,7 +188,7 @@ export interface UnpluginInstance<UserOptions, Nested extends boolean = boolean>
   raw: UnpluginFactory<UserOptions, Nested>
 }
 
-export type SupportedFramework = 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader' | 'webpack' | 'rspack' | 'esbuild' | 'bun'
+export type SupportedFramework = 'rollup' | 'vite' | 'rolldown' | 'farm' | 'unloader' | 'webpack' | 'rspack' | 'rsbuild' | 'esbuild' | 'bun'
 
 export type UnpluginContextMeta = Partial<RollupContextMeta> & {
   /**
@@ -209,6 +218,8 @@ export type UnpluginContextMeta = Partial<RollupContextMeta> & {
 } | {
   framework: 'rspack'
   rspack: { compiler: RspackCompiler }
+} | {
+  framework: 'rsbuild'
 })
 
 export interface UnpluginMessage {

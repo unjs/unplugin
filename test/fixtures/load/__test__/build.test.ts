@@ -34,6 +34,12 @@ describe('load-called-before-transform', () => {
     expect(content).toContain('it is a msg -> through the load hook -> transform-[Injected Rspack]')
   })
 
+  it('rsbuild', async () => {
+    const content = await fs.readFile(r('rsbuild/main.js'), 'utf-8')
+
+    expect(content).toContain('it is a msg -> through the load hook -> transform-[Injected Rsbuild]')
+  })
+
   it('farm', async () => {
     const content = await fs.readFile(r('farm/main.js'), 'utf-8')
 

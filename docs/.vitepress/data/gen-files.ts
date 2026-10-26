@@ -1,114 +1,78 @@
+import type { RepositoryMeta } from './meta.ts'
 import type { Repository } from './repository.data.ts'
 import { writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import path from 'node:path'
 import { env } from 'node:process'
-import { fileURLToPath } from 'node:url'
 import { consola } from 'consola'
 import { $fetch } from 'ofetch'
 import { repositoryMeta } from './meta.ts'
-import 'dotenv/config'
 
-const GITHUB_TOKEN = env.GITHUB_TOKEN
-
-const gql = `#graphql
-query repositoryQuery($owner: String!, $name: String!, $readme: String!) {
-  repository(owner: $owner, name: $name) {
-    name
-    stargazers {
-      totalCount
-    }
-    owner {
-      avatarUrl
-      login
-    }
-    description
-    primaryLanguage {
-      name
-      color
-    }
-    forkCount
-    object(expression: $readme) {
-      ... on Blob {
-        text
-      }
-    }
-  }
-}`
-
+const { GITHUB_TOKEN } = env
 if (!GITHUB_TOKEN) {
   consola.error('GITHUB_TOKEN is missing, please refer to https://github.com/unjs/unplugin/blob/main/docs/README.md#development')
   process.exit(1)
 }
 
-const fetchs = repositoryMeta.map((repository) => {
-  return fetchRepo({
-    name: repository.name,
-    owner: repository.owner,
-    readme: repository.defaultBranch ? `${repository.defaultBranch}:README.md` : 'main:README.md',
-  })
+const gql = `#graphql
+query repositoryQuery() {
+  ${repositoryMeta.map(repository => buildRepoQuery(repository)).join('\n  ')}
+}`
+
+// eslint-disable-next-line antfu/no-top-level-await
+const resp = await $fetch('https://api.github.com/graphql', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${GITHUB_TOKEN}`,
+  },
+  body: JSON.stringify({ query: gql }),
 })
 
-Promise.allSettled(fetchs).then((res) => {
-  const repoMeta = res?.map((item) => {
-    if (item.status === 'fulfilled') {
-      return {
-        name: item.value?.name,
-        stargazers: item.value?.stargazers,
-        owner: item.value?.owner,
-        description: item.value?.description,
-        url: item.value?.url,
-        isTemplate: item.value?.isTemplate,
-        primaryLanguage: item.value?.primaryLanguage,
-        forkCount: item.value?.forkCount,
-      }
-    }
+const data = resp.data as Record<string, Repository>
+for (const [key, repo] of Object.entries(data)) {
+  const meta = repositoryMeta.find(meta => getRepoId(meta) === key)
+  if (!meta) {
+    throw new Error(`Repository meta not found for ${key}`)
+  }
+  writeReadme(repo, meta)
+}
 
-    return null
-  })?.filter(item => item && item.name)
+writeFileSync(
+  path.resolve(import.meta.dirname, 'repository.json'),
+  JSON.stringify(Object.values(data).sort(
+    (a, b) => b.stargazers.totalCount - a.stargazers.totalCount,
+  ), null, 2),
+)
 
-  writeFileSync(
-    join(dirname(fileURLToPath(import.meta.url)), './repository.json'),
-    JSON.stringify(repoMeta, null, 2),
-  )
-  consola.success('[repository.json] generate success!')
-  consola.success('All files generate done!')
-}).catch((error) => {
-  consola.error(error)
-})
+consola.success('All files generate done!')
 
-async function fetchRepo(meta: {
-  owner: string
-  name: string
-  readme?: string
-}) {
-  const { owner, name, readme } = meta
+function getRepoId({ owner, name }: RepositoryMeta) {
+  return `repo_${owner.replaceAll('-', '_')}_${name.replaceAll('-', '_')}`
+}
 
-  const _readme = readme || 'main:README.md'
-  try {
-    const results = await $fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
-      },
-      body: JSON.stringify({
-        query: gql,
-        variables: {
-          owner,
-          name,
-          readme: _readme,
-        },
-      }),
-    })
+function buildRepoQuery(
+  meta: RepositoryMeta,
+) {
+  const id = getRepoId(meta)
+  const readme = `${meta.branch || 'main'}:README.md`
+  return `${id}: repository(owner: ${JSON.stringify(meta.owner)}, name: ${JSON.stringify(meta.name)}) {
+    name
+    stargazers { totalCount }
+    owner { avatarUrl login }
+    description
+    primaryLanguage { name color }
+    forkCount
+    object(expression: "${readme}") { ... on Blob { text } }
+  }`
+}
 
-    const repositoryInfo = results.data.repository as Repository
-
-    const markdownFrontmatter = `---
-title: ${repositoryInfo.name}
-owner: ${repositoryInfo.owner.login}
-name: ${repositoryInfo.name}
-stars: ${repositoryInfo.stargazers.totalCount}
-forks: ${repositoryInfo.forkCount}
+function writeReadme(repo: Repository, meta: RepositoryMeta) {
+  const markdownFrontmatter = `---
+title: ${repo.name}
+owner: ${repo.owner.login}
+name: ${repo.name}
+stars: ${repo.stargazers.totalCount}
+forks: ${repo.forkCount}
 outline: deep
 ---
 
@@ -118,14 +82,9 @@ outline: deep
 
 `
 
-    writeFileSync(
-      join(dirname(fileURLToPath(import.meta.url)), `../../showcase/${name}.md`),
-      markdownFrontmatter + repositoryInfo.object.text,
-    )
-    consola.success(`[${name}.md]: generate success`)
-    return repositoryInfo
-  }
-  catch (error) {
-    consola.error(`[${name}.md]: generate failed: ${error}`)
-  }
+  writeFileSync(
+    path.resolve(import.meta.dirname, `../../showcase/${meta.name}.md`),
+    markdownFrontmatter + repo.object.text,
+  )
+  consola.success(`[${meta.name}.md]: generate success`)
 }

@@ -1,5 +1,5 @@
 const fs = require('node:fs')
-const MagicString = require('magic-string')
+const { MagicString } = require('magic-string')
 const { createUnplugin } = require('unplugin')
 
 const targetFileReg = /(?:\/|\\)msg\.js$/

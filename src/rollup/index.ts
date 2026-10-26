@@ -29,7 +29,7 @@ export function toRollupPlugin(
     && (!nativeFilter && typeof plugin.resolveId === 'object' && plugin.resolveId.filter)
   ) {
     const resolveIdHook = plugin.resolveId
-    const { handler, filter } = normalizeObjectHook('load', resolveIdHook)
+    const { handler, filter } = normalizeObjectHook('resolveId', resolveIdHook)
 
     replaceHookHandler('resolveId', resolveIdHook, function (...args) {
       const [id] = args

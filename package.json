@@ -1,8 +1,7 @@
 {
   "name": "unplugin",
   "type": "module",
-  "version": "3.2.0",
-  "packageManager": "pnpm@11.8.0",
+  "version": "3.4.0",
   "description": "Unified plugin system for build tools",
   "license": "MIT",
   "homepage": "https://unplugin.unjs.io",
@@ -29,8 +28,12 @@
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
-  "publishConfig": {
-    "tag": "beta"
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.14.0",
+      "onFail": "download"
+    }
   },
   "scripts": {
     "build": "tsdown",
@@ -43,11 +46,13 @@
     "docs:gen-files": "pnpm -C docs run gen-files",
     "prepublishOnly": "nr build",
     "release": "bumpp",
+    "prepare": "skills experimental_sync -y -r",
     "test": "nr test:build && vitest run",
-    "test:build": "jiti scripts/buildFixtures.ts"
+    "test:build": "node scripts/buildFixtures.ts"
   },
   "peerDependencies": {
     "@farmfe/core": "*",
+    "@rsbuild/core": "*",
     "@rspack/core": "*",
     "bun-types-no-globals": "*",
     "esbuild": "*",
@@ -59,6 +64,9 @@
   },
   "peerDependenciesMeta": {
     "@farmfe/core": {
+      "optional": true
+    },
+    "@rsbuild/core": {
       "optional": true
     },
     "@rspack/core": {
@@ -94,9 +102,11 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
     "@antfu/ni": "catalog:dev",
+    "@antfu/skills": "catalog:agentic",
     "@arethetypeswrong/core": "catalog:dev",
     "@farmfe/cli": "catalog:test",
     "@farmfe/core": "catalog:peer",
+    "@rsbuild/core": "catalog:peer",
     "@rspack/cli": "catalog:test",
     "@rspack/core": "catalog:peer",
     "@types/node": "catalog:dev",
@@ -108,13 +118,13 @@
     "esbuild": "catalog:peer",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",
-    "jiti": "catalog:dev",
     "lint-staged": "catalog:dev",
     "magic-string": "catalog:test",
     "publint": "catalog:dev",
     "rolldown": "catalog:peer",
     "rollup": "catalog:peer",
     "simple-git-hooks": "catalog:dev",
+    "skills": "catalog:agentic",
     "tsdown": "catalog:dev",
     "typescript": "catalog:dev",
     "unloader": "catalog:peer",
@@ -129,7 +139,7 @@
     "esbuild": "catalog:peer"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && pnpm exec lint-staged"
+    "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"

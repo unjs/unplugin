@@ -13,13 +13,13 @@ export default defineConfig({
       dirs: '.vitepress/components',
       dts: '.vitepress/components.d.ts',
     }),
-    // @ts-expect-error mismatch vite version
     Unocss(),
     Icons(),
     groupIconVitePlugin({
       customIcon: {
         farm: localIconLoader(import.meta.url, '.vitepress/assets/farm.svg'),
         rolldown: localIconLoader(import.meta.url, '.vitepress/assets/rolldown.svg'),
+        rsbuild: localIconLoader(import.meta.url, '.vitepress/assets/rsbuild.svg'),
         rspack: localIconLoader(import.meta.url, '.vitepress/assets/rspack.svg'),
       },
     }),

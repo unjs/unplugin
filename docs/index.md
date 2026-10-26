@@ -5,7 +5,7 @@ sidebar: false
 hero:
   name: Unplugin
   text: The Unified<br>Plugin System
-  tagline: Supports Vite, Rollup, webpack, esbuild, Bun, and every framework built on top of them.
+  tagline: Supports Vite, Rollup, webpack, Rspack, Rsbuild, esbuild, Bun, and every framework built on top of them.
   image:
     light: /logo_light.svg
     dark: /logo_dark.svg
@@ -50,7 +50,13 @@ features:
     details: A fast Rust-based web bundler.
     link: https://www.rspack.dev/
     icon:
-      src: /features/rspack.png
+      src: /features/rspack.svg
+
+  - title: Rsbuild
+    details: A Rspack-based build tool.
+    link: https://rsbuild.rs/
+    icon:
+      src: /features/rsbuild.svg
 
   - title: Farm
     details: Extremely fast web build tool written in Rust

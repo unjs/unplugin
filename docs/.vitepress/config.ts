@@ -1,10 +1,21 @@
+import type { Repository } from './data/repository.data'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
 import { defineConfig } from 'vitepress'
 import { groupIconMdPlugin } from 'vitepress-plugin-group-icons'
 import { description, ogImage, title } from './constant'
-import { repositoryMeta } from './data/meta'
+
+const require = createRequire(import.meta.url)
+const repos: Repository[] = []
+
+try {
+  const meta = require('./data/repository.json')
+  repos.push(...meta)
+}
+catch {
+}
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -43,7 +54,7 @@ export default defineConfig({
               text: 'Overview',
               link: '/showcase/',
             },
-            ...repositoryMeta.map(repo => (
+            ...repos.map(repo => (
               {
                 text: repo.name,
                 link: `/showcase/${repo.name}`,
@@ -80,6 +91,7 @@ export default defineConfig({
       md.use(groupIconMdPlugin)
     },
     codeTransformers: [
+      // @ts-expect-error - version mismatch
       transformerTwoslash({
         twoslashOptions: {
           compilerOptions: {

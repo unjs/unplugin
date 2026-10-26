@@ -1,0 +1,8 @@
+{
+  "name": "pkg",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "browser": {
+    "./lib/terminal-highlight": false
+  }
+}

@@ -19,12 +19,25 @@ function createUnpluginWithHooks(
   }))
 }
 
-function createIdHook() {
+function createResolveIdHook() {
   const handler = vi.fn()
   return {
     hook: {
       filter: {
-        id: { include: [/\.js$/], exclude: ['**/entry.js', /not-expect/] },
+        id: /^(?!.*(?:entry\.js|not-expect)).*\.js$/,
+      },
+      handler,
+    },
+    handler,
+  }
+}
+
+function createLoadHook() {
+  const handler = vi.fn()
+  return {
+    hook: {
+      filter: {
+        id: '**/mod.js',
       },
       handler,
     },
@@ -47,9 +60,9 @@ function createTransformHook() {
 }
 
 function check(resolveIdHandler: Mock, loadHandler: Mock, transformHandler: Mock): void {
-  expect(resolveIdHandler).toBeCalledTimes(1)
-  expect(loadHandler).toBeCalledTimes(1)
-  expect(transformHandler).toBeCalledTimes(1)
+  expect(resolveIdHandler).toHaveBeenCalledTimes(1)
+  expect(loadHandler).toHaveBeenCalledTimes(1)
+  expect(transformHandler).toHaveBeenCalledTimes(1)
 
   const testName = expect.getState().currentTestName
   const hasExtraOptions = testName?.includes('vite')
@@ -69,8 +82,8 @@ describe('filter', () => {
   })
 
   it('vite', async () => {
-    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
-    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: resolveId, handler: resolveIdHandler } = createResolveIdHook()
+    const { hook: load, handler: loadHandler } = createLoadHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).vite
     // we need to define `enforce` here for the plugin to be run
@@ -93,8 +106,8 @@ describe('filter', () => {
   })
 
   it('rollup', async () => {
-    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
-    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: resolveId, handler: resolveIdHandler } = createResolveIdHook()
+    const { hook: load, handler: loadHandler } = createLoadHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).rollup
 
@@ -107,8 +120,8 @@ describe('filter', () => {
   })
 
   it('rolldown', async () => {
-    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
-    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: resolveId, handler: resolveIdHandler } = createResolveIdHook()
+    const { hook: load, handler: loadHandler } = createLoadHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).rolldown
 
@@ -121,8 +134,8 @@ describe('filter', () => {
   })
 
   it('webpack', async () => {
-    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
-    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: resolveId, handler: resolveIdHandler } = createResolveIdHook()
+    const { hook: load, handler: loadHandler } = createLoadHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).webpack
 
@@ -140,8 +153,8 @@ describe('filter', () => {
   })
 
   it('rspack', async () => {
-    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
-    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: resolveId, handler: resolveIdHandler } = createResolveIdHook()
+    const { hook: load, handler: loadHandler } = createLoadHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).rspack
 
@@ -159,8 +172,8 @@ describe('filter', () => {
   })
 
   it('esbuild', async () => {
-    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
-    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: resolveId, handler: resolveIdHandler } = createResolveIdHook()
+    const { hook: load, handler: loadHandler } = createLoadHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).esbuild
 
@@ -175,8 +188,8 @@ describe('filter', () => {
   })
 
   onlyBun('bun', async () => {
-    const { hook: resolveId, handler: resolveIdHandler } = createIdHook()
-    const { hook: load, handler: loadHandler } = createIdHook()
+    const { hook: resolveId, handler: resolveIdHandler } = createResolveIdHook()
+    const { hook: load, handler: loadHandler } = createLoadHook()
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).bun
 

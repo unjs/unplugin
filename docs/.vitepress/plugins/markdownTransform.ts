@@ -27,8 +27,7 @@ export function MarkdownTransform(): PluginOption {
 
       // replace markdown img link
       // code reference: https://github.com/unjs/ungh/blob/main/utils/markdown.ts
-      const { name, owner, defaultBranch } = repositoryMeta.find(({ name }) => name === basename(id, '.md'))!
-      const _defaultBranch = defaultBranch || 'main'
+      const { name, owner, branch = 'main' } = repositoryMeta.find(({ name }) => name === basename(id, '.md'))!
       code = code.replaceAll(MARKDOWN_LINK_RE, (match, _, url: string | undefined, url2: string) => {
         const path = url || url2
         // If path is already a URL, return the match
@@ -37,8 +36,8 @@ export function MarkdownTransform(): PluginOption {
 
         // handle images and links differently
         return match.includes('<img') || images.some(ext => match.includes(ext))
-          ? match.replace(path, `${GH_RAW_URL}/${owner}/${name}/${_defaultBranch}/${path.replace(/^\.\//, '')}`)
-          : match.replace(path, `${GH_URL}/${name}/tree/${_defaultBranch}/${path.replace(/^\.\//, '')}`)
+          ? match.replace(path, `${GH_RAW_URL}/${owner}/${name}/${branch}/${path.replace(/^\.\//, '')}`)
+          : match.replace(path, `${GH_URL}/${name}/tree/${branch}/${path.replace(/^\.\//, '')}`)
       })
 
       let useCode = code

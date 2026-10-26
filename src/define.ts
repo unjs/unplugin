@@ -4,6 +4,7 @@ import { getEsbuildPlugin } from './esbuild'
 import { getFarmPlugin } from './farm'
 import { getRolldownPlugin } from './rolldown'
 import { getRollupPlugin } from './rollup'
+import { getRsbuildPlugin } from './rsbuild'
 import { getRspackPlugin } from './rspack'
 import { getUnloaderPlugin } from './unloader'
 import { getVitePlugin } from './vite'
@@ -30,6 +31,9 @@ export function createUnplugin<UserOptions, Nested extends boolean = boolean>(
     },
     get rspack() {
       return getRspackPlugin(factory)
+    },
+    get rsbuild() {
+      return getRsbuildPlugin(factory)
     },
     get farm() {
       return getFarmPlugin(factory)
@@ -80,6 +84,12 @@ export function createRspackPlugin<UserOptions, Nested extends boolean = boolean
   factory: UnpluginFactory<UserOptions, Nested>,
 ): UnpluginInstance<UserOptions>['rspack'] {
   return getRspackPlugin(factory)
+}
+
+export function createRsbuildPlugin<UserOptions, Nested extends boolean = boolean>(
+  factory: UnpluginFactory<UserOptions, Nested>,
+): UnpluginInstance<UserOptions, Nested>['rsbuild'] {
+  return getRsbuildPlugin(factory)
 }
 
 export function createFarmPlugin<UserOptions, Nested extends boolean = boolean>(

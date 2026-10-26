@@ -1,4 +1,11 @@
-import type { Hook, HookFilter, StringFilter, StringOrRegExp } from '../types'
+import type {
+  Hook,
+  TransformHookFilter as HookFilter,
+  LoadHookFilter,
+  ResolveIdHookFilter,
+  StringFilter,
+  StringOrRegExp,
+} from '../types'
 import { resolve } from 'node:path'
 import picomatch from 'picomatch'
 import { toArray } from './general'
@@ -142,17 +149,21 @@ function createFilterForTransform(
   }
 }
 
-export function normalizeObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter>(
-  name: 'resolveId' | 'load',
-  hook: Hook<T, F>,
+export function normalizeObjectHook<T extends (...args: any[]) => any>(
+  name: 'resolveId',
+  hook: Hook<T, ResolveIdHookFilter>,
 ): { handler: T, filter: PluginFilter }
-export function normalizeObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter>(
+export function normalizeObjectHook<T extends (...args: any[]) => any>(
+  name: 'load',
+  hook: Hook<T, LoadHookFilter>,
+): { handler: T, filter: PluginFilter }
+export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'transform',
-  hook: Hook<T, F>,
+  hook: Hook<T, HookFilter>,
 ): { handler: T, filter: TransformHookFilter }
-export function normalizeObjectHook<T extends (...args: any[]) => any, F extends keyof HookFilter>(
+export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'resolveId' | 'load' | 'transform',
-  hook: Hook<T, F>,
+  hook: Hook<T, ResolveIdHookFilter | LoadHookFilter | HookFilter>,
 ): {
   handler: T
   filter: PluginFilter | TransformHookFilter
@@ -165,12 +176,13 @@ export function normalizeObjectHook<T extends (...args: any[]) => any, F extends
   }
   else {
     handler = hook.handler
-    const hookFilter = hook.filter as HookFilter | undefined
+    const hookFilter = hook.filter
     if (name === 'resolveId' || name === 'load') {
       filter = createFilterForId(hookFilter?.id)
     }
     else {
-      filter = createFilterForTransform(hookFilter?.id, hookFilter?.code)
+      const transformFilter = hookFilter as HookFilter | undefined
+      filter = createFilterForTransform(transformFilter?.id, transformFilter?.code)
     }
   }
 

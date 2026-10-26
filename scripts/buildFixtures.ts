@@ -45,6 +45,10 @@ for (const name of fixtures) {
   execSync('npx rspack --version', { cwd: path, stdio: 'inherit' })
   execSync('npx rspack', { cwd: path, stdio: 'inherit' })
 
+  console.log(c.cyanBright.inverse.bold`\n  Rsbuild  `, name, '\n')
+  execSync('npx rsbuild --version', { cwd: path, stdio: 'inherit' })
+  execSync('npx rsbuild build', { cwd: path, stdio: 'inherit' })
+
   console.log(c.magenta.inverse.bold`\n  Farm  `, name, '\n')
   execSync('npx farm --version', { cwd: path, stdio: 'inherit' })
   execSync('npx farm build', { cwd: path, stdio: 'inherit' })

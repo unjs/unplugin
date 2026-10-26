@@ -29,7 +29,7 @@ defineProps<{
       </div>
     </a>
 
-    <a target="_blank" :href="`https://www.npmjs.com/package/${name}`">
+    <a target="_blank" :href="`https://npmx.dev/package/${name}`">
       <div class="flex text-gray-400" hover="text-#cc3534">
         <i class="i-ri:npmjs-fill" />
       </div>
