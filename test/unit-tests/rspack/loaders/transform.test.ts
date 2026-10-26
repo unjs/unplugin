@@ -8,6 +8,33 @@ import { normalizeObjectHook } from '../../../../src/utils/filter'
 import { getWebpackPlugin } from '../../../../src/webpack'
 import webpackTransform from '../../../../src/webpack/loaders/transform'
 
+const originalMap = {
+  version: 3,
+  names: [],
+  sources: ['original.ts'],
+  sourcesContent: ['original source'],
+  mappings: 'AACA',
+}
+const transformedMap = {
+  version: 3,
+  names: [],
+  sources: ['intermediate.js'],
+  sourcesContent: ['intermediate source'],
+  mappings: ';AAAA',
+}
+const multiSourceMap = {
+  version: 3,
+  names: [],
+  sources: ['original.ts', 'other.ts'],
+  sourcesContent: ['original source', 'other source'],
+  mappings: 'AAAA,CCAA',
+}
+const composedMap = expect.objectContaining({
+  sources: ['original.ts'],
+  sourcesContent: ['original source'],
+  mappings: ';AACA',
+})
+
 describe('transform', () => {
   it('caches lazy filters per hook and cwd while reading handlers fresh', async () => {
     const originalCwd = process.cwd()
@@ -187,9 +214,8 @@ describe('transform', () => {
 
   it('should include input source map on native build context', async () => {
     const source = 'source code'
-    const map = 'source map'
+    const map = originalMap
     const transformedCode = 'transformed code'
-    const transformedMap = 'transformed map'
 
     let handlerSource: string | undefined
     let handlerId: string | undefined
@@ -227,6 +253,58 @@ describe('transform', () => {
     assert(handlerNativeBuildContext?.framework === 'rspack')
     expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
 
-    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, transformedMap)
+    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, composedMap)
+  })
+
+  describe('source map of a transformed result', () => {
+    async function run(map: any, context: object = {}, result: any = transformedMap) {
+      const mockCallback = vi.fn()
+      await transform.call({
+        async: () => mockCallback,
+        query: {
+          plugin: {
+            transform: {
+              handler: vi.fn().mockResolvedValue({ code: 'transformed code', map: result }),
+              filter: vi.fn().mockReturnValue(true),
+            },
+          },
+        },
+        resource: 'test resource',
+        _compiler: {},
+        _compilation: {},
+        ...context,
+      } as any, 'source code', map)
+      return mockCallback
+    }
+
+    it('is passed on when there is no input source map', async () => {
+      expect(await run(null)).toHaveBeenCalledWith(null, 'transformed code', transformedMap)
+    })
+
+    it('is composed with the input source map', async () => {
+      expect(await run(originalMap)).toHaveBeenCalledWith(null, 'transformed code', composedMap)
+    })
+
+    it('is dropped when source maps are disabled', async () => {
+      expect(await run(null, { sourceMap: false })).toHaveBeenCalledWith(null, 'transformed code', null)
+    })
+
+    it('keeps the transformed map when the input source map is empty', async () => {
+      const mockCallback = await run({
+        version: 3,
+        names: [],
+        sources: [],
+        mappings: '',
+      })
+      expect(mockCallback).toHaveBeenCalledWith(null, 'transformed code', transformedMap)
+    })
+
+    it('composes a transformed map with multiple sources', async () => {
+      const mockCallback = await run(originalMap, { resource: '/project/original.ts' }, multiSourceMap)
+      expect(mockCallback).toHaveBeenCalledWith(null, 'transformed code', expect.objectContaining({
+        sources: ['original.ts', 'other.ts'],
+        mappings: 'AACA,CCDA',
+      }))
+    })
   })
 })
