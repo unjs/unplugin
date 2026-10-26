@@ -1,6 +1,6 @@
 import type { LoaderContext } from '@rspack/core'
 import type { ResolvedUnpluginOptions } from '../../types'
-import { normalizeAbsolutePath } from '../../utils/webpack-like'
+import { normalizeAbsolutePath, unescapeResourcePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
 
@@ -14,6 +14,8 @@ export default async function load(this: LoaderContext, source: string, map: any
 
   if (isVirtualModuleId(id, plugin))
     id = decodeVirtualModuleId(id, plugin)
+  else
+    id = unescapeResourcePath(id, 'rspack')
 
   const context = createContext(this)
   const hook = plugin.load

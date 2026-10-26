@@ -1,7 +1,7 @@
 import type { Buffer } from 'node:buffer'
 import type { LoaderContext } from 'webpack'
 import type { ResolvedUnpluginOptions } from '../../types'
-import { normalizeAbsolutePath } from '../../utils/webpack-like'
+import { normalizeAbsolutePath, unescapeResourcePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
 // Receive the source as a Buffer. Without this, webpack decodes every file it passes through
@@ -19,6 +19,8 @@ export default async function load(this: LoaderContext<any>, source: string | Bu
 
   if (id.startsWith(plugin.__virtualModulePrefix))
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
+  else
+    id = unescapeResourcePath(id, 'webpack')
 
   const context = createContext(this)
   const hook = plugin.load

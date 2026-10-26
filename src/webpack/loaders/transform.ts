@@ -4,6 +4,7 @@ import type { HookFnMap, ResolvedUnpluginOptions } from '../../types'
 import type { TransformHookFilter } from '../../utils/filter'
 import { normalizeObjectHook } from '../../utils/filter'
 import { mergeSourceMaps } from '../../utils/sourcemap'
+import { unescapeResourcePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 
 const filters = new WeakMap<
@@ -23,6 +24,7 @@ export default async function transform(this: LoaderContext<any>, source: string
   if (!plugin?.transform)
     return callback(null, source, map)
 
+  const id = unescapeResourcePath(this.resource, 'webpack')
   const context = createContext(this)
   const hook = plugin.transform
   const cwd = process.cwd()
@@ -43,7 +45,7 @@ export default async function transform(this: LoaderContext<any>, source: string
   const code = typeof source === 'string'
     ? source
     : source.toString('utf-8')
-  if (!filter(this.resource, code))
+  if (!filter(id, code))
     return callback(null, source, map)
 
   try {
@@ -57,7 +59,7 @@ export default async function transform(this: LoaderContext<any>, source: string
         },
       }, this._compiler!, this._compilation, this, map), context),
       code,
-      this.resource,
+      id,
     )
 
     if (res == null) {
@@ -66,7 +68,7 @@ export default async function transform(this: LoaderContext<any>, source: string
     else if (typeof res !== 'string') {
       callback(null, res.code, this.sourceMap === false
         ? map
-        : mergeSourceMaps(res.map, map, this.resource))
+        : mergeSourceMaps(res.map, map, id))
     }
     else {
       callback(null, res, map)
