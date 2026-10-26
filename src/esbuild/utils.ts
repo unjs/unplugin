@@ -5,6 +5,7 @@ import type { UnpluginBuildContext, UnpluginContext, UnpluginMessage } from '../
 import { Buffer } from 'node:buffer'
 import fs from 'node:fs'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import remapping from '@jridgewell/remapping'
 import { parse } from '../utils/parse'
 
@@ -73,6 +74,7 @@ const nullSourceMap: EncodedSourceMap = {
 export function combineSourcemaps(
   filename: string,
   sourcemapList: Array<DecodedSourceMap | EncodedSourceMap>,
+  preserveSources = false,
 ): EncodedSourceMap {
   sourcemapList = sourcemapList.filter(m => m.sources)
 
@@ -89,18 +91,37 @@ export function combineSourcemaps(
   const useArrayInterface
     = !sourcemapList.slice(0, -1).some(m => m.sources.length !== 1)
   if (useArrayInterface) {
-    map = remapping(sourcemapList, () => null, true)
+    map = remapping(sourcemapList, () => null, !preserveSources)
   }
   else {
+    const normalizedFilename = filename.replace(/\\/g, '/')
+    const windows = /^[a-z]:\//i.test(normalizedFilename) || normalizedFilename.startsWith('//')
+    const paths = windows ? path.win32 : path.posix
     map = remapping(
       sourcemapList[0],
       (sourcefile) => {
-        if (sourcefile === filename && sourcemapList[mapIndex])
+        let source = sourcefile.replace(/\\/g, '/')
+        if (preserveSources && source !== normalizedFilename && source.startsWith('file:')) {
+          try {
+            source = fileURLToPath(source, { windows }).replace(/\\/g, '/')
+          }
+          catch {
+            return null
+          }
+        }
+        const matches = sourcefile === filename
+          || (preserveSources && (source === normalizedFilename
+            || (paths.isAbsolute(normalizedFilename)
+              && (paths.isAbsolute(source) || !/^[a-z][a-z\d+.-]*:/i.test(source))
+              && paths.resolve(paths.dirname(normalizedFilename), source) === paths.normalize(normalizedFilename))))
+        if (matches && sourcemapList[mapIndex]) {
           return sourcemapList[mapIndex++]
-        else
-          return { ...nullSourceMap }
+        }
+        else {
+          return preserveSources ? null : { ...nullSourceMap }
+        }
       },
-      true,
+      !preserveSources,
     )
   }
   if (!map.file)

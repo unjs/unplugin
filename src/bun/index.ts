@@ -1,7 +1,10 @@
+import type { RawSourceMap } from '@jridgewell/remapping'
 import type { BunPlugin, Loader } from 'bun'
+import type { SourceMap } from 'rollup'
 import type { TransformResult, UnpluginContextMeta, UnpluginFactory, UnpluginInstance } from '../types'
 import { isAbsolute } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
+import { combineSourcemaps, processCodeWithSourceMap } from '../esbuild/utils'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import { createBuildContext, createPluginContext, guessLoader, unwrapLoader } from './utils'
@@ -148,6 +151,9 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           let code: string | undefined
           let hasResult = false
           let activePlugin: typeof plugins[number] | undefined
+          const sourcemapResults: Array<Extract<TransformResult, { code: string }>> | undefined = build.config.sourcemap && build.config.sourcemap !== 'none'
+            ? []
+            : undefined
 
           const namespaceLoadHooks = namespace === 'file'
             ? loadHooks
@@ -182,6 +188,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             }
             else if (typeof result === 'object' && result !== null) {
               code = result.code
+              sourcemapResults?.push(result)
               hasResult = true
               activePlugin = plugin
               break
@@ -219,11 +226,15 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
               }
 
               if (typeof result === 'string') {
+                if (sourcemapResults && result !== code) {
+                  sourcemapResults.length = 0
+                }
                 code = result
                 hasResult = true
               }
               else if (typeof result === 'object' && result !== null) {
                 code = result.code
+                sourcemapResults?.push(result)
                 hasResult = true
               }
             }
@@ -231,11 +242,29 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
 
           if (hasResult && code !== undefined) {
             const pluginLoader = activePlugin?.bun?.loader
+            const resolvedLoader = (pluginLoader && unwrapLoader(pluginLoader, code, id))
+              ?? loader
+              ?? guessLoader(id)
+            if (sourcemapResults && ['js', 'jsx', 'ts', 'tsx'].includes(resolvedLoader)) {
+              const sourcemaps: RawSourceMap[] = []
+              for (let i = sourcemapResults.length - 1; i >= 0; i--) {
+                const result = sourcemapResults[i]!
+                const map = result.map
+                if (map) {
+                  sourcemaps.push(typeof map === 'string' ? JSON.parse(map) : map as RawSourceMap)
+                }
+                else if (i > 0 && result.code !== sourcemapResults[i - 1]!.code) {
+                  break
+                }
+              }
+              if (sourcemaps.length) {
+                const map = combineSourcemaps(id, sourcemaps, true)
+                code = processCodeWithSourceMap(map as SourceMap, code)
+              }
+            }
             return {
               contents: code,
-              loader: (pluginLoader && unwrapLoader(pluginLoader, code, id))
-                ?? loader
-                ?? guessLoader(id),
+              loader: resolvedLoader,
             }
           }
         }

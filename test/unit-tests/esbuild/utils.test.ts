@@ -1,4 +1,6 @@
+import assert from 'node:assert/strict'
 import { Buffer } from 'node:buffer'
+import { SourceMap } from 'node:module'
 import { describe, expect, it, vi } from 'vitest'
 import {
   combineSourcemaps,
@@ -54,6 +56,57 @@ describe('utils', () => {
   })
 
   describe('combineSourcemaps', () => {
+    it.each([
+      ['/project/entry #100%.js', 'entry #100%.js', undefined],
+      ['/project/entry #100%.js', 'file:///project/entry%20%23100%25.js', undefined],
+      ['/project/entry #100%.js', 'entry%20%23100%25.js', 'file:///project/'],
+      ['/project/entry.js', 'entry.js', './'],
+      ['/project/entry.js', 'entry.js', '/project/'],
+      ['C:\\project\\entry #100%.js', 'entry #100%.js', undefined],
+      ['C:\\project\\entry #100%.js', 'entry #100%.js', 'C:\\project'],
+      ['C:\\project\\entry #100%.js', 'file:///C:/project/entry%20%23100%25.js', undefined],
+      ['virtual:entry', 'virtual:entry', undefined],
+      ['file:///project/entry.js', 'file:///project/entry.js', undefined],
+    ] as const)('composes %s from %s with sourceRoot %s', (filename, source, sourceRoot) => {
+      const original = '\n\noriginal\n'
+      const other = 'other\n'
+      const actual = combineSourcemaps(filename, [
+        {
+          version: 3,
+          names: [],
+          sources: [source, 'other.js'],
+          sourcesContent: ['\nintermediate\n', other],
+          sourceRoot,
+          mappings: 'AACA;ACDA',
+        },
+        {
+          version: 3,
+          names: [],
+          sources: [filename],
+          sourcesContent: [original],
+          mappings: ';AAEA',
+        },
+      ], true)
+      const map = new SourceMap({
+        ...actual,
+        file: actual.file ?? filename,
+        sourceRoot: actual.sourceRoot ?? '',
+        sources: actual.sources.map((source) => {
+          assert(source !== null)
+          return source
+        }),
+        sourcesContent: actual.sourcesContent?.map(content => content ?? '') ?? [],
+      })
+      const originalPosition = map.findEntry(0, 0)
+      const otherPosition = map.findEntry(1, 0)
+      assert('originalLine' in originalPosition)
+      assert('originalSource' in otherPosition)
+      expect(originalPosition.originalLine).toBe(2)
+      expect(otherPosition.originalSource).toMatch(/other\.js$/)
+      expect(actual.sourcesContent).toContain(original)
+      expect(actual.sourcesContent).toContain(other)
+    })
+
     it('when combineSourcemaps is empty, should return expected', () => {
       const actual = combineSourcemaps('filename', [])
       expect(actual).toEqual({
