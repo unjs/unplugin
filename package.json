@@ -46,6 +46,7 @@
     "docs:gen-files": "pnpm -C docs run gen-files",
     "prepublishOnly": "nr build",
     "release": "bumpp",
+    "prepare": "skills experimental_sync -y -r",
     "test": "nr test:build && vitest run",
     "test:build": "node scripts/buildFixtures.ts"
   },
@@ -101,6 +102,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
     "@antfu/ni": "catalog:dev",
+    "@antfu/skills": "catalog:agentic",
     "@arethetypeswrong/core": "catalog:dev",
     "@farmfe/cli": "catalog:test",
     "@farmfe/core": "catalog:peer",
@@ -122,6 +124,7 @@
     "rolldown": "catalog:peer",
     "rollup": "catalog:peer",
     "simple-git-hooks": "catalog:dev",
+    "skills": "catalog:agentic",
     "tsdown": "catalog:dev",
     "typescript": "catalog:dev",
     "unloader": "catalog:peer",

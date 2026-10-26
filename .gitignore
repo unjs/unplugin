@@ -7,6 +7,8 @@ dist
 node_modules
 temp
 .eslintcache
+.agents
+.claude
 
 # docs
 docs/showcase/*.md
