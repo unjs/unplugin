@@ -2,6 +2,7 @@ import type { LoaderContext } from '@rspack/core'
 import type { HookFnMap, ResolvedUnpluginOptions } from '../../types'
 import type { TransformHookFilter } from '../../utils/filter'
 import { normalizeObjectHook } from '../../utils/filter'
+import { mergeSourceMaps } from '../../utils/sourcemap'
 import { createBuildContext, createContext } from '../context'
 
 const filters = new WeakMap<
@@ -55,9 +56,9 @@ export default async function transform(
       callback(null, source, map)
     }
     else if (typeof res !== 'string') {
-      callback(null, res.code, map == null
+      callback(null, res.code, this.sourceMap === false
         ? map
-        : (res.map || map))
+        : mergeSourceMaps(res.map, map, this.resource))
     }
     else {
       callback(null, res, map)

@@ -3,6 +3,33 @@ import { Buffer } from 'node:buffer'
 import { assert, describe, expect, it, vi } from 'vitest'
 import transform, { raw } from '../../../../src/webpack/loaders/transform'
 
+const originalMap = {
+  version: 3,
+  names: [],
+  sources: ['original.ts'],
+  sourcesContent: ['original source'],
+  mappings: 'AACA',
+}
+const transformedMap = {
+  version: 3,
+  names: [],
+  sources: ['intermediate.js'],
+  sourcesContent: ['intermediate source'],
+  mappings: ';AAAA',
+}
+const multiSourceMap = {
+  version: 3,
+  names: [],
+  sources: ['original.ts', 'other.ts'],
+  sourcesContent: ['original source', 'other source'],
+  mappings: 'AAAA,CCAA',
+}
+const composedMap = expect.objectContaining({
+  sources: ['original.ts'],
+  sourcesContent: ['original source'],
+  mappings: ';AACA',
+})
+
 describe('transform loader', () => {
   const mockCallback = vi.fn()
   const mockLoaderContext = {
@@ -67,8 +94,8 @@ describe('transform loader', () => {
 
   it('should call handler and return transformed code and map if handler returns an object', async () => {
     const source = 'source code'
-    const map = 'source map'
-    const transformedResult = { code: 'transformed code', map: 'transformed map' }
+    const map = originalMap
+    const transformedResult = { code: 'transformed code', map: transformedMap }
 
     const handlerMock = vi.fn().mockResolvedValue(transformedResult)
     mockLoaderContext.query = {
@@ -83,7 +110,7 @@ describe('transform loader', () => {
     await transform.call(mockLoaderContext as any, source, map)
 
     expect(handlerMock).toHaveBeenCalled()
-    expect(mockCallback).toHaveBeenCalledWith(null, transformedResult.code, transformedResult.map)
+    expect(mockCallback).toHaveBeenCalledWith(null, transformedResult.code, composedMap)
   })
 
   it('should handle errors thrown by the handler', async () => {
@@ -109,9 +136,8 @@ describe('transform loader', () => {
 
   it('should include input source map on native build context', async () => {
     const source = 'source code'
-    const map = 'source map'
+    const map = originalMap
     const transformedCode = 'transformed code'
-    const transformedMap = 'transformed map'
 
     let handlerSource: string | undefined
     let handlerId: string | undefined
@@ -140,7 +166,57 @@ describe('transform loader', () => {
     assert(handlerNativeBuildContext?.framework === 'webpack')
     expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
 
-    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, transformedMap)
+    expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, composedMap)
+  })
+
+  describe('source map of a transformed result', () => {
+    async function run(map: any, context: object = {}, result: any = transformedMap) {
+      mockLoaderContext.query = {
+        plugin: {
+          transform: {
+            handler: vi.fn().mockResolvedValue({ code: 'transformed code', map: result }),
+            filter: vi.fn().mockReturnValue(true),
+          },
+        },
+      }
+      await transform.call({
+        ...mockLoaderContext,
+        ...context,
+      } as any, 'source code', map)
+    }
+
+    it('is passed on when there is no input source map', async () => {
+      await run(null)
+      expect(mockCallback).toHaveBeenLastCalledWith(null, 'transformed code', transformedMap)
+    })
+
+    it('is composed with the input source map', async () => {
+      await run(originalMap)
+      expect(mockCallback).toHaveBeenLastCalledWith(null, 'transformed code', composedMap)
+    })
+
+    it('is dropped when source maps are disabled', async () => {
+      await run(null, { sourceMap: false })
+      expect(mockCallback).toHaveBeenLastCalledWith(null, 'transformed code', null)
+    })
+
+    it('keeps the transformed map when the input source map is empty', async () => {
+      await run({
+        version: 3,
+        names: [],
+        sources: [],
+        mappings: '',
+      })
+      expect(mockCallback).toHaveBeenLastCalledWith(null, 'transformed code', transformedMap)
+    })
+
+    it('composes a transformed map with multiple sources', async () => {
+      await run(originalMap, { resource: '/project/original.ts' }, multiSourceMap)
+      expect(mockCallback).toHaveBeenLastCalledWith(null, 'transformed code', expect.objectContaining({
+        sources: ['original.ts', 'other.ts'],
+        mappings: 'AACA,CCDA',
+      }))
+    })
   })
 
   it('should be a raw loader so binary files are not decoded as text', () => {
