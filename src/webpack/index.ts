@@ -132,101 +132,108 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                     if (normalizeAbsolutePath(request.request).startsWith(plugin.__virtualModulePrefix))
                       return callback()
 
-                    const id = normalizeAbsolutePath(request.request)
+                    try {
+                      const id = normalizeAbsolutePath(request.request)
 
-                    const requestContext = (request as unknown as { context: { issuer: string } }).context
-                    let importer = requestContext.issuer !== ''
-                      ? requestContext.issuer
-                      : undefined
-                    const isEntry = requestContext.issuer === ''
+                      const requestContext = (request as unknown as { context: { issuer: string } }).context
+                      let importer = requestContext.issuer !== ''
+                        ? requestContext.issuer
+                        : undefined
+                      const isEntry = requestContext.issuer === ''
 
-                    if (importer?.startsWith(plugin.__virtualModulePrefix))
-                      importer = decodeURIComponent(importer.slice(plugin.__virtualModulePrefix.length))
+                      if (importer?.startsWith(plugin.__virtualModulePrefix))
+                        importer = decodeURIComponent(importer.slice(plugin.__virtualModulePrefix.length))
 
-                    // call hook
-                    // resolveContext.fileDependencies is typed as a WriteOnlySet, so make our own copy here
-                    // so we can return it from getWatchFiles.
-                    const fileDependencies = new Set<string>()
-                    const context = createBuildContext({
-                      addWatchFile(file) {
-                        fileDependencies.add(file)
-                        resolveContext.fileDependencies?.add(file)
-                      },
-                      getWatchFiles() {
-                        return Array.from(fileDependencies)
-                      },
-                    }, compiler)
-                    let error: Error | undefined
-                    const pluginContext: UnpluginContext = {
-                      error(msg) {
-                        if (error == null)
-                          error = normalizeMessage(msg)
-                        else
-                          console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
-                      },
-                      warn(msg) {
-                        console.warn(`unplugin/webpack: warning from resolveId hook: ${msg}`)
-                      },
+                      // call hook
+                      // resolveContext.fileDependencies is typed as a WriteOnlySet, so make our own copy here
+                      // so we can return it from getWatchFiles.
+                      const fileDependencies = new Set<string>()
+                      const context = createBuildContext({
+                        addWatchFile(file) {
+                          fileDependencies.add(file)
+                          resolveContext.fileDependencies?.add(file)
+                        },
+                        getWatchFiles() {
+                          return Array.from(fileDependencies)
+                        },
+                      }, compiler)
+                      let error: Error | undefined
+                      const pluginContext: UnpluginContext = {
+                        error(msg) {
+                          if (error == null)
+                            error = normalizeMessage(msg)
+                          else
+                            console.error(`unplugin/webpack: multiple errors returned from resolveId hook: ${msg}`)
+                        },
+                        warn(msg) {
+                          console.warn(`unplugin/webpack: warning from resolveId hook: ${msg}`)
+                        },
+                      }
+
+                      const hook = plugin.resolveId!
+                      const cwd = process.cwd()
+                      let handler: HookFnMap['resolveId']
+                      if (cachedResolveId?.hook === hook && cachedResolveId.cwd === cwd) {
+                        handler = typeof hook === 'function'
+                          ? hook
+                          : hook.handler
+                      }
+                      else {
+                        const normalized = normalizeObjectHook('resolveId', hook)
+                        handler = normalized.handler
+                        cachedResolveId = { hook, cwd, filter: normalized.filter }
+                      }
+                      const { filter } = cachedResolveId
+                      if (!filter(id))
+                        return callback()
+
+                      const resolveIdResult = await handler.call!({
+                        ...context,
+                        ...pluginContext,
+                      }, id, importer, { isEntry })
+
+                      if (error != null)
+                        return callback(error)
+                      if (resolveIdResult == null)
+                        return callback()
+
+                      let resolved = typeof resolveIdResult === 'string'
+                        ? resolveIdResult
+                        : resolveIdResult.id
+
+                      const isExternal = typeof resolveIdResult === 'string'
+                        ? false
+                        : resolveIdResult.external === true
+                      if (isExternal)
+                        externalModules.add(resolved)
+
+                      // If the resolved module does not exist,
+                      // we treat it as a virtual module
+                      if (!fs.existsSync(resolved)) {
+                        resolved = normalizeAbsolutePath(
+                          plugin.__virtualModulePrefix
+                          + encodeURIComponent(resolved), // URI encode id so webpack doesn't think it's part of the path
+                        )
+
+                        // webpack virtual module should pass in the correct path
+                        // https://github.com/unjs/unplugin/pull/155
+                        ensureVirtualModule(plugin, compiler, resolved)
+                      }
+
+                      // construct the new request
+                      const newRequest = {
+                        ...request,
+                        request: resolved,
+                      }
+
+                      // redirect the resolver
+                      resolver.doResolve(target, newRequest, null, resolveContext, callback)
                     }
-
-                    const hook = plugin.resolveId!
-                    const cwd = process.cwd()
-                    let handler: HookFnMap['resolveId']
-                    if (cachedResolveId?.hook === hook && cachedResolveId.cwd === cwd) {
-                      handler = typeof hook === 'function'
-                        ? hook
-                        : hook.handler
+                    catch (error) {
+                      callback(error instanceof Error
+                        ? error
+                        : new Error(String(error)))
                     }
-                    else {
-                      const normalized = normalizeObjectHook('resolveId', hook)
-                      handler = normalized.handler
-                      cachedResolveId = { hook, cwd, filter: normalized.filter }
-                    }
-                    const { filter } = cachedResolveId
-                    if (!filter(id))
-                      return callback()
-
-                    const resolveIdResult = await handler.call!({
-                      ...context,
-                      ...pluginContext,
-                    }, id, importer, { isEntry })
-
-                    if (error != null)
-                      return callback(error)
-                    if (resolveIdResult == null)
-                      return callback()
-
-                    let resolved = typeof resolveIdResult === 'string'
-                      ? resolveIdResult
-                      : resolveIdResult.id
-
-                    const isExternal = typeof resolveIdResult === 'string'
-                      ? false
-                      : resolveIdResult.external === true
-                    if (isExternal)
-                      externalModules.add(resolved)
-
-                    // If the resolved module does not exist,
-                    // we treat it as a virtual module
-                    if (!fs.existsSync(resolved)) {
-                      resolved = normalizeAbsolutePath(
-                        plugin.__virtualModulePrefix
-                        + encodeURIComponent(resolved), // URI encode id so webpack doesn't think it's part of the path
-                      )
-
-                      // webpack virtual module should pass in the correct path
-                      // https://github.com/unjs/unplugin/pull/155
-                      ensureVirtualModule(plugin, compiler, resolved)
-                    }
-
-                    // construct the new request
-                    const newRequest = {
-                      ...request,
-                      request: resolved,
-                    }
-
-                    // redirect the resolver
-                    resolver.doResolve(target, newRequest, null, resolveContext, callback)
                   })
               },
             }
