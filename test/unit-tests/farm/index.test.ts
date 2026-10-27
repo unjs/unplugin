@@ -214,4 +214,83 @@ describe('toFarmPlugin', () => {
     )
     expect(result).toHaveProperty('resolvedPath', 'resolved-id')
   })
+
+  it('load returning null or undefined skips the module', async () => {
+    for (const value of [null, undefined]) {
+      const farmPlugin = toFarmPlugin({
+        name: 'test-plugin',
+        load: vi.fn(() => value),
+      })
+      const result = await farmPlugin.load?.executor(
+        { resolvedPath: 'test-path', query: [] } as any,
+        {} as any,
+      )
+      expect(result).toBeNull()
+    }
+  })
+
+  it('transform returning a string replaces the content', async () => {
+    const farmPlugin = toFarmPlugin({
+      name: 'test-plugin',
+      transform: vi.fn(() => 'transformed-content'),
+    })
+    const result = await farmPlugin.transform?.executor(
+      { resolvedPath: 'test-path.js', content: 'original-content', query: [] } as any,
+      {} as any,
+    )
+    expect(result).toEqual({ content: 'transformed-content', moduleType: 'js', sourceMap: undefined })
+  })
+
+  it('transform returning null keeps the original content', async () => {
+    const farmPlugin = toFarmPlugin({
+      name: 'test-plugin',
+      transform: vi.fn(() => null),
+    })
+    const result = await farmPlugin.transform?.executor(
+      { resolvedPath: 'test-path.js', content: 'original-content', query: [] } as any,
+      {} as any,
+    )
+    expect(result).toBeNull()
+  })
+
+  it('resolveId receives undefined importer and isEntry for entries', async () => {
+    const resolveIdMock = vi.fn(() => null)
+    const farmPlugin = toFarmPlugin({ name: 'test-plugin', resolveId: resolveIdMock })
+    await farmPlugin.resolve?.executor(
+      {
+        source: '/abs/entry.js',
+        importer: null,
+        kind: { entry: 'main' },
+      },
+      {} as any,
+    )
+    expect(resolveIdMock).toHaveBeenCalledWith('/abs/entry.js', undefined, { isEntry: true })
+  })
+
+  it('resolveId receives the importer for imports', async () => {
+    const resolveIdMock = vi.fn(() => null)
+    const farmPlugin = toFarmPlugin({ name: 'test-plugin', resolveId: resolveIdMock })
+    await farmPlugin.resolve?.executor(
+      { source: './dep', importer: '/abs/importer.js', kind: 'import' },
+      {} as any,
+    )
+    expect(resolveIdMock).toHaveBeenCalledWith('./dep', '/abs/importer.js', { isEntry: false })
+  })
+
+  it('resolveId keeps sideEffects for string and object results alike', async () => {
+    for (const value of [
+      'resolved-id',
+      { id: 'resolved-id' },
+    ]) {
+      const farmPlugin = toFarmPlugin({
+        name: 'test-plugin',
+        resolveId: vi.fn(() => value),
+      })
+      const result = await farmPlugin.resolve?.executor(
+        { source: 'dep', importer: '/abs/importer.js', kind: 'import' },
+        {} as any,
+      )
+      expect(result).toMatchObject({ resolvedPath: 'resolved-id', sideEffects: true })
+    }
+  })
 })

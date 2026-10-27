@@ -99,25 +99,21 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         importers: ['.*'],
       },
       async executor(params: PluginResolveHookParam, context: CompilationContext) {
-        const resolvedIdPath = path.resolve(
-          params.importer ?? '',
-        )
+        const importer = params.importer
+          ? path.resolve(params.importer)
+          : undefined
         const id = decodeStr(params.source)
 
         const { handler, filter } = normalizeObjectHook('resolveId', _resolveId)
         if (!filter(id))
           return null
 
-        let isEntry = false
-        if (isObject(params.kind) && 'entry' in params.kind) {
-          const kindWithEntry = params.kind as { entry: string }
-          isEntry = kindWithEntry.entry === 'index'
-        }
-        const farmContext = createFarmContext(context!, resolvedIdPath)
+        const isEntry = isObject(params.kind) && 'entry' in params.kind
+        const farmContext = createFarmContext(context!, importer)
         const resolveIdResult = await handler.call(
           Object.assign(unpluginContext(context), farmContext),
           id,
-          resolvedIdPath ?? null,
+          importer,
           { isEntry },
         )
 
@@ -134,7 +130,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           return {
             resolvedPath: removeQuery(encodeStr(resolveIdResult?.id)),
             query: customParseQueryString(resolveIdResult?.id),
-            sideEffects: false,
+            sideEffects: true,
             external: Boolean(resolveIdResult?.external),
             meta: {},
           }
@@ -171,6 +167,8 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           Object.assign(unpluginContext(context!), farmContext),
           id,
         )
+        if (content == null)
+          return null
 
         const loadFarmResult: PluginLoadHookResult = {
           content: getContentValue(content),
@@ -210,17 +208,18 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
           params.content,
           id,
         )
-        if (resource && typeof resource !== 'string') {
-          const transformFarmResult: PluginTransformHookResult = {
-            content: getContentValue(resource),
-            moduleType: loader,
-            sourceMap: typeof resource.map === 'object' && resource.map !== null
-              ? JSON.stringify(resource.map)
-              : undefined,
-          }
+        if (resource == null)
+          return null
 
-          return transformFarmResult
+        const transformFarmResult: PluginTransformHookResult = {
+          content: getContentValue(resource),
+          moduleType: loader,
+          sourceMap: typeof resource === 'object' && typeof resource.map === 'object' && resource.map !== null
+            ? JSON.stringify(resource.map)
+            : undefined,
         }
+
+        return transformFarmResult
       },
     } as JsPlugin['transform']
   }
