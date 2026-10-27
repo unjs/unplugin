@@ -28,7 +28,7 @@ export function getSource(fileSource: string | Uint8Array): sources.RawSource {
   return new webpack.sources.RawSource(
     typeof fileSource === 'string'
       ? fileSource
-      : Buffer.from(fileSource.buffer),
+      : Buffer.from(fileSource),
   )
 }
 
