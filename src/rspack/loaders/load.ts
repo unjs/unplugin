@@ -1,10 +1,16 @@
 import type { LoaderContext } from '@rspack/core'
+import type { Buffer } from 'node:buffer'
 import type { ResolvedUnpluginOptions } from '../../types'
 import { normalizeAbsolutePath, unescapeResourcePath } from '../../utils/webpack-like'
 import { createBuildContext, createContext } from '../context'
 import { decodeVirtualModuleId, isVirtualModuleId } from '../utils'
 
-export default async function load(this: LoaderContext, source: string, map: any): Promise<void> {
+// Receive the source as a Buffer. Without this, rspack decodes every file it passes through
+// this loader as UTF-8 text, which corrupts binary files (images, fonts) the load hook ignores.
+// https://webpack.js.org/api/loaders/#raw-loader
+export const raw = true
+
+export default async function load(this: LoaderContext, source: string | Buffer, map: any): Promise<void> {
   const callback = this.async()
   const { plugin } = this.query as { plugin: ResolvedUnpluginOptions }
 

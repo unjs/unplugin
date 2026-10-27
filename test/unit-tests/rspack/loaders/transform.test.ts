@@ -1,9 +1,10 @@
 import type { NativeBuildContext, UnpluginBuildContext } from '../../../../src/types'
+import { Buffer } from 'node:buffer'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { assert, describe, expect, it, vi } from 'vitest'
 import { getRspackPlugin } from '../../../../src/rspack'
-import transform from '../../../../src/rspack/loaders/transform'
+import transform, { raw } from '../../../../src/rspack/loaders/transform'
 import { normalizeObjectHook } from '../../../../src/utils/filter'
 import { getWebpackPlugin } from '../../../../src/webpack'
 import webpackTransform from '../../../../src/webpack/loaders/transform'
@@ -254,6 +255,68 @@ describe('transform', () => {
     expect(handlerNativeBuildContext?.inputSourceMap).toBe(map)
 
     expect(mockCallback).toHaveBeenCalledWith(null, transformedCode, composedMap)
+  })
+
+  it('should be a raw loader so binary files are not decoded as text', () => {
+    expect(raw).toBe(true)
+  })
+
+  it('should pass a binary source on untouched when the filter does not match', async () => {
+    const png = Buffer.from([
+      0x89,
+      0x50,
+      0x4E,
+      0x47,
+      0x0D,
+      0x0A,
+      0x1A,
+      0x0A,
+      0xFF,
+      0xFE,
+      0x00,
+    ])
+    const handler = vi.fn()
+    const mockCallback = vi.fn()
+    const mockLoaderContext = {
+      async: () => mockCallback,
+      query: {
+        plugin: {
+          transform: {
+            handler,
+            filter: { id: /\.never-matches$/ },
+          },
+        },
+      },
+      resource: '/path/to/image.png',
+    } as any
+
+    await transform.call(mockLoaderContext, png, undefined)
+
+    expect(handler).not.toHaveBeenCalled()
+    const [, passedSource] = mockCallback.mock.calls.at(-1)!
+    expect(Buffer.isBuffer(passedSource) && passedSource.equals(png)).toBe(true)
+  })
+
+  it('should give the handler the source as a string when it receives a Buffer', async () => {
+    const handler = vi.fn().mockResolvedValue('transformed')
+    const mockCallback = vi.fn()
+    const mockLoaderContext = {
+      async: () => mockCallback,
+      query: {
+        plugin: {
+          transform: {
+            handler,
+            filter: { id: /./ },
+          },
+        },
+      },
+      resource: '/path/to/resource',
+    } as any
+
+    await transform.call(mockLoaderContext, Buffer.from('const a = 1'), undefined)
+
+    expect(handler).toHaveBeenCalledWith('const a = 1', '/path/to/resource')
+    expect(mockCallback).toHaveBeenLastCalledWith(null, 'transformed', undefined)
   })
 
   describe('source map of a transformed result', () => {
