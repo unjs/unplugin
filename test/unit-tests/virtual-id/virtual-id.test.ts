@@ -5,7 +5,7 @@ import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'
-import { build, toArray } from '../utils'
+import { build, runRspack, runWebpack, toArray } from '../utils'
 
 function createUnpluginWithCallbacks(resolveIdCallback: UnpluginOptions['resolveId'], loadCallback: UnpluginOptions['load']) {
   return createUnplugin(() => ({
@@ -123,16 +123,11 @@ describe('virtual ids', () => {
     const mockLoadHook = createLoadHook()
     const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).webpack
 
-    await new Promise((resolve) => {
-      build.webpack(
-        {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [
-            plugin(),
-          ],
-        },
-        resolve,
-      )
+    await runWebpack({
+      entry: path.resolve(__dirname, 'test-src/entry.js'),
+      plugins: [
+        plugin(),
+      ],
     })
 
     checkResolveIdHook(mockResolveIdHook)
@@ -144,16 +139,11 @@ describe('virtual ids', () => {
     const mockLoadHook = createLoadHook()
     const plugin = createUnpluginWithCallbacks(mockResolveIdHook, mockLoadHook).rspack
 
-    await new Promise((resolve) => {
-      build.rspack(
-        {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [
-            plugin(),
-          ],
-        },
-        resolve,
-      )
+    await runRspack({
+      entry: path.resolve(__dirname, 'test-src/entry.js'),
+      plugins: [
+        plugin(),
+      ],
     })
 
     checkResolveIdHook(mockResolveIdHook)

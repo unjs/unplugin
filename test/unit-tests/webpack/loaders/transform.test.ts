@@ -57,17 +57,19 @@ describe('transform loader', () => {
     const source = 'source code'
     const map = 'source map'
 
+    const handler = vi.fn()
     mockLoaderContext.query = {
       plugin: {
         transform: {
-          handler: vi.fn(),
-          filter: vi.fn().mockReturnValue(false),
+          handler,
+          filter: { id: /\.never-matches$/ },
         },
       },
     }
 
     await transform.call(mockLoaderContext as any, source, map)
 
+    expect(handler).not.toHaveBeenCalled()
     expect(mockCallback).toHaveBeenCalledWith(null, source, map)
   })
 
@@ -81,7 +83,7 @@ describe('transform loader', () => {
       plugin: {
         transform: {
           handler: handlerMock,
-          filter: vi.fn().mockReturnValue(true),
+          filter: { id: /./ },
         },
       },
     }
@@ -102,7 +104,7 @@ describe('transform loader', () => {
       plugin: {
         transform: {
           handler: handlerMock,
-          filter: vi.fn().mockReturnValue(true),
+          filter: { id: /./ },
         },
       },
     }
@@ -123,7 +125,7 @@ describe('transform loader', () => {
       plugin: {
         transform: {
           handler: handlerMock,
-          filter: vi.fn().mockReturnValue(true),
+          filter: { id: /./ },
         },
       },
     }
@@ -153,7 +155,7 @@ describe('transform loader', () => {
       plugin: {
         transform: {
           handler: handlerMock,
-          filter: vi.fn().mockReturnValue(true),
+          filter: { id: /./ },
         },
       },
     }
@@ -175,7 +177,7 @@ describe('transform loader', () => {
         plugin: {
           transform: {
             handler: vi.fn().mockResolvedValue({ code: 'transformed code', map: result }),
-            filter: vi.fn().mockReturnValue(true),
+            filter: { id: /./ },
           },
         },
       }
@@ -237,17 +239,19 @@ describe('transform loader', () => {
       0xFE,
       0x00,
     ])
+    const handler = vi.fn()
     mockLoaderContext.query = {
       plugin: {
         transform: {
-          handler: vi.fn(),
-          filter: vi.fn().mockReturnValue(false),
+          handler,
+          filter: { id: /\.never-matches$/ },
         },
       },
     }
 
     await transform.call(mockLoaderContext as any, png, undefined)
 
+    expect(handler).not.toHaveBeenCalled()
     const [, passedSource] = mockCallback.mock.calls.at(-1)!
     expect(Buffer.isBuffer(passedSource) && passedSource.equals(png)).toBe(true)
   })
@@ -258,7 +262,7 @@ describe('transform loader', () => {
       plugin: {
         transform: {
           handler,
-          filter: vi.fn().mockReturnValue(true),
+          filter: { id: /./ },
         },
       },
     }

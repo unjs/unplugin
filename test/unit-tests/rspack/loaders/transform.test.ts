@@ -172,7 +172,7 @@ describe('transform', () => {
         plugin: {
           transform: {
             handler: vi.fn().mockRejectedValue(new Error('Handler error')),
-            filter: vi.fn().mockReturnValue(true),
+            filter: { id: /./ },
           },
         },
       },
@@ -196,7 +196,7 @@ describe('transform', () => {
         plugin: {
           transform: {
             handler: vi.fn().mockRejectedValue('Handler error'),
-            filter: vi.fn().mockReturnValue(true),
+            filter: { id: /./ },
           },
         },
       },
@@ -234,7 +234,7 @@ describe('transform', () => {
         plugin: {
           transform: {
             handler: handlerMock,
-            filter: vi.fn().mockReturnValue(true),
+            filter: { id: /./ },
           },
         },
       },
@@ -265,7 +265,7 @@ describe('transform', () => {
           plugin: {
             transform: {
               handler: vi.fn().mockResolvedValue({ code: 'transformed code', map: result }),
-              filter: vi.fn().mockReturnValue(true),
+              filter: { id: /./ },
             },
           },
         },

@@ -3,7 +3,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { beforeAll, expect, it } from 'vitest'
-import { build } from '../utils'
+import { runWebpack } from '../utils'
 
 const outputPath = path.resolve(__dirname, 'test-out')
 
@@ -32,26 +32,17 @@ it('webpack allows emitting assets from buildEnd', async () => {
     },
   })).webpack
 
-  await new Promise<void>((resolve, reject) => {
-    build.webpack({
-      mode: 'none',
-      entry: path.resolve(__dirname, '../write-bundle/test-src/entry.js'),
-      output: {
-        path: outputPath,
-        filename: 'output.js',
-      },
-      plugins: [
-        beforeEmitPlugin,
-        plugin(),
-      ],
-    }, (error, stats) => {
-      if (error)
-        reject(error)
-      else if (stats?.hasErrors())
-        reject(new Error(stats.toString({ all: false, errors: true })))
-      else
-        resolve()
-    })
+  await runWebpack({
+    mode: 'none',
+    entry: path.resolve(__dirname, '../write-bundle/test-src/entry.js'),
+    output: {
+      path: outputPath,
+      filename: 'output.js',
+    },
+    plugins: [
+      beforeEmitPlugin,
+      plugin(),
+    ],
   })
 
   expect(fs.readFileSync(path.join(outputPath, 'build-end.json'), 'utf8')).toBe('{"emitted":true}')

@@ -47,8 +47,9 @@
     "prepublishOnly": "nr build",
     "release": "bumpp",
     "prepare": "skills experimental_sync -y -r",
-    "test": "nr test:build && vitest run",
-    "test:build": "node scripts/buildFixtures.ts"
+    "test": "nr build && nr test:build && vitest run",
+    "test:build": "node scripts/buildFixtures.ts",
+    "test:unit": "vitest run test/unit-tests"
   },
   "peerDependencies": {
     "@farmfe/core": "*",
