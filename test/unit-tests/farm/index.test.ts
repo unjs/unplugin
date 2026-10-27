@@ -1,4 +1,5 @@
 import type { UnpluginOptions } from '../../../src/types'
+import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { getFarmPlugin, toFarmPlugin } from '../../../src/farm/index'
 
@@ -270,11 +271,12 @@ describe('toFarmPlugin', () => {
   it('resolveId receives the importer for imports', async () => {
     const resolveIdMock = vi.fn(() => null)
     const farmPlugin = toFarmPlugin({ name: 'test-plugin', resolveId: resolveIdMock })
+    const importer = path.resolve('/abs/importer.js')
     await farmPlugin.resolve?.executor(
-      { source: './dep', importer: '/abs/importer.js', kind: 'import' },
+      { source: './dep', importer, kind: 'import' },
       {} as any,
     )
-    expect(resolveIdMock).toHaveBeenCalledWith('./dep', '/abs/importer.js', { isEntry: false })
+    expect(resolveIdMock).toHaveBeenCalledWith('./dep', importer, { isEntry: false })
   })
 
   it('resolveId keeps sideEffects for string and object results alike', async () => {
