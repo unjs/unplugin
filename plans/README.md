@@ -16,7 +16,7 @@ were confirmed by reading the cited code.
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
 | 001 | [Test harness: cold-start build, fixture script, error-checking webpack/rspack runners, honest loader filter tests](./001-test-harness.md) | P1 | M | — | DONE |
-| 002 | [rspack loader parity: `raw` loaders, `buildEnd` on `processAssets`](./002-rspack-loader-parity.md) | P1 | S | 001 | TODO |
+| 002 | [rspack loader parity: `raw` loaders, `buildEnd` on `processAssets`](./002-rspack-loader-parity.md) | P1 | S | 001 | DONE |
 | 003 | [webpack: `resolveId` errors reach the callback; `emitFile` emits exact bytes](./003-webpack-resolveid-errors-and-emitfile-bytes.md) | P1 | S | 001 | TODO |
 | 004 | [esbuild/Bun hot path: empty results, read-after-filter, normalise once, scoped watch files, dead map branch, Bun setup crash](./004-esbuild-bun-hot-path.md) | P1 | M | — | TODO |
 | 005 | [Farm hook contract: `load`→null, `transform`→string, `resolveId` importer/isEntry/sideEffects](./005-farm-hook-contract.md) | P1 | S | — | TODO |
