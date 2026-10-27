@@ -198,20 +198,21 @@ function buildSetup() {
             return
           }
 
-          if (!filter(id))
+          const isEntry = args.kind === 'entry-point'
+          // We explicitly have this if statement here for consistency with
+          // the integration of other bundlers.
+          // Here, `args.importer` is just an empty string on entry files
+          // whereas the equivalent on other bundlers is`undefined.`
+          const importer = isEntry ? undefined : args.importer
+          if (!filter(id, importer))
             return
 
           const { errors, warnings, mixedContext } = createPluginContext(context)
 
-          const isEntry = args.kind === 'entry-point'
           const result = await handler.call(
             mixedContext,
             id,
-            // We explicitly have this if statement here for consistency with
-            // the integration of other bundlers.
-            // Here, `args.importer` is just an empty string on entry files
-            // whereas the equivalent on other bundlers is`undefined.`
-            isEntry ? undefined : args.importer,
+            importer,
             { isEntry },
           )
           if (typeof result === 'string') {

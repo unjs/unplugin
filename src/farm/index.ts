@@ -105,7 +105,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
         const id = decodeStr(params.source)
 
         const { handler, filter } = normalizeObjectHook('resolveId', _resolveId)
-        if (!filter(id))
+        if (!filter(id, resolvedIdPath))
           return null
 
         const isEntry = isObject(params.kind) && 'entry' in params.kind

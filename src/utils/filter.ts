@@ -1,3 +1,4 @@
+import type { FilterExpression, TopLevelFilterExpression } from '@rolldown/pluginutils'
 import type {
   Hook,
   TransformHookFilter as HookFilter,
@@ -7,6 +8,7 @@ import type {
   StringOrRegExp,
 } from '../types'
 import { resolve } from 'node:path'
+import { interpreter } from '@rolldown/pluginutils'
 import picomatch from 'picomatch'
 import { toArray } from './general'
 
@@ -21,6 +23,7 @@ function isAbsolute(path: string): boolean {
 }
 
 export type PluginFilter = (input: string) => boolean
+export type ResolveIdFilter = (id: string, importer?: string) => boolean
 export type TransformHookFilter = (id: string, code: string) => boolean
 
 interface NormalizedStringFilter {
@@ -156,24 +159,35 @@ function createFilterForTransform(
   }
 }
 
+function collectKinds(exprs: (TopLevelFilterExpression | FilterExpression)[], kinds = new Set<string>()): Set<string> {
+  for (const expr of exprs) {
+    kinds.add(expr.kind)
+    if ('args' in expr)
+      collectKinds(expr.args, kinds)
+    else if ('expr' in expr)
+      collectKinds([expr.expr], kinds)
+  }
+  return kinds
+}
+
 export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'resolveId',
-  hook: Hook<T, ResolveIdHookFilter>,
-): { handler: T, filter: PluginFilter }
+  hook: Hook<T, ResolveIdHookFilter | TopLevelFilterExpression[]>,
+): { handler: T, filter: ResolveIdFilter }
 export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'load',
-  hook: Hook<T, LoadHookFilter>,
+  hook: Hook<T, LoadHookFilter | TopLevelFilterExpression[]>,
 ): { handler: T, filter: PluginFilter }
 export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'transform',
-  hook: Hook<T, HookFilter>,
+  hook: Hook<T, HookFilter | TopLevelFilterExpression[]>,
 ): { handler: T, filter: TransformHookFilter, idFilter: PluginFilter }
 export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'resolveId' | 'load' | 'transform',
-  hook: Hook<T, ResolveIdHookFilter | LoadHookFilter | HookFilter>,
+  hook: Hook<T, ResolveIdHookFilter | LoadHookFilter | HookFilter | TopLevelFilterExpression[]>,
 ): {
   handler: T
-  filter: PluginFilter | TransformHookFilter
+  filter: ResolveIdFilter | TransformHookFilter
   idFilter?: PluginFilter
 } {
   const matchAll = () => true
@@ -181,6 +195,27 @@ export function normalizeObjectHook<T extends (...args: any[]) => any>(
     return { handler: hook, filter: matchAll, idFilter: matchAll }
 
   const { handler, filter: hookFilter } = hook
+
+  if (Array.isArray(hookFilter)) {
+    const kinds = collectKinds(hookFilter)
+    if (kinds.has('moduleType'))
+      throw new Error('[unplugin] `moduleType` filter expressions are only supported by Rolldown.')
+    if (name !== 'transform') {
+      return {
+        handler,
+        filter: (id: string, importer?: string) => interpreter(hookFilter, undefined, id, undefined, importer),
+      }
+    }
+    return {
+      handler,
+      filter: (id: string, code: string) => interpreter(hookFilter, code, id),
+      // Without `code` expressions the filter only depends on the id
+      idFilter: kinds.has('code')
+        ? matchAll
+        : (id: string) => interpreter(hookFilter, undefined, id),
+    }
+  }
+
   if (name === 'resolveId' || name === 'load')
     return { handler, filter: createFilterForId(hookFilter?.id) || matchAll }
 

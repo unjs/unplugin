@@ -1,7 +1,7 @@
 import type { ResolvePluginInstance, Resolver } from 'webpack'
 import type VirtualModulesPluginType from 'webpack-virtual-modules'
 import type { HookFnMap, ResolvedUnpluginOptions, UnpluginContext, UnpluginContextMeta, UnpluginFactory, UnpluginInstance, WebpackCompiler } from '../types'
-import type { PluginFilter } from '../utils/filter'
+import type { PluginFilter, ResolveIdFilter } from '../utils/filter'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
@@ -102,7 +102,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
 
           // resolveId hook
           if (plugin.resolveId) {
-            let cachedResolveId: { hook: NonNullable<ResolvedUnpluginOptions['resolveId']>, cwd: string, filter: PluginFilter } | undefined
+            let cachedResolveId: { hook: NonNullable<ResolvedUnpluginOptions['resolveId']>, cwd: string, filter: ResolveIdFilter } | undefined
             let vfs = compiler.options.plugins.find(i => i instanceof VirtualModulesPlugin)
             if (!vfs) {
               vfs = new VirtualModulesPlugin()
@@ -184,7 +184,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                         cachedResolveId = { hook, cwd, filter: normalized.filter }
                       }
                       const { filter } = cachedResolveId
-                      if (!filter(id))
+                      if (!filter(id, importer))
                         return callback()
 
                       const resolveIdResult = await handler.call!({

@@ -297,6 +297,9 @@ catalogs:
     '@jridgewell/remapping':
       specifier: ^2.3.5
       version: 2.3.5
+    '@rolldown/pluginutils':
+      specifier: ^1.0.1
+      version: 1.0.1
     picomatch:
       specifier: ^4.0.7
       version: 4.0.7
@@ -327,6 +330,9 @@ importers:
       '@jridgewell/remapping':
         specifier: catalog:prod
         version: 2.3.5
+      '@rolldown/pluginutils':
+        specifier: catalog:prod
+        version: 1.0.1
       picomatch:
         specifier: catalog:prod
         version: 4.0.7

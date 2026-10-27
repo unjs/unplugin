@@ -1,4 +1,5 @@
 import type { CompilationContext as FarmCompilationContext, JsPlugin as FarmPlugin } from '@farmfe/core'
+import type { TopLevelFilterExpression } from '@rolldown/pluginutils'
 import type { RsbuildPlugin } from '@rsbuild/core'
 import type { Compilation as RspackCompilation, Compiler as RspackCompiler, LoaderContext as RspackLoaderContext, RspackPluginInstance } from '@rspack/core'
 import type { Loader as BunLoader, BunPlugin, PluginBuilder as BunPluginBuilder } from 'bun'
@@ -114,9 +115,9 @@ export interface UnpluginOptions {
 
   buildStart?: HookFnMap['buildStart'] | undefined
   buildEnd?: HookFnMap['buildEnd'] | undefined
-  transform?: Hook<HookFnMap['transform'], TransformHookFilter> | undefined
-  load?: Hook<HookFnMap['load'], LoadHookFilter> | undefined
-  resolveId?: Hook<HookFnMap['resolveId'], ResolveIdHookFilter> | undefined
+  transform?: Hook<HookFnMap['transform'], TransformHookFilter | TopLevelFilterExpression[]> | undefined
+  load?: Hook<HookFnMap['load'], LoadHookFilter | TopLevelFilterExpression[]> | undefined
+  resolveId?: Hook<HookFnMap['resolveId'], ResolveIdHookFilter | TopLevelFilterExpression[]> | undefined
   writeBundle?: HookFnMap['writeBundle'] | undefined
 
   watchChange?: ((this: UnpluginBuildContext, id: string, change: { event: 'create' | 'update' | 'delete' }) => void) | undefined
