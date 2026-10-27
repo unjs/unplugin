@@ -1,4 +1,5 @@
 import type { LoaderContext } from '@rspack/core'
+import type { Buffer } from 'node:buffer'
 import type { HookFnMap, ResolvedUnpluginOptions } from '../../types'
 import type { TransformHookFilter } from '../../utils/filter'
 import { normalizeObjectHook } from '../../utils/filter'
@@ -10,9 +11,14 @@ const filters = new WeakMap<
   { cwd: string, filter: TransformHookFilter }
 >()
 
+// Receive the source as a Buffer so that files the transform hook does not handle, like images and
+// fonts, are passed on byte for byte instead of being decoded as UTF-8 text.
+// https://webpack.js.org/api/loaders/#raw-loader
+export const raw = true
+
 export default async function transform(
   this: LoaderContext,
-  source: string,
+  source: string | Buffer,
   map: any,
 ): Promise<void> {
   const callback = this.async()
@@ -38,7 +44,10 @@ export default async function transform(
     filters.set(hook, cached)
   }
   const { filter } = cached
-  if (!filter(this.resource, source))
+  const code = typeof source === 'string'
+    ? source
+    : source.toString('utf-8')
+  if (!filter(this.resource, code))
     return callback(null, source, map)
 
   try {
@@ -48,7 +57,7 @@ export default async function transform(
         this._compilation && createBuildContext(this._compiler, this._compilation, this, map),
         context,
       ),
-      source,
+      code,
       id,
     )
 

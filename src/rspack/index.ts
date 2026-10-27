@@ -285,8 +285,13 @@ function applyRspackPlugins(
     }
 
     if (plugin.buildEnd) {
-      compiler.hooks.emit.tapPromise(plugin.name, async (compilation) => {
-        await plugin.buildEnd!.call(createBuildContext(compiler, compilation))
+      compiler.hooks.thisCompilation.tap(plugin.name, (compilation) => {
+        compilation.hooks.processAssets.tapPromise({
+          name: plugin.name,
+          stage: compiler.rspack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+        }, async () => {
+          await plugin.buildEnd!.call(createBuildContext(compiler, compilation))
+        })
       })
     }
 
