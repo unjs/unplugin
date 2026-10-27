@@ -1,5 +1,6 @@
+import { Buffer } from 'node:buffer'
 import { describe, expect, it, vi } from 'vitest'
-import load from '../../../../src/rspack/loaders/load'
+import load, { raw } from '../../../../src/rspack/loaders/load'
 
 describe('load', () => {
   it('should call callback with source and map when plugin.load is not defined', async () => {
@@ -106,5 +107,44 @@ describe('load', () => {
 
     expect(handlerMock).toHaveBeenCalled()
     expect(asyncMock).toHaveBeenCalledWith(null, 'code', 'resmap')
+  })
+
+  it('should be a raw loader so binary files are not decoded as text', () => {
+    expect(raw).toBe(true)
+  })
+
+  it('should pass a binary source on untouched when the load hook does not handle it', async () => {
+    const asyncMock = vi.fn()
+    const png = Buffer.from([
+      0x89,
+      0x50,
+      0x4E,
+      0x47,
+      0x0D,
+      0x0A,
+      0x1A,
+      0x0A,
+      0xFF,
+      0xFE,
+      0x00,
+    ])
+    const query = {
+      plugin: {
+        load: vi.fn().mockResolvedValue(null),
+      },
+    }
+
+    await load.call(
+      {
+        async: () => asyncMock,
+        query,
+        resource: '/virtual/image.png',
+      } as any,
+      png,
+      undefined,
+    )
+
+    const [, passedSource] = asyncMock.mock.calls.at(-1)!
+    expect(Buffer.isBuffer(passedSource) && passedSource.equals(png)).toBe(true)
   })
 })
