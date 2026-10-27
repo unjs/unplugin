@@ -1,11 +1,12 @@
 import type { ResolvedUnpluginOptions } from '../../../src/types'
+import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { createCachedIdFilter, normalizeAbsolutePath, transformUse, unescapeResourcePath } from '../../../src/utils/webpack-like'
 
 describe('normalizeAbsolutePath', () => {
   it('leaves relative ids alone and normalizes absolute ones', () => {
     expect(normalizeAbsolutePath('./a/../b.js')).toBe('./a/../b.js')
-    expect(normalizeAbsolutePath('/a/./b/../c.js')).toBe('/a/c.js')
+    expect(normalizeAbsolutePath(path.resolve('/a/./b/../c.js'))).toBe(path.resolve('/a/c.js'))
   })
 })
 
@@ -31,8 +32,9 @@ describe('transformUse', () => {
 
   it('returns the loader when the filter accepts the resource and query', () => {
     const filter = vi.fn(() => true)
-    expect(transformUse({ resource: '/a/mod.js', resourceQuery: '?q' }, plugin, '/loader.mjs', filter)).toEqual([use])
-    expect(filter).toHaveBeenCalledWith('/a/mod.js?q')
+    const resource = path.resolve('/a/mod.js')
+    expect(transformUse({ resource, resourceQuery: '?q' }, plugin, '/loader.mjs', filter)).toEqual([use])
+    expect(filter).toHaveBeenCalledWith(`${resource}?q`)
   })
 
   it('returns no loader when the filter or transformInclude rejects', () => {

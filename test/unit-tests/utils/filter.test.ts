@@ -1,5 +1,5 @@
 import type { StringFilter } from '../../../src/types'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, realpathSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import process from 'node:process'
@@ -19,7 +19,8 @@ describe('id filters', () => {
   let cwd: string
 
   beforeAll(() => {
-    cwd = mkdtempSync(join(tmpdir(), 'unplugin (1) [id] {x}-'))
+    // realpath, because on macOS the tmpdir is a symlink and process.cwd() reports the target
+    cwd = realpathSync(mkdtempSync(join(tmpdir(), 'unplugin (1) [id] {x}-')))
     process.chdir(cwd)
   })
 
