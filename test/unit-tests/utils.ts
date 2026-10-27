@@ -28,6 +28,34 @@ export const bunBuild: typeof Bun.build = typeof Bun !== 'undefined'
 
 export const webpackVersion: string = ((webpack as any).default || webpack).version
 
+/** Run one webpack compilation and reject if it reports errors. */
+export function runWebpack(options: webpack.Configuration): Promise<webpack.Stats> {
+  return new Promise((resolve, reject) => {
+    webpackBuild(options, (error, stats) => {
+      if (error)
+        reject(error)
+      else if (!stats || stats.hasErrors())
+        reject(new Error(stats?.toString({ all: false, errors: true, errorDetails: true }) ?? 'webpack returned no stats'))
+      else
+        resolve(stats)
+    })
+  })
+}
+
+/** Run one rspack compilation and reject if it reports errors. */
+export function runRspack(options: rspack.RspackOptions): Promise<rspack.Stats> {
+  return new Promise((resolve, reject) => {
+    rspackBuild(options, (error, stats) => {
+      if (error)
+        reject(error)
+      else if (!stats || stats.hasErrors())
+        reject(new Error(stats?.toString({ all: false, errors: true, errorDetails: true }) ?? 'rspack returned no stats'))
+      else
+        resolve(stats)
+    })
+  })
+}
+
 export const build: {
   webpack: typeof webpack.webpack
   rspack: typeof rspackBuild

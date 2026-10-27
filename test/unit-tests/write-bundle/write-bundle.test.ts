@@ -6,7 +6,7 @@ import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'
-import { build, toArray, webpackVersion } from '../utils'
+import { build, runRspack, runWebpack, toArray, webpackVersion } from '../utils'
 
 function createUnpluginWithCallback(writeBundleCallback: UnpluginOptions['writeBundle']) {
   return createUnplugin(() => ({
@@ -125,11 +125,9 @@ describe('writeBundle hook', () => {
       },
     }
 
-    await new Promise((resolve) => {
-      build.webpack(webpackVersion!.startsWith('4')
-        ? webpack4Options
-        : webpack5Options, resolve)
-    })
+    await runWebpack(webpackVersion!.startsWith('4')
+      ? webpack4Options
+      : webpack5Options)
 
     checkWriteBundleHook(mockResolveIdHook)
   })
@@ -154,9 +152,7 @@ describe('writeBundle hook', () => {
       },
     }
 
-    await new Promise((resolve) => {
-      build.rspack(rspackOptions, resolve)
-    })
+    await runRspack(rspackOptions)
 
     checkWriteBundleHook(mockResolveIdHook)
   })

@@ -4,7 +4,7 @@ import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'
-import { build, toArray } from '../utils'
+import { build, runRspack, runWebpack, toArray } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 const externals = ['node:path']
@@ -159,21 +159,15 @@ describe('id parameter should be consistent across hooks and plugins', () => {
       mockLoadHook,
     ).webpack
 
-    await new Promise<void>((resolve) => {
-      build.webpack(
-        {
-          entry: entryFilePath,
-          plugins: [
-            plugin(),
-          ],
-          externals,
-          mode: 'production',
-          target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
-        },
-        () => {
-          resolve()
-        },
-      )
+    await runWebpack({
+      entry: entryFilePath,
+      plugins: [
+        plugin(),
+      ],
+      externals,
+      externalsType: 'commonjs',
+      mode: 'production',
+      target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
     })
 
     checkHookCalls('webpack', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
@@ -192,21 +186,15 @@ describe('id parameter should be consistent across hooks and plugins', () => {
       mockLoadHook,
     ).rspack
 
-    await new Promise<void>((resolve) => {
-      build.rspack(
-        {
-          entry: entryFilePath,
-          plugins: [
-            plugin(),
-          ],
-          externals,
-          mode: 'production',
-          target: 'node',
-        },
-        () => {
-          resolve()
-        },
-      )
+    await runRspack({
+      entry: entryFilePath,
+      plugins: [
+        plugin(),
+      ],
+      externals,
+      externalsType: 'commonjs',
+      mode: 'production',
+      target: 'node',
     })
 
     checkHookCalls('rspack', mockResolveIdHook, mockTransformIncludeHook, mockTransformHook, mockLoadHook)
