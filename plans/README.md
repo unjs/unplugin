@@ -19,7 +19,7 @@ were confirmed by reading the cited code.
 | 002 | [rspack loader parity: `raw` loaders, `buildEnd` on `processAssets`](./002-rspack-loader-parity.md) | P1 | S | 001 | DONE |
 | 003 | [webpack: `resolveId` errors reach the callback; `emitFile` emits exact bytes](./003-webpack-resolveid-errors-and-emitfile-bytes.md) | P1 | S | 001 | TODO |
 | 004 | [esbuild/Bun hot path: empty results, read-after-filter, normalise once, scoped watch files, dead map branch, Bun setup crash](./004-esbuild-bun-hot-path.md) | P1 | M | — | TODO |
-| 005 | [Farm hook contract: `load`→null, `transform`→string, `resolveId` importer/isEntry/sideEffects](./005-farm-hook-contract.md) | P1 | S | — | TODO |
+| 005 | [Farm hook contract: `load`→null, `transform`→string, `resolveId` importer/isEntry/sideEffects](./005-farm-hook-contract.md) | P1 | S | — | DONE |
 | 006 | [Filter glob base escaping, `mergeSourceMaps` empty-map guard, direct `src/utils` tests](./006-filter-cwd-escaping-and-utils-tests.md) | P2 | S | — | TODO |
 | 007 | [Lifecycle coverage: `watchChange`, `buildEnd`/`emitFile` on rspack/esbuild/bun, fixture sourcemaps](./007-lifecycle-hook-coverage.md) | P2 | M | 001, 002 | TODO |
 | 008 | [Dead code: `__unpluginMeta`/`__vfsModules`, unused Farm helpers, move shared sourcemap helpers](./008-dead-code-removal.md) | P3 | S | — (before 009) | TODO |
