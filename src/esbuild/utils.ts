@@ -118,7 +118,9 @@ export function combineSourcemaps(
           return sourcemapList[mapIndex++]
         }
         else {
-          return preserveSources ? null : { ...nullSourceMap }
+          return preserveSources
+            ? null
+            : { ...nullSourceMap }
         }
       },
       !preserveSources,

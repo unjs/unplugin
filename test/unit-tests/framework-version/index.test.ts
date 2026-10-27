@@ -4,7 +4,7 @@ import { register } from 'unloader'
 import { describe, expect, it } from 'vitest'
 import { createUnplugin } from '../../../src/define'
 import { onlyBun } from '../../utils'
-import { build, toArray } from '../utils'
+import { build, runRspack, runWebpack, toArray } from '../utils'
 
 const require = createRequire(import.meta.url)
 const rollupVersion: string = require('rollup/package.json').version
@@ -158,16 +158,11 @@ describe('framework versions', () => {
       },
     }))
 
-    await new Promise<void>((resolve) => {
-      build.webpack(
-        {
-          entry,
-          plugins: [
-            plugin.webpack(),
-          ],
-        },
-        () => resolve(),
-      )
+    await runWebpack({
+      entry,
+      plugins: [
+        plugin.webpack(),
+      ],
     })
 
     expect(hostVersion).toBe(webpackVersion)
@@ -191,16 +186,11 @@ describe('framework versions', () => {
       },
     }))
 
-    await new Promise<void>((resolve) => {
-      build.rspack(
-        {
-          entry,
-          plugins: [
-            plugin.rspack(),
-          ],
-        },
-        () => resolve(),
-      )
+    await runRspack({
+      entry,
+      plugins: [
+        plugin.rspack(),
+      ],
     })
 
     expect(hostVersion).toBe(rspackVersion)

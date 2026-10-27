@@ -251,7 +251,9 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
                 const result = sourcemapResults[i]!
                 const map = result.map
                 if (map) {
-                  sourcemaps.push(typeof map === 'string' ? JSON.parse(map) : map as RawSourceMap)
+                  sourcemaps.push(typeof map === 'string'
+                    ? JSON.parse(map)
+                    : map as RawSourceMap)
                 }
                 else if (i > 0 && result.code !== sourcemapResults[i - 1]!.code) {
                   break

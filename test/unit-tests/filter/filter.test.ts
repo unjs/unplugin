@@ -4,7 +4,7 @@ import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'
-import { build, toArray } from '../utils'
+import { build, runRspack, runWebpack, toArray } from '../utils'
 
 function createUnpluginWithHooks(
   resolveId: UnpluginOptions['resolveId'],
@@ -150,16 +150,11 @@ describe('filter', () => {
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).webpack
 
-    await new Promise((resolve) => {
-      build.webpack(
-        {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [
-            plugin(),
-          ],
-        },
-        resolve,
-      )
+    await runWebpack({
+      entry: path.resolve(__dirname, 'test-src/entry.js'),
+      plugins: [
+        plugin(),
+      ],
     })
 
     check(resolveIdHandler, loadHandler, transformHandler)
@@ -171,16 +166,11 @@ describe('filter', () => {
     const { hook: transform, handler: transformHandler } = createTransformHook()
     const plugin = createUnpluginWithHooks(resolveId, load, transform).rspack
 
-    await new Promise((resolve) => {
-      build.rspack(
-        {
-          entry: path.resolve(__dirname, 'test-src/entry.js'),
-          plugins: [
-            plugin(),
-          ],
-        },
-        resolve,
-      )
+    await runRspack({
+      entry: path.resolve(__dirname, 'test-src/entry.js'),
+      plugins: [
+        plugin(),
+      ],
     })
 
     check(resolveIdHandler, loadHandler, transformHandler)

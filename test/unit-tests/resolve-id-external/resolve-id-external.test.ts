@@ -3,7 +3,7 @@ import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'
-import { build, toArray } from '../utils'
+import { build, runRspack, runWebpack, toArray } from '../utils'
 
 const entryFilePath = path.resolve(__dirname, './test-src/entry.js')
 const externals = ['node:path']
@@ -102,21 +102,14 @@ describe('load hook should not be called when resolveId hook returned `external:
   it('webpack', async () => {
     const plugin = createMockedUnplugin().webpack
 
-    await new Promise<void>((resolve) => {
-      build.webpack(
-        {
-          entry: entryFilePath,
-          plugins: [
-            plugin(),
-          ],
-          externals,
-          mode: 'production',
-          target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
-        },
-        () => {
-          resolve()
-        },
-      )
+    await runWebpack({
+      entry: entryFilePath,
+      plugins: [
+        plugin(),
+      ],
+      externals,
+      mode: 'production',
+      target: 'node', // needed for webpack 4 so it doesn't try to "browserify" any node externals and load addtional modules
     })
 
     checkHookCalls()
@@ -125,21 +118,14 @@ describe('load hook should not be called when resolveId hook returned `external:
   it('rspack', async () => {
     const plugin = createMockedUnplugin().rspack
 
-    await new Promise<void>((resolve) => {
-      build.rspack(
-        {
-          entry: entryFilePath,
-          plugins: [
-            plugin(),
-          ],
-          externals,
-          mode: 'production',
-          target: 'node',
-        },
-        () => {
-          resolve()
-        },
-      )
+    await runRspack({
+      entry: entryFilePath,
+      plugins: [
+        plugin(),
+      ],
+      externals,
+      mode: 'production',
+      target: 'node',
     })
 
     checkHookCalls()

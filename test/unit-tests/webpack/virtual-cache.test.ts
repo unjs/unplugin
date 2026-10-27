@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { createUnplugin } from 'unplugin'
@@ -113,9 +113,9 @@ describe('webpack virtual module cache', () => {
     contexts.length = 0
   })
 
-  /** Temp project with an entry that imports the virtual module. */
+  /** Temp project with an entry that imports the virtual module. The temp dir is canonicalized because macOS `/var` is a symlink and webpack resolves to `/private/var`. */
   function createContext() {
-    const context = resolve(tmpdir(), `unplugin-virtual-cache-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const context = resolve(realpathSync(tmpdir()), `unplugin-virtual-cache-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     mkdirSync(context, { recursive: true })
     writeFileSync(resolve(context, 'entry.js'), `import value from '${virtualId}'\nexport default value\n`)
     contexts.push(context)
@@ -124,24 +124,38 @@ describe('webpack virtual module cache', () => {
 
   it('loads a virtual module', async () => {
     const context = createContext()
-    const resolveId = vi.fn((id: string) => id === virtualId ? virtualId : undefined)
-    await runWebpack(context, [createPlugin(resolveId)])
+    const resolveId = vi.fn((id: string) => id === virtualId
+      ? virtualId
+      : undefined)
+    await runWebpack(context, [
+      createPlugin(resolveId),
+    ])
     expect(resolveId).toHaveBeenCalled()
     expect(readFileSync(resolve(context, 'dist/main.js'), 'utf8')).toContain('virtual-ok')
   })
 
   it('recreates the virtual file when webpack resolves it from cache', async () => {
     const context = createContext()
-    const resolveId = vi.fn((id: string) => id === virtualId ? virtualId : undefined)
-    await runWebpack(context, [cachedResolvePlugin(), createPlugin(resolveId)])
+    const resolveId = vi.fn((id: string) => id === virtualId
+      ? virtualId
+      : undefined)
+    await runWebpack(context, [
+      cachedResolvePlugin(),
+      createPlugin(resolveId),
+    ])
     expect(resolveId.mock.calls.map(call => call[0])).not.toContain(virtualId)
     expect(readFileSync(resolve(context, 'dist/main.js'), 'utf8')).toContain('virtual-ok')
   })
 
   it('recreates the virtual file after the in-memory map is cleared', async () => {
     const context = createContext()
-    const resolveId = vi.fn((id: string) => id === virtualId ? virtualId : undefined)
-    const compiler = createCompiler(context, [cachedResolvePlugin(), createPlugin(resolveId)])
+    const resolveId = vi.fn((id: string) => id === virtualId
+      ? virtualId
+      : undefined)
+    const compiler = createCompiler(context, [
+      cachedResolvePlugin(),
+      createPlugin(resolveId),
+    ])
     try {
       await runCompiler(compiler)
       wipeInMemoryVirtualFiles(compiler)
@@ -161,8 +175,12 @@ describe('webpack virtual module cache', () => {
       resolve(context, 'entry.js'),
       `import virtual from '${virtualId}'\nimport real from './_virtual_helper.js'\nexport default { virtual, real }\n`,
     )
-    const resolveId = vi.fn((id: string) => id === virtualId ? virtualId : undefined)
-    await runWebpack(context, [createPlugin(resolveId)])
+    const resolveId = vi.fn((id: string) => id === virtualId
+      ? virtualId
+      : undefined)
+    await runWebpack(context, [
+      createPlugin(resolveId),
+    ])
     const bundle = readFileSync(resolve(context, 'dist/main.js'), 'utf8')
     expect(bundle).toContain('virtual-ok')
     expect(bundle).toContain('real-file-ok')
