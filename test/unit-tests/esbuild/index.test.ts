@@ -23,7 +23,7 @@ describe('esbuild getContents with browser:false stubbed module', () => {
     const plugin = createUnplugin(() => ({
       name: 'passthru',
       transform: {
-        filter: { id: /\.[cm]?js$/ },
+        filter: { id: /terminal-highlight|\.[cm]?js$/ },
         async handler(code) {
           return { code }
         },
@@ -43,7 +43,7 @@ describe('esbuild getContents with browser:false stubbed module', () => {
         {
           name: 'passthru-1',
           transform: {
-            filter: { id: /\.[cm]?js$/ },
+            filter: { id: /terminal-highlight|\.[cm]?js$/ },
             async handler(code) {
               return { code }
             },
@@ -52,7 +52,7 @@ describe('esbuild getContents with browser:false stubbed module', () => {
         {
           name: 'passthru-2',
           transform: {
-            filter: { id: /\.[cm]?js$/ },
+            filter: { id: /terminal-highlight|\.[cm]?js$/ },
             async handler(code) {
               return { code }
             },
@@ -68,5 +68,95 @@ describe('esbuild getContents with browser:false stubbed module', () => {
     finally {
       readFileSpy.mockRestore()
     }
+  })
+})
+
+describe('esbuild hook results and filters', () => {
+  const dir = resolve(__dirname, 'fixtures/empty-result')
+
+  function buildWith(plugin: Plugin, entry = 'entry.js') {
+    return build({
+      entryPoints: [
+        resolve(dir, entry),
+      ],
+      bundle: true,
+      write: false,
+      format: 'esm',
+      plugins: [plugin],
+    })
+  }
+
+  it('keeps an empty-string transform result', async () => {
+    const plugin = createUnplugin(() => ({
+      name: 'empty-transform',
+      transform: {
+        filter: { id: /dep\.js$/ },
+        handler() {
+          return ''
+        },
+      },
+    }))
+
+    const result = await buildWith(plugin.esbuild())
+    expect(result.outputFiles[0].text).not.toContain('ORIGINAL_DEP')
+  })
+
+  it('keeps an empty-string load result for a virtual module', async () => {
+    const plugin = createUnplugin(() => ({
+      name: 'empty-virtual',
+      resolveId(id) {
+        if (id === 'virtual:empty')
+          return id
+      },
+      load(id) {
+        if (id === 'virtual:empty')
+          return ''
+      },
+    }))
+
+    const result = await buildWith(plugin.esbuild(), 'virtual-entry.js')
+    expect(result.outputFiles[0].text).toContain('ORIGINAL_DEP')
+  })
+
+  it('does not read a module whose id the transform filter rejects', async () => {
+    const readFileSpy = vi.spyOn(fs.promises, 'readFile')
+    try {
+      const plugin = createUnplugin(() => ({
+        name: 'never-matches',
+        transform: {
+          filter: { id: /\.never$/ },
+          handler: vi.fn(),
+        },
+      }))
+
+      await buildWith(plugin.esbuild())
+
+      const reads = readFileSpy.mock.calls.filter(([path]) => String(path).startsWith(dir))
+      expect(reads).toHaveLength(0)
+    }
+    finally {
+      readFileSpy.mockRestore()
+    }
+  })
+
+  it('scopes watch files to the hook call that added them', async () => {
+    const watchFiles: string[][] = []
+    const plugin = createUnplugin(() => ({
+      name: 'watch-files',
+      transform: {
+        filter: { id: /\.js$/ },
+        handler(code, id) {
+          this.addWatchFile(`${id}.dep`)
+          watchFiles.push(this.getWatchFiles())
+          return code
+        },
+      },
+    }))
+
+    await buildWith(plugin.esbuild())
+
+    expect(watchFiles.length).toBeGreaterThan(1)
+    for (const files of watchFiles)
+      expect(files).toHaveLength(1)
   })
 })

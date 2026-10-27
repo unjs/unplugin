@@ -193,10 +193,10 @@ describe('utils', () => {
 
   describe('createPluginContext', () => {
     it('should return expected', () => {
-      const watchFiles: any = []
-      const actual = createPluginContext({
-        getWatchFiles: () => watchFiles,
-      } as any)
+      const context = {
+        getWatchFiles: () => [],
+      } as any
+      const actual = createPluginContext(context)
       expect(actual.errors).toBeInstanceOf(Array)
       expect(actual.warnings).toBeInstanceOf(Array)
       expect(actual.mixedContext).toBeInstanceOf(Object)
@@ -205,7 +205,9 @@ describe('utils', () => {
       expect(actual.mixedContext.warn).toBeInstanceOf(Function)
 
       actual.mixedContext.addWatchFile('id')
-      expect(watchFiles).toContain('id')
+      expect(actual.mixedContext.getWatchFiles()).toEqual(['id'])
+      // Each plugin context tracks its own watch files
+      expect(createPluginContext(context).mixedContext.getWatchFiles()).toEqual([])
 
       actual.mixedContext.error('error')
       expect(actual.errors).toHaveLength(1)
