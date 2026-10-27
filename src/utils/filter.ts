@@ -28,13 +28,15 @@ interface NormalizedStringFilter {
   exclude?: StringOrRegExp[]
 }
 
-function getMatcherString(glob: string, cwd: string) {
-  if (glob.startsWith('**') || isAbsolute(glob)) {
-    return normalize(glob)
-  }
+// A project path like `Copy (1)` or `[id]` must stay literal when it becomes the base of a glob
+const GLOB_METACHARS_REGEX = /[\\^$*+?.()|[\]{}]/g
 
-  const resolved = resolve(cwd, glob)
-  return normalize(resolved)
+function getMatcherString(glob: string, cwd: string) {
+  if (glob.startsWith('**') || isAbsolute(glob))
+    return normalize(glob)
+
+  const base = normalize(resolve(cwd)).replace(GLOB_METACHARS_REGEX, '\\$&')
+  return `${base}/${normalize(glob).replace(/^\.\//, '')}`
 }
 
 function patternToIdFilter(pattern: StringOrRegExp): PluginFilter {
