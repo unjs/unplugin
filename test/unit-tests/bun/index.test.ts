@@ -48,4 +48,19 @@ describe.skipIf(typeof Bun === 'undefined')('bun plugin', () => {
     expect(bunPlugin.name).toBe('unplugin-host:plugin-1:plugin-2')
     expect(bunPlugin.setup).toBeDefined()
   })
+
+  it('ignores transformInclude without a transform hook', async () => {
+    const unplugin = createUnplugin(() => ({
+      name: 'include-only',
+      transformInclude: () => true,
+    }))
+
+    const build = {
+      config: {},
+      onStart: () => {},
+      onResolve: () => {},
+      onLoad: () => {},
+    }
+    await expect(unplugin.bun().setup(build as any)).resolves.toBeUndefined()
+  })
 })
