@@ -132,13 +132,12 @@ function createFilterForId(filter: StringFilter | undefined): PluginFilter | und
 }
 
 function createFilterForTransform(
-  idFilter: StringFilter | undefined,
+  idFilterFunction: PluginFilter | undefined,
   codeFilter: StringFilter | undefined,
 ): TransformHookFilter | undefined {
-  if (!idFilter && !codeFilter)
-    return
-  const idFilterFunction = createIdFilter(idFilter)
   const codeFilterFunction = createCodeFilter(codeFilter)
+  if (!idFilterFunction && !codeFilterFunction)
+    return
   return (id, code) => {
     let fallback = true
     if (idFilterFunction) {
@@ -166,34 +165,29 @@ export function normalizeObjectHook<T extends (...args: any[]) => any>(
 export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'transform',
   hook: Hook<T, HookFilter>,
-): { handler: T, filter: TransformHookFilter }
+): { handler: T, filter: TransformHookFilter, idFilter: PluginFilter }
 export function normalizeObjectHook<T extends (...args: any[]) => any>(
   name: 'resolveId' | 'load' | 'transform',
   hook: Hook<T, ResolveIdHookFilter | LoadHookFilter | HookFilter>,
 ): {
   handler: T
   filter: PluginFilter | TransformHookFilter
+  idFilter?: PluginFilter
 } {
-  let handler: T
-  let filter: PluginFilter | TransformHookFilter | undefined
+  const matchAll = () => true
+  if (typeof hook === 'function')
+    return { handler: hook, filter: matchAll, idFilter: matchAll }
 
-  if (typeof hook === 'function') {
-    handler = hook
-  }
-  else {
-    handler = hook.handler
-    const hookFilter = hook.filter
-    if (name === 'resolveId' || name === 'load') {
-      filter = createFilterForId(hookFilter?.id)
-    }
-    else {
-      const transformFilter = hookFilter as HookFilter | undefined
-      filter = createFilterForTransform(transformFilter?.id, transformFilter?.code)
-    }
-  }
+  const { handler, filter: hookFilter } = hook
+  if (name === 'resolveId' || name === 'load')
+    return { handler, filter: createFilterForId(hookFilter?.id) || matchAll }
 
+  const transformFilter = hookFilter as HookFilter | undefined
+  const idFilter = createIdFilter(transformFilter?.id)
   return {
     handler,
-    filter: filter || (() => true),
+    filter: createFilterForTransform(idFilter, transformFilter?.code) || matchAll,
+    // The id part alone, so callers can skip reading a module's code when the id already rules it out
+    idFilter: idFilter || matchAll,
   }
 }

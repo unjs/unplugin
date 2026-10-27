@@ -1,4 +1,3 @@
-import type { RawSourceMap } from '@jridgewell/remapping'
 import type { OnLoadOptions, OnLoadResult, PluginBuild } from 'esbuild'
 import type { SourceMap } from 'rollup'
 import type {
@@ -14,7 +13,6 @@ import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
 import {
-  combineSourcemaps,
   createBuildContext,
   createPluginContext,
   guessLoader,
@@ -97,7 +95,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
 
             if (onLoadCb)
               result = await onLoadCb!(args)
-            if (result?.contents)
+            if (result?.contents != null)
               break
           }
 
@@ -113,7 +111,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
                 ...result,
                 ...args,
                 async getContents() {
-                  if (result?.contents)
+                  if (result?.contents != null)
                     return result.contents as string
 
                   if (fsContentsCached)
@@ -143,12 +141,12 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               }
 
               const _result = await onTransformCb(newArgs)
-              if (_result?.contents)
+              if (_result?.contents != null)
                 result = _result
             }
           }
 
-          if (result?.contents)
+          if (result?.contents != null)
             return result
         })
       }
@@ -190,6 +188,7 @@ function buildSetup() {
       }
 
       if (plugin.resolveId) {
+        const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId)
         onResolve({ filter: onResolveFilter }, async (args) => {
           const id = args.path
           if (initialOptions.external?.includes(id)) {
@@ -199,7 +198,6 @@ function buildSetup() {
             return
           }
 
-          const { handler, filter } = normalizeObjectHook('resolveId', plugin.resolveId!)
           if (!filter(id))
             return
 
@@ -239,8 +237,8 @@ function buildSetup() {
       }
 
       if (plugin.load) {
+        const { handler, filter } = normalizeObjectHook('load', plugin.load)
         onLoad({ filter: onLoadFilter }, async (args) => {
-          const { handler, filter } = normalizeObjectHook('load', plugin.load!)
           const id = args.path + (args.suffix || '') // compat for #427
 
           if (plugin.loadInclude && !plugin.loadInclude(id))
@@ -284,11 +282,12 @@ function buildSetup() {
       }
 
       if (plugin.transform) {
+        const { handler, filter, idFilter } = normalizeObjectHook('transform', plugin.transform)
         onTransform({ filter: onLoadFilter }, async (args) => {
-          const { handler, filter } = normalizeObjectHook('transform', plugin.transform!)
-
           const id = args.path + (args.suffix || '')
           if (plugin.transformInclude && !plugin.transformInclude(id))
+            return
+          if (!idFilter(id))
             return
           let code = await args.getContents()
           if (!filter(id, code))
@@ -304,28 +303,12 @@ function buildSetup() {
           }
           else if (typeof result === 'object' && result !== null) {
             code = result.code
-            // if we already got sourcemap from `load()`,
-            // combine the two sourcemaps
-            if (map && result.map) {
-              map = combineSourcemaps(args.path, [
-                result.map === 'string'
-                  ? JSON.parse(result.map)
-                  : result.map as RawSourceMap,
-                map as RawSourceMap,
-              ]) as SourceMap
-            }
-            else {
-              if (typeof result.map === 'string') {
-                map = JSON.parse(result.map)
-              }
-              else {
-                // otherwise, we always keep the last one, even if it's empty
-                map = result.map as SourceMap
-              }
-            }
+            map = typeof result.map === 'string'
+              ? JSON.parse(result.map)
+              : result.map as SourceMap
           }
 
-          if (code) {
+          if (code !== undefined) {
             if (map)
               code = processCodeWithSourceMap(map, code)
             return {

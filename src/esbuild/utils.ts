@@ -133,7 +133,6 @@ export function combineSourcemaps(
 }
 
 export function createBuildContext(build: PluginBuild): UnpluginBuildContext {
-  const watchFiles: string[] = []
   const { initialOptions } = build
   return {
     parse,
@@ -152,7 +151,7 @@ export function createBuildContext(build: PluginBuild): UnpluginBuildContext {
       }
     },
     getWatchFiles() {
-      return watchFiles
+      return []
     },
     getNativeBuildContext() {
       return { framework: 'esbuild', build }
@@ -172,11 +171,16 @@ export function createPluginContext(context: UnpluginBuildContext): {
     warn(message) { warnings.push(normalizeMessage(message)) },
   }
 
+  // Each hook call reports only the files it added, so esbuild does not tie every module to every watched file
+  const watchFiles: string[] = []
   const mixedContext: UnpluginContext & UnpluginBuildContext = {
     ...context,
     ...pluginContext,
     addWatchFile(id: string) {
-      context.getWatchFiles().push(id)
+      watchFiles.push(id)
+    },
+    getWatchFiles() {
+      return watchFiles
     },
   }
 

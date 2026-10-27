@@ -72,7 +72,7 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
           }))
 
         const transformHooks = plugins
-          .filter(plugin => plugin.transform || plugin.transformInclude)
+          .filter(plugin => plugin.transform)
           .map(plugin => ({
             plugin,
             ...normalizeObjectHook('transform', plugin.transform!),
@@ -195,18 +195,18 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             }
           }
 
-          if (!hasResult && namespace === 'file' && transformHooks.length > 0) {
+          // Decide by id first, so a file no transform hook wants is never read
+          const namespaceTransformHooks = (namespace === 'file'
+            ? transformHooks
+            : transformHooks.filter(h => h.plugin.name === namespace))
+            .filter(({ plugin, idFilter }) => (!plugin.transformInclude || plugin.transformInclude(id)) && idFilter(id))
+
+          if (!hasResult && namespace === 'file' && namespaceTransformHooks.length > 0) {
             code = await Bun.file(id).text()
           }
 
           if (code !== undefined) {
-            const namespaceTransformHooks = namespace === 'file'
-              ? transformHooks
-              : transformHooks.filter(h => h.plugin.name === namespace)
-
             for (const { plugin, handler, filter } of namespaceTransformHooks) {
-              if (plugin.transformInclude && !plugin.transformInclude(id))
-                continue
               if (!filter(id, code))
                 continue
 

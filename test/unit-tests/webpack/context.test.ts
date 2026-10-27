@@ -1,4 +1,5 @@
 import type { Compilation, Compiler, LoaderContext } from 'webpack'
+import { Buffer } from 'node:buffer'
 import { describe, expect, it, vi } from 'vitest'
 import { contextOptionsFromCompilation, createBuildContext, createContext, normalizeMessage } from '../../../src/webpack/context'
 
@@ -45,6 +46,25 @@ describe('webpack - utils', () => {
         'output.js',
         expect.anything(),
       )
+    })
+
+    it('should emit a Uint8Array source byte for byte, not its backing pool', () => {
+      const emitAsset = vi.fn()
+      const buildContext = createBuildContext(
+        {
+          addWatchFile: vi.fn(),
+          getWatchFiles: vi.fn(() => []),
+        },
+        {} as Compiler,
+        { emitAsset } as unknown as Compilation,
+      )
+      // Small Buffers are slices of a shared pool, so `source.buffer` is much larger than the view
+      const bytes = Buffer.from('tiny')
+
+      buildContext.emitFile({ type: 'asset', fileName: 'a.bin', source: bytes })
+
+      const [, rawSource] = emitAsset.mock.calls[0]
+      expect(Buffer.from(rawSource.buffer()).equals(bytes)).toBe(true)
     })
 
     it('should add expected values to native build context', () => {

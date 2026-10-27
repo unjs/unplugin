@@ -164,4 +164,30 @@ describe('resolveId hook', () => {
 
     checkResolveIdHook(mockResolveIdHook)
   })
+
+  describe('a throwing resolveId fails the build', () => {
+    function createThrowingPlugin() {
+      return createUnpluginWithCallback(() => {
+        throw new Error('resolveId exploded')
+      })
+    }
+
+    it('webpack', async () => {
+      await expect(runWebpack({
+        entry: path.resolve(__dirname, 'test-src/entry.js'),
+        plugins: [
+          createThrowingPlugin().webpack(),
+        ],
+      })).rejects.toThrow(/resolveId exploded/)
+    }, 10_000)
+
+    it('rspack', async () => {
+      await expect(runRspack({
+        entry: path.resolve(__dirname, 'test-src/entry.js'),
+        plugins: [
+          createThrowingPlugin().rspack(),
+        ],
+      })).rejects.toThrow(/resolveId exploded/)
+    }, 10_000)
+  })
 })
