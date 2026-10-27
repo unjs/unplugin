@@ -56,3 +56,21 @@ export function normalizeAbsolutePath(path: string): string {
   else
     return path
 }
+
+/**
+ * Webpack escapes special characters in a resource path, such as the `#` of `msg#hash.js`, by
+ * prefixing them with an escape character. Rspack does the same with a different one.
+ * Hooks should see the real path, so the escape characters have to be removed again.
+ *
+ * Only use this on resource paths, not on virtual module ids: those can legitimately
+ * start with `\0`, like `\0virtual:foo` in the Rollup convention.
+ *
+ * @param path - Resource path of the loader context.
+ * @param framework - Bundler that produced the path.
+ * @returns the path without escape characters.
+ */
+export function unescapeResourcePath(path: string, framework: 'webpack' | 'rspack'): string {
+  return framework === 'webpack'
+    ? path.replace(/\0([\s\S])/g, '$1')
+    : path.replace(/\u200B([\s\S])/g, '$1')
+}
