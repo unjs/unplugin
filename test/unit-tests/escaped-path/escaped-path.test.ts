@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { createUnplugin } from 'unplugin'
 import { afterAll, describe, expect, it } from 'vitest'
 import { unescapeResourcePath } from '../../../src/utils/webpack-like'
-import { build } from '../utils'
+import { runRspack, runWebpack } from '../utils'
 
 const root = realpathSync(mkdtempSync(join(tmpdir(), 'unplugin-escaped-path-')))
 const hashFile = join(root, 'msg#hash.js')
@@ -45,7 +45,7 @@ function createPlugin() {
 const frameworks = [
   [
     'webpack',
-    (plugin: any) => build.webpack({
+    (plugin: ReturnType<typeof createPlugin>['plugin']) => runWebpack({
       mode: 'development',
       context: root,
       entry: join(root, 'entry.js'),
@@ -59,7 +59,7 @@ const frameworks = [
   ],
   [
     'rspack',
-    (plugin: any) => build.rspack({
+    (plugin: ReturnType<typeof createPlugin>['plugin']) => runRspack({
       mode: 'development',
       context: root,
       entry: join(root, 'entry.js'),
@@ -77,17 +77,7 @@ describe('escaped paths', () => {
   for (const [name, run] of frameworks) {
     it(name, async () => {
       const { seen, plugin } = createPlugin()
-      await new Promise<void>((done, reject) => {
-        const compiler: any = run(plugin)
-        compiler.run((error: Error | null, stats: any) => {
-          compiler.close(() => {
-            if (error || stats?.hasErrors())
-              reject(error ?? new Error(stats.toString({ errors: true })))
-            else
-              done()
-          })
-        })
-      })
+      await run(plugin)
 
       // A `#` in a real file name must reach the hooks as is, without the loader escape
       for (const hook of ['load', 'transform'] as const) {
