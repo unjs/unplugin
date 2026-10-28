@@ -17,6 +17,7 @@
     ".": "./dist/index.mjs",
     "./rspack/loaders/load": "./dist/rspack/loaders/load.mjs",
     "./rspack/loaders/transform": "./dist/rspack/loaders/transform.mjs",
+    "./utils/filters": "./dist/utils/filters.mjs",
     "./webpack/loaders/load": "./dist/webpack/loaders/load.mjs",
     "./webpack/loaders/transform": "./dist/webpack/loaders/transform.mjs",
     "./package.json": "./package.json"

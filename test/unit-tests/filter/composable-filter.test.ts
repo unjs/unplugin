@@ -1,7 +1,8 @@
 import type { UnpluginOptions, VitePlugin } from 'unplugin'
 import * as path from 'node:path'
-import { and, code, exclude, id, importerId, include, moduleType, not } from '@rolldown/pluginutils'
 import { createUnplugin } from 'unplugin'
+import { and, code, exclude, id, importerId, include, moduleType, not } from 'unplugin/utils/filters'
+import { createServer } from 'vite'
 import { describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'
 import { build, runRspack, runWebpack, toArray } from '../utils'
@@ -64,6 +65,28 @@ describe('composable filter', () => {
         write: false,
       },
     })
+    check(hooks)
+  })
+
+  it('vite dev server', async () => {
+    const hooks = createPlugin()
+    const server = await createServer({
+      configFile: false,
+      root: path.dirname(entry),
+      logLevel: 'silent',
+      server: { middlewareMode: true, ws: false },
+      optimizeDeps: { noDiscovery: true },
+      plugins: [
+        toArray(hooks.plugin.vite()).map((plugin): VitePlugin => ({ ...plugin, enforce: 'pre' })),
+      ],
+    })
+    try {
+      for (const url of ['/entry.js', '/mod.js', '/not-expect.js'])
+        await server.transformRequest(url)
+    }
+    finally {
+      await server.close()
+    }
     check(hooks)
   })
 

@@ -8,7 +8,6 @@ import type {
   StringOrRegExp,
 } from '../types'
 import { resolve } from 'node:path'
-import { interpreter } from '@rolldown/pluginutils'
 import picomatch from 'picomatch'
 import { toArray } from './general'
 
@@ -159,15 +158,95 @@ function createFilterForTransform(
   }
 }
 
-function collectKinds(exprs: (TopLevelFilterExpression | FilterExpression)[], kinds = new Set<string>()): Set<string> {
-  for (const expr of exprs) {
-    kinds.add(expr.kind)
-    if ('args' in expr)
-      collectKinds(expr.args, kinds)
-    else if ('expr' in expr)
-      collectKinds([expr.expr], kinds)
+interface FilterInput {
+  id: string
+  code?: string | undefined
+  importer?: string | undefined
+}
+type CompiledFilter = (input: FilterInput) => boolean
+
+const URL_POSTFIX_REGEX = /[?#].*$/
+const QUERY_REGEX = /\?([^#]*)/
+
+// Mirrors how Rolldown evaluates composable filters natively, which differs from
+// `@rolldown/pluginutils`' `interpreter`: string ids are globs, regexes see `/` separators,
+// and expressions whose input is unavailable in a hook don't match instead of throwing
+function compileExpression(expr: FilterExpression, hook: 'resolveId' | 'load' | 'transform'): CompiledFilter {
+  switch (expr.kind) {
+    case 'and': {
+      const args = expr.args.map(arg => compileExpression(arg, hook))
+      return input => args.every(arg => arg(input))
+    }
+    case 'or': {
+      const args = expr.args.map(arg => compileExpression(arg, hook))
+      return input => args.some(arg => arg(input))
+    }
+    case 'not': {
+      const arg = compileExpression(expr.expr, hook)
+      return input => !arg(input)
+    }
+    case 'id':
+    case 'importerId': {
+      if (expr.kind === 'importerId' && hook !== 'resolveId')
+        throw new Error(`[unplugin] The \`importerId\` filter can only be used with the \`resolveId\` hook, but it was used with the \`${hook}\` hook.`)
+      if (expr.kind === 'id' && hook === 'resolveId' && typeof expr.pattern === 'string')
+        throw new Error('[unplugin] A string `id` filter is not supported for the `resolveId` hook, because its `id` is the import specifier rather than a resolved path. Use a RegExp instead.')
+      const match = patternToIdFilter(expr.pattern)
+      const { cleanUrl } = expr.params
+      const key = expr.kind === 'id'
+        ? 'id'
+        : 'importer'
+      return (input) => {
+        const value = input[key]
+        return value !== undefined && match(cleanUrl
+          ? value.replace(URL_POSTFIX_REGEX, '')
+          : value)
+      }
+    }
+    case 'code': {
+      const match = patternToCodeFilter(expr.pattern)
+      return input => input.code !== undefined && match(input.code)
+    }
+    case 'query': {
+      const { key, pattern } = expr
+      return (input) => {
+        const params = new URLSearchParams(input.id.match(QUERY_REGEX)?.[1])
+        if (typeof pattern === 'boolean')
+          return params.has(key) === pattern
+        const value = params.get(key)
+        if (typeof pattern === 'string')
+          return value === pattern
+        const result = pattern.test(value ?? '')
+        pattern.lastIndex = 0
+        return result
+      }
+    }
+    case 'moduleType':
+      throw new Error('[unplugin] `moduleType` filter expressions are only supported by Rolldown.')
   }
-  return kinds
+}
+
+function compileComposableFilter(exprs: TopLevelFilterExpression[], hook: 'resolveId' | 'load' | 'transform'): CompiledFilter {
+  const compiled = exprs.map(expr => ({
+    include: expr.kind === 'include',
+    match: compileExpression(expr.expr, hook),
+  }))
+  const hasInclude = compiled.some(expr => expr.include)
+  return (input) => {
+    for (const { include, match } of compiled) {
+      if (match(input))
+        return include
+    }
+    return !hasInclude
+  }
+}
+
+function hasCodeExpression(expr: TopLevelFilterExpression | FilterExpression): boolean {
+  if ('args' in expr)
+    return expr.args.some(hasCodeExpression)
+  if ('expr' in expr)
+    return hasCodeExpression(expr.expr)
+  return expr.kind === 'code'
 }
 
 export function normalizeObjectHook<T extends (...args: any[]) => any>(
@@ -197,22 +276,20 @@ export function normalizeObjectHook<T extends (...args: any[]) => any>(
   const { handler, filter: hookFilter } = hook
 
   if (Array.isArray(hookFilter)) {
-    const kinds = collectKinds(hookFilter)
-    if (kinds.has('moduleType'))
-      throw new Error('[unplugin] `moduleType` filter expressions are only supported by Rolldown.')
+    const filter = compileComposableFilter(hookFilter, name)
     if (name !== 'transform') {
       return {
         handler,
-        filter: (id: string, importer?: string) => interpreter(hookFilter, undefined, id, undefined, importer),
+        filter: (id: string, importer?: string) => filter({ id, importer }),
       }
     }
     return {
       handler,
-      filter: (id: string, code: string) => interpreter(hookFilter, code, id),
+      filter: (id: string, code: string) => filter({ id, code }),
       // Without `code` expressions the filter only depends on the id
-      idFilter: kinds.has('code')
+      idFilter: hookFilter.some(hasCodeExpression)
         ? matchAll
-        : (id: string) => interpreter(hookFilter, undefined, id),
+        : (id: string) => filter({ id }),
     }
   }
 

@@ -329,11 +329,11 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 #### Composable Filters
 
-When `include`/`exclude` patterns are not expressive enough, pass an array of [composable filter expressions](https://rolldown.rs/apis/plugin-api/hook-filters#composable-filters) built with `@rolldown/pluginutils`. Rolldown evaluates them natively; every other bundler evaluates them in unplugin.
+When `include`/`exclude` patterns are not expressive enough, pass an array of [composable filter expressions](https://rolldown.rs/apis/plugin-api/hook-filters#composable-filters). The builders from `@rolldown/pluginutils` are re-exported from `unplugin/utils/filters`. Rolldown evaluates them natively; every other bundler evaluates them in unplugin with the same semantics.
 
 ```ts twoslash
-import { and, code, exclude, id, include, query } from '@rolldown/pluginutils'
 import { createUnplugin } from 'unplugin'
+import { and, code, exclude, id, include, query } from 'unplugin/utils/filters'
 
 const plugin = createUnplugin(() => ({
   name: 'unplugin-starter',
@@ -349,8 +349,8 @@ const plugin = createUnplugin(() => ({
 }))
 ```
 
-- A string passed to `id()` or `importerId()` must match the id exactly; it is not a glob.
-- `importerId()` is only meaningful in `resolveId`.
+- A string passed to `id()` or `importerId()` is a glob, like in object filters. `resolveId` only accepts a `RegExp` for `id()`.
+- `importerId()` can only be used in `resolveId`.
 - `moduleType()` is only supported by Rolldown. Other bundlers throw an error when the plugin uses it.
 
 ## Supported Context
