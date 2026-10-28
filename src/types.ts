@@ -242,4 +242,13 @@ export interface UnpluginMessage {
 export interface UnpluginContext {
   error: (message: string | UnpluginMessage) => void
   warn: (message: string | UnpluginMessage) => void
+  /**
+   * Pass `false` to tell the bundler that the result of this `load` or `transform` call can't be
+   * cached, so the module is built again on every rebuild instead of being restored from the cache.
+   *
+   * Only available in `load` and `transform` on webpack and Rspack (including Rsbuild).
+   *
+   * @see https://webpack.js.org/api/loaders/#thiscacheable
+   */
+  cacheable?: ((flag?: boolean) => void) | undefined
 }

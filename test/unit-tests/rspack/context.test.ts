@@ -86,4 +86,15 @@ describe('createBuildContext', () => {
     context.warn('testWarning')
     expect(loaderContext.emitWarning).toHaveBeenCalledWith(new Error('testWarning'))
   })
+
+  it('createContext - should forward cacheable to the loader', () => {
+    const loaderContext = {
+      cacheable: vi.fn(),
+    }
+
+    const context = createContext(loaderContext as any)
+    context.cacheable!(false)
+
+    expect(loaderContext.cacheable).toHaveBeenCalledWith(false)
+  })
 })
