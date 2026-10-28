@@ -103,6 +103,17 @@ describe('webpack - utils', () => {
       expect(mockLoader.emitError).toHaveBeenCalledWith(expect.any(Error))
       expect(mockLoader.emitWarning).toHaveBeenCalledWith(expect.any(Error))
     })
+
+    it('should forward cacheable to the loader', () => {
+      const mockLoader = {
+        cacheable: vi.fn(),
+      } as unknown as LoaderContext<{ unpluginName: string }>
+
+      const context = createContext(mockLoader)
+      context.cacheable!(false)
+
+      expect(mockLoader.cacheable).toHaveBeenCalledWith(false)
+    })
   })
 
   describe('normalizeMessage', () => {

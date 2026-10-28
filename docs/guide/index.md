@@ -363,11 +363,13 @@ const plugin = createUnplugin(() => ({
 | [`this.getWatchFiles`](https://rollupjs.org/plugin-development/#this-getwatchfiles)   |   ✅   |  ✅  |   ✅    |   ❌    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
 | [`this.warn`](https://rollupjs.org/plugin-development/#this-warn)                     |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
 | [`this.error`](https://rollupjs.org/plugin-development/#this-error)                   |   ✅   |  ✅  |   ✅    |   ✅    |   ✅   |   ✅    |  ✅  |    ✅    | ✅  |
+| [`this.cacheable`](https://webpack.js.org/api/loaders/#thiscacheable)<sup>3</sup>     |   ❌   |  ❌  |   ✅    |   ❌    |   ✅   |   ✅    |  ❌  |    ❌    | ❌  |
 
 ::: info Notice
 
 1. For bundlers other than Rollup, Rolldown, or Vite, `setParseImpl` must be called to manually provide a parser implementation. Parsers such as [Acorn](https://github.com/acornjs/acorn), [Babel](https://babeljs.io/), or [Oxc](https://oxc.rs/) can be used.
 2. Currently, [`this.emitFile`](https://rollupjs.org/plugin-development/#thisemitfile) only supports the `EmittedAsset` variant.
+3. Only in the `load` and `transform` hooks. Call `this.cacheable(false)` when the result can't be cached, for example when it depends on state the bundler doesn't track, so the module is built again on every rebuild. On other bundlers `this.cacheable` is `undefined`, so call it as `this.cacheable?.(false)` in plugins that run on several bundlers.
 
 :::
 

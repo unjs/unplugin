@@ -46,6 +46,7 @@ export function createContext(loader: LoaderContext): UnpluginContext {
   return {
     error: error => loader.emitError(normalizeMessage(error)),
     warn: message => loader.emitWarning(normalizeMessage(message)),
+    cacheable: flag => loader.cacheable(flag),
   }
 }
 
