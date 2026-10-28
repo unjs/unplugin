@@ -45,8 +45,8 @@ interface Compiler {
   close: (callback: () => void) => void
 }
 
-// Build twice with the same compiler so the second build can reuse the in-memory cache
-async function buildTwice(compiler: Compiler): Promise<void> {
+// Build `times` times with the same compiler, then close it so a persistent cache is written to disk
+async function build(compiler: Compiler, times = 1): Promise<void> {
   const run = () => new Promise<void>((resolve, reject) => {
     compiler.run((error, stats) => {
       if (error)
@@ -57,17 +57,22 @@ async function buildTwice(compiler: Compiler): Promise<void> {
         resolve()
     })
   })
-  await run()
-  await run()
+  for (let i = 0; i < times; i++)
+    await run()
   await new Promise<void>(resolve => compiler.close(resolve))
 }
 
 const frameworks = [
   [
     'webpack',
-    (plugin: UnpluginInstance<any>) => webpackBuild({
+    (plugin: UnpluginInstance<any>, persistent = false) => webpackBuild({
       mode: 'development',
-      cache: { type: 'memory' },
+      cache: persistent
+        ? {
+            type: 'filesystem',
+            cacheDirectory: join(root, 'cache-webpack'),
+          }
+        : { type: 'memory' },
       context: root,
       entry: join(root, 'entry.js'),
       output: {
@@ -80,9 +85,17 @@ const frameworks = [
   ],
   [
     'rspack',
-    (plugin: UnpluginInstance<any>) => rspackBuild({
+    (plugin: UnpluginInstance<any>, persistent = false) => rspackBuild({
       mode: 'development',
-      cache: true,
+      cache: persistent
+        ? {
+            type: 'persistent',
+            storage: {
+              type: 'filesystem',
+              directory: join(root, 'cache-rspack'),
+            },
+          }
+        : true,
       context: root,
       entry: join(root, 'entry.js'),
       output: {
@@ -95,21 +108,33 @@ const frameworks = [
   ],
 ] as const
 
+// `entry.js` comes from the cache on the second build, while the modules marked
+// with `this.cacheable(false)` in `load` or `transform` are built again
+const expected = {
+  'load loaded.js': 2,
+  'transform entry.js': 1,
+  'transform loaded.js': 2,
+  'transform transformed.js': 2,
+}
+
 describe('this.cacheable', () => {
   for (const [name, createCompiler] of frameworks) {
     it(name, async () => {
       const { calls, plugin } = createPlugin()
 
-      await buildTwice(createCompiler(plugin))
+      await build(createCompiler(plugin), 2)
 
-      // `entry.js` comes from the cache on the second build, while the modules marked
-      // with `this.cacheable(false)` in `load` or `transform` are built again
-      expect(calls).toEqual({
-        'load loaded.js': 2,
-        'transform entry.js': 1,
-        'transform loaded.js': 2,
-        'transform transformed.js': 2,
-      })
+      expect(calls).toEqual(expected)
+    })
+
+    // A new compiler only has the cache on disk, like a restarted dev server
+    it(`${name} with a persistent cache`, async () => {
+      const { calls, plugin } = createPlugin()
+
+      await build(createCompiler(plugin, true))
+      await build(createCompiler(plugin, true))
+
+      expect(calls).toEqual(expected)
     })
   }
 })
