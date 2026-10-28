@@ -92,16 +92,17 @@ export function getBunPlugin<UserOptions = Record<string, never>>(
             }
 
             for (const { plugin, handler, filter } of resolveIdHooks) {
-              if (!filter(args.path))
+              const isEntry = args.kind === 'entry-point-run' || args.kind === 'entry-point-build'
+              const importer = isEntry ? undefined : args.importer
+              if (!filter(args.path, importer))
                 continue
 
               const { mixedContext, errors, warnings } = createPluginContext(context)
-              const isEntry = args.kind === 'entry-point-run' || args.kind === 'entry-point-build'
 
               const result = await handler.call(
                 mixedContext,
                 args.path,
-                isEntry ? undefined : args.importer,
+                importer,
                 { isEntry },
               )
 

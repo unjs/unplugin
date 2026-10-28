@@ -17,6 +17,7 @@
     ".": "./dist/index.mjs",
     "./rspack/loaders/load": "./dist/rspack/loaders/load.mjs",
     "./rspack/loaders/transform": "./dist/rspack/loaders/transform.mjs",
+    "./utils/filter": "./dist/utils/filter.mjs",
     "./webpack/loaders/load": "./dist/webpack/loaders/load.mjs",
     "./webpack/loaders/transform": "./dist/webpack/loaders/transform.mjs",
     "./package.json": "./package.json"
@@ -97,6 +98,7 @@
   },
   "dependencies": {
     "@jridgewell/remapping": "catalog:prod",
+    "@rolldown/pluginutils": "catalog:prod",
     "picomatch": "catalog:prod",
     "webpack-virtual-modules": "catalog:prod"
   },

@@ -327,6 +327,32 @@ const plugin = createUnplugin(() => ({
 
 More details can be found in the [Rolldown's documentation](https://rolldown.rs/guide/plugin-development#plugin-hook-filters).
 
+#### Composable Filters
+
+When `include`/`exclude` patterns are not expressive enough, pass an array of [composable filter expressions](https://rolldown.rs/apis/plugin-api/hook-filters#composable-filters). The builders from `@rolldown/pluginutils` are re-exported from `unplugin/utils/filter`. Rolldown evaluates them natively; every other bundler evaluates them in unplugin with the same semantics.
+
+```ts twoslash
+import { createUnplugin } from 'unplugin'
+import { and, code, exclude, id, include, query } from 'unplugin/utils/filter'
+
+const plugin = createUnplugin(() => ({
+  name: 'unplugin-starter',
+  transform: {
+    filter: [
+      exclude(query('raw', true)),
+      include(and(id(/\.vue$/, { cleanUrl: true }), code('defineProps'))),
+    ],
+    handler(code) {
+      // ...
+    },
+  }
+}))
+```
+
+- A string passed to `id()` or `importerId()` is a glob, like in object filters. `resolveId` only accepts a `RegExp` for `id()`.
+- `importerId()` can only be used in `resolveId`.
+- `moduleType()` is only supported by Rolldown. Other bundlers throw an error when the plugin uses it.
+
 ## Supported Context
 
 | Context                                                                               | Rollup | Vite | webpack | esbuild | Rspack | Rsbuild | Farm | Rolldown | Bun |

@@ -1,16 +1,19 @@
 import type { RuleSetUseItem } from '@rspack/core'
-import type { Hook, LoadHookFilter, ResolvedUnpluginOptions } from '../types'
+import type { ResolvedUnpluginOptions, UnpluginOptions } from '../types'
 import type { PluginFilter } from './filter'
 import { isAbsolute, normalize } from 'node:path'
 import { normalizeObjectHook } from './filter'
 
-export function createCachedIdFilter<T extends (...args: any[]) => any>(getHook: () => Hook<T, LoadHookFilter>): PluginFilter {
-  let cached: { hook: Hook<T, LoadHookFilter>, cwd: string, filter: PluginFilter } | undefined
+type IdFilteredHook = NonNullable<UnpluginOptions['load'] | UnpluginOptions['transform']>
+
+export function createCachedIdFilter(getHook: () => IdFilteredHook): PluginFilter {
+  let cached: { hook: IdFilteredHook, cwd: string, filter: PluginFilter } | undefined
   return (id) => {
     const hook = getHook()
     const cwd = process.cwd()
+    // The id part of a transform filter is exactly what a load filter checks
     if (cached?.hook !== hook || cached.cwd !== cwd)
-      cached = { hook, cwd, filter: normalizeObjectHook('load', hook).filter }
+      cached = { hook, cwd, filter: normalizeObjectHook('transform', hook).idFilter }
     return cached.filter(id)
   }
 }

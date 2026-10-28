@@ -34,9 +34,9 @@ export function toRollupPlugin(
     const { handler, filter } = normalizeObjectHook('resolveId', resolveIdHook)
 
     replaceHookHandler('resolveId', resolveIdHook, function (...args) {
-      const [id] = args
-      const supportFilter = supportNativeFilter(this, key)
-      if (!supportFilter && !filter(id))
+      const [id, importer] = args
+      const supportFilter = supportNativeFilter(this, key, resolveIdHook)
+      if (!supportFilter && !filter(id, importer))
         return
 
       return handler.apply(this, args)
@@ -54,7 +54,7 @@ export function toRollupPlugin(
       if (plugin.loadInclude && !plugin.loadInclude(id))
         return
 
-      const supportFilter = supportNativeFilter(this, key)
+      const supportFilter = supportNativeFilter(this, key, loadHook)
       if (!supportFilter && !filter(id))
         return
 
@@ -73,7 +73,7 @@ export function toRollupPlugin(
       if (plugin.transformInclude && !plugin.transformInclude(id))
         return
 
-      const supportFilter = supportNativeFilter(this, key)
+      const supportFilter = supportNativeFilter(this, key, transformHook)
       if (!supportFilter && !filter(id, code))
         return
 
@@ -130,7 +130,11 @@ export function toRollupPlugin(
   }
 }
 
-function supportNativeFilter(context: any, framework: 'rollup' | 'rolldown' | 'vite' | 'unloader') {
+function supportNativeFilter(context: any, framework: 'rollup' | 'rolldown' | 'vite' | 'unloader', hook: Hook<HookFnMap[keyof HookFnMap], any>) {
+  // Only Rolldown evaluates composable filters; Vite's dev server would ignore them
+  if (typeof hook === 'object' && Array.isArray(hook.filter))
+    return framework === 'rolldown'
+
   if (framework === 'vite')
     return !!context?.meta?.viteVersion // since Vite v7
 

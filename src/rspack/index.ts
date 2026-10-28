@@ -8,7 +8,7 @@ import type {
   UnpluginInstance,
   UnpluginOptions,
 } from '../types'
-import type { PluginFilter } from '../utils/filter'
+import type { ResolveIdFilter } from '../utils/filter'
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
@@ -105,7 +105,7 @@ function applyRspackPlugins(
 
     // resolveId hook
     if (plugin.resolveId) {
-      let cachedResolveId: { hook: NonNullable<ResolvedUnpluginOptions['resolveId']>, cwd: string, filter: PluginFilter } | undefined
+      let cachedResolveId: { hook: NonNullable<ResolvedUnpluginOptions['resolveId']>, cwd: string, filter: ResolveIdFilter } | undefined
       // rspack >= 1.5.0: use native virtual modules plugin
       // rspack < 1.5.0: use fake virtual modules plugin
       const vfs = compiler.rspack.experiments.VirtualModulesPlugin
@@ -157,7 +157,7 @@ function applyRspackPlugins(
             cachedResolveId = { hook, cwd, filter: normalized.filter }
           }
           const { filter } = cachedResolveId
-          if (!filter(id))
+          if (!filter(id, importer))
             return
 
           const resolveIdResult = await handler.call!({

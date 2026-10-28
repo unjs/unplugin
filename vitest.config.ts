@@ -6,9 +6,16 @@ export default defineConfig({
     'import.meta.dev': 'true',
   },
   resolve: {
-    alias: {
-      unplugin: resolve('src/index.ts'),
-    },
+    alias: [
+      {
+        find: /^unplugin$/,
+        replacement: resolve('src/index.ts'),
+      },
+      {
+        find: /^unplugin\/utils\/filter$/,
+        replacement: resolve('src/filter.ts'),
+      },
+    ],
   },
   test: {
     coverage: {
