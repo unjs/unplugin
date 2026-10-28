@@ -12,8 +12,8 @@ export default defineConfig({
         replacement: resolve('src/index.ts'),
       },
       {
-        find: /^unplugin\/utils\/filters$/,
-        replacement: resolve('src/utils/filters.ts'),
+        find: /^unplugin\/utils\/filter$/,
+        replacement: resolve('src/filter.ts'),
       },
     ],
   },

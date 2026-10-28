@@ -1,7 +1,7 @@
 import type { UnpluginOptions, VitePlugin } from 'unplugin'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
-import { and, code, exclude, id, importerId, include, moduleType, not } from 'unplugin/utils/filters'
+import { and, code, exclude, id, importerId, include, moduleType, not } from 'unplugin/utils/filter'
 import { createServer } from 'vite'
 import { describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'

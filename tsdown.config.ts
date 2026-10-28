@@ -1,7 +1,11 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/utils/filters.ts', 'src/{webpack,rspack}/loaders/*'],
+  entry: [
+    'src/index.ts',
+    { 'utils/filter': 'src/filter.ts' },
+    'src/{webpack,rspack}/loaders/*',
+  ],
   define: {
     'import.meta.dev': 'false',
   },

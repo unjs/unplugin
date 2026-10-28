@@ -329,11 +329,11 @@ More details can be found in the [Rolldown's documentation](https://rolldown.rs/
 
 #### Composable Filters
 
-When `include`/`exclude` patterns are not expressive enough, pass an array of [composable filter expressions](https://rolldown.rs/apis/plugin-api/hook-filters#composable-filters). The builders from `@rolldown/pluginutils` are re-exported from `unplugin/utils/filters`. Rolldown evaluates them natively; every other bundler evaluates them in unplugin with the same semantics.
+When `include`/`exclude` patterns are not expressive enough, pass an array of [composable filter expressions](https://rolldown.rs/apis/plugin-api/hook-filters#composable-filters). The builders from `@rolldown/pluginutils` are re-exported from `unplugin/utils/filter`. Rolldown evaluates them natively; every other bundler evaluates them in unplugin with the same semantics.
 
 ```ts twoslash
 import { createUnplugin } from 'unplugin'
-import { and, code, exclude, id, include, query } from 'unplugin/utils/filters'
+import { and, code, exclude, id, include, query } from 'unplugin/utils/filter'
 
 const plugin = createUnplugin(() => ({
   name: 'unplugin-starter',
