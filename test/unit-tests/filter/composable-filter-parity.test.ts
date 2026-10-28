@@ -127,7 +127,7 @@ describe('composable filter parity with Rolldown', async () => {
   }, true)
 
   it('covers modules with and without queries', () => {
-    expect(modules.map(m => path.relative(root, m.id))).toEqual(expect.arrayContaining(['mod.js?raw&x=1', 'mod.js', 'nested/deep.js']))
+    expect(modules.map(m => path.relative(root, m.id).replaceAll('\\', '/'))).toEqual(expect.arrayContaining(['mod.js?raw&x=1', 'mod.js', 'nested/deep.js']))
   })
 
   it.each(Object.entries(transformCases))('transform: %s', async (_, filter) => {
