@@ -8,7 +8,7 @@ import process from 'node:process'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { createCachedIdFilter, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
+import { createCachedIdFilter, isLoadNarrowed, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
 
 const TRANSFORM_LOADER = resolve(
@@ -259,15 +259,17 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                 },
               ],
             })
-            // A virtual module has no extension to infer its type from. Real files keep the
-            // type webpack gives them, so a `load` hook that skips `.json` or `.css` files
-            // doesn't turn them into JavaScript.
+            // A virtual module has no extension to infer its type from, so it is always
+            // typed as JavaScript. A real file keeps the type webpack gives it, unless the
+            // plugin limited `load` to some files: the hook is then expected to turn them
+            // into JavaScript. An unfiltered hook also sees files it ignores, such as `.json`.
             compiler.options.module.rules.unshift({
               include(id) {
+                if (!shouldLoad(id, plugin, externalModules, filter))
+                  return false
                 // The prefix has no trailing separator, so it also matches real files like `_virtual_helper.json`
-                return id.startsWith(plugin.__virtualModulePrefix)
-                  && !fs.existsSync(id)
-                  && shouldLoad(id, plugin, externalModules, filter)
+                const isVirtual = id.startsWith(plugin.__virtualModulePrefix) && !fs.existsSync(id)
+                return isVirtual || isLoadNarrowed(plugin)
               },
               type: 'javascript/auto',
             })

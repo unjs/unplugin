@@ -18,6 +18,22 @@ export function createCachedIdFilter(getHook: () => IdFilteredHook): PluginFilte
   }
 }
 
+/**
+ * Whether the plugin limited its `load` hook to some files, with `loadInclude` or a `filter`.
+ * An unfiltered hook sees every module, including ones it has nothing to say about.
+ */
+export function isLoadNarrowed(plugin: ResolvedUnpluginOptions): boolean {
+  if (plugin.loadInclude)
+    return true
+  const hook = plugin.load
+  if (!hook || typeof hook === 'function')
+    return false
+  const filter = hook.filter
+  return Array.isArray(filter)
+    ? filter.length > 0
+    : filter?.id != null
+}
+
 export function transformUse(
   data: { resource?: string, resourceQuery?: string },
   plugin: ResolvedUnpluginOptions,

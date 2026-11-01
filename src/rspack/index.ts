@@ -14,7 +14,7 @@ import { resolve } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { createCachedIdFilter, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
+import { createCachedIdFilter, isLoadNarrowed, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { createBuildContext, normalizeMessage } from './context'
 import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin, isVirtualModuleId } from './utils'
 
@@ -244,11 +244,12 @@ function applyRspackPlugins(
           },
         ],
       })
-      // A virtual module has no extension to infer its type from. Real files keep the
-      // type rspack gives them, so a `load` hook that skips `.json` or `.css` files
-      // doesn't turn them into JavaScript.
+      // A virtual module has no extension to infer its type from, so it is always
+      // typed as JavaScript. A real file keeps the type rspack gives it, unless the
+      // plugin limited `load` to some files: the hook is then expected to turn them
+      // into JavaScript. An unfiltered hook also sees files it ignores, such as `.json`.
       compiler.options.module.rules.unshift({
-        include: id => isVirtualModuleId(id, plugin) && shouldLoad(id),
+        include: id => shouldLoad(id) && (isVirtualModuleId(id, plugin) || isLoadNarrowed(plugin)),
         type: 'javascript/auto',
       })
     }
