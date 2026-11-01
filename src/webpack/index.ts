@@ -258,6 +258,15 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
                   },
                 },
               ],
+            })
+            // A virtual module has no extension to infer its type from. Real files keep the
+            // type webpack gives them, so a `load` hook that skips `.json` or `.css` files
+            // doesn't turn them into JavaScript.
+            compiler.options.module.rules.unshift({
+              include(id) {
+                return id.startsWith(plugin.__virtualModulePrefix)
+                  && shouldLoad(id, plugin, externalModules, filter)
+              },
               type: 'javascript/auto',
             })
           }

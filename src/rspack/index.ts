@@ -218,22 +218,23 @@ function applyRspackPlugins(
     // load hook
     if (plugin.load) {
       const filter = createCachedIdFilter(() => plugin.load!)
+      const shouldLoad = (id: string): boolean => {
+        if (isVirtualModuleId(id, plugin))
+          id = decodeVirtualModuleId(id, plugin)
+
+        // load include filter
+        if (plugin.loadInclude && !plugin.loadInclude(id))
+          return false
+
+        if (!filter(id))
+          return false
+
+        // Don't run load hook for external modules
+        return !externalModules.has(id)
+      }
       compiler.options.module.rules.unshift({
         enforce: plugin.enforce,
-        include(id) {
-          if (isVirtualModuleId(id, plugin))
-            id = decodeVirtualModuleId(id, plugin)
-
-          // load include filter
-          if (plugin.loadInclude && !plugin.loadInclude(id))
-            return false
-
-          if (!filter(id))
-            return false
-
-          // Don't run load hook for external modules
-          return !externalModules.has(id)
-        },
+        include: shouldLoad,
         use: [
           {
             loader: LOAD_LOADER,
@@ -242,6 +243,12 @@ function applyRspackPlugins(
             },
           },
         ],
+      })
+      // A virtual module has no extension to infer its type from. Real files keep the
+      // type rspack gives them, so a `load` hook that skips `.json` or `.css` files
+      // doesn't turn them into JavaScript.
+      compiler.options.module.rules.unshift({
+        include: id => isVirtualModuleId(id, plugin) && shouldLoad(id),
         type: 'javascript/auto',
       })
     }
