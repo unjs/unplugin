@@ -14,7 +14,7 @@ import { resolve } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { createCachedIdFilter, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
+import { createCachedIdFilter, isLoadNarrowed, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
 import { createBuildContext, normalizeMessage } from './context'
 import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin, isVirtualModuleId } from './utils'
 
@@ -218,22 +218,23 @@ function applyRspackPlugins(
     // load hook
     if (plugin.load) {
       const filter = createCachedIdFilter(() => plugin.load!)
+      const shouldLoad = (id: string): boolean => {
+        if (isVirtualModuleId(id, plugin))
+          id = decodeVirtualModuleId(id, plugin)
+
+        // load include filter
+        if (plugin.loadInclude && !plugin.loadInclude(id))
+          return false
+
+        if (!filter(id))
+          return false
+
+        // Don't run load hook for external modules
+        return !externalModules.has(id)
+      }
       compiler.options.module.rules.unshift({
         enforce: plugin.enforce,
-        include(id) {
-          if (isVirtualModuleId(id, plugin))
-            id = decodeVirtualModuleId(id, plugin)
-
-          // load include filter
-          if (plugin.loadInclude && !plugin.loadInclude(id))
-            return false
-
-          if (!filter(id))
-            return false
-
-          // Don't run load hook for external modules
-          return !externalModules.has(id)
-        },
+        include: shouldLoad,
         use: [
           {
             loader: LOAD_LOADER,
@@ -242,6 +243,13 @@ function applyRspackPlugins(
             },
           },
         ],
+      })
+      // A virtual module has no extension to infer its type from, so it is always
+      // typed as JavaScript. A real file keeps the type rspack gives it, unless the
+      // plugin limited `load` to some files: the hook is then expected to turn them
+      // into JavaScript. An unfiltered hook also sees files it ignores, such as `.json`.
+      compiler.options.module.rules.unshift({
+        include: id => shouldLoad(id) && (isVirtualModuleId(id, plugin) || isLoadNarrowed(plugin)),
         type: 'javascript/auto',
       })
     }
