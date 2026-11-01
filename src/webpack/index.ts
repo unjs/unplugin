@@ -264,7 +264,9 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
             // doesn't turn them into JavaScript.
             compiler.options.module.rules.unshift({
               include(id) {
+                // The prefix has no trailing separator, so it also matches real files like `_virtual_helper.json`
                 return id.startsWith(plugin.__virtualModulePrefix)
+                  && !fs.existsSync(id)
                   && shouldLoad(id, plugin, externalModules, filter)
               },
               type: 'javascript/auto',

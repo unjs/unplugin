@@ -26,7 +26,9 @@ describe('unfiltered load hook leaves the module type of real files alone', () =
   beforeEach(() => {
     dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'unplugin-module-type-')))
     fs.writeFileSync(path.join(dir, 'data.json'), '{ "name": "unplugin" }\n')
-    fs.writeFileSync(path.join(dir, 'entry.js'), 'import data from \'./data.json\'\nimport config from \'virtual/config.json\'\nconsole.log(data.name, config.name)\n')
+    // Its name starts like webpack's virtual module prefix (`<context>/_virtual_`), but it is a real file.
+    fs.writeFileSync(path.join(dir, '_virtual_helper.json'), '{ "name": "helper" }\n')
+    fs.writeFileSync(path.join(dir, 'entry.js'), 'import data from \'./data.json\'\nimport helper from \'./_virtual_helper.json\'\nimport config from \'virtual/config.json\'\nconsole.log(data.name, helper.name, config.name)\n')
   })
 
   afterEach(() => {
@@ -52,7 +54,7 @@ describe('unfiltered load hook leaves the module type of real files alone', () =
         plugin.webpack(),
       ],
     })
-    expect(fs.readFileSync(path.join(dir, 'dist/main.js'), 'utf8')).toContain('virtual')
+    expect(fs.readFileSync(path.join(dir, 'dist/main.js'), 'utf8')).toContain('helper')
   })
 
   it('rspack', async () => {
@@ -62,6 +64,6 @@ describe('unfiltered load hook leaves the module type of real files alone', () =
         plugin.rspack(),
       ],
     })
-    expect(fs.readFileSync(path.join(dir, 'dist/main.js'), 'utf8')).toContain('virtual')
+    expect(fs.readFileSync(path.join(dir, 'dist/main.js'), 'utf8')).toContain('helper')
   })
 })
