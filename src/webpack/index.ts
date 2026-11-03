@@ -8,7 +8,7 @@ import process from 'node:process'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { createCachedIdFilter, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
+import { createCachedIdFilter, normalizeAbsolutePath, realContext, transformUse } from '../utils/webpack-like'
 import { contextOptionsFromCompilation, createBuildContext, normalizeMessage } from './context'
 
 const TRANSFORM_LOADER = resolve(
@@ -77,7 +77,7 @@ export function getWebpackPlugin<UserOptions = Record<string, never>>(
       apply(compiler: WebpackCompiler) {
         // We need the prefix of virtual modules to be an absolute path so webpack let's us load them (even if it's made up)
         // In the loader we strip the made up prefix path again
-        const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), '_virtual_')
+        const VIRTUAL_MODULE_PREFIX = resolve(realContext(compiler.options.context ?? process.cwd()), '_virtual_')
 
         const version = (compiler as any).webpack?.version
         const meta: UnpluginContextMeta = {

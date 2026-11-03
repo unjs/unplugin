@@ -14,7 +14,7 @@ import { resolve } from 'node:path'
 import { version as unpluginVersion } from '../../package.json'
 import { normalizeObjectHook } from '../utils/filter'
 import { toArray } from '../utils/general'
-import { createCachedIdFilter, normalizeAbsolutePath, transformUse } from '../utils/webpack-like'
+import { createCachedIdFilter, normalizeAbsolutePath, realContext, transformUse } from '../utils/webpack-like'
 import { createBuildContext, normalizeMessage } from './context'
 import { decodeVirtualModuleId, encodeVirtualModuleId, FakeVirtualModulesPlugin, isVirtualModuleId } from './utils'
 
@@ -79,7 +79,7 @@ function applyRspackPlugins(
 ) {
   // We need the prefix of virtual modules to be an absolute path so rspack lets us load them (even if it's made up)
   // In the loader we strip the made up prefix path again
-  const VIRTUAL_MODULE_PREFIX = resolve(compiler.options.context ?? process.cwd(), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin
+  const VIRTUAL_MODULE_PREFIX = resolve(realContext(compiler.options.context ?? process.cwd()), 'node_modules/.virtual', compiler.rspack.experiments.VirtualModulesPlugin
     ? ''
     : process.pid.toString())
 

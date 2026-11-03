@@ -1,6 +1,7 @@
 import type { RuleSetUseItem } from '@rspack/core'
 import type { ResolvedUnpluginOptions, UnpluginOptions } from '../types'
 import type { PluginFilter } from './filter'
+import { realpathSync } from 'node:fs'
 import { isAbsolute, normalize } from 'node:path'
 import { normalizeObjectHook } from './filter'
 
@@ -58,6 +59,31 @@ export function normalizeAbsolutePath(path: string): string {
     return normalize(path)
   else
     return path
+}
+
+/**
+ * Returns the build context with its symlinks resolved, to build the virtual module prefix on.
+ *
+ * Webpack and Rspack resolve symlinks in module paths (`resolve.symlinks` is on by default), so
+ * a virtual module path made from a context that goes through a link, such as any project under
+ * macOS's `/var` or a linked project folder, resolves to a path where the virtual module was
+ * never written, and the build fails with ENOENT.
+ *
+ * With no link left in the prefix, neither resolver rewrites a virtual path built on it.
+ * `realpathSync` and not `realpathSync.native`: it resolves links and junctions only, and leaves
+ * Windows short names and letter case as the context gave them. A context that does not exist
+ * is returned as is.
+ *
+ * @param context - The `context` option of the compiler, or the current directory.
+ * @returns the real path of the context.
+ */
+export function realContext(context: string): string {
+  try {
+    return realpathSync(context)
+  }
+  catch {
+    return context
+  }
 }
 
 /**
