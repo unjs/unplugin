@@ -1,12 +1,34 @@
 import type { ResolvedUnpluginOptions } from '../../../src/types'
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import { createCachedIdFilter, normalizeAbsolutePath, transformUse, unescapeResourcePath } from '../../../src/utils/webpack-like'
+import { createCachedIdFilter, normalizeAbsolutePath, realContext, transformUse, unescapeResourcePath } from '../../../src/utils/webpack-like'
 
 describe('normalizeAbsolutePath', () => {
   it('leaves relative ids alone and normalizes absolute ones', () => {
     expect(normalizeAbsolutePath('./a/../b.js')).toBe('./a/../b.js')
     expect(normalizeAbsolutePath(path.resolve('/a/./b/../c.js'))).toBe(path.resolve('/a/c.js'))
+  })
+})
+
+describe('realContext', () => {
+  it('resolves a context reached through a link, and returns a missing one as is', () => {
+    const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'unplugin-real-context-')))
+    try {
+      const real = path.join(root, 'real')
+      const link = path.join(root, 'link')
+      mkdirSync(real)
+      // a junction on Windows needs no privilege; other platforms ignore the type
+      symlinkSync(real, link, 'junction')
+      expect(realContext(link)).toBe(real)
+      expect(realContext(real)).toBe(real)
+      const missing = path.join(root, 'missing')
+      expect(realContext(missing)).toBe(missing)
+    }
+    finally {
+      rmSync(root, { recursive: true, force: true })
+    }
   })
 })
 
