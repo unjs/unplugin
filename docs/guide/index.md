@@ -254,6 +254,10 @@ export default defineConfig({
 
 :::
 
+In Vite dev mode, `buildEnd` runs when the dev server closes. In webpack,
+it runs during compilation, including rebuilds in watch mode. For cleanup tied
+to a particular bundler's lifecycle, see [Bundler-Specific Logic](#bundler-specific-logic).
+
 ### Usage
 
 ```ts{12-14,16-18} twoslash
