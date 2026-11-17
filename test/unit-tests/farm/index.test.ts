@@ -295,4 +295,59 @@ describe('toFarmPlugin', () => {
       expect(result).toMatchObject({ resolvedPath: 'resolved-id', sideEffects: true })
     }
   })
+
+  it('resolveId resolves relative importer against config.root', async () => {
+    const resolveIdMock = vi.fn(() => null)
+    const farmPlugin = toFarmPlugin({ name: 'test-plugin', resolveId: resolveIdMock })
+    const root = path.resolve('/repo/app')
+    await farmPlugin.configResolved?.({ root } as any)
+    await farmPlugin.resolve?.executor(
+      { source: 'rel:./sibling.js', importer: 'src/nested/entry.js', kind: 'import' },
+      {} as any,
+    )
+    expect(resolveIdMock).toHaveBeenCalledWith(
+      'rel:./sibling.js',
+      path.resolve(root, 'src/nested/entry.js'),
+      { isEntry: false },
+    )
+  })
+
+  it('resolveId resolves relative config.root before resolving importer', async () => {
+    const resolveIdMock = vi.fn(() => null)
+    const farmPlugin = toFarmPlugin({ name: 'test-plugin', resolveId: resolveIdMock })
+    await farmPlugin.configResolved?.({ root: 'app' } as any)
+    await farmPlugin.resolve?.executor(
+      { source: './dep', importer: 'src/entry.js', kind: 'import' },
+      {} as any,
+    )
+    expect(resolveIdMock).toHaveBeenCalledWith(
+      './dep',
+      path.resolve('app', 'src/entry.js'),
+      { isEntry: false },
+    )
+  })
+
+  it('resolveId preserves custom farm.configResolved hook when resolving root', async () => {
+    const resolveIdMock = vi.fn(() => null)
+    const customConfigResolved = vi.fn()
+    const farmPlugin = getFarmPlugin(() => ({
+      name: 'test-plugin',
+      resolveId: resolveIdMock,
+      farm: {
+        configResolved: customConfigResolved,
+      },
+    }))({}) as any
+    const root = path.resolve('/repo/app')
+    await farmPlugin.configResolved?.({ root } as any)
+    await farmPlugin.resolve?.executor(
+      { source: './dep', importer: 'src/entry.js', kind: 'import' },
+      {} as any,
+    )
+    expect(customConfigResolved).toHaveBeenCalledWith({ root })
+    expect(resolveIdMock).toHaveBeenCalledWith(
+      './dep',
+      path.resolve(root, 'src/entry.js'),
+      { isEntry: false },
+    )
+  })
 })

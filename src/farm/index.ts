@@ -50,8 +50,17 @@ export function getFarmPlugin<
 
     const plugins = rawPlugins.map((rawPlugin) => {
       const plugin = toFarmPlugin(rawPlugin, userOptions as Record<string, any>) as JsPlugin
-      if (rawPlugin.farm)
+      if (rawPlugin.farm) {
+        const _configResolved = plugin.configResolved
         Object.assign(plugin, rawPlugin.farm)
+        if (_configResolved && rawPlugin.farm.configResolved) {
+          const customConfigResolved = rawPlugin.farm.configResolved
+          plugin.configResolved = async (config) => {
+            await _configResolved(config)
+            await customConfigResolved(config)
+          }
+        }
+      }
 
       return plugin
     })
@@ -87,6 +96,13 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
 
   if (plugin.resolveId) {
     const _resolveId = plugin.resolveId
+    let root: string | undefined
+    const _configResolved = farmPlugin.configResolved
+    farmPlugin.configResolved = async (config) => {
+      if (config.root)
+        root = path.resolve(config.root)
+      await _configResolved?.(config)
+    }
     let filters = []
     if (options)
       filters = options?.filters ?? []
@@ -100,7 +116,7 @@ export function toFarmPlugin(plugin: UnpluginOptions, options?: Record<string, a
       },
       async executor(params: PluginResolveHookParam, context: CompilationContext) {
         const importer = params.importer
-          ? path.resolve(params.importer)
+          ? path.resolve(root ?? process.cwd(), params.importer)
           : undefined
         const id = decodeStr(params.source)
 
