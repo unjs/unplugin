@@ -20,7 +20,7 @@ export default async function load(this: LoaderContext<any>, source: string | Bu
   if (id.startsWith(plugin.__virtualModulePrefix))
     id = decodeURIComponent(id.slice(plugin.__virtualModulePrefix.length))
   else
-    id = unescapeResourcePath(id, 'webpack')
+    id = normalizeAbsolutePath(unescapeResourcePath(id, 'webpack'))
 
   const context = createContext(this)
   const hook = plugin.load
@@ -37,7 +37,7 @@ export default async function load(this: LoaderContext<any>, source: string | Bu
           return this.getDependencies()
         },
       }, this._compiler!, this._compilation, this), context),
-      normalizeAbsolutePath(id),
+      id,
     )
 
     if (res == null)

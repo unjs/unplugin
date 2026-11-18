@@ -43,6 +43,22 @@ describe('load function', () => {
     expect(pluginLoadHandler).toHaveBeenCalledWith('test.js')
   })
 
+  it('should preserve leading slash in decoded virtual module id', async () => {
+    const pluginLoadHandler = vi.fn().mockResolvedValue('export default 1')
+    await load.call({
+      ...mockLoaderContext,
+      query: {
+        plugin: {
+          load: pluginLoadHandler,
+          __virtualModulePrefix: '/virtual/',
+        },
+      },
+      resource: `/virtual/${encodeURIComponent('/__virtual/1')}`,
+    } as any, '', undefined)
+
+    expect(pluginLoadHandler).toHaveBeenCalledWith('/__virtual/1')
+  })
+
   it('should call callback with transformed code and map if handler returns an object', async () => {
     const source = 'source code'
     const map = 'source map'
