@@ -1,6 +1,8 @@
 import { Buffer } from 'node:buffer'
+import { resolve } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import load, { raw } from '../../../../src/rspack/loaders/load'
+import { encodeVirtualModuleId } from '../../../../src/rspack/utils'
 
 describe('load', () => {
   it('should call callback with source and map when plugin.load is not defined', async () => {
@@ -146,5 +148,26 @@ describe('load', () => {
 
     const [, passedSource] = asyncMock.mock.calls.at(-1)!
     expect(Buffer.isBuffer(passedSource) && passedSource.equals(png)).toBe(true)
+  })
+
+  it('should preserve leading slash in decoded virtual module id', async () => {
+    const asyncMock = vi.fn()
+    const handlerMock = vi.fn().mockResolvedValue('export default 1')
+    const plugin = {
+      load: handlerMock,
+      __virtualModulePrefix: resolve('/virtual'),
+    } as any
+
+    await load.call(
+      {
+        async: () => asyncMock,
+        query: { plugin },
+        resource: encodeVirtualModuleId('/__virtual/1', plugin),
+      } as any,
+      '',
+      undefined,
+    )
+
+    expect(handlerMock).toHaveBeenCalledWith('/__virtual/1')
   })
 })

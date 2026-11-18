@@ -1,9 +1,10 @@
 import type { UnpluginOptions, VitePlugin } from 'unplugin'
 import type { Mock } from 'vitest'
 import * as fs from 'node:fs'
+import * as os from 'node:os'
 import * as path from 'node:path'
 import { createUnplugin } from 'unplugin'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, afterEach, describe, expect, it, vi } from 'vitest'
 import { onlyBun } from '../../utils'
 import { build, runRspack, runWebpack, toArray } from '../utils'
 
@@ -186,5 +187,144 @@ describe('virtual ids', () => {
 
     checkResolveIdHook(mockResolveIdHook)
     checkLoadHook(mockLoadHook)
+  })
+})
+
+describe('virtual ids with leading slash', () => {
+  const slashRoot = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'unplugin-virtual-slash-')))
+  const slashEntry = path.join(slashRoot, 'entry.js')
+  fs.writeFileSync(
+    slashEntry,
+    'import one from "virtual/1"\nimport two from "virtual/2"\nexport default [one, two]\n',
+  )
+
+  afterAll(() => {
+    fs.rmSync(slashRoot, { recursive: true, force: true })
+  })
+
+  function createSlashVirtualPlugin() {
+    const loadedIds: string[] = []
+    const plugin = createUnplugin(() => ({
+      name: 'slash-virtual-plugin',
+      resolveId(id) {
+        return id.startsWith('virtual/')
+          ? `/__${id}`
+          : null
+      },
+      loadInclude(id) {
+        return id.startsWith('/__virtual/')
+      },
+      load(id) {
+        loadedIds.push(id)
+        if (id === '/__virtual/1')
+          return 'export default "VIRTUAL:ONE"'
+        if (id === '/__virtual/2')
+          return 'export default "VIRTUAL:TWO"'
+        throw new Error(`Unexpected id: ${id}`)
+      },
+    }))
+    return { loadedIds, plugin }
+  }
+
+  it('vite', async () => {
+    const { loadedIds, plugin } = createSlashVirtualPlugin()
+    const plugins = toArray(plugin.vite()).map((p): VitePlugin => ({ ...p, enforce: 'pre' }))
+
+    await build.vite({
+      clearScreen: false,
+      plugins: [plugins],
+      build: {
+        lib: {
+          entry: slashEntry,
+          name: 'SlashLib',
+        },
+        write: false,
+      },
+    })
+
+    expect(loadedIds).toEqual(expect.arrayContaining(['/__virtual/1', '/__virtual/2']))
+  })
+
+  it('rollup', async () => {
+    const { loadedIds, plugin } = createSlashVirtualPlugin()
+
+    await build.rollup({
+      input: slashEntry,
+      plugins: [
+        plugin.rollup(),
+      ],
+    })
+
+    expect(loadedIds).toEqual(expect.arrayContaining(['/__virtual/1', '/__virtual/2']))
+  })
+
+  it('webpack', async () => {
+    const { loadedIds, plugin } = createSlashVirtualPlugin()
+
+    await runWebpack({
+      mode: 'development',
+      context: slashRoot,
+      entry: slashEntry,
+      output: {
+        path: path.join(slashRoot, 'dist-webpack'),
+      },
+      plugins: [
+        plugin.webpack(),
+      ],
+    })
+
+    expect(loadedIds).toEqual(expect.arrayContaining(['/__virtual/1', '/__virtual/2']))
+    const bundle = fs.readFileSync(path.join(slashRoot, 'dist-webpack/main.js'), 'utf-8')
+    expect(bundle).toContain('VIRTUAL:ONE')
+    expect(bundle).toContain('VIRTUAL:TWO')
+  })
+
+  it('rspack', async () => {
+    const { loadedIds, plugin } = createSlashVirtualPlugin()
+
+    await runRspack({
+      mode: 'development',
+      context: slashRoot,
+      entry: slashEntry,
+      output: {
+        path: path.join(slashRoot, 'dist-rspack'),
+      },
+      plugins: [
+        plugin.rspack(),
+      ],
+    })
+
+    expect(loadedIds).toEqual(expect.arrayContaining(['/__virtual/1', '/__virtual/2']))
+    const bundle = fs.readFileSync(path.join(slashRoot, 'dist-rspack/main.js'), 'utf-8')
+    expect(bundle).toContain('VIRTUAL:ONE')
+    expect(bundle).toContain('VIRTUAL:TWO')
+  })
+
+  it('esbuild', async () => {
+    const { loadedIds, plugin } = createSlashVirtualPlugin()
+
+    await build.esbuild({
+      entryPoints: [slashEntry],
+      plugins: [
+        plugin.esbuild(),
+      ],
+      bundle: true,
+      write: false,
+    })
+
+    expect(loadedIds).toEqual(expect.arrayContaining(['/__virtual/1', '/__virtual/2']))
+  })
+
+  onlyBun('bun', async () => {
+    const { loadedIds, plugin } = createSlashVirtualPlugin()
+
+    await build.bun({
+      entrypoints: [slashEntry],
+      plugins: [
+        plugin.bun(),
+      ],
+    })
+
+    expect(loadedIds).toEqual(expect.arrayContaining(['/__virtual/1', '/__virtual/2']))
   })
 })

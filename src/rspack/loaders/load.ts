@@ -21,7 +21,7 @@ export default async function load(this: LoaderContext, source: string | Buffer,
   if (isVirtualModuleId(id, plugin))
     id = decodeVirtualModuleId(id, plugin)
   else
-    id = unescapeResourcePath(id, 'rspack')
+    id = normalizeAbsolutePath(unescapeResourcePath(id, 'rspack'))
 
   const context = createContext(this)
   const hook = plugin.load
@@ -35,7 +35,7 @@ export default async function load(this: LoaderContext, source: string | Buffer,
         this._compilation && createBuildContext(this._compiler, this._compilation, this),
         context,
       ),
-      normalizeAbsolutePath(id),
+      id,
     )
 
     if (res == null)
