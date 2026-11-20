@@ -74,7 +74,7 @@ describe('esbuild getContents with browser:false stubbed module', () => {
 describe('esbuild hook results and filters', () => {
   const dir = resolve(__dirname, 'fixtures/empty-result')
 
-  function buildWith(plugin: Plugin, entry = 'entry.js') {
+  function buildWith(plugins: Plugin[], entry = 'entry.js') {
     return build({
       entryPoints: [
         resolve(dir, entry),
@@ -82,7 +82,7 @@ describe('esbuild hook results and filters', () => {
       bundle: true,
       write: false,
       format: 'esm',
-      plugins: [plugin],
+      plugins,
     })
   }
 
@@ -97,8 +97,42 @@ describe('esbuild hook results and filters', () => {
       },
     }))
 
-    const result = await buildWith(plugin.esbuild())
+    const result = await buildWith([
+      plugin.esbuild(),
+    ])
     expect(result.outputFiles[0].text).not.toContain('ORIGINAL_DEP')
+  })
+
+  it.each([undefined, null])('lets a later esbuild loader run when transform returns %s', async (transformResult) => {
+    const inspect = vi.fn()
+    const plugin = createUnplugin(() => ({
+      name: 'inspect-dep',
+      transform: {
+        filter: { id: /dep\.js$/ },
+        handler(code) {
+          inspect(code)
+          this.warn('Inspected dependency')
+          return transformResult
+        },
+      },
+    }))
+    const downstreamLoader: Plugin = {
+      name: 'replace-dep',
+      setup(build) {
+        build.onLoad({ filter: /dep\.js$/ }, () => ({
+          contents: 'export const dep = "DOWNSTREAM_DEP"',
+        }))
+      },
+    }
+
+    const result = await buildWith([
+      plugin.esbuild(),
+      downstreamLoader,
+    ])
+
+    expect(inspect).toHaveBeenCalledWith(expect.stringContaining('ORIGINAL_DEP'))
+    expect(result.outputFiles[0].text).toContain('DOWNSTREAM_DEP')
+    expect(result.warnings.map(warning => warning.text)).toEqual(['Inspected dependency'])
   })
 
   it('keeps an empty-string load result for a virtual module', async () => {
@@ -114,7 +148,9 @@ describe('esbuild hook results and filters', () => {
       },
     }))
 
-    const result = await buildWith(plugin.esbuild(), 'virtual-entry.js')
+    const result = await buildWith([
+      plugin.esbuild(),
+    ], 'virtual-entry.js')
     expect(result.outputFiles[0].text).toContain('ORIGINAL_DEP')
   })
 
@@ -129,7 +165,9 @@ describe('esbuild hook results and filters', () => {
         },
       }))
 
-      await buildWith(plugin.esbuild())
+      await buildWith([
+        plugin.esbuild(),
+      ])
 
       const reads = readFileSpy.mock.calls.filter(([path]) => String(path).startsWith(dir))
       expect(reads).toHaveLength(0)
@@ -153,7 +191,9 @@ describe('esbuild hook results and filters', () => {
       },
     }))
 
-    await buildWith(plugin.esbuild())
+    await buildWith([
+      plugin.esbuild(),
+    ])
 
     expect(watchFiles.length).toBeGreaterThan(1)
     for (const files of watchFiles)

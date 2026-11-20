@@ -81,6 +81,15 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
       }
 
       if (loaders.length) {
+        const deferredWarnings: NonNullable<OnLoadResult['warnings']> = []
+        build.onEnd(() => {
+          if (deferredWarnings.length) {
+            return {
+              warnings: deferredWarnings.splice(0),
+            }
+          }
+        })
+
         build.onLoad(loaders.length === 1
           ? loaders[0].options!
           : { filter: /.*/ }, async (args) => {
@@ -99,6 +108,7 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
               break
           }
 
+          let { errors, warnings, watchFiles } = result ?? {}
           let fsContentsCache: string | undefined
           let fsContentsCached = false
 
@@ -140,14 +150,42 @@ export function getEsbuildPlugin<UserOptions = Record<string, never>>(
                 },
               }
 
-              const _result = await onTransformCb(newArgs)
-              if (_result?.contents != null)
-                result = _result
+              const transformed = await onTransformCb(newArgs)
+              if (transformed?.errors?.length) {
+                errors = [
+                  ...(errors ?? []),
+                  ...transformed.errors,
+                ]
+              }
+              if (transformed?.warnings?.length) {
+                warnings = [
+                  ...(warnings ?? []),
+                  ...transformed.warnings,
+                ]
+              }
+              if (transformed?.watchFiles?.length) {
+                watchFiles = [
+                  ...(watchFiles ?? []),
+                  ...transformed.watchFiles,
+                ]
+              }
+              if (transformed?.contents != null)
+                result = transformed
             }
           }
 
-          if (result?.contents != null)
-            return result
+          if (result?.contents != null || errors?.length || watchFiles?.length) {
+            return {
+              ...result,
+              errors,
+              warnings,
+              watchFiles,
+            }
+          }
+
+          // esbuild stops at any onLoad result, even one containing only warnings.
+          if (warnings?.length)
+            deferredWarnings.push(...warnings)
         })
       }
     }
@@ -290,36 +328,39 @@ function buildSetup() {
             return
           if (!idFilter(id))
             return
-          let code = await args.getContents()
+          const code = await args.getContents()
           if (!filter(id, code))
             return
 
           const { mixedContext, errors, warnings } = createPluginContext(context)
-          const resolveDir = path.dirname(args.path)
-
-          let map: SourceMap | null | undefined
           const result = await handler.call(mixedContext, code, id)
+          const metadata = {
+            errors,
+            warnings,
+            watchFiles: mixedContext.getWatchFiles(),
+          }
+
+          let contents: string
           if (typeof result === 'string') {
-            code = result
+            contents = result
           }
           else if (typeof result === 'object' && result !== null) {
-            code = result.code
-            map = typeof result.map === 'string'
+            const map = typeof result.map === 'string'
               ? JSON.parse(result.map)
               : result.map as SourceMap
+            contents = map
+              ? processCodeWithSourceMap(map, result.code)
+              : result.code
+          }
+          else {
+            return metadata
           }
 
-          if (code !== undefined) {
-            if (map)
-              code = processCodeWithSourceMap(map, code)
-            return {
-              contents: code,
-              errors,
-              warnings,
-              watchFiles: mixedContext.getWatchFiles(),
-              loader: unwrapLoader(loader, code, args.path),
-              resolveDir,
-            }
+          return {
+            ...metadata,
+            contents,
+            loader: unwrapLoader(loader, contents, args.path),
+            resolveDir: path.dirname(args.path),
           }
         })
       }
