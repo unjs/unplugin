@@ -36,15 +36,19 @@ export function createFarmContext(
   }
 }
 
+function formatMessage(error: unknown): string {
+  if (typeof error === 'string')
+    return error
+  if (error instanceof Error)
+    return error.message
+  if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string')
+    return error.message
+  return String(error)
+}
+
 export function unpluginContext(context: CompilationContext): UnpluginContext {
   return {
-    error: (error: any) =>
-      context!.error(typeof error === 'string'
-        ? new Error(error)
-        : error),
-    warn: (error: any) =>
-      context!.warn(typeof error === 'string'
-        ? new Error(error)
-        : error),
+    error: (error: any) => context!.error(formatMessage(error)),
+    warn: (error: any) => context!.warn(formatMessage(error)),
   }
 }

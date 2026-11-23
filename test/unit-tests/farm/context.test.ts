@@ -87,7 +87,7 @@ describe('createFarmContext', () => {
 })
 
 describe('unpluginContext', () => {
-  it('should call context.error with an Error object', () => {
+  it('should call context.error with a string from an Error object', () => {
     const mockContext = {
       error: vi.fn(),
     } as unknown as CompilationContext
@@ -95,10 +95,10 @@ describe('unpluginContext', () => {
     const pluginContext = unpluginContext(mockContext)
     pluginContext.error(new Error('Test error'))
 
-    expect(mockContext.error).toHaveBeenCalledWith(new Error('Test error'))
+    expect(mockContext.error).toHaveBeenCalledWith('Test error')
   })
 
-  it('should call context.error with an Error String', () => {
+  it('should call context.error with a string message', () => {
     const mockContext = {
       error: vi.fn(),
     } as unknown as CompilationContext
@@ -106,10 +106,21 @@ describe('unpluginContext', () => {
     const pluginContext = unpluginContext(mockContext)
     pluginContext.error('Test error')
 
-    expect(mockContext.error).toHaveBeenCalledWith(new Error('Test error'))
+    expect(mockContext.error).toHaveBeenCalledWith('Test error')
   })
 
-  it('should call context.warn with an Error object', () => {
+  it('should call context.error with a string from a message object', () => {
+    const mockContext = {
+      error: vi.fn(),
+    } as unknown as CompilationContext
+
+    const pluginContext = unpluginContext(mockContext)
+    pluginContext.error({ message: 'Object error' })
+
+    expect(mockContext.error).toHaveBeenCalledWith('Object error')
+  })
+
+  it('should call context.warn with a string from an Error object', () => {
     const mockContext = {
       warn: vi.fn(),
     } as unknown as CompilationContext
@@ -117,10 +128,10 @@ describe('unpluginContext', () => {
     const pluginContext = unpluginContext(mockContext)
     pluginContext.warn(new Error('Test warning'))
 
-    expect(mockContext.warn).toHaveBeenCalledWith(new Error('Test warning'))
+    expect(mockContext.warn).toHaveBeenCalledWith('Test warning')
   })
 
-  it('should call context.warn with an Error String', () => {
+  it('should call context.warn with a string message', () => {
     const mockContext = {
       warn: vi.fn(),
     } as unknown as CompilationContext
@@ -128,6 +139,17 @@ describe('unpluginContext', () => {
     const pluginContext = unpluginContext(mockContext)
     pluginContext.warn('Test warning')
 
-    expect(mockContext.warn).toHaveBeenCalledWith(new Error('Test warning'))
+    expect(mockContext.warn).toHaveBeenCalledWith('Test warning')
+  })
+
+  it('should call context.warn with a string from a message object', () => {
+    const mockContext = {
+      warn: vi.fn(),
+    } as unknown as CompilationContext
+
+    const pluginContext = unpluginContext(mockContext)
+    pluginContext.warn({ message: 'Object warning' })
+
+    expect(mockContext.warn).toHaveBeenCalledWith('Object warning')
   })
 })
